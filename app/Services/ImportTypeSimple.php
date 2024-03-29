@@ -176,6 +176,16 @@ class ImportTypeSimple extends QueueManagerBase
                             continue 1;
                         }
 
+                        // skip import item if needed
+                        $skip = array_key_exists('skipValue', $item) ? $item['skipValue'] : 'Skip';
+                        if (isset($item['column']) && is_array($item['column'])) {
+                            foreach ($item['column'] as $column) {
+                                if (array_key_exists($column, $row) && $row[$column] == $skip) {
+                                    continue 2;
+                                }
+                            }
+                        }
+
                         if ($item['entity'] === 'ProductAttributeValue' && in_array($item['name'], ['value', 'valueFrom', 'valueTo', 'valueUnitId'])) {
                             $item = json_decode(json_encode($item), true);
                             // if there is attributeId in input data (We have to put it in configurator item)
@@ -187,16 +197,6 @@ class ImportTypeSimple extends QueueManagerBase
                         $type = $this->prepareFieldType($item, $input, $entity ?? null);
 
                         try {
-                            // skip import item if needed
-                            $skip = array_key_exists('skipValue', $item) ? $item['skipValue'] : 'Skip';
-                            if (isset($item['column']) && is_array($item['column'])) {
-                                foreach ($item['column'] as $column) {
-                                    if (array_key_exists($column, $row) && $row[$column] == $skip) {
-                                        throw new NotModified();
-                                    }
-                                }
-                            }
-
                             $this->getService('ImportConfiguratorItem')->getFieldConverter($type)->convert($input, $item, $row);
                             $this->getMemoryStorage()->set("import_job_{$importJob->get('id')}_input", $input);
                         } catch (DeleteProductAttributeValue $e) {
