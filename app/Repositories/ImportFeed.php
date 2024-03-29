@@ -79,8 +79,12 @@ class ImportFeed extends Base
             throw new BadRequest($this->getLanguage()->translate("nullNoneSame", "exceptions", "ImportFeed"));
         }
 
-        if ($entity->getFeedField('skipValue') === $entity->getFeedField('emptyValue') || $entity->getFeedField('skipValue') === $entity->getFeedField('nullValue')) {
-            throw new BadRequest($this->getLanguage()->translate("skipNoneSame", "exceptions", "ImportFeed"));
+        if ($entity->getFeedField('skipValue') === $entity->getFeedField('emptyValue')) {
+            throw new BadRequest($this->getLanguage()->translate("skipNoneSameEmpty", "exceptions", "ImportFeed"));
+        }
+
+        if ($entity->getFeedField('skipValue') === $entity->getFeedField('nullValue')) {
+            throw new BadRequest($this->getLanguage()->translate("skipNoneSameNull", "exceptions", "ImportFeed"));
         }
 
         if (empty($entity->get('sourceFields'))) {

@@ -90,6 +90,8 @@
     "moreThanOneFound": "Mehr als ein Datensatz mit der Kennung '%s' gefunden.",
     "wrongImportByValuesCount": "Die Anzahl der empfangenen Werte für die zugehörige Entität '%s' sollte nicht kleiner als die Anzahl der zugehörigen Entitätsfelder sein.",
     "nullNoneSame": "Keiner und Nullwert dürfen nicht identisch sein.",
+    "skipNoneSameEmpty": "Keiner und überspringen dürfen nicht identisch sein.",
+    "skipNoneSameNull": "Nullwert und überspringen dürfen nicht identisch sein.",
     "skipNoneSame": "Keiner und Nullwert dürfen nicht identisch sein/Keiner und überspringen dürfen nicht identisch sein/Nullwert und überspringen dürfen nicht identisch sein.",
     "unexpectedFieldType": "Der Wert '%s' is als '%s' ungültig.",
     "incorrectCurrencyValue": "Das Währungswertformat ist ungültig. Wert wie \"12 EUR\" wird erwartet.",
