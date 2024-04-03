@@ -736,7 +736,8 @@ class ImportTypeSimple extends QueueManagerBase
 
                 $pavData['data']['importJobId'] = $pavJob->get('id');
 
-                $dto = new QueueItemDTO($importService->getName($importFeed), 'ImportTypeSimple', $pavData);
+                $event = $this->getEventManager()->dispatch(new Event(['importFeed' => $importFeed, 'pavData' => $pavData]), 'prepareImportPavJob');
+                $dto = new QueueItemDTO($importService->getName($importFeed), 'ImportTypeSimple', $event->getArgument('pavData'));
                 $dto->setParentId($qmJob->get('id'));
 
                 $importService->push($dto);
