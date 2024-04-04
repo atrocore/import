@@ -64,7 +64,6 @@
     "importFile": {
       "type": "file",
       "notStorable": true,
-      "noAsset": true,
       "layoutDetailDisabled": true,
       "layoutListDisabled": true,
       "layoutMassUpdateDisabled": true,
@@ -76,11 +75,9 @@
     },
     "file": {
       "type": "file",
-      "noAsset": true,
       "required": false,
       "filterDisabled": true,
       "tooltip": true,
-      "sourceList": [],
       "view": "import:views/import-feed/fields/file"
     },
     "sheet": {
@@ -365,10 +362,6 @@
       "foreign": "importFeed",
       "entity": "ImportConfiguratorItem",
       "audited": false
-    },
-    "file": {
-      "type": "belongsTo",
-      "entity": "Attachment"
     },
     "createdBy": {
       "type": "belongsTo",
