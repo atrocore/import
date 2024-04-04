@@ -682,24 +682,12 @@ class ImportFeed extends Base
             throw new NotFound();
         }
 
-        $repository = $this->getEntityManager()->getRepository('Attachment');
-        $attachment = $repository->get();
-        $attachment->set('name', 'easy-catalog.json');
-        $attachment->set('type', 'application/json');
-        $attachment->set('role', 'Import');
-        $attachment->set('relatedType', 'ImportFeed');
-        $attachment->set('relatedId', $importFeed->get('id'));
-        $attachment->set('storage', 'UploadDir');
-        $attachment->set('storageFilePath', $this->getInjection('filePathBuilder')->createPath(FilePathBuilder::UPLOAD));
-        $fileName = $repository->getFilePath($attachment);
+        $input = new \stdClass();
+        $input->name = 'easy-catalog.json';
 
-        $this->createDir($fileName);
-        file_put_contents($fileName, json_encode($data->json));
-        $attachment->set('size', \filesize($fileName));
+        $file = $this->getServiceFactory()->create('File')->createFileViaContents($input, json_encode($data->json));
 
-        $this->getEntityManager()->saveEntity($attachment);
-
-        $this->runImport($importFeed->id, $attachment->id);
+        $this->runImport($importFeed->id, $file['id']);
     }
 
     protected function createDir(string $fileName): void
