@@ -55,26 +55,33 @@ class ImportFeed extends Base
 
     public function createImportFileFolder(ImportFeedEntity $importFeed): Folder
     {
-        try {
-            $input = new \stdClass();
-            $input->id = 'a_import_feed';
-            $input->name = 'Import Feeds';
-            $input->hidden = true;
-            $this->getServiceFactory()->create('Folder')->createEntity($input);
-        } catch (\Throwable $e) {
+        /** @var \Atro\Repositories\Folder $folderRepo */
+        $folderRepo = $this->getEntityManager()->getRepository('Folder');
+
+        $root = $folderRepo->where(['code' => 'import_feeds'])->findOne();
+        if (empty($root)) {
+            $root = $folderRepo->get();
+            $root->set([
+                'name'   => 'Import Feeds',
+                'hidden' => true,
+                'code'   => 'import_feeds'
+            ]);
+            $this->getEntityManager()->saveEntity($root);
         }
 
-        try {
-            $input = new \stdClass();
-            $input->id = 'a_' . $importFeed->get('id');
-            $input->name = $importFeed->get('name');
-            $input->hidden = true;
-            $input->parentIds = ['a_import_feed'];
-            $this->getServiceFactory()->create('Folder')->createEntity($input);
-        } catch (\Throwable $e) {
+        $folder = $folderRepo->where(['code' => $importFeed->get('id')])->findOne();
+        if (empty($folder)) {
+            $folder = $folderRepo->get();
+            $folder->set([
+                'name'      => $importFeed->get('name'),
+                'hidden'    => true,
+                'parentIds' => [$root->get('id')],
+                'code'      => $importFeed->get('id')
+            ]);
+            $this->getEntityManager()->saveEntity($folder);
         }
 
-        return $this->getEntityManager()->getRepository('Folder')->get($input->id);
+        return $folder;
     }
 
     public function parseFileColumns(\stdClass $payload): array

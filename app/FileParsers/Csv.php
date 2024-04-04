@@ -111,6 +111,7 @@ class Csv extends Injectable implements FileParserInterface
         $tmpFilePath = tempnam(sys_get_temp_dir(), 'csv_');
 
         $fp = fopen($tmpFilePath, 'w');
+        fputcsv($fp, array_keys($data[0]), $delimiter, $enclosure);
         foreach ($data as $fields) {
             fputcsv($fp, $fields, $delimiter, $enclosure);
         }
