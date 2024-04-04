@@ -13,15 +13,15 @@ declare(strict_types=1);
 
 namespace Import\FileParsers;
 
-use Espo\Entities\Attachment;
+use Atro\Entities\File;
 
 interface FileParserInterface
 {
     public function setData(array $data): void;
 
-    public function getFileColumns(Attachment $attachment): array;
+    public function getFileColumns(File $attachment): array;
 
-    public function getFileData(Attachment $attachment, int $offset = 0, ?int $limit = null): array;
+    public function getFileData(File $attachment, int $offset = 0, ?int $limit = null): array;
 
     public function createFile(string $fileName, array $data): void;
 }

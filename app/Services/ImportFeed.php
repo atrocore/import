@@ -15,6 +15,7 @@ namespace Import\Services;
 
 use Atro\Core\EventManager\Event;
 use Atro\DTO\QueueItemDTO;
+use Atro\Entities\File;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
@@ -57,7 +58,7 @@ class ImportFeed extends Base
             throw new BadRequest($this->exception("noSuchFile"));
         }
 
-        $attachment = $this->getEntityManager()->getEntity('Attachment', $payload->attachmentId);
+        $attachment = $this->getEntityManager()->getEntity('File', $payload->attachmentId);
         if (empty($attachment)) {
             throw new BadRequest($this->exception("noSuchFile"));
         }
@@ -94,7 +95,7 @@ class ImportFeed extends Base
             throw new BadRequest($this->exception("noSuchFile"));
         }
 
-        $attachment = $this->getEntityManager()->getEntity('Attachment', $payload->attachmentId);
+        $attachment = $this->getEntityManager()->getEntity('File', $payload->attachmentId);
         if (empty($attachment)) {
             throw new BadRequest($this->exception("noSuchFile"));
         }
@@ -108,7 +109,8 @@ class ImportFeed extends Base
             throw new BadRequest($this->exception("noSuchFile"));
         }
 
-        $attachment = $this->getEntityManager()->getEntity('Attachment', $payload->attachmentId);
+        /** @var File $attachment */
+        $attachment = $this->getEntityManager()->getEntity('File', $payload->attachmentId);
         if (empty($attachment)) {
             throw new BadRequest($this->exception("noSuchFile"));
         }
@@ -137,12 +139,13 @@ class ImportFeed extends Base
 
     public function validateXMLFile(string $attachmentId): void
     {
-        $attachment = $this->getEntityManager()->getEntity('Attachment', $attachmentId);
+        /** @var File $attachment */
+        $attachment = $this->getEntityManager()->getEntity('File', $attachmentId);
         if (empty($attachment)) {
             throw new BadRequest($this->exception("noSuchFile"));
         }
 
-        $contents = file_get_contents($attachment->getFilePath());
+        $contents = $attachment->getContents();
 
         $data = \simplexml_load_string($contents);
         if (empty($data)) {
@@ -152,12 +155,13 @@ class ImportFeed extends Base
 
     public function validateJSONFile(string $attachmentId): void
     {
-        $attachment = $this->getEntityManager()->getEntity('Attachment', $attachmentId);
+        /** @var File $attachment */
+        $attachment = $this->getEntityManager()->getEntity('File', $attachmentId);
         if (empty($attachment)) {
             throw new BadRequest($this->exception("noSuchFile"));
         }
 
-        $contents = file_get_contents($attachment->getFilePath());
+        $contents = $attachment->getContents();
 
         if (is_string($contents)) {
             $data = @json_decode($contents, true);
@@ -170,7 +174,8 @@ class ImportFeed extends Base
 
     public function validateCSVFile(string $attachmentId): void
     {
-        $attachment = $this->getEntityManager()->getEntity('Attachment', $attachmentId);
+        /** @var File $attachment */
+        $attachment = $this->getEntityManager()->getEntity('File', $attachmentId);
         if (empty($attachment)) {
             throw new BadRequest($this->exception("noSuchFile"));
         }
@@ -188,11 +193,11 @@ class ImportFeed extends Base
             "text/tab-separated-values"
         ];
 
-        if (!in_array($attachment->get('type'), $csvTypes)) {
+        if (!in_array($attachment->get('mimeType'), $csvTypes)) {
             throw new BadRequest($this->getInjection('language')->translate('csvExpected', 'exceptions', 'ImportFeed'));
         }
 
-        $contents = file_get_contents($attachment->getFilePath());
+        $contents = $attachment->getContents();
         if (is_string($contents) && !preg_match('//u', $contents)) {
             throw new BadRequest($this->getInjection('language')->translate('utf8Expected', 'exceptions', 'ImportFeed'));
         }
@@ -200,7 +205,8 @@ class ImportFeed extends Base
 
     public function validateExcelFile(string $attachmentId): void
     {
-        $attachment = $this->getEntityManager()->getEntity('Attachment', $attachmentId);
+        /** @var File $attachment */
+        $attachment = $this->getEntityManager()->getEntity('File', $attachmentId);
         if (empty($attachment)) {
             throw new BadRequest($this->exception("noSuchFile"));
         }
@@ -210,7 +216,7 @@ class ImportFeed extends Base
             "application/vnd.ms-excel",
         ];
 
-        if (!in_array($attachment->get('type'), $excelTypes)) {
+        if (!in_array($attachment->get('mimeType'), $excelTypes)) {
             throw new BadRequest($this->getInjection('language')->translate('excelExpected', 'exceptions', 'ImportFeed'));
         }
     }

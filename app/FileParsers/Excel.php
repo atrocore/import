@@ -15,13 +15,13 @@ namespace Import\FileParsers;
 
 use Atro\Core\EventManager\Event;
 use Espo\Core\Exceptions\BadRequest;
-use Espo\Entities\Attachment;
+use Atro\Entities\File;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 
 class Excel extends Csv
 {
-    public function getFileColumns(Attachment $attachment): array
+    public function getFileColumns(File $attachment): array
     {
         $data = $this->data['fileData'] ?? null;
 
@@ -32,7 +32,7 @@ class Excel extends Csv
         return parent::getFileColumns($attachment);
     }
 
-    public function getFileSheetsNames(Attachment $attachment)
+    public function getFileSheetsNames(File $attachment)
     {
         $path = $this->getLocalFilePath($attachment);
         $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReaderForFile($path);
@@ -47,7 +47,7 @@ class Excel extends Csv
         return $data;
     }
 
-    public function getFileData(Attachment $attachment, int $offset = 0, ?int $limit = null): array
+    public function getFileData(File $attachment, int $offset = 0, ?int $limit = null): array
     {
         $sheet = $this->data['sheet'] ?? 0;
 

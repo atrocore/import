@@ -16,7 +16,7 @@ namespace Import\FileParsers;
 use Atro\Core\EventManager\Event;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Injectable;
-use Espo\Entities\Attachment;
+use Atro\Entities\File;
 
 class Csv extends Injectable implements FileParserInterface
 {
@@ -36,7 +36,7 @@ class Csv extends Injectable implements FileParserInterface
         $this->data = $data;
     }
 
-    public function getFileColumns(Attachment $attachment): array
+    public function getFileColumns(File $attachment): array
     {
         $isFileHeaderRow = $this->data['isFileHeaderRow'] ?? true;
         $data = $this->data['fileData'] ?? null;
@@ -68,7 +68,7 @@ class Csv extends Injectable implements FileParserInterface
         return $result;
     }
 
-    public function getFileData(Attachment $attachment, int $offset = 0, ?int $limit = null): array
+    public function getFileData(File $attachment, int $offset = 0, ?int $limit = null): array
     {
         $delimiter = $this->data['delimiter'] ?? ';';
         $enclosure = $this->data['enclosure'] ?? '"';
@@ -120,7 +120,7 @@ class Csv extends Injectable implements FileParserInterface
         $this->convertToUTF8($fileName);
     }
 
-    public function convertAttachmentToUTF8(Attachment $attachment): void
+    public function convertAttachmentToUTF8(File $attachment): void
     {
         $this->convertToUTF8($this->getLocalFilePath($attachment));
     }
@@ -162,11 +162,9 @@ class Csv extends Injectable implements FileParserInterface
         return (string)($k + 1);
     }
 
-    public function getLocalFilePath(Attachment $attachment): string
+    public function getLocalFilePath(File $attachment): string
     {
-        $path = $this->getInjection('fileStorageManager')->getLocalFilePath($attachment);
-
-        return (empty($path)) ? '' : (string)$path;
+        return $attachment->getFilePath();
     }
 
     /**

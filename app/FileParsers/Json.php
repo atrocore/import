@@ -15,7 +15,7 @@ namespace Import\FileParsers;
 
 use Atro\Core\EventManager\Event;
 use Espo\Core\Injectable;
-use Espo\Entities\Attachment;
+use Atro\Entities\File;
 
 class Json extends Injectable implements FileParserInterface
 {
@@ -33,7 +33,7 @@ class Json extends Injectable implements FileParserInterface
         $this->data = $data;
     }
 
-    public function getFileColumns(Attachment $attachment): array
+    public function getFileColumns(File $attachment): array
     {
         $this->excludedNodes = $this->data['excludedNodes'] ?? [];
         $this->keptStringNodes = $this->data['keptStringNodes'] ?? [];
@@ -46,7 +46,7 @@ class Json extends Injectable implements FileParserInterface
         return array_keys($data[0]);
     }
 
-    public function getFileData(Attachment $attachment, int $offset = 0, ?int $limit = null): array
+    public function getFileData(File $attachment, int $offset = 0, ?int $limit = null): array
     {
         $contents = file_get_contents($attachment->getFilePath());
 

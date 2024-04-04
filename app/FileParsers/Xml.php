@@ -14,11 +14,11 @@ declare(strict_types=1);
 namespace Import\FileParsers;
 
 use Atro\Core\EventManager\Event;
-use Espo\Entities\Attachment;
+use Atro\Entities\File;
 
 class Xml extends Json
 {
-    public function getFileData(Attachment $attachment, int $offset = 0, ?int $limit = null): array
+    public function getFileData(File $attachment, int $offset = 0, ?int $limit = null): array
     {
         $contents = file_get_contents($attachment->getFilePath());
 
