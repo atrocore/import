@@ -16,6 +16,8 @@ namespace Import\Services;
 use Atro\Core\EventManager\Event;
 use Atro\DTO\QueueItemDTO;
 use Atro\Entities\File;
+use Atro\Entities\Folder;
+use Doctrine\DBAL\ParameterType;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
@@ -49,6 +51,30 @@ class ImportFeed extends Base
             $entity->set('lastStatus', $latestJob->get('state'));
             $entity->set('lastTime', $latestJob->get('start'));
         }
+    }
+
+    public function createImportFileFolder(ImportFeedEntity $importFeed): Folder
+    {
+        try {
+            $input = new \stdClass();
+            $input->id = 'a_import_feed';
+            $input->name = 'Import Feeds';
+            $input->hidden = true;
+            $this->getServiceFactory()->create('Folder')->createEntity($input);
+        } catch (\Throwable $e) {
+        }
+
+        try {
+            $input = new \stdClass();
+            $input->id = 'a_' . $importFeed->get('id');
+            $input->name = $importFeed->get('name');
+            $input->hidden = true;
+            $input->parentIds = ['a_import_feed'];
+            $this->getServiceFactory()->create('Folder')->createEntity($input);
+        } catch (\Throwable $e) {
+        }
+
+        return $this->getEntityManager()->getRepository('Folder')->get($input->id);
     }
 
     public function parseFileColumns(\stdClass $payload): array

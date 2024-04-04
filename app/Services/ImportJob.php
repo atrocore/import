@@ -16,12 +16,9 @@ namespace Import\Services;
 use Atro\Services\File;
 use Doctrine\DBAL\ParameterType;
 use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\FilePathBuilder;
 use Atro\Core\Templates\Services\Base;
-use Espo\Core\Utils\Util;
 use Espo\ORM\EntityCollection;
 use Import\FileParsers\FileParserInterface;
-use PhpOffice\PhpSpreadsheet\IOFactory as PhpSpreadsheet;
 use Import\Entities\ImportFeed as ImportFeedEntity;
 
 class ImportJob extends Base
@@ -181,6 +178,8 @@ class ImportJob extends Base
         $name = 'errors-' . implode('.', $nameParts);
 
         $inputData = new \stdClass();
+        $inputData->hidden = true;
+        $inputData->folderId = $this->getImportFeedService()->createImportFileFolder($feed)->get('id');
         switch ($format) {
             case 'CSV':
                 $inputData->name = "{$name}.csv";
@@ -222,6 +221,8 @@ class ImportJob extends Base
 
         $inputData = new \stdClass();
         $inputData->name = str_replace(' ', '_', $importJob->get('name')) . '.csv';
+        $inputData->hidden = true;
+        $inputData->folderId = $this->getImportFeedService()->createImportFileFolder($importJob->get('importFeed'))->get('id');
         $fileArr = $this->getFileService()->createFileViaContents($inputData, $this->createFileParser('CSV')->createFileContent($rows));
 
         // set converted file attachment to import job
@@ -256,9 +257,14 @@ class ImportJob extends Base
         return $this->getServiceFactory()->create('ImportTypeSimple');
     }
 
+    protected function getImportFeedService(): ImportFeed
+    {
+        return $this->getServiceFactory()->create('ImportFeed');
+    }
+
     protected function getFileService(): File
     {
-        return $this->getInjection('serviceFactory')->create('File');
+        return $this->getServiceFactory()->create('File');
     }
 
     public function prepareCounts(EntityCollection $collection): void

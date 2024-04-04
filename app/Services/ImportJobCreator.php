@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Import\Services;
 
-use Espo\Core\FilePathBuilder;
 use Espo\Services\QueueManagerBase;
 
 class ImportJobCreator extends QueueManagerBase
@@ -74,6 +73,8 @@ class ImportJobCreator extends QueueManagerBase
 
             $input = new \stdClass();
             $input->name = date('Y-m-d H:i:s') . ' (' . $partNumber . ')' . '.' . $fileExt;
+            $input->hidden = true;
+            $input->folderId = $importFeedService->createImportFileFolder($importFeed)->get('id');
 
             $jobAttachment = $fileService->createFileViaContents($input, $fileParser->createFileContent($part));
 
