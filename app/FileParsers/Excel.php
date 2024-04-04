@@ -97,8 +97,10 @@ class Excel extends Csv
             ->getArgument('data');
     }
 
-    public function createFile(string $fileName, array $data): void
+    public function createFileContent(array $data): string
     {
+        $tmpFilePath = tempnam(sys_get_temp_dir(), 'excel_');
+
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
 
@@ -112,10 +114,14 @@ class Excel extends Csv
             $row++;
         }
 
-        $this->createDir($fileName);
-
         $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
-        $writer->save($fileName);
+        $writer->save($tmpFilePath);
+
+        $fileContent = file_get_contents($tmpFilePath);
+
+        unlink($tmpFilePath);
+
+        return $fileContent;
     }
 
     public function convertToUTF8(string $filename): void

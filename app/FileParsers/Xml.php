@@ -35,7 +35,8 @@ class Xml extends Json
             ->getArgument('data');
     }
 
-    public function createFile(string $fileName, array $data): void
+    public function createFileContent(array $data): string
     {
+        return '';
     }
 }

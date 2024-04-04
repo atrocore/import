@@ -63,10 +63,9 @@ class Json extends Injectable implements FileParserInterface
             ->getArgument('data');
     }
 
-    public function createFile(string $fileName, array $data): void
+    public function createFileContent(array $data): string
     {
-        $this->createDir($fileName);
-        file_put_contents($fileName, json_encode($data, JSON_PRETTY_PRINT));
+        return json_encode($data, JSON_PRETTY_PRINT);
     }
 
     protected function createDir(string $fileName): void

@@ -23,5 +23,5 @@ interface FileParserInterface
 
     public function getFileData(File $attachment, int $offset = 0, ?int $limit = null): array;
 
-    public function createFile(string $fileName, array $data): void;
+    public function createFileContent(array $data): string;
 }

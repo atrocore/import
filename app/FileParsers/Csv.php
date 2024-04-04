@@ -103,21 +103,27 @@ class Csv extends Injectable implements FileParserInterface
             ->getArgument('data');
     }
 
-    public function createFile(string $fileName, array $data): void
+    public function createFileContent(array $data): string
     {
         $delimiter = $this->data['delimiter'] ?? ';';
         $enclosure = $this->data['enclosure'] ?? '"';
 
-        $this->createDir($fileName);
+        $tmpFilePath = tempnam(sys_get_temp_dir(), 'csv_');
 
-        $fp = fopen($fileName, 'w');
+        $fp = fopen($tmpFilePath, 'w');
         foreach ($data as $fields) {
             fputcsv($fp, $fields, $delimiter, $enclosure);
         }
         fclose($fp);
 
         // convert to utf-8
-        $this->convertToUTF8($fileName);
+        $this->convertToUTF8($tmpFilePath);
+
+        $fileContent = file_get_contents($tmpFilePath);
+
+        unlink($tmpFilePath);
+
+        return $fileContent;
     }
 
     public function convertAttachmentToUTF8(File $attachment): void

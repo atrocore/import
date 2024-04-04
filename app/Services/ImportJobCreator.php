@@ -39,8 +39,8 @@ class ImportJobCreator extends QueueManagerBase
         /** @var ImportFeed $importFeedService */
         $importFeedService = $serviceFactory->create('ImportFeed');
 
-        /** @var \Espo\Core\FilePathBuilder $filePathBuilder */
-        $filePathBuilder = $this->getContainer()->get('filePathBuilder');
+        /** @var \Atro\Services\File $fileService */
+        $fileService = $serviceFactory->create('File');
 
         $isFileHeaderRow = !empty($importFeed->getFeedField('isFileHeaderRow'));
 
@@ -71,30 +71,20 @@ class ImportJobCreator extends QueueManagerBase
         while (!empty($fileData = $fileParser->getFileData($attachment, $offset, $maxPerJob))) {
             $part = array_merge($header, $fileData);
             $fileExt = $importFeed->getFeedField('format') === 'CSV' ? 'csv' : 'xlsx';
-            $jobAttachment = $this->getEntityManager()->getRepository('File')->get();
-            $jobAttachment->set('name', date('Y-m-d H:i:s') . ' (' . $partNumber . ')' . '.' . $fileExt);
-            $jobAttachment->set('role', 'Attachment');
-            $jobAttachment->set('relatedType', 'ImportFeed');
-            $jobAttachment->set('relatedId', $importFeed->get('id'));
-            $jobAttachment->set('storage', 'UploadDir');
-            $jobAttachment->set('storageFilePath', $filePathBuilder->createPath(FilePathBuilder::UPLOAD));
 
-            $fileName = $this->getEntityManager()->getRepository('Attachment')->getFilePath($jobAttachment);
-            $fileParser->createFile($fileName, $part);
+            $input = new \stdClass();
+            $input->name = date('Y-m-d H:i:s') . ' (' . $partNumber . ')' . '.' . $fileExt;
 
-            $jobAttachment->set('md5', \md5_file($fileName));
-            $jobAttachment->set('type', \mime_content_type($fileName));
-            $jobAttachment->set('size', \filesize($fileName));
-            $this->getEntityManager()->saveEntity($jobAttachment);
+            $jobAttachment = $fileService->createFileViaContents($input, $fileParser->createFileContent($part));
 
-            $jobData = $service->prepareJobData($importFeed, $jobAttachment->get('id'));
+            $jobData = $service->prepareJobData($importFeed, $jobAttachment['id']);
             if (!empty($priority)) {
                 $jobData['data']['priority'] = $priority;
             }
             $jobData['sheet'] = 0;
             $jobData['rowNumberPart'] = $rowNumberPart;
             $jobData['data']['importJobId'] = $importFeedService
-                ->createImportJob($importFeed, $importFeed->getFeedField('entity'), $attachment->get('id'), $payload, $jobAttachment->get('id'))
+                ->createImportJob($importFeed, $importFeed->getFeedField('entity'), $attachment->get('id'), $payload, $jobAttachment['id'])
                 ->get('id');
 
             if (!empty($data['jobData']) && is_array($data['jobData'])) {
