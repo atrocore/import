@@ -37,7 +37,7 @@ Espo.define('import:views/import-configurator-item/fields/create-if-not-exist', 
 
                 let foreignEntity = ImportBy.prototype.getForeignEntity.call(this);
 
-                if (['Asset', 'Attachment'].includes(foreignEntity)) {
+                if (['File'].includes(foreignEntity)) {
                     $input.attr('disabled', 'disabled');
                     this.model.set('createIfNotExist', (this.model.get('importBy') || []).includes('url'));
                 } else {

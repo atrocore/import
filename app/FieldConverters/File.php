@@ -15,11 +15,11 @@ namespace Import\FieldConverters;
 
 use Espo\ORM\Entity;
 
-class Asset extends Link
+class File extends Link
 {
     public function convert(\stdClass $inputRow, array $config, array $row): void
     {
-        $config['relEntityName'] = 'Asset';
+        $config['relEntityName'] = 'File';
 
         if (isset($config['attributeId'])) {
             $config['importBy'] = ['url'];
@@ -30,16 +30,6 @@ class Asset extends Link
         }
 
         parent::convert($inputRow, $config, $row);
-
-        $key = $config['name'] . 'Id';
-
-        if (property_exists($inputRow, $key)) {
-            $asset = $this->getEntityManager()->getEntity('Asset', $inputRow->$key);
-            unset($inputRow->$key);
-            if (!empty($asset) && !empty($asset->get('fileId'))) {
-                $inputRow->$key = $asset->get('fileId');
-            }
-        }
     }
 
     public function prepareValue(\stdClass $restore, Entity $entity, array $item): void
@@ -69,11 +59,14 @@ class Asset extends Link
         $entity->set('defaultId', null);
         $entity->set('defaultName', null);
         $entity->set('defaultPathsData', null);
+
         if (!empty($entity->get('default'))) {
+            /** @var \Atro\Entities\File $file */
+            $file = $this->getEntityManager()->getEntity('File', $entity->get('defaultId'));
+
             $entity->set('defaultId', $entity->get('default'));
-            $relEntity = $this->getEntityManager()->getEntity('Attachment', $entity->get('defaultId'));
-            $entity->set('defaultName', empty($relEntity) ? $entity->get('defaultId') : $relEntity->get('name'));
-            $entity->set('defaultPathsData', $this->getEntityManager()->getRepository('Attachment')->getAttachmentPathsData($relEntity));
+            $entity->set('defaultName', empty($file) ? $entity->get('defaultId') : $file->get('name'));
+            $entity->set('defaultPathsData', $file->getPathsData());
         }
     }
 }
