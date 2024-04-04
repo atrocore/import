@@ -19,7 +19,6 @@ use Atro\Entities\File;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
-use Espo\Core\FilePathBuilder;
 use Atro\Core\Templates\Services\Base;
 use Espo\Core\Utils\Util;
 use Espo\ORM\Entity;
@@ -684,6 +683,7 @@ class ImportFeed extends Base
 
         $input = new \stdClass();
         $input->name = 'easy-catalog.json';
+        $input->hidden = true;
 
         $file = $this->getServiceFactory()->create('File')->createFileViaContents($input, json_encode($data->json));
 
