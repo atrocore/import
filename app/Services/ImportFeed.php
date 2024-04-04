@@ -75,10 +75,10 @@ class ImportFeed extends Base
             $folder->set([
                 'name'      => $importFeed->get('name'),
                 'hidden'    => true,
-                'parentIds' => [$root->get('id')],
                 'code'      => $importFeed->get('id')
             ]);
             $this->getEntityManager()->saveEntity($folder);
+            $folderRepo->relate($folder, 'parents', $root);
         }
 
         return $folder;
