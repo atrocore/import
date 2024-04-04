@@ -17,7 +17,6 @@ use Atro\Core\EventManager\Event;
 use Atro\DTO\QueueItemDTO;
 use Atro\Entities\File;
 use Atro\Entities\Folder;
-use Doctrine\DBAL\ParameterType;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
