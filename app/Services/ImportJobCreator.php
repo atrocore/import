@@ -25,7 +25,7 @@ class ImportJobCreator extends QueueManagerBase
             return false;
         }
 
-        $attachment = $this->getEntityManager()->getEntity('Attachment', $data['attachmentId']);
+        $attachment = $this->getEntityManager()->getEntity('File', $data['attachmentId']);
         if (empty($attachment)) {
             return false;
         }
@@ -71,7 +71,7 @@ class ImportJobCreator extends QueueManagerBase
         while (!empty($fileData = $fileParser->getFileData($attachment, $offset, $maxPerJob))) {
             $part = array_merge($header, $fileData);
             $fileExt = $importFeed->getFeedField('format') === 'CSV' ? 'csv' : 'xlsx';
-            $jobAttachment = $this->getEntityManager()->getRepository('Attachment')->get();
+            $jobAttachment = $this->getEntityManager()->getRepository('File')->get();
             $jobAttachment->set('name', date('Y-m-d H:i:s') . ' (' . $partNumber . ')' . '.' . $fileExt);
             $jobAttachment->set('role', 'Attachment');
             $jobAttachment->set('relatedType', 'ImportFeed');
