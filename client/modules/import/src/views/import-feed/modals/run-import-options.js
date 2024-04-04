@@ -49,7 +49,8 @@ Espo.define('import:views/import-feed/modals/run-import-options', 'views/modal',
                 inlineEditDisabled: true
             }, view => {
                 this.listenTo(this, 'close', () => {
-                    view.deleteAttachment();
+                    this.model.set('importFileId', null);
+                    this.model.set('importFileName', null);
                 });
             });
         },
