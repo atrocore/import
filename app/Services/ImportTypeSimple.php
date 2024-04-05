@@ -517,14 +517,17 @@ class ImportTypeSimple extends QueueManagerBase
          * Prepare import rows
          */
         $prepared = [];
+        $originalRows = $fileData;
         while (count($fileData) > 0) {
             $row = array_shift($fileData);
-            $event = $this->getEventManager()->dispatch(new Event(['row' => $row, 'jobData' => $data, 'skip' => false]), 'prepareImportRow');
+            $event = $this->getEventManager()->dispatch(new Event(['originalRows' => $originalRows, 'row' => $row, 'jobData' => $data, 'skip' => false]), 'prepareImportRow');
             if (!empty($event->getArgument('skip'))) {
                 continue 1;
             }
             $prepared[] = $event->getArgument('row');
         }
+
+        $this->getEventManager()->dispatch(new Event(['jobData' => $data]), 'afterPrepareImportRows');
 
         /**
          * Validation
@@ -747,7 +750,8 @@ class ImportTypeSimple extends QueueManagerBase
 
                 $pavData['data']['importJobId'] = $pavJob->get('id');
 
-                $dto = new QueueItemDTO($importService->getName($importFeed), 'ImportTypeSimple', $pavData);
+                $event = $this->getEventManager()->dispatch(new Event(['importFeed' => $importFeed, 'pavData' => $pavData]), 'prepareImportPavJob');
+                $dto = new QueueItemDTO($importService->getName($importFeed), 'ImportTypeSimple', $event->getArgument('pavData'));
                 $dto->setParentId($qmJob->get('id'));
 
                 $importService->push($dto);
