@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Import\Services;
 
 use Doctrine\DBAL\ParameterType;
-use Espo\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\BadRequest;
 use Espo\Core\FilePathBuilder;
 use Atro\Core\Templates\Services\Base;
 use Espo\Core\Utils\Util;
