@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Import\Services;
 
-use Espo\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Templates\Services\Base;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;

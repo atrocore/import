@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Import\Listeners;
 
-use Espo\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\BadRequest;
 use Atro\Listeners\AbstractListener;
 use Atro\Core\EventManager\Event;
 

@@ -843,6 +843,10 @@ class ImportTypeSimple extends QueueManagerBase
             }
         }
 
+        if ($type === "varchar" && !empty($this->getMetadata()->get(['entityDefs', $item['entity'], 'fields', $fieldName, 'unitField']))) {
+            $type = 'valueWithUnit';
+        }
+
         return $type;
     }
 }
