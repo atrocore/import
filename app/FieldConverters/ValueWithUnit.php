@@ -40,18 +40,22 @@ class ValueWithUnit extends Varchar
             $parts = explode(" ", $value);
             $unitPart = $parts[count($parts) - 1];
             array_splice($parts, count($parts) - 1, 1);
-            $floatPart = trim(join($parts, " "));
-
+            $floatPart = trim(join(" ", $parts));
 
             $mainField = $this->getMetadata()->get(['entityDefs', $config['entity'], 'fields', $name, 'mainField']);
-            $mainUnitField = $mainField . 'Unit';
             $mainFieldType = $this->getMetadata()->get(['entityDefs', $config['entity'], 'fields', $mainField, 'type']);
+            $measureId = $this->getMetadata()->get(['entityDefs', $config['entity'], 'fields', $mainField, 'measureId']);
 
             $this->getService('ImportConfiguratorItem')->getFieldConverter($mainFieldType)
-                ->convert($inputRow, array_merge($config, ['column' => [$mainField]]), array_merge($row, [$mainField => $floatPart]));
+                ->convert($inputRow, array_merge($config, ['name' => $mainField, 'column' => [$mainField]]), array_merge($row, [$mainField => $floatPart]));
 
-            $this->getService('ImportConfiguratorItem')->getFieldConverter('link')
-                ->convert($inputRow, array_merge($config, ['column' => [$mainUnitField], 'importBy' => ['id']]), array_merge($row, [$mainUnitField => $unitPart]));
+            // validate unit
+            $unit = $this->getEntityManager()->getRepository('Unit')->where(['id' => $unitPart, 'measureId' => $measureId])->findOne();
+            if (empty($unit)) {
+                throw new BadRequest("Invalid unit value for measure $measureId");
+            }
+
+            $inputRow->{$mainField . 'UnitId'} = $unit->get('id');
         }
     }
 }
