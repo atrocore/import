@@ -181,6 +181,10 @@ class ImportTypeSimple extends QueueManagerBase
                         if (isset($item['column']) && is_array($item['column'])) {
                             foreach ($item['column'] as $column) {
                                 if (array_key_exists($column, $row) && $row[$column] == $skip) {
+                                    if ($item['entity'] === 'ProductAttributeValue') {
+                                        throw new NotModified();
+                                    }
+
                                     continue 2;
                                 }
                             }
