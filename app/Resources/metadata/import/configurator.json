@@ -3,6 +3,9 @@
     "varchar": {
       "converter": "\\Import\\FieldConverters\\Varchar"
     },
+    "valueWithUnit": {
+      "converter": "\\Import\\FieldConverters\\ValueWithUnit"
+    },
     "text": {
       "converter": "\\Import\\FieldConverters\\Text"
     },

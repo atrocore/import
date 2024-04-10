@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Import\FileParsers;
 
 use Atro\Core\EventManager\Event;
-use Espo\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\BadRequest;
 use Espo\Core\Injectable;
 use Atro\Entities\File;
 
