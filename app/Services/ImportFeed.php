@@ -15,10 +15,11 @@ namespace Import\Services;
 
 use Atro\Core\EventManager\Event;
 use Atro\DTO\QueueItemDTO;
-use Atro\Core\Exceptions\BadRequest;
-use Atro\Core\Exceptions\Forbidden;
-use Atro\Core\Exceptions\NotFound;
-use Espo\Core\FilePathBuilder;
+use Atro\Entities\File;
+use Atro\Entities\Folder;
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\NotFound;
 use Atro\Core\Templates\Services\Base;
 use Espo\Core\Utils\Util;
 use Espo\ORM\Entity;
@@ -51,13 +52,44 @@ class ImportFeed extends Base
         }
     }
 
+    public function createImportFileFolder(ImportFeedEntity $importFeed): Folder
+    {
+        /** @var \Atro\Repositories\Folder $folderRepo */
+        $folderRepo = $this->getEntityManager()->getRepository('Folder');
+
+        $root = $folderRepo->where(['code' => 'import_feeds'])->findOne();
+        if (empty($root)) {
+            $root = $folderRepo->get();
+            $root->set([
+                'name'   => 'Import Feeds',
+                'hidden' => true,
+                'code'   => 'import_feeds'
+            ]);
+            $this->getEntityManager()->saveEntity($root);
+        }
+
+        $folder = $folderRepo->where(['code' => $importFeed->get('id')])->findOne();
+        if (empty($folder)) {
+            $folder = $folderRepo->get();
+            $folder->set([
+                'name'      => $importFeed->get('name'),
+                'hidden'    => true,
+                'code'      => $importFeed->get('id')
+            ]);
+            $this->getEntityManager()->saveEntity($folder);
+            $folderRepo->relate($folder, 'parents', $root);
+        }
+
+        return $folder;
+    }
+
     public function parseFileColumns(\stdClass $payload): array
     {
         if (!property_exists($payload, 'attachmentId')) {
             throw new BadRequest($this->exception("noSuchFile"));
         }
 
-        $attachment = $this->getEntityManager()->getEntity('Attachment', $payload->attachmentId);
+        $attachment = $this->getEntityManager()->getEntity('File', $payload->attachmentId);
         if (empty($attachment)) {
             throw new BadRequest($this->exception("noSuchFile"));
         }
@@ -94,7 +126,7 @@ class ImportFeed extends Base
             throw new BadRequest($this->exception("noSuchFile"));
         }
 
-        $attachment = $this->getEntityManager()->getEntity('Attachment', $payload->attachmentId);
+        $attachment = $this->getEntityManager()->getEntity('File', $payload->attachmentId);
         if (empty($attachment)) {
             throw new BadRequest($this->exception("noSuchFile"));
         }
@@ -108,7 +140,8 @@ class ImportFeed extends Base
             throw new BadRequest($this->exception("noSuchFile"));
         }
 
-        $attachment = $this->getEntityManager()->getEntity('Attachment', $payload->attachmentId);
+        /** @var File $attachment */
+        $attachment = $this->getEntityManager()->getEntity('File', $payload->attachmentId);
         if (empty($attachment)) {
             throw new BadRequest($this->exception("noSuchFile"));
         }
@@ -137,12 +170,13 @@ class ImportFeed extends Base
 
     public function validateXMLFile(string $attachmentId): void
     {
-        $attachment = $this->getEntityManager()->getEntity('Attachment', $attachmentId);
+        /** @var File $attachment */
+        $attachment = $this->getEntityManager()->getEntity('File', $attachmentId);
         if (empty($attachment)) {
             throw new BadRequest($this->exception("noSuchFile"));
         }
 
-        $contents = file_get_contents($attachment->getFilePath());
+        $contents = $attachment->getContents();
 
         $data = \simplexml_load_string($contents);
         if (empty($data)) {
@@ -152,12 +186,13 @@ class ImportFeed extends Base
 
     public function validateJSONFile(string $attachmentId): void
     {
-        $attachment = $this->getEntityManager()->getEntity('Attachment', $attachmentId);
+        /** @var File $attachment */
+        $attachment = $this->getEntityManager()->getEntity('File', $attachmentId);
         if (empty($attachment)) {
             throw new BadRequest($this->exception("noSuchFile"));
         }
 
-        $contents = file_get_contents($attachment->getFilePath());
+        $contents = $attachment->getContents();
 
         if (is_string($contents)) {
             $data = @json_decode($contents, true);
@@ -170,7 +205,8 @@ class ImportFeed extends Base
 
     public function validateCSVFile(string $attachmentId): void
     {
-        $attachment = $this->getEntityManager()->getEntity('Attachment', $attachmentId);
+        /** @var File $attachment */
+        $attachment = $this->getEntityManager()->getEntity('File', $attachmentId);
         if (empty($attachment)) {
             throw new BadRequest($this->exception("noSuchFile"));
         }
@@ -188,11 +224,11 @@ class ImportFeed extends Base
             "text/tab-separated-values"
         ];
 
-        if (!in_array($attachment->get('type'), $csvTypes)) {
+        if (!in_array($attachment->get('mimeType'), $csvTypes)) {
             throw new BadRequest($this->getInjection('language')->translate('csvExpected', 'exceptions', 'ImportFeed'));
         }
 
-        $contents = file_get_contents($attachment->getFilePath());
+        $contents = $attachment->getContents();
         if (is_string($contents) && !preg_match('//u', $contents)) {
             throw new BadRequest($this->getInjection('language')->translate('utf8Expected', 'exceptions', 'ImportFeed'));
         }
@@ -200,7 +236,8 @@ class ImportFeed extends Base
 
     public function validateExcelFile(string $attachmentId): void
     {
-        $attachment = $this->getEntityManager()->getEntity('Attachment', $attachmentId);
+        /** @var File $attachment */
+        $attachment = $this->getEntityManager()->getEntity('File', $attachmentId);
         if (empty($attachment)) {
             throw new BadRequest($this->exception("noSuchFile"));
         }
@@ -210,7 +247,7 @@ class ImportFeed extends Base
             "application/vnd.ms-excel",
         ];
 
-        if (!in_array($attachment->get('type'), $excelTypes)) {
+        if (!in_array($attachment->get('mimeType'), $excelTypes)) {
             throw new BadRequest($this->getInjection('language')->translate('excelExpected', 'exceptions', 'ImportFeed'));
         }
     }
@@ -676,24 +713,13 @@ class ImportFeed extends Base
             throw new NotFound();
         }
 
-        $repository = $this->getEntityManager()->getRepository('Attachment');
-        $attachment = $repository->get();
-        $attachment->set('name', 'easy-catalog.json');
-        $attachment->set('type', 'application/json');
-        $attachment->set('role', 'Import');
-        $attachment->set('relatedType', 'ImportFeed');
-        $attachment->set('relatedId', $importFeed->get('id'));
-        $attachment->set('storage', 'UploadDir');
-        $attachment->set('storageFilePath', $this->getInjection('filePathBuilder')->createPath(FilePathBuilder::UPLOAD));
-        $fileName = $repository->getFilePath($attachment);
+        $input = new \stdClass();
+        $input->name = 'easy-catalog.json';
+        $input->hidden = true;
 
-        $this->createDir($fileName);
-        file_put_contents($fileName, json_encode($data->json));
-        $attachment->set('size', \filesize($fileName));
+        $file = $this->getServiceFactory()->create('File')->createFileViaContents($input, json_encode($data->json));
 
-        $this->getEntityManager()->saveEntity($attachment);
-
-        $this->runImport($importFeed->id, $attachment->id);
+        $this->runImport($importFeed->id, $file['id']);
     }
 
     protected function createDir(string $fileName): void

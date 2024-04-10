@@ -14,14 +14,14 @@ declare(strict_types=1);
 namespace Import\FileParsers;
 
 use Atro\Core\EventManager\Event;
-use Atro\Core\Exceptions\BadRequest;
-use Espo\Entities\Attachment;
+use Espo\Core\Exceptions\BadRequest;
+use Atro\Entities\File;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 
 class Excel extends Csv
 {
-    public function getFileColumns(Attachment $attachment): array
+    public function getFileColumns(File $attachment): array
     {
         $data = $this->data['fileData'] ?? null;
 
@@ -32,7 +32,7 @@ class Excel extends Csv
         return parent::getFileColumns($attachment);
     }
 
-    public function getFileSheetsNames(Attachment $attachment)
+    public function getFileSheetsNames(File $attachment)
     {
         $path = $this->getLocalFilePath($attachment);
         $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReaderForFile($path);
@@ -47,7 +47,7 @@ class Excel extends Csv
         return $data;
     }
 
-    public function getFileData(Attachment $attachment, int $offset = 0, ?int $limit = null): array
+    public function getFileData(File $attachment, int $offset = 0, ?int $limit = null): array
     {
         $sheet = $this->data['sheet'] ?? 0;
 
@@ -97,8 +97,10 @@ class Excel extends Csv
             ->getArgument('data');
     }
 
-    public function createFile(string $fileName, array $data): void
+    public function createFileContent(array $data): string
     {
+        $tmpFilePath = tempnam(sys_get_temp_dir(), 'excel_');
+
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
 
@@ -112,10 +114,14 @@ class Excel extends Csv
             $row++;
         }
 
-        $this->createDir($fileName);
-
         $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
-        $writer->save($fileName);
+        $writer->save($tmpFilePath);
+
+        $fileContent = file_get_contents($tmpFilePath);
+
+        unlink($tmpFilePath);
+
+        return $fileContent;
     }
 
     public function convertToUTF8(string $filename): void

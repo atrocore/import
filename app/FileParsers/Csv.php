@@ -16,7 +16,7 @@ namespace Import\FileParsers;
 use Atro\Core\EventManager\Event;
 use Atro\Core\Exceptions\BadRequest;
 use Espo\Core\Injectable;
-use Espo\Entities\Attachment;
+use Atro\Entities\File;
 
 class Csv extends Injectable implements FileParserInterface
 {
@@ -36,7 +36,7 @@ class Csv extends Injectable implements FileParserInterface
         $this->data = $data;
     }
 
-    public function getFileColumns(Attachment $attachment): array
+    public function getFileColumns(File $attachment): array
     {
         $isFileHeaderRow = $this->data['isFileHeaderRow'] ?? true;
         $data = $this->data['fileData'] ?? null;
@@ -68,7 +68,7 @@ class Csv extends Injectable implements FileParserInterface
         return $result;
     }
 
-    public function getFileData(Attachment $attachment, int $offset = 0, ?int $limit = null): array
+    public function getFileData(File $attachment, int $offset = 0, ?int $limit = null): array
     {
         $delimiter = $this->data['delimiter'] ?? ';';
         $enclosure = $this->data['enclosure'] ?? '"';
@@ -103,24 +103,31 @@ class Csv extends Injectable implements FileParserInterface
             ->getArgument('data');
     }
 
-    public function createFile(string $fileName, array $data): void
+    public function createFileContent(array $data): string
     {
         $delimiter = $this->data['delimiter'] ?? ';';
         $enclosure = $this->data['enclosure'] ?? '"';
 
-        $this->createDir($fileName);
+        $tmpFilePath = tempnam(sys_get_temp_dir(), 'csv_');
 
-        $fp = fopen($fileName, 'w');
+        $fp = fopen($tmpFilePath, 'w');
+        fputcsv($fp, array_keys($data[0]), $delimiter, $enclosure);
         foreach ($data as $fields) {
             fputcsv($fp, $fields, $delimiter, $enclosure);
         }
         fclose($fp);
 
         // convert to utf-8
-        $this->convertToUTF8($fileName);
+        $this->convertToUTF8($tmpFilePath);
+
+        $fileContent = file_get_contents($tmpFilePath);
+
+        unlink($tmpFilePath);
+
+        return $fileContent;
     }
 
-    public function convertAttachmentToUTF8(Attachment $attachment): void
+    public function convertAttachmentToUTF8(File $attachment): void
     {
         $this->convertToUTF8($this->getLocalFilePath($attachment));
     }
@@ -162,11 +169,9 @@ class Csv extends Injectable implements FileParserInterface
         return (string)($k + 1);
     }
 
-    public function getLocalFilePath(Attachment $attachment): string
+    public function getLocalFilePath(File $attachment): string
     {
-        $path = $this->getInjection('fileStorageManager')->getLocalFilePath($attachment);
-
-        return (empty($path)) ? '' : (string)$path;
+        return $attachment->getFilePath();
     }
 
     /**

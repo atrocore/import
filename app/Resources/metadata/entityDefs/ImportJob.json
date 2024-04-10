@@ -109,17 +109,14 @@
     },
     "attachment": {
       "type": "file",
-      "noAsset": true,
       "readOnly": true
     },
     "uploadedFile": {
       "type": "file",
-      "noAsset": true,
       "readOnly": true
     },
     "convertedFile": {
       "type": "file",
-      "noAsset": true,
       "view": "import:views/import-job/fields/generated-file",
       "readOnly": true
     },
@@ -130,7 +127,6 @@
     },
     "errorsAttachment": {
       "type": "file",
-      "noAsset": true,
       "view": "import:views/import-job/fields/generated-file",
       "readOnly": true,
       "tooltip": true
@@ -201,21 +197,6 @@
     "queueItem": {
       "type": "belongsTo",
       "entity": "QueueItem"
-    },
-    "attachment": {
-      "type": "belongsTo",
-      "entity": "Attachment",
-      "skipOrmDefs": true
-    },
-    "convertedFile": {
-      "type": "belongsTo",
-      "entity": "Attachment",
-      "skipOrmDefs": true
-    },
-    "errorsAttachment": {
-      "type": "belongsTo",
-      "entity": "Attachment",
-      "skipOrmDefs": true
     },
     "importJobLogs": {
       "type": "hasMany",

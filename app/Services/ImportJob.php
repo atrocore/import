@@ -13,14 +13,12 @@ declare(strict_types=1);
 
 namespace Import\Services;
 
+use Atro\Services\File;
 use Doctrine\DBAL\ParameterType;
-use Atro\Core\Exceptions\BadRequest;
-use Espo\Core\FilePathBuilder;
+use Espo\Core\Exceptions\BadRequest;
 use Atro\Core\Templates\Services\Base;
-use Espo\Core\Utils\Util;
-use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
-use PhpOffice\PhpSpreadsheet\IOFactory as PhpSpreadsheet;
+use Import\FileParsers\FileParserInterface;
 use Import\Entities\ImportFeed as ImportFeedEntity;
 
 class ImportJob extends Base
@@ -152,12 +150,11 @@ class ImportJob extends Base
             $errorsRowsNumbers[$rowNumber] = $log->get('message');
         }
 
-        if (empty($attachmentId) || empty($attachment = $this->getEntityManager()->getEntity('Attachment', $attachmentId))) {
+        if (empty($attachmentId) || empty($attachment = $this->getEntityManager()->getEntity('File', $attachmentId))) {
             throw new BadRequest("Attachment '$attachmentId' does not exist.");
         }
 
-        /** @var \Import\FileParsers\FileParserInterface $fileParser */
-        $fileParser = $this->getInjection('container')->get(ImportFeedEntity::getFileParserClass($format));
+        $fileParser = $this->createFileParser($format);
         $fileParser->setData([
             'delimiter' => $delimiter,
             'enclosure' => $enclosure
@@ -175,56 +172,31 @@ class ImportJob extends Base
             }
         }
 
-        /** @var \Espo\Services\Attachment $attachmentService */
-        $attachmentService = $this->getInjection('serviceFactory')->create('Attachment');
-
         // prepare attachment name
         $nameParts = explode('.', $importJob->get('attachment')->get('name'));
         array_pop($nameParts);
         $name = 'errors-' . implode('.', $nameParts);
 
         $inputData = new \stdClass();
-        $inputData->name = "{$name}.csv";
-        $inputData->contents = \Import\Core\Utils\Util::generateCsvContents($errorsRows, $feed->getDelimiter(), $feed->getEnclosure());
-        $inputData->type = 'text/csv';
-        $inputData->relatedType = 'ImportJob';
-        $inputData->field = 'errorsAttachment';
-        $inputData->role = 'Attachment';
-
-        $attachment = $attachmentService->createEntity($inputData);
-
-        // create xlsx
-        if ($format === 'Excel') {
-            $filePath = $this->getEntityManager()->getRepository('Attachment')->getFilePath($attachment);
-            $cacheDir = 'data/cache';
-
-            Util::createDir($cacheDir);
-            $cacheFile = "{$cacheDir}/{$name}.xlsx";
-
-            $reader = PhpSpreadsheet::createReaderForFile($filePath);
-            $reader->setReadDataOnly(true);
-            $reader->setDelimiter($feed->getDelimiter());
-            $reader->setEnclosure($feed->getEnclosure());
-            $writer = PhpSpreadsheet::createWriter($reader->load($filePath), "Xlsx");
-            $writer->save($cacheFile);
-
-            $inputData->name = "{$name}.xlsx";
-            $inputData->type = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
-            $inputData->contents = file_get_contents($cacheFile);
-
-            // remove csv
-            $this->getEntityManager()->removeEntity($attachment);
-
-            // remove cache file
-            unlink($cacheFile);
-
-            $attachment = $attachmentService->createEntity($inputData);
+        $inputData->hidden = true;
+        $inputData->folderId = $this->getImportFeedService()->createImportFileFolder($feed)->get('id');
+        switch ($format) {
+            case 'CSV':
+                $inputData->name = "{$name}.csv";
+                break;
+            case 'Excel':
+                $inputData->name = "{$name}.xlsx";
+                break;
+            default:
+                throw new \Error('Unknown file format');
         }
 
-        $importJob->set('errorsAttachmentId', $attachment->get('id'));
+        $fileArr = $this->getFileService()->createFileViaContents($inputData, $fileParser->createFileContent($errorsRows));
+
+        $importJob->set('errorsAttachmentId', $fileArr['id']);
         $this->getEntityManager()->saveEntity($importJob);
 
-        return $attachment->toArray();
+        return $fileArr;
     }
 
     public function generateConvertedFile(string $jobId): array
@@ -242,60 +214,22 @@ class ImportJob extends Base
         // prepare job data
         $jobData = json_decode(json_encode($qmJob->get('data')), true);
 
-        /** @var \Import\Services\ImportTypeSimple $importService */
-        $importService = $this->getServiceFactory()->create('ImportTypeSimple');
-
-        /** @var \Espo\Repositories\Attachment $attachmentRepository */
-        $attachmentRepository = $this->getEntityManager()->getRepository('Attachment');
-
-        // prepare converted file attachment
-        $convertedFileAttachment = $attachmentRepository->get();
-        $convertedFileAttachment->set([
-            'name'            => str_replace(' ', '_', $importJob->get('name')) . '.csv',
-            'role'            => 'Attachment',
-            'field'           => 'convertedFile',
-            'relatedType'     => 'ImportJob',
-            'relatedId'       => $importJob->get('id'),
-            'storage'         => 'UploadDir',
-            'type'            => 'text/csv',
-            'storageFilePath' => $this->getInjection('container')->get('filePathBuilder')->createPath(FilePathBuilder::UPLOAD),
-        ]);
-
-        // create dir for converted file
-        $convertedFileDirPath = trim($this->getConfig()->get('filesPath', 'upload/files'), '/') . '/' . $convertedFileAttachment->get('storageFilePath');
-        while (!file_exists($convertedFileDirPath)) {
-            mkdir($convertedFileDirPath, 0777, true);
-            usleep(100);
+        $rows = [];
+        while (!empty($inputData = $this->getImportTypeSimpleService()->getInputData($jobData))) {
+            $rows = array_merge($rows, $inputData);
         }
 
-        // create converted file
-        $convertedFile = fopen($convertedFileDirPath . '/' . $convertedFileAttachment->get('name'), 'w');
-
-        while (!empty($inputData = $importService->getInputData($jobData))) {
-            while (!empty($inputData)) {
-                $row = array_shift($inputData);
-
-                // push header to converted file
-                if (empty($convertedFileHeaderPushed)) {
-                    fputcsv($convertedFile, array_keys($row));
-                    $convertedFileHeaderPushed = true;
-                }
-
-                // push row to converted file
-                fputcsv($convertedFile, array_values($row));
-            }
-        }
-
-        // save converted file attachment
-        fclose($convertedFile);
-        $convertedFileAttachment->set('size', \filesize($attachmentRepository->getFilePath($convertedFileAttachment)));
-        $this->getEntityManager()->saveEntity($convertedFileAttachment);
+        $inputData = new \stdClass();
+        $inputData->name = str_replace(' ', '_', $importJob->get('name')) . '.csv';
+        $inputData->hidden = true;
+        $inputData->folderId = $this->getImportFeedService()->createImportFileFolder($importJob->get('importFeed'))->get('id');
+        $fileArr = $this->getFileService()->createFileViaContents($inputData, $this->createFileParser('CSV')->createFileContent($rows));
 
         // set converted file attachment to import job
-        $importJob->set('convertedFileId', $convertedFileAttachment->get('id'));
+        $importJob->set('convertedFileId', $fileArr['id']);
         $this->getEntityManager()->saveEntity($importJob);
 
-        return $convertedFileAttachment->toArray();
+        return $fileArr;
     }
 
     public function getImportJobsViaScope(string $scope): array
@@ -311,6 +245,26 @@ class ImportJob extends Base
         parent::prepareCollectionForOutput($collection, $selectParams);
 
         $this->prepareCounts($collection);
+    }
+
+    protected function createFileParser(string $format): FileParserInterface
+    {
+        return $this->getInjection('container')->get(ImportFeedEntity::getFileParserClass($format));
+    }
+
+    protected function getImportTypeSimpleService(): ImportTypeSimple
+    {
+        return $this->getServiceFactory()->create('ImportTypeSimple');
+    }
+
+    protected function getImportFeedService(): ImportFeed
+    {
+        return $this->getServiceFactory()->create('ImportFeed');
+    }
+
+    protected function getFileService(): File
+    {
+        return $this->getServiceFactory()->create('File');
     }
 
     public function prepareCounts(EntityCollection $collection): void

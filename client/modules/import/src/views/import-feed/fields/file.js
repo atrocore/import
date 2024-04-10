@@ -30,19 +30,19 @@ Espo.define('import:views/import-feed/fields/file', 'views/fields/file',
 
         prepareAccept() {
             if (this.model.get('format') === 'CSV') {
-                this.acceptAttribue = ['.csv'];
+                this.accept = '.csv';
             }
 
             if (this.model.get('format') === 'Excel') {
-                this.acceptAttribue = ['.xls', '.xlsx'];
+                this.accept = '.xls,.xlsx';
             }
 
             if (this.model.get('format') === 'JSON') {
-                this.acceptAttribue = ['.json'];
+                this.accept = '.json';
             }
 
             if (this.model.get('format') === 'XML') {
-                this.acceptAttribue = ['.xml'];
+                this.accept = '.xml';
             }
         },
 

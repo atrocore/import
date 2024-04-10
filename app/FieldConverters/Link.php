@@ -239,7 +239,7 @@ class Link extends Varchar
 
     protected function prepareWhere(array $config, string $entityName, array &$where): void
     {
-        if ($entityName === 'Asset' && in_array('url', $config['importBy'])) {
+        if ($entityName === 'File' && in_array('url', $config['importBy'])) {
             $where = [];
         }
     }

@@ -2,12 +2,12 @@
   "name": "atrocore/import-feeds",
   "description": "",
   "require": {
-    "atrocore/core": "~1.9.1",
+    "atrocore/core": "~1.10.0",
     "ext-simplexml": "*",
     "phpoffice/phpspreadsheet": "~1.16.0"
   },
   "conflict": {
-    "atrocore/pim": "<1.11.26  || >=1.13.0"
+    "atrocore/pim": "<1.11.26  || >=1.14.0"
   },
   "autoload": {
     "psr-4": {
