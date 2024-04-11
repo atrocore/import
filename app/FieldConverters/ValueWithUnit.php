@@ -59,7 +59,7 @@ class ValueWithUnit extends Varchar
                 // validate unit
                 $unit = $this->getEntityManager()->getRepository('Unit')->where(['name' => $unitPart, 'measureId' => $measureId])->findOne();
                 if (empty($unit)) {
-                    throw new BadRequest("Invalid unit value for measure $measureId");
+                    throw new BadRequest("Invalid unit value ($unitPart) for measure $measureId");
                 }
                 $inputRow->{$mainField . 'UnitId'} = $unit->get('id');
             } else {
