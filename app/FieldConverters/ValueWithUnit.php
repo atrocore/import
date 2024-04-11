@@ -37,10 +37,16 @@ class ValueWithUnit extends Varchar
         if ($value !== null) {
             $name = $config['name'];
 
-            $parts = explode(" ", $value);
-            $unitPart = $parts[count($parts) - 1];
-            array_splice($parts, count($parts) - 1, 1);
-            $floatPart = trim(join(" ", $parts));
+            $parts = explode(" ", (string)$value);
+            if (count($parts) >= 2) {
+                $unitPart = $parts[count($parts) - 1];
+                array_splice($parts, count($parts) - 1, 1);
+                $floatPart = trim(join(" ", $parts));
+            } else {
+                $unitPart = "";
+                $floatPart = $value;
+            }
+
 
             $mainField = $this->getMetadata()->get(['entityDefs', $config['entity'], 'fields', $name, 'mainField']);
             $mainFieldType = $this->getMetadata()->get(['entityDefs', $config['entity'], 'fields', $mainField, 'type']);
@@ -49,13 +55,16 @@ class ValueWithUnit extends Varchar
             $this->getService('ImportConfiguratorItem')->getFieldConverter($mainFieldType)
                 ->convert($inputRow, array_merge($config, ['name' => $mainField, 'column' => [$mainField]]), array_merge($row, [$mainField => $floatPart]));
 
-            // validate unit
-            $unit = $this->getEntityManager()->getRepository('Unit')->where(['id' => $unitPart, 'measureId' => $measureId])->findOne();
-            if (empty($unit)) {
-                throw new BadRequest("Invalid unit value for measure $measureId");
+            if (!empty($unitPart)) {
+                // validate unit
+                $unit = $this->getEntityManager()->getRepository('Unit')->where(['name' => $unitPart, 'measureId' => $measureId])->findOne();
+                if (empty($unit)) {
+                    throw new BadRequest("Invalid unit value for measure $measureId");
+                }
+                $inputRow->{$mainField . 'UnitId'} = $unit->get('id');
+            } else {
+                $inputRow->{$mainField . 'UnitId'} = null;
             }
-
-            $inputRow->{$mainField . 'UnitId'} = $unit->get('id');
         }
     }
 }
