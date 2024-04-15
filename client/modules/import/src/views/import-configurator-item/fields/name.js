@@ -24,6 +24,9 @@ Espo.define('import:views/import-configurator-item/fields/name', 'views/fields/e
                 this.params.options.push(field);
                 this.translatedOptions[field] = this.translate(field, 'fields', entity);
             });
+            this.params.options.sort((a, b) => {
+                return this.translatedOptions[a].localeCompare(this.translatedOptions[b])
+            });
 
             this.listenTo(this.model, `change:${this.name}`, function () {
                 this.model.set('createIfNotExist', false);
