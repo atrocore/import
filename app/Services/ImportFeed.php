@@ -663,10 +663,12 @@ class ImportFeed extends Base
             $attachment->channelId = $configuratorItem->channelId;
             $attachment->sortOrder = $configuratorItem->sortOrder;
             $attachment->importBy = $configuratorItem->exportBy;
-            if (property_exists($configuratorItem, 'attributeValue') && !empty($configuratorItem->attributeValue)) {
+            if (!empty($configuratorItem->attributeValue)) {
                 $value = $configuratorItem->attributeValue;
                 if (!in_array($value, ['value', 'valueFrom', 'valueTo', 'valueUnit'])) {
                     $value = 'value';
+                } elseif ($value === 'valueUnit') {
+                    $value = 'valueUnitId';
                 }
                 $attachment->attributeValue = $value;
             } elseif ($configuratorItem->language != 'main') {
