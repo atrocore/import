@@ -193,7 +193,7 @@ Espo.define('import:views/import-configurator-item/fields/default-container', 'v
                     viewName = fieldDefs['view'];
                 }
             }
-console.log('create view', this.params, this.defs, viewName)
+
             this.createView('default', viewName, {
                 el: `${this.options.el} > .field[data-name="default"]`,
                 model: this.model,
