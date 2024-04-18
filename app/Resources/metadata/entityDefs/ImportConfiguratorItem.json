@@ -113,6 +113,10 @@
       "type": "varchar",
       "notStorable": true
     },
+    "defaultUnitId": {
+      "type": "varchar",
+      "notStorable": true
+    },
     "defaultName": {
       "type": "varchar",
       "notStorable": true

@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace Import\FieldConverters;
 
+use Espo\ORM\Entity;
+
 class Varchar extends Text
 {
 }

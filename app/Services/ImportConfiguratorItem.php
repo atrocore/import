@@ -169,6 +169,9 @@ class ImportConfiguratorItem extends Base
 
     protected function prepareDefaultField(string $type, Entity $entity): void
     {
+        if ($type === 'varchar' && !empty($this->getMetadata()->get(['entityDefs', $entity->get('entity'), 'fields', $entity->get('name'), 'unitField']))) {
+            $type = 'valueWithUnit';
+        }
         $converter = $this->getFieldConverter(ImportConfiguratorItemRepository::prepareConverterType($type, $entity->get('attributeValue')));
         if (!empty($converter)) {
             $converter->prepareForOutputConfiguratorDefaultField($entity);
