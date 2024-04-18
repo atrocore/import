@@ -181,6 +181,11 @@ Espo.define('import:views/import-configurator-item/fields/default-container', 'v
                 viewName = 'views/admin/field-manager/fields/link/extensible-enum-default';
             } else if (type === 'extensibleMultiEnum') {
                 viewName = 'views/admin/field-manager/fields/linkMultiple/extensible-multi-enum-default';
+            } else if (type === 'varchar') {
+                const fieldDefs = this.getMetadata().get(`entityDefs.${this.model.get('entity')}.fields.${this.model.get('name')}`)
+                if (fieldDefs['unitField']) {
+                    viewName = fieldDefs['view'];
+                }
             }
 
             this.createView('default', viewName, {
