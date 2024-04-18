@@ -36,12 +36,6 @@
     "linkMultiple": {
       "converter": "\\Import\\FieldConverters\\LinkMultiple"
     },
-    "image": {
-      "converter": "\\Import\\FieldConverters\\Asset"
-    },
-    "asset": {
-      "converter": "\\Import\\FieldConverters\\Asset"
-    },
     "bool": {
       "converter": "\\Import\\FieldConverters\\Boolean"
     },
@@ -64,7 +58,7 @@
       "converter": "\\Import\\FieldConverters\\DateTime"
     },
     "file": {
-      "converter": "\\Import\\FieldConverters\\Asset"
+      "converter": "\\Import\\FieldConverters\\File"
     }
   }
 }

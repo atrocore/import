@@ -18,7 +18,6 @@ use Atro\Core\EventManager\Event;
 use Atro\DTO\QueueItemDTO;
 use Espo\Core\EventManager\Manager;
 use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Utils\Metadata;
 use Espo\ORM\Entity;
 use Espo\Services\QueueManagerBase;
@@ -36,10 +35,10 @@ class ImportTypeSimple extends QueueManagerBase
 
     public function prepareJobData(ImportFeed $feed, string $attachmentId): array
     {
-        if (empty($attachmentId) || empty($file = $this->getEntityById('Attachment', $attachmentId))) {
+        if (empty($attachmentId) || empty($file = $this->getEntityById('File', $attachmentId))) {
             $attachmentId = $feed->get('fileId');
             if (!empty($attachmentId)) {
-                $file = $this->getEntityById('Attachment', $attachmentId);
+                $file = $this->getEntityById('File', $attachmentId);
             }
         }
 
@@ -466,8 +465,8 @@ class ImportTypeSimple extends QueueManagerBase
             return [];
         }
 
-        /** @var \Espo\Entities\Attachment $attachment */
-        $attachment = $this->getEntityById('Attachment', $data['attachmentId']);
+        /** @var \Atro\Entities\File $attachment */
+        $attachment = $this->getEntityById('File', $data['attachmentId']);
 
         $fileParser = $this->getFileParser($data['fileFormat']);
         $fileParser->setData($data);

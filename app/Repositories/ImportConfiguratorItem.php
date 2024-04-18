@@ -119,7 +119,9 @@ class ImportConfiguratorItem extends Base
                 ->order('sortOrder', 'DESC')
                 ->findOne();
 
-            $entity->set('sortOrder', empty($last) ? 0 : (int)$last->get('sortOrder') + 1);
+            if (is_null($entity->get('sortOrder'))) {
+                $entity->set('sortOrder', empty($last) ? 0 : (int)$last->get('sortOrder') + 1);
+            }
         }
 
         parent::beforeSave($entity, $options);
