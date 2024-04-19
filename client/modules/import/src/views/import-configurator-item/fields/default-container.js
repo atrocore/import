@@ -107,9 +107,8 @@ Espo.define('import:views/import-configurator-item/fields/default-container', 'v
                 this.params.measureId = this.getMetadata().get(`entityDefs.${this.model.get('entity')}.fields.${this.model.get('name')}.measureId`);
                 this.model.defs.fields["default"]['measureId'] = this.params.measureId;
             } else if (type === 'varchar') {
-                const fieldDefs = this.getMetadata().get(`entityDefs.${this.model.get('entity')}.fields.${this.model.get('name')}`)
-                if (fieldDefs['unitField']) {
-                    this.params.measureId = fieldDefs.measureId;
+                if (this.getMetadata().get(`entityDefs.${this.model.get('entity')}.fields.${this.model.get('name')}.unitField`)) {
+                    this.params.measureId = this.getMetadata().get(`entityDefs.${this.model.get('entity')}.fields.${this.model.get('name')}.measureId`);
                     this.model.defs.fields["default"]['measureId'] = this.params.measureId;
                 }
             }
