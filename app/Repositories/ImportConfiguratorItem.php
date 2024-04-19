@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Import\Repositories;
 
 use Doctrine\DBAL\ParameterType;
-use Espo\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Templates\Repositories\Base;
 use Espo\ORM\Entity;
 
@@ -91,6 +91,9 @@ class ImportConfiguratorItem extends Base
 
         if ($entity->get('type') === 'Field') {
             $type = $this->getMetadata()->get(['entityDefs', $importFeed->getFeedField('entity'), 'fields', $entity->get('name'), 'type'], 'varchar');
+            if ($type === 'varchar' && !empty($this->getMetadata()->get(['entityDefs', $importFeed->getFeedField('entity'), 'fields', $entity->get('name'), 'unitField']))) {
+                $type = 'valueWithUnit';
+            }
         } elseif ($entity->get('type') === 'Attribute') {
             if (empty($attribute = $entity->get('attribute'))) {
                 throw new BadRequest('No such Attribute.');

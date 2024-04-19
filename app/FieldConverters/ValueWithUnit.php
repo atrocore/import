@@ -14,12 +14,19 @@ declare(strict_types=1);
 namespace Import\FieldConverters;
 
 use Atro\Core\Exceptions\BadRequest;
+use Espo\Core\Utils\Json;
+use Espo\ORM\Entity;
 
 class ValueWithUnit extends Varchar
 {
     public function convert(\stdClass $inputRow, array $config, array $row): void
     {
-        $default = empty($config['default']) ? null : $config['default'];
+        $default = @json_decode($config['default'], true);
+        if (!empty($default)) {
+            $default = "{$default['value']} {$default['unitId']}";
+        } else {
+            $default = null;
+        }
 
         if (isset($config['column'][0]) && isset($row[$config['column'][0]])) {
             $value = $row[$config['column'][0]];
@@ -37,10 +44,16 @@ class ValueWithUnit extends Varchar
         if ($value !== null) {
             $name = $config['name'];
 
-            $parts = explode(" ", $value);
-            $unitPart = $parts[count($parts) - 1];
-            array_splice($parts, count($parts) - 1, 1);
-            $floatPart = trim(join(" ", $parts));
+            $parts = explode(" ", (string)$value);
+            if (count($parts) >= 2) {
+                $unitPart = $parts[count($parts) - 1];
+                array_splice($parts, count($parts) - 1, 1);
+                $floatPart = trim(join(" ", $parts));
+            } else {
+                $unitPart = "";
+                $floatPart = $value;
+            }
+
 
             $mainField = $this->getMetadata()->get(['entityDefs', $config['entity'], 'fields', $name, 'mainField']);
             $mainFieldType = $this->getMetadata()->get(['entityDefs', $config['entity'], 'fields', $mainField, 'type']);
@@ -49,13 +62,43 @@ class ValueWithUnit extends Varchar
             $this->getService('ImportConfiguratorItem')->getFieldConverter($mainFieldType)
                 ->convert($inputRow, array_merge($config, ['name' => $mainField, 'column' => [$mainField]]), array_merge($row, [$mainField => $floatPart]));
 
-            // validate unit
-            $unit = $this->getEntityManager()->getRepository('Unit')->where(['id' => $unitPart, 'measureId' => $measureId])->findOne();
-            if (empty($unit)) {
-                throw new BadRequest("Invalid unit value for measure $measureId");
+            if (!empty($unitPart)) {
+                // validate unit
+                $unit = $this->getEntityManager()->getRepository('Unit')->where(['OR' => ['name' => $unitPart, 'id' => $unitPart], 'measureId' => $measureId])->findOne();
+                if (empty($unit)) {
+                    throw new BadRequest("Invalid unit value ($unitPart) for measure $measureId");
+                }
+                $inputRow->{$mainField . 'UnitId'} = $unit->get('id');
+            } else {
+                $inputRow->{$mainField . 'UnitId'} = null;
             }
+        }
+    }
 
-            $inputRow->{$mainField . 'UnitId'} = $unit->get('id');
+    public function prepareForSaveConfiguratorDefaultField(Entity $entity): void
+    {
+        if (strpos((string)$entity->getFetched('default'), '{') === false) {
+            $data = [];
+        } else {
+            $data = @json_decode($entity->getFetched('default'), true);
+        }
+
+        if ($entity->has('defaultUnitId')) {
+            $data['unitId'] = $entity->get('defaultUnitId');
+        }
+        if ($entity->has('default') && strpos((string)$entity->get('default'), '{') === false) {
+            $data['value'] = $entity->get('default');
+        }
+        $entity->set('default', Json::encode($data));
+    }
+
+    public
+    function prepareForOutputConfiguratorDefaultField(Entity $entity): void
+    {
+        $data = Json::decode($entity->get('default'), true);
+        if (!empty($data)) {
+            $entity->set('default', $data['value']);
+            $entity->set('defaultUnitId', $data['unitId']);
         }
     }
 }

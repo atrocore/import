@@ -106,6 +106,12 @@ Espo.define('import:views/import-configurator-item/fields/default-container', 'v
             } else if (type === 'measure') {
                 this.params.measureId = this.getMetadata().get(`entityDefs.${this.model.get('entity')}.fields.${this.model.get('name')}.measureId`);
                 this.model.defs.fields["default"]['measureId'] = this.params.measureId;
+            } else if (type === 'varchar') {
+                const fieldDefs = this.getMetadata().get(`entityDefs.${this.model.get('entity')}.fields.${this.model.get('name')}`)
+                if (fieldDefs['unitField']) {
+                    this.params.measureId = fieldDefs.measureId;
+                    this.model.defs.fields["default"]['measureId'] = this.params.measureId;
+                }
             }
 
             if (this.model.get('type') === 'Attribute' && this.model.get('attributeId')) {
@@ -181,6 +187,11 @@ Espo.define('import:views/import-configurator-item/fields/default-container', 'v
                 viewName = 'views/admin/field-manager/fields/link/extensible-enum-default';
             } else if (type === 'extensibleMultiEnum') {
                 viewName = 'views/admin/field-manager/fields/linkMultiple/extensible-multi-enum-default';
+            } else if (type === 'varchar') {
+                const fieldDefs = this.getMetadata().get(`entityDefs.${this.model.get('entity')}.fields.${this.model.get('name')}`)
+                if (fieldDefs['unitField']) {
+                    viewName = fieldDefs['view'];
+                }
             }
 
             this.createView('default', viewName, {
