@@ -44,6 +44,7 @@ class Boolean extends Varchar
         }
 
         if ($value === null) {
+            $inputRow->{$config['name']} = null;
             return;
         }
 
