@@ -104,6 +104,9 @@ class Import implements TypeInterface
         }
 
         $payload['executeNow'] = empty($action->get('inBackground'));
+        if (property_exists($input, 'actionSetLinkerId')) {
+            $payload['actionSetLinkerId'] = $input->actionSetLinkerId;
+        }
 
         $service->runImport($importFeed->get('id'), '', empty($payload) ? null : json_decode(json_encode($payload)));
 
