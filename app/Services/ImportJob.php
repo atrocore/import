@@ -68,7 +68,7 @@ class ImportJob extends Base
         }
 
         // delete forever
-        $daysToDeleteForever = $days + 14;
+        $daysToDeleteForever = $days + $this->getConfig()->get('importJobsDeletedMaxDays', 14);
         $maxDate = (new \DateTime())->modify("-$daysToDeleteForever days");
         $qb = $this->getEntityManager()->getConnection()->createQueryBuilder();
         $qb
