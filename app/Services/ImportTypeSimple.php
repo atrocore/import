@@ -290,21 +290,34 @@ class ImportTypeSimple extends QueueManagerBase
         $this->createImportPavJobs($data);
 
         if (self::isDeleteAction($data['action'])) {
-            $toDeleteRecords = $this
-                ->getEntityManager()
-                ->getRepository($scope)
-                ->select(['id'])
-                ->where(['id!=' => $ids])
-                ->find();
+            $limit = 60000;
+            $offset = 0;
 
-            if (!empty($toDeleteRecords) && count($toDeleteRecords) > 0) {
-                foreach ($toDeleteRecords as $record) {
-                    try {
-                        if ($entityService->deleteEntity($record->get('id'))) {
-                            $this->log($scope, $importJob->get('id'), 'delete', null, $record->get('id'));
+            while (true) {
+                $idsToDelete = array_slice($ids, $offset, $limit);
+                $offset += $limit;
+                if (empty($idsToDelete)) {
+                    break;
+                }
+
+                $toDeleteRecords = $this
+                    ->getEntityManager()
+                    ->getRepository($scope)
+                    ->select(['id'])
+                    ->where(['id!=' => $idsToDelete])
+                    ->find();
+
+                if (!empty($toDeleteRecords) && count($toDeleteRecords) > 0) {
+                    foreach ($toDeleteRecords as $record) {
+                        if (!in_array($record->get('id'), $ids)) {
+                            try {
+                                if ($entityService->deleteEntity($record->get('id'))) {
+                                    $this->log($scope, $importJob->get('id'), 'delete', null, $record->get('id'));
+                                }
+                            } catch (\Throwable $e) {
+                                // ignore all
+                            }
                         }
-                    } catch (\Throwable $e) {
-                        // ignore all
                     }
                 }
             }
