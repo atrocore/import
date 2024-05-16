@@ -58,11 +58,19 @@ class Boolean extends Varchar
 
     public function prepareForSaveConfiguratorDefaultField(Entity $entity): void
     {
+        $importFeed = $entity->get('importFeed');
+        $notNull =   $this->getMetadata()->get(['entityDefs', $importFeed->getFeedField('entity'), 'fields', $entity->get('name'), 'notNull'],  true);
+        if(!$notNull && $entity->get('default') === null){
+            return;
+        }
         $entity->set('default', !empty($entity->get('default')));
     }
 
     public function prepareForOutputConfiguratorDefaultField(Entity $entity): void
     {
+        if($entity->get('default') === null){
+            return;
+        }
         $entity->set('default', !empty($entity->get('default')));
     }
 }
