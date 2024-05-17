@@ -68,14 +68,14 @@ class ImportJob extends Base
         }
 
         // delete forever
-        $daysToDeleteForever = $days + $this->getConfig()->get('importJobsDeletedMaxDays', 14);
-        $maxDate = (new \DateTime())->modify("-$daysToDeleteForever days");
+        $daysToDeleteForever = $this->getConfig()->get('importJobsDeletedMaxDays', 14);
+        $maxDate = (new \DateTime())->modify("-$daysToDeleteForever days")->format('Y-m-d H:i:s');
         $qb = $this->getEntityManager()->getConnection()->createQueryBuilder();
         $qb
             ->delete('import_job')
-            ->where('modified_at < :maxDate')
+            ->where('modified_at <= :maxDate')
             ->andWhere('deleted = :true')
-            ->setParameter('maxDate', $maxDate->format('Y-m-d H:i:s'))
+            ->setParameter('maxDate', $maxDate)
             ->setParameter('true', true, ParameterType::BOOLEAN)
             ->executeStatement();
 
@@ -84,9 +84,9 @@ class ImportJob extends Base
         $qb
             ->delete('import_job_log')
             ->where('deleted = :deleted')
-            ->andWhere('modified_at < :maxDate')
+            ->andWhere('modified_at <= :maxDate')
             ->setParameter('deleted', true, ParameterType::BOOLEAN)
-            ->setParameter('maxDate', $maxDate->format('Y-m-d H:i:s'))
+            ->setParameter('maxDate', $maxDate)
             ->executeStatement();
 
         return true;
