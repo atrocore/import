@@ -25,7 +25,7 @@ class ImportJob extends Base
 {
     protected $mandatorySelectAttributeList = ['message', 'uploadedFileId', 'uploadedFileName', 'attachmentId', 'attachmentName'];
 
-    public function deleteOld(int $days): bool
+    public function deleteOld(int $days = 14): bool
     {
         if ($days === 0) {
             return true;
