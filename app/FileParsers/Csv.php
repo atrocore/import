@@ -107,11 +107,15 @@ class Csv extends Injectable implements FileParserInterface
     {
         $delimiter = $this->data['delimiter'] ?? ';';
         $enclosure = $this->data['enclosure'] ?? '"';
+        $hasHeader = $this->data['isFileHeaderRow'] ?? false;
 
         $tmpFilePath = tempnam(sys_get_temp_dir(), 'csv_');
 
         $fp = fopen($tmpFilePath, 'w');
-        fputcsv($fp, array_keys($data[0]), $delimiter, $enclosure);
+        if ($hasHeader === false) {
+            fputcsv($fp, array_keys($data[0]), $delimiter, $enclosure);
+        }
+
         foreach ($data as $fields) {
             fputcsv($fp, $fields, $delimiter, $enclosure);
         }
