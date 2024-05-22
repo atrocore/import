@@ -159,6 +159,10 @@ Espo.define('import:views/import-configurator-item/fields/default-container', 'v
                 if (this.model.get('attributeValue') === 'valueUnitId') {
                     type = 'unit'
                 }
+
+                if(type === 'bool'){
+                    this.params.notNull = !!this.model.get('attributeData').notNull ;
+                }
             }
 
             this.prepareDefaultModel(type, options);
