@@ -22,6 +22,10 @@ class Boolean extends Varchar
     {
         $default = empty($config['default']) ? null : $config['default'];
 
+        if(in_array($default, ['TRUE', 'FALSE'])){
+            $default = $default === 'TRUE';
+        }
+
         if (isset($config['column'][0]) && isset($row[$config['column'][0]])) {
             $value = $row[$config['column'][0]];
             $this->deletePAV($value, $config);
@@ -63,7 +67,7 @@ class Boolean extends Varchar
         if(!$notNull && $entity->get('default') === null){
             return;
         }
-        $entity->set('default', !empty($entity->get('default')));
+        $entity->set('default', !empty($entity->get('default')) === true ? "TRUE" : "FALSE");
     }
 
     public function prepareForOutputConfiguratorDefaultField(Entity $entity): void
@@ -71,6 +75,12 @@ class Boolean extends Varchar
         if($entity->get('default') === null){
             return;
         }
+
+        if(in_array($entity->get('default'), ['FALSE','TRUE'])){
+            $entity->set('default', $entity->get('default') === 'TRUE');
+            return;
+        }
+
         $entity->set('default', !empty($entity->get('default')));
     }
 }
