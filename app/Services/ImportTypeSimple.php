@@ -756,6 +756,8 @@ class ImportTypeSimple extends QueueManagerBase
                     unset($pavData['sourceFields']);
                 }
 
+                $GLOBALS['log']->error('iciiiiiiiiiii '.json_encode($pavData));
+
                 $pavData['data']['configuration'] = $configurator;
 
                 $payload = new \stdClass();
