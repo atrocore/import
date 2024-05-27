@@ -25,7 +25,6 @@ use Espo\ORM\Entity;
 use Espo\Services\QueueManagerBase;
 use Espo\Core\Services\Base;
 use Import\Entities\ImportFeed;
-use Import\Entities\ImportFeed as ImportFeedEntity;
 use Import\Exceptions\DeleteProductAttributeValue;
 use Import\FieldConverters\Link;
 
@@ -33,16 +32,6 @@ class ImportTypeSimple extends QueueManagerBase
 {
     public const MEMORY_KEYS = 'loaded_exists_entities_keys';
     public const MEMORY_WHERE_KEYS = 'loaded_exists_entities_by_where_keys';
-    public const COMMON_FIELDS = [
-        'delimiter',
-        'emptyValue',
-        'nullValue',
-        'decimalMark',
-        'thousandSeparator',
-        'markForNoRelation',
-        'fieldDelimiterForRelation',
-        'skipValue'
-    ];
     private array $restore = [];
     private bool $lastIteration = false;
 
@@ -799,7 +788,7 @@ class ImportTypeSimple extends QueueManagerBase
         return $cacheFileName;
     }
 
-    public function generateDeleteFilesFromCache(ImportFeedEntity $importFeed, string $cacheFileName, string $entityName): array
+    public function generateDeleteFilesFromCache(ImportFeed $importFeed, string $cacheFileName, string $entityName): array
     {
         $result = [];
         $stmt = $this->getEntityManager()->getConnection()
