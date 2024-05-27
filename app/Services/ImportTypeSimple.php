@@ -767,7 +767,6 @@ class ImportTypeSimple extends QueueManagerBase
 
     public function prepareDeleteCache(string $parentId, array $ids): string
     {
-        $GLOBALS['log']->error(print_r($ids, true));
         $cacheFileName = 'data/cache/' . Util::generateId() . '.txt';
         $cacheFile = fopen($cacheFileName, 'w');
 
