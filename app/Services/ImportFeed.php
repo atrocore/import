@@ -72,9 +72,9 @@ class ImportFeed extends Base
         if (empty($folder)) {
             $folder = $folderRepo->get();
             $folder->set([
-                'name'      => $importFeed->get('name'),
-                'hidden'    => true,
-                'code'      => $importFeed->get('id')
+                'name'   => $importFeed->get('name'),
+                'hidden' => true,
+                'code'   => $importFeed->get('id')
             ]);
             $this->getEntityManager()->saveEntity($folder);
             $folderRepo->relate($folder, 'parents', $root);
@@ -290,9 +290,76 @@ class ImportFeed extends Base
         return true;
     }
 
+    public function pushDeleteJobs(ImportFeedEntity $importFeed, ImportJob $parent, array $jobsData, Entity $qmJob): bool
+    {
+        /** @var ImportTypeSimple $service */
+        $service = $this->getServiceFactory()->create($this->getImportTypeService($importFeed));
+        $jobStates = array_unique(array_column($jobsData, 'state'));
+        $jobIds = array_column($jobsData, 'id');
+        $entityName = $parent->get('entityName');
+        $maxPerJob = (int) $importFeed->get('maxPerJob');
+
+        // push delete jobs only if all child jobs are succeed
+        if (in_array('Success', $jobStates) && count($jobStates) === 1) {
+            $qmData = json_decode(json_encode($qmJob->get('data')), true);
+            $qmData['action'] = 'delete_found';
+            $qmData['fileFormat'] = 'CSV';
+            $qmData['isFileHeaderRow'] = true;
+            $qmData['data']['idField'] = ['id'];
+            $qmData['data']['entity'] = $entityName;
+
+            $confItem = [];
+            foreach ($qmData['data']['configuration'] ?? [] as $item) {
+                // copy common field configuration
+                if ($item['entity'] == $entityName && $item['type'] == 'Field') {
+                    foreach ($service->getCommonFieldsList() as $commonField) {
+                        $confItem[$commonField] = $item[$commonField];
+                    }
+                    break;
+                }
+            }
+
+            // do not push jobs if there are no fields in configurator for some reason
+            if (empty($confItem)) {
+                return false;
+            }
+
+            $confItem['type'] = 'Field';
+            $confItem['name'] = 'id';
+            $confItem['entity'] = $entityName;
+            $confItem['column'] = ['id'];
+            $qmData['data']['configuration'] = [$confItem];
+
+            // generate import file
+            $cacheFileName = $service->prepareDeleteCache($parent->get('id'), $jobIds);
+            $files = $service->generateDeleteFilesFromCache($importFeed, $cacheFileName, $entityName);
+
+            if (empty($files)) {
+                return false;
+            }
+
+            $payload = new \stdClass();
+            $payload->parentJobId = $parent->get('id');
+            $rowNumberPart = 0;
+            foreach ($files as $file) {
+                $qmData['attachmentId'] = $file->get('id');
+                $qmData['rowNumberPart'] = $rowNumberPart;
+                $rowNumberPart += $maxPerJob;
+                $deleteJob = $this->createImportJob($importFeed, $parent->get('entityName'), $file->get('id'), $payload);
+                $qmData['data']['importJobId'] = $deleteJob->get('id');
+                $dto = new QueueItemDTO($this->getName($importFeed), 'ImportTypeSimple', $qmData);
+                $this->push($dto);
+            }
+
+            return true;
+        }
+
+        return false;
+    }
+
     public function pushJobs(ImportFeedEntity $importFeed, string $attachmentId, ?\stdClass $payload = null, ?string $priority = null): void
     {
-        $hasParent = (int)$importFeed->get('maxPerJob') > 0;
+        $hasParent = (int)$importFeed->get('maxPerJob') > 0 || \Import\Services\ImportTypeSimple::isDeleteAction($importFeed->get('fileDataAction') ?? '');
         if (!$hasParent && $importFeed->getFeedField('entity') === 'Product') {
             $configuratorItemTypes = array_column($importFeed->get('configuratorItems')->toArray(), 'type');
             $hasParent = in_array('Attribute', $configuratorItemTypes);
@@ -667,11 +734,11 @@ class ImportFeed extends Base
                 $value = $configuratorItem->attributeValue;
                 if (!in_array($value, ['value', 'valueFrom', 'valueTo', 'valueUnit'])) {
                     $value = 'value';
-                } elseif ($value === 'valueUnit') {
+                } else if ($value === 'valueUnit') {
                     $value = 'valueUnitId';
                 }
                 $attachment->attributeValue = $value;
-            } elseif ($configuratorItem->language != 'main') {
+            } else if ($configuratorItem->language != 'main') {
                 $attachment->name .= ucfirst(Util::toCamelCase(strtolower($configuratorItem->language)));
             }
 

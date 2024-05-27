@@ -17,7 +17,6 @@ use Doctrine\DBAL\ParameterType;
 use Espo\Core\Exceptions\BadRequest;
 use Atro\Core\Templates\Repositories\Base;
 use Espo\ORM\Entity;
-use Espo\ORM\EntityCollection;
 
 class ImportJob extends Base
 {
@@ -48,7 +47,7 @@ class ImportJob extends Base
         if ($entity->isAttributeChanged('state')) {
             if (in_array($entity->get('state'), ['Running', 'Pending'])) {
                 $entity->set('start', date('Y-m-d H:i:s'));
-            } elseif ($entity->get('state') == 'Success') {
+            } else if ($entity->get('state') == 'Success') {
                 $entity->set('end', date('Y-m-d H:i:s'));
             }
         }
@@ -104,13 +103,33 @@ class ImportJob extends Base
 
         if (in_array($entity->get('state'), ['Success', 'Failed'])) {
             $children = $this->getConnection()->createQueryBuilder()
-                ->select('id, state')
+                ->select('id, state, entity_name')
                 ->from('import_job')
                 ->where('parent_id = :id')
                 ->andWhere('deleted = :false')
                 ->setParameter('false', false, ParameterType::BOOLEAN)
                 ->setParameter('id', $parent->get('id'))
                 ->fetchAllAssociative();
+
+            /** @var \Import\Services\ImportFeed $importService */
+            $importService = $this->getInjection('serviceFactory')->create('ImportFeed');
+            $importFeed = $parent->get('importFeed');
+            $qmJob = $this->getQmJob($entity);
+            if (!empty($qmJob)) {
+                $qmData = $qmJob->get('data');
+
+                /** @var string $action */
+                $action = $qmData->action;
+                if (\Import\Services\ImportTypeSimple::isDeleteAction($action)) {
+                    $jobs = array_filter($children, function ($child) use ($parent) {
+                        return $child['entity_name'] == $parent->get('entityName');
+                    });
+
+                    if ($importService->pushDeleteJobs($importFeed, $parent, $jobs, $qmJob)) {
+                        return;
+                    }
+                }
+            }
 
             $states = array_unique(array_column($children, 'state'));
 
