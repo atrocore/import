@@ -293,7 +293,7 @@ class ImportTypeSimple extends QueueManagerBase
 
         if (self::isDeleteAction($data['action'])) {
             $parentJobId = $importJob->get('parentId');
-            $cacheFile = fopen("data/cache/import-$parentJobId-existing-{$importJob->get('id')}.txt", 'w');
+            $cacheFile = fopen("data/import-$parentJobId-existing-{$importJob->get('id')}.txt", 'w');
 
             $cacheData = [];
             while (!empty($ids) || !empty($cacheData)) {
@@ -767,12 +767,12 @@ class ImportTypeSimple extends QueueManagerBase
 
     public function prepareDeleteCache(string $parentId, array $ids): string
     {
-        $cacheFileName = 'data/cache/' . Util::generateId() . '.txt';
+        $cacheFileName = 'data/' . Util::generateId() . '.txt';
         $cacheFile = fopen($cacheFileName, 'w');
 
         // merge cache files of every job
         foreach ($ids as $jobId) {
-            $fileName = "data/cache/import-$parentId-existing-$jobId.txt";
+            $fileName = "data/import-$parentId-existing-$jobId.txt";
             $jobCache = fopen($fileName, 'r');
             while (!empty($row = fgets($jobCache))) {
                 fwrite($cacheFile, $row);
@@ -825,7 +825,7 @@ class ImportTypeSimple extends QueueManagerBase
             $csvFileName = "$csvBaseName.csv";
         }
 
-        $csvFilePath = "data/cache/$csvFileName";
+        $csvFilePath = "data/$csvFileName";
         $csvFile = fopen($csvFilePath, 'w+');
         fputcsv($csvFile, ['id'], $importFeed->getDelimiter(), $importFeed->getEnclosure());
 
@@ -857,7 +857,7 @@ class ImportTypeSimple extends QueueManagerBase
                         $files[$csvFileName] = $csvFilePath;
                         fclose($csvFile);
                         $csvFileName = "$csvBaseName ($part).csv";
-                        $csvFilePath = "data/cache/$csvFileName";
+                        $csvFilePath = "data/$csvFileName";
                         $csvFile = fopen($csvFilePath, 'w+');
                         fputcsv($csvFile, ['id'], $importFeed->getDelimiter(), $importFeed->getEnclosure());
                     }
