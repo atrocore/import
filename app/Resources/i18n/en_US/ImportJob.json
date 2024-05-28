@@ -36,7 +36,8 @@
   },
   "exceptions": {
     "errorFileCreatingFailed": "Error file can not be created.",
-    "convertedFileNotExist": "Converted file does not exist. Please, generate it first."
+    "convertedFileNotExist": "Converted file does not exist. Please, generate it first.",
+    "cacheWriteFailed": "Cannot write data to the import cache."
   },
   "boolFilters": {
     "onlyImportFailed24Hours": "Only Import Jobs that failed during last 24 hours",

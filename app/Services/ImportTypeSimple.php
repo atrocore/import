@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Import\Services;
 
+use Atro\Core\Exceptions\Error;
 use Atro\Core\Exceptions\NotModified;
 use Atro\Core\EventManager\Event;
 use Atro\DTO\QueueItemDTO;
@@ -30,6 +31,7 @@ use Import\FieldConverters\Link;
 
 class ImportTypeSimple extends QueueManagerBase
 {
+    private const CACHE_DIR = 'data/import-cache';
     public const MEMORY_KEYS = 'loaded_exists_entities_keys';
     public const MEMORY_WHERE_KEYS = 'loaded_exists_entities_by_where_keys';
     private array $restore = [];
@@ -293,9 +295,14 @@ class ImportTypeSimple extends QueueManagerBase
 
         if (self::isDeleteAction($data['action'])) {
             $parentJobId = $importJob->get('parentId');
-            $cacheFile = fopen("data/import-$parentJobId-existing-{$importJob->get('id')}.txt", 'w');
+            if (empty($parentJobId)) {
+                throw new Error('Parent job does not exist');
+            }
 
             $cacheData = [];
+            $cacheFile = $this->createTmpFile("import-$parentJobId-existing-{$importJob->get('id')}.txt");
+
+            // put existing ids to the file cache
             while (!empty($ids) || !empty($cacheData)) {
                 if (count($cacheData) < 60000 && !empty($ids)) {
                     $cacheData[array_pop($ids)] = true;
@@ -765,14 +772,23 @@ class ImportTypeSimple extends QueueManagerBase
         }
     }
 
+    public function clearCache(): void
+    {
+        $this->getContainer()->get('fileManager')->removeAllInDir(self::CACHE_DIR);
+    }
+
     public function prepareDeleteCache(string $parentId, array $ids): string
     {
-        $cacheFileName = 'data/' . Util::generateId() . '.txt';
+        $cacheFileName = self::CACHE_DIR . '/' . Util::generateId() . '.txt';
         $cacheFile = fopen($cacheFileName, 'w');
 
         // merge cache files of every job
         foreach ($ids as $jobId) {
-            $fileName = "data/import-$parentId-existing-$jobId.txt";
+            $fileName = self::CACHE_DIR . "/import-$parentId-existing-$jobId.txt";
+            if (!file_exists($fileName)) {
+                continue;
+            }
+
             $jobCache = fopen($fileName, 'r');
             while (!empty($row = fgets($jobCache))) {
                 fwrite($cacheFile, $row);
@@ -799,13 +815,13 @@ class ImportTypeSimple extends QueueManagerBase
             ->executeQuery();
 
         $folder = $this->getService('ImportFeed')->createImportFileFolder($importFeed);
-        foreach ($this->createFilesToDeleteFromStatement($importFeed, $stmt, $cacheFileName) as $fileName => $filePath) {
+        foreach ($this->createFilesToDeleteFromStatement($importFeed, $stmt, $cacheFileName) as $fileName) {
             $input = new \stdClass();
             $input->name = $fileName;
             $input->mimeType = 'text/csv';
             $input->hidden = true;
             $input->folderId = $folder->get('id');
-            $fileData = $this->getService('File')->moveLocalFileToFileEntity($input, $filePath);
+            $fileData = $this->getService('File')->moveLocalFileToFileEntity($input, self::CACHE_DIR . "/$fileName");
             $result[] = $fileData;
         }
 
@@ -825,8 +841,7 @@ class ImportTypeSimple extends QueueManagerBase
             $csvFileName = "$csvBaseName.csv";
         }
 
-        $csvFilePath = "data/$csvFileName";
-        $csvFile = fopen($csvFilePath, 'w+');
+        $csvFile = $this->createTmpFile($csvFileName);
         fputcsv($csvFile, ['id'], $importFeed->getDelimiter(), $importFeed->getEnclosure());
 
         $files = [];
@@ -850,22 +865,18 @@ class ImportTypeSimple extends QueueManagerBase
             rewind($cacheFile);
 
             foreach (array_diff($records, $existing) as $diffId) {
-                if ($maxPerJob > 0) {
-                    if ($linesCount >= $maxPerJob) {
-                        $linesCount = 0;
-                        $part += 1;
-                        $files[$csvFileName] = $csvFilePath;
-                        fclose($csvFile);
-                        $csvFileName = "$csvBaseName ($part).csv";
-                        $csvFilePath = "data/$csvFileName";
-                        $csvFile = fopen($csvFilePath, 'w+');
-                        fputcsv($csvFile, ['id'], $importFeed->getDelimiter(), $importFeed->getEnclosure());
-                    }
-
-                    $linesCount += 1;
+                if ($maxPerJob > 0 && $linesCount >= $maxPerJob) {
+                    $linesCount = 0;
+                    $part += 1;
+                    $files[] = $csvFileName;
+                    fclose($csvFile);
+                    $csvFileName = "$csvBaseName ($part).csv";
+                    $csvFile = $this->createTmpFile($csvFileName);
+                    fputcsv($csvFile, ['id'], $importFeed->getDelimiter(), $importFeed->getEnclosure());
                 }
 
                 fputcsv($csvFile, [$diffId], $importFeed->getDelimiter(), $importFeed->getEnclosure());
+                $linesCount += 1;
             }
 
             $records = [];
@@ -874,13 +885,32 @@ class ImportTypeSimple extends QueueManagerBase
             }
         }
 
-        $files[$csvFileName] = $csvFilePath;
+        if ($linesCount > 0) {
+            $files[] = $csvFileName;
+        } else {
+            unlink(self::CACHE_DIR . "/$csvFileName");
+        }
 
         fclose($cacheFile);
         unlink($cacheFileName);
         fclose($csvFile);
 
         return $files;
+    }
+
+    /** @return resource */
+    private function createTmpFile(string $name)
+    {
+        if (!is_dir(self::CACHE_DIR) && !mkdir(self::CACHE_DIR)) {
+            throw new Error($this->translate('cacheWriteFailed', 'exceptions', 'ImportJob'));
+        }
+
+        $resource = fopen(self::CACHE_DIR . DIRECTORY_SEPARATOR . $name, 'w+');
+        if ($resource === false) {
+            throw new Error($this->translate('cacheWriteFailed', 'exceptions', 'ImportJob'));
+        }
+
+        return $resource;
     }
 
     protected function sortConfigurator(array &$data): void
