@@ -779,8 +779,8 @@ class ImportTypeSimple extends QueueManagerBase
 
     public function prepareDeleteCache(string $parentId, array $ids): string
     {
-        $cacheFileName = self::CACHE_DIR . '/' . Util::generateId() . '.txt';
-        $cacheFile = fopen($cacheFileName, 'w');
+        $cacheFileName = Util::generateId() . '.txt';
+        $cacheFile = $this->createTmpFile($cacheFileName);
 
         // merge cache files of every job
         foreach ($ids as $jobId) {
@@ -800,7 +800,7 @@ class ImportTypeSimple extends QueueManagerBase
 
         fclose($cacheFile);
 
-        return $cacheFileName;
+        return self::CACHE_DIR . DIRECTORY_SEPARATOR . $cacheFileName;
     }
 
     public function generateDeleteFilesFromCache(ImportFeed $importFeed, string $cacheFileName, string $entityName): array
