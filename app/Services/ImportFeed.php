@@ -342,10 +342,11 @@ class ImportFeed extends Base
             $payload->parentJobId = $parent->get('id');
             $rowNumberPart = 0;
             foreach ($files as $file) {
-                $qmData['attachmentId'] = $file->get('id');
+                $fileId = is_array($file) ? $file['id'] : $file->get('id');
+                $qmData['attachmentId'] = $fileId;
                 $qmData['rowNumberPart'] = $rowNumberPart;
                 $rowNumberPart += $maxPerJob;
-                $deleteJob = $this->createImportJob($importFeed, $parent->get('entityName'), $file->get('id'), $payload);
+                $deleteJob = $this->createImportJob($importFeed, $parent->get('entityName'), $fileId, $payload);
                 $qmData['data']['importJobId'] = $deleteJob->get('id');
                 $dto = new QueueItemDTO($this->getName($importFeed), 'ImportTypeSimple', $qmData);
                 $this->push($dto);
