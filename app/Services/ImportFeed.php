@@ -290,8 +290,11 @@ class ImportFeed extends Base
         return true;
     }
 
-    public function pushDeleteJobs(ImportFeedEntity $importFeed, ImportJob $parent, array $jobsData, Entity $qmJob): bool
+    public function pushDeleteJobs(ImportJob $parent, array $jobsData, Entity $qmJob): bool
     {
+        /** @var ImportFeedEntity $importFeed */
+        $importFeed = $parent->get('importFeed');
+
         /** @var ImportTypeSimple $service */
         $service = $this->getServiceFactory()->create($this->getImportTypeService($importFeed));
         $jobStates = array_unique(array_column($jobsData, 'state'));
@@ -305,6 +308,7 @@ class ImportFeed extends Base
             $qmData['action'] = 'delete_found';
             $qmData['fileFormat'] = 'CSV';
             $qmData['isFileHeaderRow'] = true;
+            $qmData['offset'] = 1;
             $qmData['data']['idField'] = ['id'];
             $qmData['data']['entity'] = $entityName;
 

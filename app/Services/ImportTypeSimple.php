@@ -772,9 +772,9 @@ class ImportTypeSimple extends QueueManagerBase
         }
     }
 
-    public function clearCache(): void
+    public static function clearCache(): void
     {
-        $this->getContainer()->get('fileManager')->removeAllInDir(self::CACHE_DIR);
+        Util::removeDir(self::CACHE_DIR);
     }
 
     public function prepareDeleteCache(string $parentId, array $ids): string

@@ -111,9 +111,6 @@ class ImportJob extends Base
                 ->setParameter('id', $parent->get('id'))
                 ->fetchAllAssociative();
 
-            /** @var \Import\Services\ImportFeed $importService */
-            $importService = $this->getInjection('serviceFactory')->create('ImportFeed');
-            $importFeed = $parent->get('importFeed');
             $qmJob = $this->getQmJob($entity);
             if (!empty($qmJob)) {
                 $qmData = $qmJob->get('data');
@@ -125,7 +122,7 @@ class ImportJob extends Base
                         return $child['entity_name'] == $parent->get('entityName');
                     });
 
-                    if ($importService->pushDeleteJobs($importFeed, $parent, $jobs, $qmJob)) {
+                    if ($this->getImportService()->pushDeleteJobs($parent, $jobs, $qmJob)) {
                         return;
                     }
                 }
@@ -262,6 +259,11 @@ class ImportJob extends Base
             $qmJob->set('status', 'Canceled');
             $this->getEntityManager()->saveEntity($qmJob);
         }
+    }
+
+    protected function getImportService(): \Import\Services\ImportFeed
+    {
+        return $this->getInjection('serviceFactory')->create('ImportFeed');
     }
 
     protected function init()
