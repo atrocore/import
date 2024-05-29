@@ -13,12 +13,15 @@ declare(strict_types=1);
 
 namespace Import\Services;
 
+use Atro\Core\Exceptions\Error;
 use Atro\Core\Exceptions\NotModified;
 use Atro\Core\EventManager\Event;
 use Atro\DTO\QueueItemDTO;
+use Doctrine\DBAL\ParameterType;
 use Espo\Core\EventManager\Manager;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Utils\Metadata;
+use Espo\Core\Utils\Util;
 use Espo\ORM\Entity;
 use Espo\Services\QueueManagerBase;
 use Espo\Core\Services\Base;
@@ -28,6 +31,7 @@ use Import\FieldConverters\Link;
 
 class ImportTypeSimple extends QueueManagerBase
 {
+    private const CACHE_DIR = 'data/import-cache';
     public const MEMORY_KEYS = 'loaded_exists_entities_keys';
     public const MEMORY_WHERE_KEYS = 'loaded_exists_entities_by_where_keys';
     private array $restore = [];
@@ -290,37 +294,27 @@ class ImportTypeSimple extends QueueManagerBase
         $this->createImportPavJobs($data);
 
         if (self::isDeleteAction($data['action'])) {
-            $limit = 60000;
-            $offset = 0;
-
-            while (true) {
-                $idsToDelete = array_slice($ids, $offset, $limit);
-                $offset += $limit;
-                if (empty($idsToDelete)) {
-                    break;
-                }
-
-                $toDeleteRecords = $this
-                    ->getEntityManager()
-                    ->getRepository($scope)
-                    ->select(['id'])
-                    ->where(['id!=' => $idsToDelete])
-                    ->find();
-
-                if (!empty($toDeleteRecords) && count($toDeleteRecords) > 0) {
-                    foreach ($toDeleteRecords as $record) {
-                        if (!in_array($record->get('id'), $ids)) {
-                            try {
-                                if ($entityService->deleteEntity($record->get('id'))) {
-                                    $this->log($scope, $importJob->get('id'), 'delete', null, $record->get('id'));
-                                }
-                            } catch (\Throwable $e) {
-                                // ignore all
-                            }
-                        }
-                    }
-                }
+            $parentJobId = $importJob->get('parentId');
+            if (empty($parentJobId)) {
+                throw new Error('Parent job does not exist');
             }
+
+            $cacheData = [];
+            $cacheFile = $this->createTmpFile("import-$parentJobId-existing-{$importJob->get('id')}.txt");
+
+            // put existing ids to the file cache
+            while (!empty($ids) || !empty($cacheData)) {
+                if (count($cacheData) < 60000 && !empty($ids)) {
+                    $cacheData[array_pop($ids)] = true;
+                    continue;
+                }
+
+                fwrite($cacheFile, json_encode($cacheData));
+                fwrite($cacheFile, PHP_EOL);
+                $cacheData = [];
+            }
+
+            fclose($cacheFile);
         }
 
         return true;
@@ -467,7 +461,7 @@ class ImportTypeSimple extends QueueManagerBase
         return $log;
     }
 
-    protected static function isDeleteAction(string $action): bool
+    public static function isDeleteAction(string $action): bool
     {
         return in_array($action, ['delete_not_found', 'create_delete', 'update_delete', 'create_update_delete']);
     }
@@ -636,13 +630,9 @@ class ImportTypeSimple extends QueueManagerBase
         return 'HTTP Code: ' . $code;
     }
 
-    protected function createImportPavJobs(array $productImportData): void
+    public function getCommonFieldsList(): array
     {
-        if (empty($productImportData['data']['entity']) || $productImportData['data']['entity'] !== 'Product') {
-            return;
-        }
-
-        $commonFields = [
+        return [
             'delimiter',
             'emptyValue',
             'nullValue',
@@ -652,6 +642,13 @@ class ImportTypeSimple extends QueueManagerBase
             'fieldDelimiterForRelation',
             'skipValue'
         ];
+    }
+
+    protected function createImportPavJobs(array $productImportData): void
+    {
+        if (empty($productImportData['data']['entity']) || $productImportData['data']['entity'] !== 'Product') {
+            return;
+        }
 
         /**
          * Prepare Product configurator item
@@ -664,7 +661,7 @@ class ImportTypeSimple extends QueueManagerBase
                 $product['entity'] = 'ProductAttributeValue';
                 $product['column'][] = $item['column'][0];
                 $product['importBy'][] = $item['name'];
-                foreach ($commonFields as $commonField) {
+                foreach ($this->getCommonFieldsList() as $commonField) {
                     $product[$commonField] = $item[$commonField];
                 }
             }
@@ -701,7 +698,7 @@ class ImportTypeSimple extends QueueManagerBase
                 }
 
                 $common = ['entity' => 'ProductAttributeValue'];
-                foreach ($commonFields as $commonField) {
+                foreach ($this->getCommonFieldsList() as $commonField) {
                     $common[$commonField] = $item[$commonField];
                 }
 
@@ -773,6 +770,147 @@ class ImportTypeSimple extends QueueManagerBase
                 $importService->push($dto);
             }
         }
+    }
+
+    public static function clearCache(): void
+    {
+        Util::removeDir(self::CACHE_DIR);
+    }
+
+    public function prepareDeleteCache(string $parentId, array $ids): string
+    {
+        $cacheFileName = Util::generateId() . '.txt';
+        $cacheFile = $this->createTmpFile($cacheFileName);
+
+        // merge cache files of every job
+        foreach ($ids as $jobId) {
+            $fileName = self::CACHE_DIR . "/import-$parentId-existing-$jobId.txt";
+            if (!file_exists($fileName)) {
+                continue;
+            }
+
+            $jobCache = fopen($fileName, 'r');
+            while (!empty($row = fgets($jobCache))) {
+                fwrite($cacheFile, $row);
+            }
+
+            fclose($jobCache);
+            unlink($fileName);
+        }
+
+        fclose($cacheFile);
+
+        return self::CACHE_DIR . DIRECTORY_SEPARATOR . $cacheFileName;
+    }
+
+    public function generateDeleteFilesFromCache(ImportFeed $importFeed, string $cacheFileName, string $entityName): array
+    {
+        $result = [];
+        $stmt = $this->getEntityManager()->getConnection()
+            ->createQueryBuilder()
+            ->select('id')
+            ->from($this->getEntityManager()->getMapper()->toDb($entityName))
+            ->where('deleted = :false')
+            ->setParameter('false', false, ParameterType::BOOLEAN)
+            ->executeQuery();
+
+        $folder = $this->getService('ImportFeed')->createImportFileFolder($importFeed);
+        foreach ($this->createFilesToDeleteFromStatement($importFeed, $stmt, $cacheFileName) as $fileName) {
+            $input = new \stdClass();
+            $input->name = $fileName;
+            $input->mimeType = 'text/csv';
+            $input->hidden = true;
+            $input->folderId = $folder->get('id');
+            $fileData = $this->getService('File')->moveLocalFileToFileEntity($input, self::CACHE_DIR . "/$fileName");
+            $result[] = $fileData;
+        }
+
+        return $result;
+    }
+
+    private function createFilesToDeleteFromStatement(ImportFeed $importFeed, \Doctrine\DBAL\Result $stmt, string $cacheFileName): array {
+        $part = 1;
+        $maxPerJob = (int) $importFeed->get('maxPerJob');
+        $linesCount = 0;
+        $cacheFile = fopen($cacheFileName, 'r');
+
+        $csvBaseName = date('Y-m-d H:i:s');
+        if ($maxPerJob > 0) {
+            $csvFileName = "$csvBaseName ($part).csv";
+        } else {
+            $csvFileName = "$csvBaseName.csv";
+        }
+
+        $csvFile = $this->createTmpFile($csvFileName);
+        fputcsv($csvFile, ['id'], $importFeed->getDelimiter(), $importFeed->getEnclosure());
+
+        $files = [];
+        $records = [];
+        while (($row = $stmt->fetchAssociative()) !== false || !empty($records)) {
+            if (count($records) < 60000 && $row !== false) {
+                $records[] = $row['id'];
+                continue;
+            }
+
+            $existing = [];
+            while (($cacheRow = fgets($cacheFile)) !== false) {
+                $cacheRow = json_decode($cacheRow, true);
+
+                foreach ($records as $record) {
+                    if (isset($cacheRow[$record])) {
+                        $existing[] = $record;
+                    }
+                }
+            }
+            rewind($cacheFile);
+
+            foreach (array_diff($records, $existing) as $diffId) {
+                if ($maxPerJob > 0 && $linesCount >= $maxPerJob) {
+                    $linesCount = 0;
+                    $part += 1;
+                    $files[] = $csvFileName;
+                    fclose($csvFile);
+                    $csvFileName = "$csvBaseName ($part).csv";
+                    $csvFile = $this->createTmpFile($csvFileName);
+                    fputcsv($csvFile, ['id'], $importFeed->getDelimiter(), $importFeed->getEnclosure());
+                }
+
+                fputcsv($csvFile, [$diffId], $importFeed->getDelimiter(), $importFeed->getEnclosure());
+                $linesCount += 1;
+            }
+
+            $records = [];
+            if ($row !== false) {
+                $records[] = $row['id'];
+            }
+        }
+
+        if ($linesCount > 0) {
+            $files[] = $csvFileName;
+        } else {
+            unlink(self::CACHE_DIR . "/$csvFileName");
+        }
+
+        fclose($cacheFile);
+        unlink($cacheFileName);
+        fclose($csvFile);
+
+        return $files;
+    }
+
+    /** @return resource */
+    private function createTmpFile(string $name)
+    {
+        if (!is_dir(self::CACHE_DIR) && !mkdir(self::CACHE_DIR)) {
+            throw new Error($this->translate('cacheWriteFailed', 'exceptions', 'ImportJob'));
+        }
+
+        $resource = fopen(self::CACHE_DIR . DIRECTORY_SEPARATOR . $name, 'w+');
+        if ($resource === false) {
+            throw new Error($this->translate('cacheWriteFailed', 'exceptions', 'ImportJob'));
+        }
+
+        return $resource;
     }
 
     protected function sortConfigurator(array &$data): void

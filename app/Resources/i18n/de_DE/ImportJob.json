@@ -36,7 +36,8 @@
   },
   "exceptions": {
     "errorFileCreatingFailed": "Konvertierte Datei existiert nicht. Bitte generieren Sie es zuerst.",
-    "convertedFileNotExist": "No such converted file found. Please, generate it first."
+    "convertedFileNotExist": "No such converted file found. Please, generate it first.",
+    "cacheWriteFailed": "Daten können nicht in den Import-Cache geschrieben werden."
   },
   "boolFilters": {
     "onlyImportFailed24Hours": "Nur Importaufträge, die in den letzten 24 Stunden fehlgeschlagen sind",
