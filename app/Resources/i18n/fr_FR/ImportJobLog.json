@@ -1,0 +1,16 @@
+{
+  "fields": {
+    "rowNumber": "",
+    "importJob": "",
+    "type": "",
+    "entityName": "",
+    "entityId": "",
+    "message": ""
+  },
+  "links": {
+    "importJob": ""
+  },
+  "labels": {
+    "Create ImportJobLog": ""
+  }
+}
