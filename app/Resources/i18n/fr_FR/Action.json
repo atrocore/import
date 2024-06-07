@@ -1,11 +1,11 @@
 {
   "fields": {
-    "importFeed": "",
-    "payload": ""
+    "importFeed": "Importation de flux",
+    "payload": "Charge utile"
   },
   "options": {
     "type": {
-      "import": ""
+      "import": "Importation de flux"
     }
   }
 }
