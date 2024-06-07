@@ -1,0 +1,22 @@
+{
+  "fields": {
+    "importFeed": "",
+    "importFeeds": "",
+    "maximumHoursToLookBack": "",
+    "maximumDaysForJobExist": ""
+  },
+  "links": {
+    "importFeed": "",
+    "importFeeds": ""
+  },
+  "options": {
+    "job": {
+      "ImportFeed": "",
+      "TrialImport": "",
+      "ImportJobRemove": ""
+    }
+  },
+  "tooltips": {
+    "importFeeds": ""
+  }
+}
