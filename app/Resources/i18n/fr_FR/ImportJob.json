@@ -1,0 +1,47 @@
+{
+  "fields": {
+    "importFeed": "",
+    "state": "",
+    "message": "",
+    "start": "",
+    "end": "",
+    "createdCount": "",
+    "updatedCount": "",
+    "deletedCount": "",
+    "skippedCount": "",
+    "errorsCount": "",
+    "attachment": "",
+    "uploadedFile": "",
+    "convertedFile": "",
+    "errorsAttachment": "",
+    "importJobLogs": ""
+  },
+  "links": {
+    "importFeed": "",
+    "importJobLogs": ""
+  },
+  "labels": {
+    "Create ImportJob": "",
+    "Pending": "",
+    "Success": "",
+    "Running": "",
+    "Failed": "",
+    "Canceled": "",
+    "generate": "",
+    "generating": "",
+    "tryAgain": ""
+  },
+  "tooltips": {
+    "errorsAttachment": ""
+  },
+  "exceptions": {
+    "errorFileCreatingFailed": "",
+    "convertedFileNotExist": "",
+    "cacheWriteFailed": ""
+  },
+  "boolFilters": {
+    "onlyImportFailed24Hours": "",
+    "onlyImportFailed7Days": "",
+    "onlyImportFailed28Days": ""
+  }
+}
