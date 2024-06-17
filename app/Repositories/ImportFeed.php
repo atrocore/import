@@ -30,14 +30,11 @@ class ImportFeed extends Base
 
     public function removeInvalidConfiguratorItems(ImportFeedEntity $feed): void
     {
-        $feedId = $feed->get('id');
-
-        // delete attribute items
         $this->getConnection()->createQueryBuilder()
-            ->delete('import_configurator_item', 't3')
-            ->where('t3.import_feed_id = :id')
-            ->andWhere('t3.type = :type')
-            ->andWhere("t3.attribute_id NOT IN (SELECT a55.id FROM {$this->getConnection()->quoteIdentifier('attribute')} a55 WHERE a55.deleted=:false)")
+            ->delete('import_configurator_item')
+            ->where('import_feed_id = :id')
+            ->andWhere('type = :type')
+            ->andWhere("attribute_id NOT IN (SELECT id FROM {$this->getConnection()->quoteIdentifier('attribute')} WHERE deleted=:false)")
             ->setParameter('id', $feed->get('id'))
             ->setParameter('type', 'Attribute')
             ->setParameter('false', false, ParameterType::BOOLEAN)
