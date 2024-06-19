@@ -28,6 +28,30 @@ class ImportFeed extends Base
         return $this->getInjection('language');
     }
 
+    public function getLatestJobData(array $importFeedsIds): array
+    {
+        $records = $this->getEntityManager()->getConnection()->createQueryBuilder()
+            ->select('t1.id, t1.import_feed_id, t1.start, t1.state')
+            ->from('import_job', 't1')
+            ->innerJoin(
+                't1', '(SELECT import_feed_id, MAX(start) AS max_start FROM import_job GROUP BY import_feed_id)', 't2',
+                't1.import_feed_id = t2.import_feed_id AND t1.start = t2.max_start'
+            )
+            ->where('t1.deleted=:false')
+            ->andWhere('t1.import_feed_id IN (:ids)')
+            ->setParameter('false', false, ParameterType::BOOLEAN)
+            ->setParameter('ids', $importFeedsIds, $this->getEntityManager()->getConnection()::PARAM_STR_ARRAY)
+            ->fetchAllAssociative();
+
+        $res = [];
+
+        foreach ($records as $record) {
+            $res[$record['import_feed_id']] = $record;
+        }
+
+        return $res;
+    }
+
     public function removeInvalidConfiguratorItems(ImportFeedEntity $feed): void
     {
         $this->getConnection()->createQueryBuilder()

@@ -23,12 +23,28 @@ use Espo\Core\Exceptions\NotFound;
 use Atro\Core\Templates\Services\Base;
 use Espo\Core\Utils\Util;
 use Espo\ORM\Entity;
+use Espo\ORM\EntityCollection;
 use Import\Entities\ImportFeed as ImportFeedEntity;
 use Import\Entities\ImportJob;
 
 class ImportFeed extends Base
 {
     protected $mandatorySelectAttributeList = ['sourceFields', 'sheet', 'data'];
+
+    public function prepareCollectionForOutput(EntityCollection $collection, array $selectParams = []): void
+    {
+        parent::prepareCollectionForOutput($collection, $selectParams);
+
+        $latestJobsData = $this->getRepository()->getLatestJobData(array_column($collection->toArray(), 'id'));
+
+        foreach ($collection as $entity) {
+            $entity->_collectionPrepared = true;
+            if (isset($latestJobsData[$entity->get('id')])) {
+                $entity->set('lastStatus', $latestJobsData[$entity->get('id')]['state']);
+                $entity->set('lastTime', $latestJobsData[$entity->get('id')]['start']);
+            }
+        }
+    }
 
     public function prepareEntityForOutput(Entity $entity)
     {
@@ -38,17 +54,12 @@ class ImportFeed extends Base
             $entity->set($name, $value);
         }
 
-        $latestJob = $this->getEntityManager()
-            ->getRepository('ImportJob')
-            ->where([
-                'importFeedId' => $entity->id
-            ])
-            ->order('start', 'DESC')
-            ->limit(1, 0)
-            ->findOne();
-        if (!empty($latestJob)) {
-            $entity->set('lastStatus', $latestJob->get('state'));
-            $entity->set('lastTime', $latestJob->get('start'));
+        if (empty($entity->_collectionPrepared)){
+            $latestJobsData = $this->getRepository()->getLatestJobData([$entity->get('id')]);
+            if (isset($latestJobsData[$entity->get('id')])) {
+                $entity->set('lastStatus', $latestJobsData[$entity->get('id')]['state']);
+                $entity->set('lastTime', $latestJobsData[$entity->get('id')]['start']);
+            }
         }
     }
 
@@ -300,7 +311,7 @@ class ImportFeed extends Base
         $jobStates = array_unique(array_column($jobsData, 'state'));
         $jobIds = array_column($jobsData, 'id');
         $entityName = $parent->get('entityName');
-        $maxPerJob = (int) $importFeed->get('maxPerJob');
+        $maxPerJob = (int)$importFeed->get('maxPerJob');
 
         // push delete jobs only if all child jobs are succeed
         if (in_array('Success', $jobStates) && count($jobStates) === 1) {
@@ -739,12 +750,16 @@ class ImportFeed extends Base
                 $value = $configuratorItem->attributeValue;
                 if (!in_array($value, ['value', 'valueFrom', 'valueTo', 'valueUnit'])) {
                     $value = 'value';
-                } else if ($value === 'valueUnit') {
-                    $value = 'valueUnitId';
+                } else {
+                    if ($value === 'valueUnit') {
+                        $value = 'valueUnitId';
+                    }
                 }
                 $attachment->attributeValue = $value;
-            } else if ($configuratorItem->language != 'main') {
-                $attachment->name .= ucfirst(Util::toCamelCase(strtolower($configuratorItem->language)));
+            } else {
+                if ($configuratorItem->language != 'main') {
+                    $attachment->name .= ucfirst(Util::toCamelCase(strtolower($configuratorItem->language)));
+                }
             }
 
             if ($configuratorItem->name === 'id') {
