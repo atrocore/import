@@ -21,6 +21,8 @@ class ImportJobLog extends Base
 {
     protected bool $cacheable = false;
 
+    protected array $cachedImportJobs = [];
+
     protected function beforeSave(Entity $entity, array $options = [])
     {
         if ($entity->get('entityName') === null) {
@@ -101,12 +103,12 @@ class ImportJobLog extends Base
             return;
         }
 
-        $importJob = $this->getEntityManager()->getRepository('ImportJob')->get($entity->get('importJobId'));
+        $importJob = $this->getCachedImportJob($entity->get('importJobId'));
         if (empty($importJob->get('parentId'))) {
             return;
         }
 
-        $parentJob = $this->getEntityManager()->getRepository('ImportJob')->get($importJob->get('parentId'));
+        $parentJob = $this->getCachedImportJob($importJob->get('parentId'));
         if (empty($parentJob)) {
             return;
         }
@@ -162,5 +164,14 @@ class ImportJobLog extends Base
                 }
             }
         }
+    }
+
+    protected function getCachedImportJob(string $importJobId): ?Entity
+    {
+        if (!isset($this->cachedImportJobs[$importJobId])) {
+            $this->cachedImportJobs[$importJobId] = $this->getEntityManager()->getRepository('ImportJob')->get($importJobId);
+        }
+
+        return $this->cachedImportJobs[$importJobId];
     }
 }
