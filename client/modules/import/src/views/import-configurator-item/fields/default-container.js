@@ -114,11 +114,21 @@ Espo.define('import:views/import-configurator-item/fields/default-container', 'v
             }
 
             if (this.model.get('type') === 'Attribute' && this.model.get('attributeId')) {
-                this.ajaxGetRequest(`Attribute/${this.model.get('attributeId')}`, null, {async: false}).then(attribute => {
+                let attribute = null;
+                if (this.model.get('attributeData')) {
+                    attribute = this.model.get('attributeData');
+                } else {
+                    this.ajaxGetRequest(`Attribute/${this.model.get('attributeId')}`, null, {async: false}).then(res => {
+                        attribute = res;
+                    });
+                }
+
+                if (attribute) {
                     if (attribute.measureId) {
                         this.params.measureId = attribute.measureId;
                         this.model.defs.fields["default"]['extensibleEnumId'] = this.params.measureId;
                     }
+
                     if (attribute.extensibleEnumId) {
                         this.params.extensibleEnumId = attribute.extensibleEnumId;
                         this.model.defs.fields["default"]['extensibleEnumId'] = this.params.extensibleEnumId;
@@ -130,7 +140,7 @@ Espo.define('import:views/import-configurator-item/fields/default-container', 'v
                             entity: attribute.entityType
                         };
                     }
-                });
+                }
             }
         },
 
