@@ -33,6 +33,7 @@ class ImportTypeSimple extends QueueManagerBase
 {
     private const CACHE_DIR = 'data/import-cache';
     public const MEMORY_KEYS = 'loaded_exists_entities_keys';
+    public const MEMORY_EMPTY_QUERY_RES = 'queries_with_empty_result';
     public const MEMORY_WHERE_KEYS = 'loaded_exists_entities_by_where_keys';
     private array $restore = [];
     private bool $lastIteration = false;
@@ -364,9 +365,22 @@ class ImportTypeSimple extends QueueManagerBase
             throw new \Error('Where is empty');
         }
 
+        $key = md5($entityType . json_encode($collectionWhere));
+
+        $empties = $this->getMemoryStorage()->get(self::MEMORY_EMPTY_QUERY_RES) ?? [];
+        if (!empty($empties[$key])) {
+            return;
+        }
+
         $existsEntities = $this->getEntityManager()->getRepository($entityType)
             ->where($collectionWhere)
             ->find();
+
+        if (empty($existsEntities[0])) {
+            $empties[$key] = true;
+            $this->getMemoryStorage()->set(self::MEMORY_EMPTY_QUERY_RES, $empties);
+            return;
+        }
 
         $whereKeys = $this->getMemoryStorage()->get(self::MEMORY_WHERE_KEYS) ?? [];
 
@@ -414,6 +428,11 @@ class ImportTypeSimple extends QueueManagerBase
         }
         $this->getMemoryStorage()->delete(Link::MEMORY_FOREIGN_KEYS);
         $this->getMemoryStorage()->delete(Link::MEMORY_WHERE_FOREIGN_KEYS);
+
+        foreach ($this->getMemoryStorage()->get(self::MEMORY_EMPTY_QUERY_RES) ?? [] as $key => $val) {
+            $this->getMemoryStorage()->delete($key);
+        }
+        $this->getMemoryStorage()->delete(self::MEMORY_EMPTY_QUERY_RES);
     }
 
     public function createMemoryKey(string $entityType, string $entityId): string
@@ -756,7 +775,7 @@ class ImportTypeSimple extends QueueManagerBase
                 $pavData['data']['configuration'] = $configurator;
 
                 $payload = new \stdClass();
-                if (!empty($importJob->get('parentId'))){
+                if (!empty($importJob->get('parentId'))) {
                     $payload->parentJobId = $importJob->get('parentId');
                 }
                 $pavJob = $importService->createImportJob($importFeed, 'ProductAttributeValue', $pavData['attachmentId'], $payload);
@@ -828,9 +847,10 @@ class ImportTypeSimple extends QueueManagerBase
         return $result;
     }
 
-    private function createFilesToDeleteFromStatement(ImportFeed $importFeed, \Doctrine\DBAL\Result $stmt, string $cacheFileName): array {
+    private function createFilesToDeleteFromStatement(ImportFeed $importFeed, \Doctrine\DBAL\Result $stmt, string $cacheFileName): array
+    {
         $part = 1;
-        $maxPerJob = (int) $importFeed->get('maxPerJob');
+        $maxPerJob = (int)$importFeed->get('maxPerJob');
         $linesCount = 0;
         $cacheFile = fopen($cacheFileName, 'r');
 
