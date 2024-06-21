@@ -37,6 +37,7 @@ class ImportTypeSimple extends QueueManagerBase
     public const MEMORY_WHERE_KEYS = 'loaded_exists_entities_by_where_keys';
     private array $restore = [];
     private bool $lastIteration = false;
+    private ?string $skipValue = null;
 
     public function prepareJobData(ImportFeed $feed, string $attachmentId): array
     {
@@ -84,10 +85,7 @@ class ImportTypeSimple extends QueueManagerBase
         $scope = $data['data']['entity'];
         $entityService = $this->getService($scope);
 
-        // set configurator item position
-        foreach ($data['data']['configuration'] as $k => $v) {
-            $data['data']['configuration'][$k]['pos'] = $k;
-        }
+        $this->prepareConfigurator($data);
 
         $ids = [];
 
@@ -101,8 +99,13 @@ class ImportTypeSimple extends QueueManagerBase
             while (!empty($inputData)) {
                 $row = array_shift($inputData);
 
-                // increment file row number
+                // increase file row number
                 $fileRow++;
+
+                if ($this->skipRow($row, $data)) {
+                    $this->log($scope, $importJob->get('id'), 'skip', (string)$fileRow, null);
+                    continue;
+                }
 
                 try {
                     $where = $this->prepareWhere($entityService->getEntityType(), $data['data'], $row);
@@ -170,8 +173,6 @@ class ImportTypeSimple extends QueueManagerBase
 
                     $restore = new \stdClass();
 
-                    $this->sortConfigurator($data);
-
                     $this->getMemoryStorage()->set("import_job_{$importJob->get('id')}_rowNumberPart", $data['rowNumberPart'] ?? 0);
 
                     foreach ($data['data']['configuration'] as $item) {
@@ -181,14 +182,9 @@ class ImportTypeSimple extends QueueManagerBase
                         }
 
                         // skip import item if needed
-                        $skip = array_key_exists('skipValue', $item) ? $item['skipValue'] : 'Skip';
                         if (isset($item['column']) && is_array($item['column'])) {
                             foreach ($item['column'] as $column) {
-                                if (array_key_exists($column, $row) && $row[$column] == $skip) {
-                                    if ($item['entity'] === 'ProductAttributeValue') {
-                                        throw new NotModified();
-                                    }
-
+                                if (array_key_exists($column, $row) && $row[$column] == $this->skipValue) {
                                     continue 2;
                                 }
                             }
@@ -933,10 +929,18 @@ class ImportTypeSimple extends QueueManagerBase
         return $resource;
     }
 
-    protected function sortConfigurator(array &$data): void
+    protected function prepareConfigurator(array &$data): void
     {
         if (empty($data['data']['entity']) || empty($data['data']['configuration'])) {
             return;
+        }
+
+        foreach ($data['data']['configuration'] as $k => $v) {
+            // set position
+            $data['data']['configuration'][$k]['pos'] = $k;
+
+            // set skip value
+            $this->skipValue = array_key_exists('skipValue', $v) ? $v['skipValue'] : 'Skip';
         }
 
         if ($data['data']['entity'] === 'ProductAttributeValue') {
@@ -1022,5 +1026,32 @@ class ImportTypeSimple extends QueueManagerBase
         }
 
         return $type;
+    }
+
+    protected function skipRow(array $row, array $data): bool
+    {
+        if (empty($data['data']['entity'])) {
+            return true;
+        }
+        $entityName = $data['data']['entity'];
+
+        if (empty($data['data']['configuration'][0])) {
+            return true;
+        }
+        $configuration = $data['data']['configuration'];
+
+        if ($entityName === 'ProductAttributeValue') {
+            foreach ($configuration as $item) {
+                if (isset($item['column']) && is_array($item['column'])) {
+                    foreach ($item['column'] as $column) {
+                        if (array_key_exists($column, $row) && $row[$column] == $this->skipValue) {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+
+        return false;
     }
 }
