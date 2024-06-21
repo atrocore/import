@@ -16,6 +16,7 @@ namespace Import\FieldConverters;
 use Atro\Core\Exceptions\NotModified;
 use Atro\Core\KeyValueStorages\StorageInterface;
 use Espo\Core\Services\Base;
+use Espo\Core\Utils\Language;
 use Espo\ORM\Entity;
 use Espo\Core\Container;
 use Espo\Core\Utils\Config;
@@ -93,9 +94,14 @@ class Wysiwyg
         return $this->container->get('entityManager');
     }
 
+    protected function getLanguage(): Language
+    {
+        return $this->container->get('language');
+    }
+
     protected function translate(string $label, string $category = 'labels', string $scope = 'Global'): string
     {
-        return $this->container->get('language')->translate($label, $category, $scope);
+        return $this->getLanguage()->translate($label, $category, $scope);
     }
 
     protected function getService(string $name): Base

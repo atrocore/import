@@ -83,7 +83,6 @@ class Link extends Varchar
                     // find in memory
                     $entity = $this->findEntityInMemory($where, $config);
 
-
                     if (empty($entity) && empty($config['createIfNotExist'])) {
                         throw new BadRequest(
                             sprintf($this->translate('noRecordsFoundFor', 'exceptions', 'ImportFeed'), $this->translate($entityName, 'scopeNames'), json_encode($where))
@@ -146,6 +145,10 @@ class Link extends Varchar
          */
         if ($fieldName === 'channelId' && in_array($config['entity'], ['ProductAttributeValue', 'ClassificationAttribute']) && $value === null) {
             $value = '';
+        }
+
+        if ($config['entity'] === 'ProductAttributeValue' && $fieldName === 'value') {
+            $fieldName = 'referenceValue';
         }
 
         $inputRow->$fieldName = $value;

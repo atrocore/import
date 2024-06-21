@@ -59,7 +59,7 @@ class ExtensibleEnum extends Link
     {
         parent::prepareInputForCreateIfNotExist($input, $config, $row);
 
-        $input->extensibleEnumId = $this->getExtensibleEnumId($config);
+        $input->extensibleEnumsIds = [$this->getExtensibleEnumId($config)];
     }
 
     protected function getExtensibleEnumId(array $config): string
