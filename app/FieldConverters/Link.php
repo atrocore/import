@@ -121,6 +121,7 @@ class Link extends Varchar
                 }
 
                 if (!empty($entity)) {
+                    $this->beforeSetValue($entity, $config, $row);
                     $value = $entity->get('id');
                 } else {
                     $value = $default;
@@ -344,5 +345,9 @@ class Link extends Varchar
     protected function prepareCollectionBeforeWhereKeysCreated($collection): EntityCollection
     {
         return $collection;
+    }
+
+    protected function beforeSetValue(Entity $entity, array $config, array $row): void
+    {
     }
 }

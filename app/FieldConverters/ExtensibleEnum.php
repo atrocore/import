@@ -13,8 +13,11 @@ declare(strict_types=1);
 
 namespace Import\FieldConverters;
 
+use Atro\Core\Exceptions\NotUnique;
 use Atro\ORM\DB\RDB\Mapper;
+use Doctrine\DBAL\Exception\ConstraintViolationException;
 use Espo\ORM\Entity;
+use Espo\ORM\EntityManager;
 
 class ExtensibleEnum extends Link
 {
@@ -44,22 +47,25 @@ class ExtensibleEnum extends Link
         return 'ExtensibleEnumOption';
     }
 
-    protected function prepareWhere(array $config, string $entityName, array &$where): void
+    protected function beforeSetValue(Entity $entity, array $config, array $row): void
     {
-        parent::prepareWhere($config, $entityName, $where);
-
-        if (empty($where)) {
+        if (empty($config['createIfNotExist'])) {
             return;
         }
 
-        $where['extensibleEnumId'] = $this->getExtensibleEnumId($config);
-    }
+        /** @var EntityManager $em */
+        $em = $this->configuratorItem->getContainer2()->get('entityManager');
 
-    protected function prepareInputForCreateIfNotExist($input, array $config, $row): void
-    {
-        parent::prepareInputForCreateIfNotExist($input, $config, $row);
+        $link = $em->getRepository('ExtensibleEnumExtensibleEnumOption')->get();
+        $link->set([
+            'extensibleEnumId'       => $this->getExtensibleEnumId($config),
+            'extensibleEnumOptionId' => $entity->get('id')
+        ]);
 
-        $input->extensibleEnumsIds = [$this->getExtensibleEnumId($config)];
+        try {
+            $em->saveEntity($link);
+        } catch (NotUnique|ConstraintViolationException $e) {
+        }
     }
 
     protected function getExtensibleEnumId(array $config): string
@@ -80,8 +86,8 @@ class ExtensibleEnum extends Link
     protected function prepareCollectionBeforeWhereKeysCreated($collection): \Espo\ORM\EntityCollection
     {
         $collectionTmp = clone $collection;
-        if(!empty($collection[0]) && $collection[0]->getEntityType() === "ExtensibleEnumOption"){
-            foreach ($collection as $key => $option){
+        if (!empty($collection[0]) && $collection[0]->getEntityType() === "ExtensibleEnumOption") {
+            foreach ($collection as $key => $option) {
                 $extensibleEnumsIds = $this->getEntityManager()
                     ->getConnection()
                     ->createQueryBuilder()
@@ -95,10 +101,10 @@ class ExtensibleEnum extends Link
 
                 $collectionTmp[$key]->set('extensibleEnumId', array_shift($extensibleEnumsIds));
 
-                foreach ($extensibleEnumsIds as $extensibleEnumId){
-                     $cloneOption = clone $option;
-                     $cloneOption->set('extensibleEnumId', $extensibleEnumId);
-                     $collectionTmp[]= $cloneOption;
+                foreach ($extensibleEnumsIds as $extensibleEnumId) {
+                    $cloneOption = clone $option;
+                    $cloneOption->set('extensibleEnumId', $extensibleEnumId);
+                    $collectionTmp[] = $cloneOption;
                 }
             }
 

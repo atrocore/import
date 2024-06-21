@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Import\Services;
 
+use Atro\Core\Container;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Templates\Services\Base;
 use Espo\ORM\Entity;
@@ -39,6 +40,8 @@ class ImportConfiguratorItem extends Base
         ];
 
     protected array $attributes = [];
+
+    protected ?Container $container2 = null;
 
     public function getSelectAttributeList($params)
     {
@@ -165,6 +168,23 @@ class ImportConfiguratorItem extends Base
         parent::init();
 
         $this->addDependency('container');
+    }
+
+    /**
+     * Returns alternative Container
+     *
+     * @return Container
+     */
+    public function getContainer2(): Container
+    {
+        if (is_null($this->container2)) {
+            $this->container2 = (new \Atro\Core\Application())->getContainer();
+
+            $auth = new \Espo\Core\Utils\Auth($this->container2);
+            $auth->useNoAuth();
+        }
+
+        return $this->container2;
     }
 
     protected function prepareDefaultField(string $type, Entity $entity): void
