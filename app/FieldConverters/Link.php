@@ -106,7 +106,7 @@ class Link extends Varchar
                     }
 
                     try {
-                        $entity = $this->getService($entityName)->createEntity($input);
+                        $entity = $this->getService($entityName, true)->createEntity($input);
                     } catch (NotUnique|ConstraintViolationException $e) {
                         $entity = $this->getEntityManager()->getRepository($entityName)->where($where)->findOne();
                     } catch (\Throwable $e) {

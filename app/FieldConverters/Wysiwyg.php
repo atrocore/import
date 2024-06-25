@@ -89,8 +89,12 @@ class Wysiwyg
         return $this->container->get('metadata');
     }
 
-    protected function getEntityManager(): EntityManager
+    protected function getEntityManager(bool $alternativeContainer = false): EntityManager
     {
+        if ($alternativeContainer){
+            return $this->configuratorItem->getContainer2()->get('entityManager');
+        }
+
         return $this->container->get('entityManager');
     }
 
@@ -104,12 +108,19 @@ class Wysiwyg
         return $this->getLanguage()->translate($label, $category, $scope);
     }
 
-    protected function getService(string $name): Base
+    protected function getService(string $name, bool $alternativeContainer = false): Base
     {
         $key = "service_{$name}";
 
+        $container = $this->container;
+
+        if ($alternativeContainer) {
+            $key .= "_container2";
+            $container = $this->configuratorItem->getContainer2();
+        }
+
         if (!$this->getMemoryStorage()->has($key)) {
-            $this->getMemoryStorage()->set($key, $this->container->get('serviceFactory')->create($name));
+            $this->getMemoryStorage()->set($key, $container->get('serviceFactory')->create($name));
         }
 
         return $this->getMemoryStorage()->get($key);

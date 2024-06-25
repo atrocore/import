@@ -53,17 +53,14 @@ class ExtensibleEnum extends Link
             return;
         }
 
-        /** @var EntityManager $em */
-        $em = $this->configuratorItem->getContainer2()->get('entityManager');
-
-        $link = $em->getRepository('ExtensibleEnumExtensibleEnumOption')->get();
+        $link = $this->getEntityManager(true)->getRepository('ExtensibleEnumExtensibleEnumOption')->get();
         $link->set([
             'extensibleEnumId'       => $this->getExtensibleEnumId($config),
             'extensibleEnumOptionId' => $entity->get('id')
         ]);
 
         try {
-            $em->saveEntity($link);
+            $this->getEntityManager(true)->saveEntity($link);
         } catch (NotUnique|ConstraintViolationException $e) {
         }
     }
