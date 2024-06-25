@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace Import\FieldConverters;
 
+use Atro\Core\Exceptions\NotUnique;
+use Doctrine\DBAL\Exception\ConstraintViolationException;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
@@ -105,6 +107,8 @@ class Link extends Varchar
 
                     try {
                         $entity = $this->getService($entityName)->createEntity($input);
+                    } catch (NotUnique|ConstraintViolationException $e) {
+                        $entity = $this->getEntityManager()->getRepository($entityName)->where($where)->findOne();
                     } catch (\Throwable $e) {
                         $className = get_class($e);
 
