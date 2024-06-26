@@ -26,7 +26,7 @@ Espo.define('import:views/import-feed/fields/entity', 'views/fields/enum',
         getEntitiesList() {
             let scopes = this.getMetadata().get('scopes') || {};
             return Object.keys(scopes)
-                .filter(scope => scopes[scope].importable && scopes[scope].entity)
+                .filter(scope => !scopes[scope].disabled && scopes[scope].importable && scopes[scope].entity)
                 .sort((v1, v2) => this.translate(v1, 'scopeNamesPlural').localeCompare(this.translate(v2, 'scopeNamesPlural')));
         },
 
