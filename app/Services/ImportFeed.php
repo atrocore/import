@@ -14,8 +14,11 @@ declare(strict_types=1);
 namespace Import\Services;
 
 use Atro\Core\EventManager\Event;
+use Atro\Core\Exceptions\Error;
+use Atro\Core\FileStorage\FileStorageInterface;
 use Atro\DTO\QueueItemDTO;
 use Atro\Entities\File;
+use Atro\Services\File as FileService;
 use Atro\Entities\Folder;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Forbidden;
@@ -54,7 +57,7 @@ class ImportFeed extends Base
             $entity->set($name, $value);
         }
 
-        if (empty($entity->_collectionPrepared)){
+        if (empty($entity->_collectionPrepared)) {
             $latestJobsData = $this->getRepository()->getLatestJobData([$entity->get('id')]);
             if (isset($latestJobsData[$entity->get('id')])) {
                 $entity->set('lastStatus', $latestJobsData[$entity->get('id')]['state']);
@@ -290,6 +293,11 @@ class ImportFeed extends Base
             if (empty($attachmentId)) {
                 throw new BadRequest($this->getInjection('language')->translate('fileIdIsEmpty', 'exceptions', 'ImportFeed'));
             }
+        }
+
+        $file = $feed->get('file');
+        if (!empty($file) && $file->get('id') === $attachmentId) {
+            $attachmentId = $this->createFileDuplicate($file, $this->createImportFileFolder($feed)->get('id'));
         }
 
         $this->pushJobs($feed, $attachmentId, $payload, $priority);
@@ -794,7 +802,6 @@ class ImportFeed extends Base
         return 'Import feed is correctly configured';
     }
 
-
     public function importFromEasyCatalog(\stdClass $data)
     {
         $importFeed = $this->getRepository()->where(['code' => $data->code])->findOne();
@@ -806,9 +813,54 @@ class ImportFeed extends Base
         $input->name = 'easy-catalog.json';
         $input->hidden = true;
 
-        $file = $this->getServiceFactory()->create('File')->createFileViaContents($input, json_encode($data->json));
+        $file = $this->getFileService()->createFileViaContents($input, json_encode($data->json));
 
         $this->runImport($importFeed->id, $file['id']);
+    }
+
+    public function createFileDuplicate(File $file, ?string $folderId): string
+    {
+        /** @var FileStorageInterface $storage */
+        $storage = $this->getInjection('container')->get($file->getStorage()->get('type') . 'Storage');
+
+        $tmpDir = 'data' . DIRECTORY_SEPARATOR . 'import-tmp' . DIRECTORY_SEPARATOR . Util::generateId();
+        @mkdir($tmpDir, 0777, true);
+
+        $path = $tmpDir . DIRECTORY_SEPARATOR . $file->get('name');
+
+        $stream = $storage->getStream($file);
+
+        $tmpFile = fopen($path, 'w');
+        if ($tmpFile === false) {
+            throw new \RuntimeException('Failed to open file for writing: ' . $path);
+        }
+        $stream->rewind();
+        while (!$stream->eof()) {
+            fwrite($tmpFile, $stream->read(8192));
+        }
+        fclose($tmpFile);
+
+        $input = new \stdClass();
+        $input->name = $file->get('name');
+        $input->hidden = true;
+        if ($folderId !== null) {
+            $input->folderId = $folderId;
+        }
+
+        $fileData = $this->getFileService()->moveLocalFileToFileEntity($input, $path);
+
+        @rmdir($tmpDir);
+
+        if (empty($fileData['id'])) {
+            throw new Error('File duplicate was not created!');
+        }
+
+        return $fileData['id'];
+    }
+
+    protected function getFileService(): FileService
+    {
+        return $this->getServiceFactory()->create('File');
     }
 
     protected function createDir(string $fileName): void
