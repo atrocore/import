@@ -47,6 +47,18 @@ class ExtensibleEnum extends Link
         return 'ExtensibleEnumOption';
     }
 
+    protected function prepareWhere(array $config, string $entityName, array &$where): void
+    {
+        parent::prepareWhere($config, $entityName, $where);
+
+        if (empty($where)) {
+            return;
+        }
+
+        $where['extensibleEnumId'] = $this->getExtensibleEnumId($config);
+    }
+
+
     protected function beforeSetValue(Entity $entity, array $config, array $row): void
     {
         if (empty($config['createIfNotExist'])) {
