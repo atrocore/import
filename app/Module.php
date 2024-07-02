@@ -15,6 +15,7 @@ namespace Import;
 
 use Espo\Core\OpenApiGenerator;
 use Atro\Core\ModuleManager\AbstractModule;
+use Espo\Core\Utils\Util;
 
 /**
  * Class Module
@@ -27,6 +28,12 @@ class Module extends AbstractModule
     public static function getLoadOrder(): int
     {
         return 5110;
+    }
+
+    public static function afterUpdate(): void
+    {
+        \Import\Services\ImportTypeSimple::clearCache();
+        Util::removeDir(\Import\Services\ImportFeed::TMP_DIR);
     }
 
     public function prepareApiDocs(array &$data, array $schemas): void

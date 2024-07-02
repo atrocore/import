@@ -32,6 +32,8 @@ use Import\Entities\ImportJob;
 
 class ImportFeed extends Base
 {
+    public const TMP_DIR = 'data/import-tmp';
+
     protected $mandatorySelectAttributeList = ['sourceFields', 'sheet', 'data'];
 
     public function prepareCollectionForOutput(EntityCollection $collection, array $selectParams = []): void
@@ -823,7 +825,7 @@ class ImportFeed extends Base
         /** @var FileStorageInterface $storage */
         $storage = $this->getInjection('container')->get($file->getStorage()->get('type') . 'Storage');
 
-        $tmpDir = 'data' . DIRECTORY_SEPARATOR . 'import-tmp' . DIRECTORY_SEPARATOR . Util::generateId();
+        $tmpDir = self::TMP_DIR . DIRECTORY_SEPARATOR . Util::generateId();
         @mkdir($tmpDir, 0777, true);
 
         $path = $tmpDir . DIRECTORY_SEPARATOR . $file->get('name');
