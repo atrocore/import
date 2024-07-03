@@ -19,11 +19,24 @@ class ImportJob extends Base
 {
     protected function access(&$result)
     {
-        $importFeeds = $this->getEntityManager()->getRepository('ImportFeed')
-            ->select(['id'])
-            ->find($this->createSelectManager('ImportFeed')->getSelectParams([], true, true));
+        $repository = $this->getEntityManager()->getRepository('ImportFeed');
 
-        $result['whereClause'][] = ['OR' => ['importFeedId' => array_column($importFeeds->toArray(), 'id')]];
+        $sp = $this->createSelectManager('ImportFeed')->getSelectParams([], true, true);
+        $sp['select'] = ['id'];
+
+        $qb = $repository->getMapper()->createSelectQueryBuilder($repository->get(), $sp);
+
+        $mainTableAlias = $this->getRepository()->getMapper()->getQueryConverter()->getMainTableAlias();
+        $innerSql = str_replace($mainTableAlias, "t_if", $qb->getSql());
+
+        $where = [
+            'innerSql' => [
+                "sql"        => "$mainTableAlias.import_feed_id IN ({$innerSql})",
+                "parameters" => $qb->getParameters()
+            ]
+        ];
+
+        $result['whereClause'][] = ['OR' => $where];
     }
 
     protected function boolFilterOnlyImportFailed24Hours(array &$result): void
