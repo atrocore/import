@@ -19,10 +19,23 @@ class ImportJobLog extends Base
 {
     protected function access(&$result)
     {
-        $importJobs = $this->getEntityManager()->getRepository('ImportJob')
-            ->select(['id'])
-            ->find($this->createSelectManager('ImportJob')->getSelectParams([], true, true));
+        $repository = $this->getEntityManager()->getRepository('ImportJob');
 
-        $result['whereClause'][] = ['OR' => ['importJobId' => array_column($importJobs->toArray(), 'id')]];
+        $sp = $this->createSelectManager('ImportJob')->getSelectParams([], true, true);
+        $sp['select'] = ['id'];
+
+        $qb = $repository->getMapper()->createSelectQueryBuilder($repository->get(), $sp);
+
+        $mainTableAlias = $this->getRepository()->getMapper()->getQueryConverter()->getMainTableAlias();
+        $innerSql = str_replace($mainTableAlias, "t_ij", $qb->getSql());
+
+        $where = [
+            'innerSql' => [
+                "sql"        => "$mainTableAlias.import_job_id IN ({$innerSql})",
+                "parameters" => $qb->getParameters()
+            ]
+        ];
+
+        $result['whereClause'][] = ['OR' => $where];
     }
 }
