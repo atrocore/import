@@ -32,12 +32,14 @@
     "nullValue": "Null Value",
     "skipValue": "Skip Value",
     "markForNoRelation": "Marking for no relation",
-    "fieldDelimiterForRelation": "Field Delimiter for Relation"
+    "fieldDelimiterForRelation": "Field Delimiter for Relation",
+    "scheduledJobs": "Scheduled Jobs"
   },
   "links": {
     "connection": "Connection",
     "importJobs": "Import Jobs",
-    "configuratorItems": "Configurator"
+    "configuratorItems": "Configurator",
+    "scheduleJobs": "Scheduled Jobs"
   },
   "labels": {
     "parseFile": "File Parsing: {{fileName}}",
