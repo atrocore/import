@@ -31,12 +31,14 @@
     "nullValue": "Нульове значення",
     "skipValue": "Пропуск значення",
     "markForNoRelation": "Отметка об отсутствии отношений",
-    "fieldDelimiterForRelation": "Роздільник полів для зв'язку"
+    "fieldDelimiterForRelation": "Роздільник полів для зв'язку",
+    "scheduledJobs": "Заплановані роботи"
   },
   "links": {
     "connection": "З'єднання",
     "importJobs": "Завдання імпорту",
-    "configuratorItems": "Конфігуратор"
+    "configuratorItems": "Конфігуратор",
+    "scheduledJobs": "Заплановані роботи"
   },
   "labels": {
     "parseFile": "Аналіз файлу: {{fileName}}",

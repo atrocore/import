@@ -28,12 +28,14 @@
     "nullValue": "Nullwert",
     "skipValue": "Wert überspringen",
     "markForNoRelation": "Markierung für fehlende Relationen",
-    "fieldDelimiterForRelation": "Feldtrennzeichen für Relation"
+    "fieldDelimiterForRelation": "Feldtrennzeichen für Relation",
+    "scheduledJobs": "Geplante Aufträge"
   },
   "links": {
     "connection": "Verbindung",
     "importJobs": "Importaufträge",
-    "configuratorItems": "Konfigurator"
+    "configuratorItems": "Konfigurator",
+    "scheduledJobs": "Geplante Aufträge"
   },
   "labels": {
     "parseFile": "Datei-Parsing: {{fileName}}",
