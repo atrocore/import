@@ -37,8 +37,7 @@
   "links": {
     "connection": "З'єднання",
     "importJobs": "Завдання імпорту",
-    "configuratorItems": "Конфігуратор",
-    "scheduledJobs": "Заплановані роботи"
+    "configuratorItems": "Конфігуратор"
   },
   "labels": {
     "parseFile": "Аналіз файлу: {{fileName}}",
