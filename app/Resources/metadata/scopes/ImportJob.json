@@ -7,6 +7,7 @@
   "importable": false,
   "notifications": false,
   "stream": false,
+  "streamDisabled": true,
   "disabled": false,
   "type": "Base",
   "module": "Import",
