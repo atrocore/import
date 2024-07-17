@@ -15,5 +15,6 @@
   "overviewFilters": false,
   "hasAssignedUser": false,
   "hasTeam": false,
-  "hasOwner": false
+  "hasOwner": false,
+  "deleteWithoutConfirmation": true
 }
