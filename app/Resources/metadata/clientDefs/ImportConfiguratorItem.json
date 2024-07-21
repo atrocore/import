@@ -77,6 +77,17 @@
           ]
         }
       },
+      "urlHeaders": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "name",
+              "value": "url"
+            }
+          ]
+        }
+      },
       "foreignColumn": {
         "required": {
           "conditionGroup": [

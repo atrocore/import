@@ -76,6 +76,32 @@
     ]
   },
   {
+    "label": "urlHeaders",
+    "style": "default",
+    "rows": [
+      [
+        {
+          "name": "urlHeaders",
+          "fullWidth": true
+        }
+      ]
+    ],
+    "dynamicLogicVisible": {
+      "conditionGroup": [
+        {
+          "type": "equals",
+          "attribute": "name",
+          "value": "url"
+        },
+        {
+          "type": "equals",
+          "attribute": "entity",
+          "value": "File"
+        }
+      ]
+    }
+  },
+  {
     "label": "mapping",
     "style": "default",
     "rows": [
