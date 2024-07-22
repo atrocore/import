@@ -84,6 +84,11 @@
               "type": "equals",
               "attribute": "name",
               "value": "url"
+            },
+            {
+              "type": "equals",
+              "attribute": "entity",
+              "value": "File"
             }
           ]
         }
