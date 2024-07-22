@@ -17,7 +17,8 @@
     "foreignImportBy": "Feld(er) der verknüpften Entität",
     "replaceArray": "Ersetzen",
     "attributeValue": "Attributwert",
-    "importByForListAttribute": "Verwandte Entitätsfelder für Listen"
+    "importByForListAttribute": "Verwandte Entitätsfelder für Listen",
+    "urlHeaders": "Kopfzeilen anfordern"
   },
   "options": {
     "attributeValue": {
@@ -35,7 +36,8 @@
     "mapping": "Feldzuordnung fürs Erstellen",
     "search": "Feldzuordnung für Suche",
     "additionalInformation": "Zusatzinformationen",
-    "importByForAttributeValue": "Dies gilt nur für Attribute vom Typ Liste oder Mehrwertliste"
+    "importByForAttributeValue": "Dies gilt nur für Attribute vom Typ Liste oder Mehrwertliste",
+    "urlHeaders": "Kopfzeilen anfordern"
   },
   "exceptions": {
     "wrongFieldsNumber": "Für die Suche sollte die Anzahl der Quellfelder gleich der Anzahl der Relationsfelder sein.",

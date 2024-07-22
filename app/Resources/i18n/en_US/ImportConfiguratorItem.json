@@ -17,7 +17,8 @@
     "foreignImportBy": "Related entity field(s)",
     "replaceArray": "Replace",
     "attributeValue": "Attribute Value",
-    "importByForListAttribute": "Related Entity Fields for Lists"
+    "importByForListAttribute": "Related Entity Fields for Lists",
+    "urlHeaders": "Request Headers"
   },
   "options": {
     "attributeValue": {
@@ -36,7 +37,8 @@
     "mapping": "Field mapping for insert",
     "search": "Field mapping for search",
     "additionalInformation": "Additional Information",
-    "importByForAttributeValue": "This is only for Attribute of type List or Multi-value list"
+    "importByForAttributeValue": "This is only for Attribute of type List or Multi-value list",
+    "urlHeaders": "Request Headers"
   },
   "exceptions": {
     "wrongFieldsNumber": "For search the amount of source fields should be the same as the amount of related entity fields.",
