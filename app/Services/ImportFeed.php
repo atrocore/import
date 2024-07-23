@@ -383,13 +383,20 @@ class ImportFeed extends Base
         return false;
     }
 
-    public function pushJobs(ImportFeedEntity $importFeed, string $attachmentId, ?\stdClass $payload = null, ?string $priority = null): void
+    public function hasParentJob(ImportFeedEntity $importFeed): bool
     {
         $hasParent = (int)$importFeed->get('maxPerJob') > 0 || \Import\Services\ImportTypeSimple::isDeleteAction($importFeed->get('fileDataAction') ?? '');
         if (!$hasParent && $importFeed->getFeedField('entity') === 'Product') {
             $configuratorItemTypes = array_column($importFeed->get('configuratorItems')->toArray(), 'type');
             $hasParent = in_array('Attribute', $configuratorItemTypes);
         }
+
+        return $hasParent;
+    }
+
+    public function pushJobs(ImportFeedEntity $importFeed, string $attachmentId, ?\stdClass $payload = null, ?string $priority = null): void
+    {
+        $hasParent = $this->hasParentJob($importFeed);
 
         if ($hasParent) {
             $parentJob = $this->createImportJob($importFeed, $importFeed->getFeedField('entity'), $attachmentId, new \stdClass());
