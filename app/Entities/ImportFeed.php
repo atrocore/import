@@ -141,6 +141,7 @@ class ImportFeed extends Base
                 'emptyValue'                => $this->getFeedField('emptyValue'),
                 'nullValue'                 => $this->getFeedField('nullValue'),
                 'skipValue'                 => $this->getFeedField('skipValue'),
+                'urlHeaders'                => $item->get('urlHeaders'),
                 'decimalMark'               => $this->getFeedField('format') === 'CSV' ? $this->getFeedField('decimalMark') : ".",
                 'thousandSeparator'         => $this->getFeedField('thousandSeparator'),
                 'markForNoRelation'         => $this->getFeedField('markForNoRelation'),

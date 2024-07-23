@@ -143,6 +143,12 @@
       "readOnly": true,
       "view": "import:views/import-configurator-item/fields/source-fields"
     },
+    "urlHeaders": {
+      "type": "jsonObject",
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "view": "import:views/import-configurator-item/fields/url-headers"
+    },
     "createdAt": {
       "type": "datetime",
       "readOnly": true

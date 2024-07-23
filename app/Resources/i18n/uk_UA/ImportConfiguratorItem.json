@@ -17,7 +17,8 @@
     "foreignImportBy": "Поле(я) пов'язаної сутності",
     "replaceArray": "Замінювати",
     "attributeValue": "Значення атрибуту",
-    "importByForListAttribute": "Пов’язані поля сутності для списків"
+    "importByForListAttribute": "Пов’язані поля сутності для списків",
+    "urlHeaders": "Заголовки запиту"
   },
   "options": {
     "attributeValue": {
@@ -35,7 +36,8 @@
     "mapping": "Зіставлення полів для вставки",
     "search": "Зіставлення полів для пошуку",
     "additionalInformation": "Додаткова інформація",
-    "importByForAttributeValue": "Це лише для атрибутів типу List або Multi-value list"
+    "importByForAttributeValue": "Це лише для атрибутів типу List або Multi-value list",
+    "urlHeaders": "Заголовки запиту"
   },
   "exceptions": {
     "wrongFieldsNumber": "Для пошуку кількість вихідних полів має бути такою самою, як кількість полів пов'язаних сутностей.",

@@ -30,6 +30,10 @@ class Text extends Wysiwyg
 //        $value = str_replace(['<br>', '<br/>', '<br />', '\n'], ["\n", "\n", "\n", "\n"], $value);
 //        $inputRow->{$config['name']} = trim(html_entity_decode(strip_tags($value)));
 
+        if (!empty($config['urlHeaders']) && !property_exists($inputRow, 'urlHeaders')) {
+            $inputRow->urlHeaders = $config['urlHeaders'];
+        }
+
         $inputRow->{$config['name']} = $value;
     }
 }
