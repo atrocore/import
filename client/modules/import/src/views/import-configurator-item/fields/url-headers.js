@@ -78,7 +78,7 @@ Espo.define('import:views/import-configurator-item/fields/url-headers', 'views/f
         fetch() {
             const result = {};
             for (const item of this.items) {
-                if (!item.key || !item.value) {
+                if (!item?.key || !item?.value) {
                     continue;
                 }
 
