@@ -147,6 +147,11 @@ class JsonToVerticalArray
                 }
 
                 $preparedName = implode(".", $nameParts);
+
+                if (is_bool($value)) {
+                    $value = $value ? 'true' : 'false';
+                }
+
                 $row[$preparedName] = $value;
             }
             $data[] = $row;
