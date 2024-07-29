@@ -214,23 +214,42 @@ class ImportJob extends Base
 
         // prepare job data
         $jobData = json_decode(json_encode($qmJob->get('data')), true);
+        $this->getImportTypeSimpleService()->prepareConfigurator($jobData);
+
+        $idFields = $this->getImportTypeSimpleService()->getLinkFields($jobData['data']['entity'], $jobData['data']['idField']);
 
         $rows = [];
         while (!empty($inputData = $this->getImportTypeSimpleService()->getInputData($jobData))) {
+            $this->getMemoryStorage()->set('importRowsPart', $inputData);
+
+            // add column converted_{field} to the row
+            foreach ($inputData as $i => $row) {
+                $this->getImportTypeSimpleService()->processConvertedFileRow($jobData, $row, $idFields);
+                $inputData[$i] = $row;
+            }
+
             $rows = array_merge($rows, $inputData);
+        }
+
+        if ($jobData['isFileHeaderRow'] ?? false) {
+            $rows = array_merge([array_keys($rows[0])], $rows);
+        } else {
+            $rows[0] = array_keys($rows[0]);
         }
 
         $inputData = new \stdClass();
         $inputData->name = str_replace(' ', '_', $importJob->get('name')) . '.csv';
         $inputData->hidden = true;
         $inputData->folderId = $this->getImportFeedService()->createImportFileFolder($importJob->get('importFeed'))->get('id');
-        $fileArr = $this->getFileService()->createFileViaContents($inputData, $this->createFileParser('CSV')->createFileContent($rows));
+        $fileParser = $this->createFileParser('CSV');
+        $fileParser->setData($jobData);
+        $fileArr = $this->getFileService()->createFileViaContents($inputData, $fileParser->createFileContent($rows));
 
         // set converted file attachment to import job
-        $importJob->set('convertedFileId', $fileArr['id']);
+        $importJob->set('convertedFileId', is_array($fileArr) ? $fileArr['id'] : $fileArr->get('id'));
         $this->getEntityManager()->saveEntity($importJob);
 
-        return $fileArr;
+        return is_array($fileArr) ? $fileArr : $fileArr->toArray();
     }
 
     public function getImportJobsViaScope(string $scope): array
