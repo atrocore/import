@@ -23,6 +23,7 @@ use Import\Entities\ImportFeed as ImportFeedEntity;
 
 class ImportJob extends Base
 {
+    private ?ImportTypeSimple $importService = null;
     protected $mandatorySelectAttributeList = ['message', 'uploadedFileId', 'uploadedFileName', 'attachmentId', 'attachmentName'];
 
     public function deleteOld(int $days = 14): bool
@@ -254,7 +255,11 @@ class ImportJob extends Base
 
     protected function getImportTypeSimpleService(): ImportTypeSimple
     {
-        return $this->getServiceFactory()->create('ImportTypeSimple');
+        if (!$this->importService) {
+            $this->importService = $this->getServiceFactory()->create('ImportTypeSimple');
+        }
+
+        return $this->importService;
     }
 
     protected function getImportFeedService(): ImportFeed
