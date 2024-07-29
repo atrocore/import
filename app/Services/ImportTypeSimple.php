@@ -705,6 +705,8 @@ class ImportTypeSimple extends QueueManagerBase
         /** @var \Import\Services\ImportFeed $importService */
         $importService = $this->getService('ImportFeed');
 
+        $linkFields = $this->getLinkFields('Product', $productImportData['data']['idField']);
+
         foreach ($productImportData['data']['configuration'] as $item) {
             if ($item['type'] === 'Attribute') {
                 $attribute = $this->getEntityById('Attribute', $item['attributeId']);
@@ -766,6 +768,42 @@ class ImportTypeSimple extends QueueManagerBase
 
                 if (isset($pavData['sourceFields'])) {
                     unset($pavData['sourceFields']);
+                }
+
+                if (!empty($pavData['script']) || !empty($linkFields)) {
+                    if (!$importJob->get('convertedFileId')) {
+                        $importJob->set('convertedFileId', $this->getService('ImportJob')->generateConvertedFile($importJob->get('id'))['id']);
+                    }
+
+                    $pavData['attachmentId'] = $importJob->get('convertedFileId');
+                    $pavData['offset'] = 1;
+                    $pavData['isFileHeaderRow'] = true;
+
+                    if (!empty($pavData['script'])) {
+                        $pavData['script'] = null;
+                    }
+
+                    foreach ($configurator as $i => $confItem) {
+                        if ($confItem['name'] !== 'product') {
+                            continue;
+                        }
+
+                        $columns = [];
+                        $importBy = [];
+                        foreach ($confItem['importBy'] as $index => $value) {
+                            if (isset($linkFields[$value])) {
+                                $field = $linkFields[$value];
+                                $importBy[$index] = $field;
+                                $columns[$index] = "converted_$field";
+                            } else {
+                                $importBy[$index] = $value;
+                                $columns[$index] = $confItem['column'][$index];
+                            }
+                        }
+
+                        $configurator[$i]['importBy'] = $importBy;
+                        $configurator[$i]['column'] = $columns;
+                    }
                 }
 
                 $pavData['data']['configuration'] = $configurator;
@@ -929,7 +967,7 @@ class ImportTypeSimple extends QueueManagerBase
         return $resource;
     }
 
-    protected function prepareConfigurator(array &$data): void
+    public function prepareConfigurator(array &$data): void
     {
         if (empty($data['data']['entity']) || empty($data['data']['configuration'])) {
             return;
@@ -1053,5 +1091,39 @@ class ImportTypeSimple extends QueueManagerBase
         }
 
         return false;
+    }
+
+    public function getLinkFields(string $scope, array $fields): array
+    {
+        $linkFields = [];
+        foreach ($fields as $field) {
+            $type = $this->getMetadata()->get(['entityDefs', $scope, 'fields', $field, 'type']);
+            if (in_array($type, ['link', 'linkMultiple', 'extensibleEnum', 'extensibleMultiEnum'])) {
+                $value = $field;
+                if ($type == 'link') {
+                    $value .= 'Id';
+                } else if ($type == 'linkMultiple') {
+                    $value .= 'Ids';
+                }
+
+                $linkFields[$field] = $value;
+            }
+        }
+
+        return $linkFields;
+    }
+
+    public function processConvertedFileRow(array $jobData, array &$row, array $idFields): void
+    {
+        $where = $this->prepareWhere($jobData['data']['entity'], $jobData['data'], $row);
+        foreach ($where as $key => $value) {
+            if (is_array($value)) {
+                $value = implode($jobData['data']['delimiter'], $value);
+            }
+
+            if (in_array($key, $idFields)) {
+                $row["converted_$key"] = $value;
+            }
+        }
     }
 }
