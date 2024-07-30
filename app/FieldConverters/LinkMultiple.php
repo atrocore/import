@@ -30,6 +30,10 @@ class LinkMultiple extends Varchar
         $fieldName = $this->getFieldName($config);
 
         foreach ($config['column'] as $column) {
+            if (!isset($row[$column])) {
+                continue;
+            }
+
             $this->deletePAV($row[$column], $config);
             if ($row[$column] === $config['markForNoRelation']) {
                 $inputRow->$fieldName = [];
@@ -164,34 +168,38 @@ class LinkMultiple extends Varchar
         $result = [];
 
         if (count($columns) == 1) {
-            $value = $row[$columns[0]];
+            if (isset($row[$columns[0]])) {
+                $value = $row[$columns[0]];
 
-            if (strtolower((string)$value) === strtolower((string)$config['emptyValue']) || $value === '') {
-                $value = null;
-            }
+                if (strtolower((string)$value) === strtolower((string)$config['emptyValue']) || $value === '') {
+                    $value = null;
+                }
 
-            if (strtolower((string)$value) === strtolower((string)$config['nullValue'])) {
-                $value = null;
-            }
+                if (strtolower((string)$value) === strtolower((string)$config['nullValue'])) {
+                    $value = null;
+                }
 
-            if ($value !== null) {
-                $values = explode($config['delimiter'], (string)$value);
+                if ($value !== null) {
+                    $values = explode($config['delimiter'], (string)$value);
 
-                foreach ($values as $value) {
-                    $result[] = [$value];
+                    foreach ($values as $value) {
+                        $result[] = [$value];
+                    }
                 }
             }
         } else {
             $rows = [];
 
             foreach ($columns as $column) {
-                $value = explode($config['delimiter'], (string)$row[$column]);
+                if (isset($row[$column])) {
+                    $value = explode($config['delimiter'], (string)$row[$column]);
 
-                if (count($value) > 1) {
-                    throw new BadRequest(sprintf($this->translate('listSeparatorNotAllowed', 'exceptions', 'ImportFeed'), $this->relationEntityName));
+                    if (count($value) > 1) {
+                        throw new BadRequest(sprintf($this->translate('listSeparatorNotAllowed', 'exceptions', 'ImportFeed'), $this->relationEntityName));
+                    }
+
+                    $rows[] = $value[0];
                 }
-
-                $rows[] = $value[0];
             }
 
             $result[] = $rows;
