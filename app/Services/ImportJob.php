@@ -192,6 +192,7 @@ class ImportJob extends Base
                 throw new \Error('Unknown file format');
         }
 
+        $fileParser->setData(['isFileHeaderRow' => $isFileHeaderRow]);
         $fileArr = $this->getFileService()->createFileViaContents($inputData, $fileParser->createFileContent($errorsRows));
 
         $importJob->set('errorsAttachmentId', $fileArr['id']);
