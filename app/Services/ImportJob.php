@@ -226,6 +226,10 @@ class ImportJob extends Base
             // add column converted_{field} to the row
             foreach ($inputData as $i => $row) {
                 $this->getImportTypeSimpleService()->processConvertedFileRow($jobData, $row, $idFields);
+                if ($row === null) {
+                    unset($inputData[$i]);
+                    continue;
+                }
                 $inputData[$i] = $row;
             }
 

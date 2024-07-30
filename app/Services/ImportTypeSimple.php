@@ -1115,15 +1115,29 @@ class ImportTypeSimple extends QueueManagerBase
 
     public function processConvertedFileRow(array $jobData, array &$row, array $idFields): void
     {
-        $where = $this->prepareWhere($jobData['data']['entity'], $jobData['data'], $row);
-        foreach ($where as $key => $value) {
-            if (is_array($value)) {
-                $value = implode($jobData['data']['delimiter'], $value);
+        try {
+            $where = $this->prepareWhere($jobData['data']['entity'], $jobData['data'], $row);
+            foreach ($where as $key => $value) {
+                if (is_array($value)) {
+                    $value = implode($jobData['data']['delimiter'], $value);
+                }
+
+                if (in_array($key, $idFields)) {
+                    $row["converted_$key"] = $value;
+                }
+            }
+        } catch (\Throwable $e) {
+            // skip empty rows on import
+            if ($this->getMemoryStorage()->get('importJobId')) {
+                $row = null;
+            } else {
+                foreach ($idFields as $field => $value) {
+                    $row["converted_$value"] = null;
+                }
             }
 
-            if (in_array($key, $idFields)) {
-                $row["converted_$key"] = $value;
-            }
+            return;
         }
+
     }
 }
