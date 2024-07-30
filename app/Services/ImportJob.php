@@ -192,6 +192,7 @@ class ImportJob extends Base
                 throw new \Error('Unknown file format');
         }
 
+        $fileParser->setData(['isFileHeaderRow' => $isFileHeaderRow]);
         $fileArr = $this->getFileService()->createFileViaContents($inputData, $fileParser->createFileContent($errorsRows));
 
         $importJob->set('errorsAttachmentId', $fileArr['id']);
@@ -225,10 +226,18 @@ class ImportJob extends Base
             // add column converted_{field} to the row
             foreach ($inputData as $i => $row) {
                 $this->getImportTypeSimpleService()->processConvertedFileRow($jobData, $row, $idFields);
+                if ($row === null) {
+                    unset($inputData[$i]);
+                    continue;
+                }
                 $inputData[$i] = $row;
             }
 
             $rows = array_merge($rows, $inputData);
+        }
+
+        if (empty($rows)) {
+            return [];
         }
 
         if ($jobData['isFileHeaderRow'] ?? false) {

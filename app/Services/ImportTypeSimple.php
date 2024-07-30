@@ -706,6 +706,7 @@ class ImportTypeSimple extends QueueManagerBase
         $importService = $this->getService('ImportFeed');
 
         $linkFields = $this->getLinkFields('Product', $productImportData['data']['idField']);
+        $convertedFile = null;
 
         foreach ($productImportData['data']['configuration'] as $item) {
             if ($item['type'] === 'Attribute') {
@@ -771,11 +772,17 @@ class ImportTypeSimple extends QueueManagerBase
                 }
 
                 if (!empty($pavData['script']) || !empty($linkFields)) {
-                    if (!$importJob->get('convertedFileId')) {
-                        $importJob->set('convertedFileId', $this->getService('ImportJob')->generateConvertedFile($importJob->get('id'))['id']);
+                    if ($convertedFile === null) {
+                        $convertedFile = $this->getService('ImportJob')->generateConvertedFile($importJob->get('id'));
                     }
 
+                    if (empty($convertedFile)) {
+                        continue;
+                    }
+
+                    $importJob->set('convertedFileId', $convertedFile['id']);
                     $pavData['attachmentId'] = $importJob->get('convertedFileId');
+                    $pavData['fileFormat'] = 'CSV';
                     $pavData['offset'] = 1;
                     $pavData['isFileHeaderRow'] = true;
 
@@ -1115,15 +1122,29 @@ class ImportTypeSimple extends QueueManagerBase
 
     public function processConvertedFileRow(array $jobData, array &$row, array $idFields): void
     {
-        $where = $this->prepareWhere($jobData['data']['entity'], $jobData['data'], $row);
-        foreach ($where as $key => $value) {
-            if (is_array($value)) {
-                $value = implode($jobData['data']['delimiter'], $value);
+        try {
+            $where = $this->prepareWhere($jobData['data']['entity'], $jobData['data'], $row);
+            foreach ($where as $key => $value) {
+                if (is_array($value)) {
+                    $value = implode($jobData['data']['delimiter'], $value);
+                }
+
+                if (in_array($key, $idFields)) {
+                    $row["converted_$key"] = $value;
+                }
+            }
+        } catch (\Throwable $e) {
+            // skip empty rows on import
+            if ($this->getMemoryStorage()->get('importJobId')) {
+                $row = null;
+            } else {
+                foreach ($idFields as $field => $value) {
+                    $row["converted_$value"] = null;
+                }
             }
 
-            if (in_array($key, $idFields)) {
-                $row["converted_$key"] = $value;
-            }
+            return;
         }
+
     }
 }
