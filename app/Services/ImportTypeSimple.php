@@ -706,6 +706,7 @@ class ImportTypeSimple extends QueueManagerBase
         $importService = $this->getService('ImportFeed');
 
         $linkFields = $this->getLinkFields('Product', $productImportData['data']['idField']);
+        $convertedFile = null;
 
         foreach ($productImportData['data']['configuration'] as $item) {
             if ($item['type'] === 'Attribute') {
@@ -771,11 +772,17 @@ class ImportTypeSimple extends QueueManagerBase
                 }
 
                 if (!empty($pavData['script']) || !empty($linkFields)) {
-                    if (!$importJob->get('convertedFileId')) {
-                        $importJob->set('convertedFileId', $this->getService('ImportJob')->generateConvertedFile($importJob->get('id'))['id']);
+                    if ($convertedFile === null) {
+                        $convertedFile = $this->getService('ImportJob')->generateConvertedFile($importJob->get('id'));
                     }
 
+                    if (empty($convertedFile)) {
+                        continue;
+                    }
+
+                    $importJob->set('convertedFileId', $convertedFile['id']);
                     $pavData['attachmentId'] = $importJob->get('convertedFileId');
+                    $pavData['fileFormat'] = 'CSV';
                     $pavData['offset'] = 1;
                     $pavData['isFileHeaderRow'] = true;
 

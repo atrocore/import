@@ -236,6 +236,10 @@ class ImportJob extends Base
             $rows = array_merge($rows, $inputData);
         }
 
+        if (empty($rows)) {
+            return [];
+        }
+
         if ($jobData['isFileHeaderRow'] ?? false) {
             $rows = array_merge([array_keys($rows[0])], $rows);
         } else {
