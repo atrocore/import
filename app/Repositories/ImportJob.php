@@ -180,7 +180,7 @@ class ImportJob extends Base
 
         // delete import logs
         while (true) {
-            $logsToDelete = $this->getEntityManager()->getRepository('importJobLog')
+            $logsToDelete = $this->getEntityManager()->getRepository('ImportJobLog')
                 ->where(['importJobId' => $entity->get('id')])
                 ->limit(0, 4000)
                 ->find();
@@ -190,7 +190,7 @@ class ImportJob extends Base
             }
 
             foreach ($logsToDelete as $log) {
-                $log->removeEntity();
+                $this->getEntityManager()->removeEntity($log);
             }
         }
 
