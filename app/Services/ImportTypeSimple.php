@@ -1046,8 +1046,18 @@ class ImportTypeSimple extends QueueManagerBase
                     $type = $item['attributeType'];
                 } elseif (property_exists($input, 'attributeType')) {
                     $type = $input->attributeType;
-                } elseif (!empty($entity) && !empty($attribute = $this->getEntityById('Attribute', $entity->get('attributeId')))) {
-                    $type = $attribute->get('type');
+                } else {
+                    $attributeId = null;
+                    if (!empty($entity) && !empty($entity->get('attributeId'))) {
+                        $attributeId = $entity->get('attributeId');
+                    } elseif (isset($item['attributeId'])) {
+                        $attributeId = $item['attributeId'];
+                    }
+
+                    if (!empty($attributeId)) {
+                        $attribute = $this->getEntityById('Attribute', $attributeId);
+                        $type = $attribute->get('type');
+                    }
                 }
 
                 if (in_array($fieldName, ['valueFrom', 'valueTo'])) {
