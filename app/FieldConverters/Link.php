@@ -232,6 +232,10 @@ class Link extends Varchar
             return $this->getEntityById('Attribute', $config['attributeId'])->get('entityType');
         }
 
+        if (!empty($config['relEntityName'])) {
+            return $config['relEntityName'];
+        }
+
         $res = $this->getMetadata()->get(['entityDefs', $config['entity'], 'fields', $config['name'], 'entity']);
         if (empty($res)) {
             $res = $this->getMetadata()->get(['entityDefs', $config['entity'], 'links', $config['name'], 'entity']);
