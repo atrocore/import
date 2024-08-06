@@ -54,6 +54,19 @@ class ImportJob extends Base
         return $this->getRecordService()->getImportJobsViaScope((string)$request->get('scope'));
     }
 
+    public function actionReCreate($params, \stdClass $data, $request): bool
+    {
+        if (!$request->isPost() || !property_exists($data, 'id') || empty($data->id)) {
+            throw new BadRequest();
+        }
+
+        if (!$this->getAcl()->check($this->name, 'create')) {
+            throw new Forbidden();
+        }
+
+        return $this->getRecordService()->reCreateImportJob((string)$data->id, property_exists($data, 'attachmentId') ? $data->attachmentId : null);
+    }
+
     /**
      * @inheritDoc
      */

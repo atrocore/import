@@ -23,7 +23,7 @@ use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Utils\Metadata;
 use Espo\Core\Utils\Util;
 use Espo\ORM\Entity;
-use Espo\Services\QueueManagerBase;
+use Atro\Services\QueueManagerBase;
 use Espo\Core\Services\Base;
 use Import\Entities\ImportFeed;
 use Import\Exceptions\DeleteProductAttributeValue;
