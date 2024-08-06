@@ -30,7 +30,22 @@ Espo.define('import:views/import-job/record/list', 'views/record/list',
             model.save().then(() => {
                 this.notify('Saved', 'success');
             });
-        }
+        },
 
+        actionReCreateImportJob(data) {
+            const importJobModel = this.collection.get(data.id)
+            this.getModelFactory().create('ImportFeed', model => {
+                model.set({
+                    id: data.id,
+                    importFileId: importJobModel.get('attachmentId'),
+                    importFileName: importJobModel.get('attachmentName')
+                });
+                this.getParentView().getParentView().createView('dialog', 'import:views/import-job/modals/recreate', {
+                    scope: this.options.scope,
+                    el: '[data-view="dialog"]',
+                    model: model,
+                }, view => view.render());
+            })
+        },
     })
 );

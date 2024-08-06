@@ -29,7 +29,8 @@
     "Canceled": "Canceled",
     "generate": "Generate",
     "generating": "Generating",
-    "tryAgain": "Import again"
+    "tryAgain": "Import again",
+    "reCreate": "Recreate"
   },
   "tooltips": {
     "errorsAttachment": "Rows from 'Imported file' that have not been imported."

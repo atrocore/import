@@ -13,10 +13,13 @@ declare(strict_types=1);
 
 namespace Import\Services;
 
+use Atro\Core\Exceptions\NotFound;
+use Atro\DTO\QueueItemDTO;
 use Atro\Services\File;
 use Doctrine\DBAL\ParameterType;
 use Espo\Core\Exceptions\BadRequest;
 use Atro\Core\Templates\Services\Base;
+use Espo\Core\Utils\Util;
 use Espo\ORM\EntityCollection;
 use Import\FileParsers\FileParserInterface;
 use Import\Entities\ImportFeed as ImportFeedEntity;
@@ -324,6 +327,45 @@ class ImportJob extends Base
         }
 
         return $entity;
+    }
+
+    public function reCreateImportJob(string $id, ?string $attachmentId = null): bool
+    {
+        $job = $this->getEntity($id);
+        if (empty($job)) {
+            throw new NotFound();
+        }
+
+        if ($job->get('state') !== 'Success') {
+            throw new \Atro\Core\Exceptions\BadRequest("Status must be Success");
+        }
+
+        $importService = $this->getServiceFactory()->create('ImportFeed');
+
+        $feed = $this->getEntityManager()->getEntity('ImportFeed', $job->get('importFeedId'));
+        // if job is pav or child job
+        if (!empty($job->get('parentId'))) {
+            $queueItem = $job->get('queueItem');
+            if (!empty($queueItem)) {
+                $importJob = $this->getRepository()->get();
+                $importJob->set('id', Util::generateId());
+                $importJob->set('status', 'Pending');
+                $importJob->set('name', $job->get('name'));
+                $importJob->set('entityName', $job->get('entityName'));
+                $importJob->set('importFeedId', $job->get('importFeedId'));
+                $importJob->set('parentId', $job->get('parentId'));
+                $importJob->set('attachmentId', !empty($attachmentId) ? $attachmentId : $job->get('attachmentId'));
+                $this->getEntityManager()->saveEntity($importJob);
+
+                $data = $queueItem->get('data');
+                $data->data->importJobId = $importJob->get('id');
+                $data->attachmentId = $importJob->get('attachmentId');
+                $importService->push(new QueueItemDTO($queueItem->get('name'), $queueItem->get('serviceName'), json_decode(json_encode($data), true)));
+            }
+            return true;
+        }
+
+        return $importService->runImport($job->get('importFeedId'), !empty($attachmentId) ? $attachmentId : $job->get('attachmentId'));
     }
 
     protected function init()

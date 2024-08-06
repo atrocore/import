@@ -33,6 +33,16 @@ Espo.define('import:views/import-job/record/row-actions/relationship', 'views/re
                 });
             }
 
+            if (this.model.get('state') === 'Success' && this.options.acl.edit) {
+                list.push({
+                    action: 'reCreateImportJob',
+                    label: 'reCreate',
+                    data: {
+                        id: this.model.id
+                    }
+                });
+            }
+
             if (this.options.acl.delete) {
                 list.push({
                     action: 'removeRelated',

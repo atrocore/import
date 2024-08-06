@@ -29,7 +29,8 @@
     "Canceled": "Anulowane",
     "generate": "Generuj",
     "generating": "Generowanie",
-    "tryAgain": "Importuj ponownie"
+    "tryAgain": "Importuj ponownie",
+    "reCreate": "Odtwarzać"
   },
   "tooltips": {
     "errorsAttachment": "Wiersze z 'Zaimportowanego pliku', które nie zostały zaimportowane."
