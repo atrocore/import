@@ -1156,5 +1156,10 @@ class ImportTypeSimple extends QueueManagerBase
             return;
         }
 
+        foreach ($row as $column => $value) {
+            if (is_array($value)) {
+                $row[$column] = implode($jobData['data']['delimiter'], $value);
+            }
+        }
     }
 }
