@@ -107,15 +107,14 @@ class JsonToVerticalArray
                 }
                 self::toHorizontalArray($v, self::concatKeys($key, $k), $result);
             } else {
-                $val = $v;
-                if ($val === null) {
-                    $val = $nullValue;
+                if ($v === null) {
+                    $v = $nullValue;
                 }
-                if ($val === '') {
-                    $val = $emptyValue;
+                if ($v === '') {
+                    $v = $emptyValue;
                 }
 
-                $result[self::concatKeys($key, $k)] = $val;
+                $result[self::concatKeys($key, $k)] = $v;
             }
         }
     }
