@@ -107,14 +107,15 @@ class JsonToVerticalArray
                 }
                 self::toHorizontalArray($v, self::concatKeys($key, $k), $result);
             } else {
-                $value = $v;
-                if ($value === null) {
-                    $value = $nullValue;
+                $val = $v;
+                if ($val === null) {
+                    $val = $nullValue;
                 }
-                if ($value === '') {
-                    $value = $emptyValue;
+                if ($val === '') {
+                    $val = $emptyValue;
                 }
-                $result[self::concatKeys($key, $k)] = $value;
+
+                $result[self::concatKeys($key, $k)] = $val;
             }
         }
     }
@@ -146,13 +147,27 @@ class JsonToVerticalArray
                     }
                 }
 
+                // treat leaf collection as single array
+                if (!empty($leaf = end($nameParts) ?: '') && preg_match("/^collection\{([0-9]*)\}$/", $leaf)) {
+                    array_pop($nameParts);
+                }
+
                 $preparedName = implode(".", $nameParts);
 
                 if (is_bool($value)) {
                     $value = $value ? 'true' : 'false';
                 }
 
-                $row[$preparedName] = $value;
+                if (!empty($row[$preparedName])) {
+                    $existing = $row[$preparedName];
+                    if (!is_array($existing)) {
+                        $existing = [$row[$preparedName]];
+                    }
+                    $existing[] = $value;
+                    $row[$preparedName] = $existing;
+                } else {
+                    $row[$preparedName] = $value;
+                }
             }
             $data[] = $row;
             $i++;
