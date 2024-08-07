@@ -1,8 +1,8 @@
 {
   "fields": {
-    "rowNumber": "",
+    "rowNumber": "Rangée",
     "importJob": "",
-    "type": "",
+    "type": "Type",
     "entityName": "",
     "entityId": "",
     "message": ""
