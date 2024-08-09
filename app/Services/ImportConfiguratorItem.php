@@ -182,6 +182,11 @@ class ImportConfiguratorItem extends Base
 
             $auth = new \Espo\Core\Utils\Auth($this->container2);
             $auth->useNoAuth();
+
+            $importJobId = $this->getMemoryStorage()->get('importJobId');
+            if(!empty($importJobId)) {
+                $this->container2->get('memoryStorage')->set('importJobId', $importJobId);
+            }
         }
 
         return $this->container2;
