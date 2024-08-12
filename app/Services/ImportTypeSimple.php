@@ -708,6 +708,8 @@ class ImportTypeSimple extends QueueManagerBase
         $linkFields = $this->getLinkFields('Product', $productImportData['data']['idField']);
         $convertedFile = null;
 
+        $this->getMemoryStorage()->set('creatingPavImportJobs', true);
+
         foreach ($productImportData['data']['configuration'] as $item) {
             if ($item['type'] === 'Attribute') {
                 $attribute = $this->getEntityById('Attribute', $item['attributeId']);
@@ -780,8 +782,7 @@ class ImportTypeSimple extends QueueManagerBase
                         continue;
                     }
 
-                    $importJob->set('convertedFileId', $convertedFile['id']);
-                    $pavData['attachmentId'] = $importJob->get('convertedFileId');
+                    $pavData['attachmentId'] = $convertedFile['id'];
                     $pavData['fileFormat'] = 'CSV';
                     $pavData['offset'] = 1;
                     $pavData['isFileHeaderRow'] = true;
@@ -830,6 +831,8 @@ class ImportTypeSimple extends QueueManagerBase
                 $importService->push($dto);
             }
         }
+
+        $this->getMemoryStorage()->set('creatingPavImportJobs', false);
     }
 
     public static function clearCache(): void
