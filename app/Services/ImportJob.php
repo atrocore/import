@@ -257,9 +257,10 @@ class ImportJob extends Base
         $fileParser->setData($jobData);
         $fileArr = $this->getFileService()->createFileViaContents($inputData, $fileParser->createFileContent($rows));
 
-        // set converted file attachment to import job
-        $importJob->set('convertedFileId', is_array($fileArr) ? $fileArr['id'] : $fileArr->get('id'));
-        $this->getEntityManager()->saveEntity($importJob);
+        if (empty($this->getMemoryStorage()->get('importJobId'))) {
+            $importJob->set('convertedFileId', is_array($fileArr) ? $fileArr['id'] : $fileArr->get('id'));
+            $this->getEntityManager()->saveEntity($importJob);
+        }
 
         return is_array($fileArr) ? $fileArr : $fileArr->toArray();
     }
