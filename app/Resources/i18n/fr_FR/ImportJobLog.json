@@ -1,16 +1,16 @@
 {
   "fields": {
     "rowNumber": "Rangée",
-    "importJob": "",
+    "importJob": "Job d'import",
     "type": "Type",
-    "entityName": "",
-    "entityId": "",
-    "message": ""
+    "entityName": "Entité",
+    "entityId": "Identifiant de l'entité",
+    "message": "Message d'erreur"
   },
   "links": {
-    "importJob": ""
+    "importJob": "Job d'import"
   },
   "labels": {
-    "Create ImportJobLog": ""
+    "Create ImportJobLog": "Créer un journal des travaux d'importation"
   }
 }
