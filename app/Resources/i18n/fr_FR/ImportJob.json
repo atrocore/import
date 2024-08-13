@@ -1,47 +1,48 @@
 {
   "fields": {
     "importFeed": "Importation de flux",
-    "state": "",
-    "message": "",
-    "start": "",
-    "end": "",
-    "createdCount": "",
-    "updatedCount": "",
-    "deletedCount": "",
-    "skippedCount": "",
-    "errorsCount": "",
-    "attachment": "",
-    "uploadedFile": "",
-    "convertedFile": "",
-    "errorsAttachment": "",
-    "importJobLogs": ""
+    "state": "État",
+    "message": "Message",
+    "start": "Démarrer",
+    "end": "Fin",
+    "createdCount": "Créé",
+    "updatedCount": "Mise à jour",
+    "deletedCount": "Supprimé",
+    "skippedCount": "Ignoré",
+    "errorsCount": "Erreurs",
+    "attachment": "Fichier importé",
+    "uploadedFile": "Fichier téléchargé",
+    "convertedFile": "Fichier converti",
+    "errorsAttachment": "Fichier d'erreurs",
+    "importJobLogs": "Journaux d'erreurs"
   },
   "links": {
     "importFeed": "Flux d'import",
-    "importJobLogs": ""
+    "importJobLogs": "Journaux d'erreurs"
   },
   "labels": {
-    "Create ImportJob": "",
-    "Pending": "",
-    "Success": "",
-    "Running": "",
-    "Failed": "",
-    "Canceled": "",
-    "generate": "",
-    "generating": "",
-    "tryAgain": ""
+    "Create ImportJob": "Créer un job d'import",
+    "Pending": "En attente",
+    "Success": "Succès",
+    "Running": "La course à pied",
+    "Failed": "Échec",
+    "Canceled": "Annulé",
+    "generate": "Générer",
+    "generating": "Générer",
+    "tryAgain": "Importer à nouveau",
+    "reCreate": "Recréer"
   },
   "tooltips": {
-    "errorsAttachment": ""
+    "errorsAttachment": "Lignes du \"Fichier importé\" qui n'ont pas été importées."
   },
   "exceptions": {
-    "errorFileCreatingFailed": "",
-    "convertedFileNotExist": "",
-    "cacheWriteFailed": ""
+    "errorFileCreatingFailed": "Le fichier d'erreur ne peut pas être créé.",
+    "convertedFileNotExist": "Le fichier converti n'existe pas. Veuillez d'abord le générer.",
+    "cacheWriteFailed": "Impossible d'écrire des données dans le cache d'importation."
   },
   "boolFilters": {
-    "onlyImportFailed24Hours": "",
-    "onlyImportFailed7Days": "",
-    "onlyImportFailed28Days": ""
+    "onlyImportFailed24Hours": "Importer uniquement les travaux qui ont échoué au cours des dernières 24 heures",
+    "onlyImportFailed7Days": "Uniquement les travaux d'importation qui ont échoué au cours des 7 derniers jours",
+    "onlyImportFailed28Days": "Importer uniquement les travaux qui ont échoué au cours des 28 derniers jours"
   }
 }
