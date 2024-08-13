@@ -37,7 +37,7 @@
     "mapping": "Correspondance des champs pour l'insertion",
     "search": "Cartographie des champs pour la recherche",
     "additionalInformation": "Informations complémentaires",
-    "importByForAttributeValue": "Ceci n'est valable que pour les attributs de type liste ou liste multi-valeurs.",
+    "importByForAttributeValue": "Ceci n'est valable que pour les attributs de type liste ou liste multi-valeurs",
     "urlHeaders": "En-têtes de la demande"
   },
   "exceptions": {
