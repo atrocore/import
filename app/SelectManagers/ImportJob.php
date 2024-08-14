@@ -17,28 +17,6 @@ use Espo\Core\SelectManagers\Base;
 
 class ImportJob extends Base
 {
-    protected function access(&$result)
-    {
-        $repository = $this->getEntityManager()->getRepository('ImportFeed');
-
-        $sp = $this->createSelectManager('ImportFeed')->getSelectParams([], true, true);
-        $sp['select'] = ['id'];
-
-        $qb = $repository->getMapper()->createSelectQueryBuilder($repository->get(), $sp);
-
-        $mainTableAlias = $this->getRepository()->getMapper()->getQueryConverter()->getMainTableAlias();
-        $innerSql = str_replace($mainTableAlias, "t_if", $qb->getSql());
-
-        $where = [
-            'innerSql' => [
-                "sql"        => "$mainTableAlias.import_feed_id IN ({$innerSql})",
-                "parameters" => $qb->getParameters()
-            ]
-        ];
-
-        $result['whereClause'][] = ['OR' => $where];
-    }
-
     protected function boolFilterOnlyImportFailed24Hours(array &$result): void
     {
         $result['whereClause'][] = [
