@@ -104,6 +104,7 @@ class Metadata extends AbstractListener
                         'id'      => $action['id'],
                         'name'    => $action['name'],
                         'display' => $action['display'],
+                        'massAction' => true,
                         'acl'     => [
                             'scope'  => 'ImportFeed',
                             'action' => 'read',
