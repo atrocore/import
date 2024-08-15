@@ -93,6 +93,7 @@ class ImportTypeSimple extends QueueManagerBase
 
         // prepare file row
         $fileRow = empty($data['offset']) ? 0 : (int)$data['offset'];
+        $this->getMemoryStorage()->set('importRowNumber', $fileRow + 1);
 
         while (!empty($inputData = $this->getInputData($data))) {
             $this->getMemoryStorage()->set('importRowsPart', $inputData);
@@ -101,6 +102,7 @@ class ImportTypeSimple extends QueueManagerBase
 
                 // increase file row number
                 $fileRow++;
+                $this->getMemoryStorage()->set('importRowNumber', $fileRow);
 
                 if ($this->skipRow($row, $data)) {
                     $this->log($scope, $importJob->get('id'), 'skip', (string)$fileRow, null);
@@ -543,7 +545,9 @@ class ImportTypeSimple extends QueueManagerBase
          */
         $prepared = [];
         $originalRows = $fileData;
+        $rowNumber = $this->getMemoryStorage()->get('importRowNumber') ?? $data['offset'] + 1;
         while (count($fileData) > 0) {
+            $this->getMemoryStorage()->set('importRowNumber', $rowNumber++);
             $row = array_shift($fileData);
             $event = $this->getEventManager()->dispatch(new Event(['originalRows' => $originalRows, 'row' => $row, 'jobData' => $data, 'skip' => false]), 'prepareImportRow');
             if (!empty($event->getArgument('skip'))) {
@@ -708,6 +712,8 @@ class ImportTypeSimple extends QueueManagerBase
         $linkFields = $this->getLinkFields('Product', $productImportData['data']['idField']);
         $convertedFile = null;
 
+        $this->getMemoryStorage()->set('creatingPavImportJobs', true);
+
         foreach ($productImportData['data']['configuration'] as $item) {
             if ($item['type'] === 'Attribute') {
                 $attribute = $this->getEntityById('Attribute', $item['attributeId']);
@@ -780,8 +786,7 @@ class ImportTypeSimple extends QueueManagerBase
                         continue;
                     }
 
-                    $importJob->set('convertedFileId', $convertedFile['id']);
-                    $pavData['attachmentId'] = $importJob->get('convertedFileId');
+                    $pavData['attachmentId'] = $convertedFile['id'];
                     $pavData['fileFormat'] = 'CSV';
                     $pavData['offset'] = 1;
                     $pavData['isFileHeaderRow'] = true;
@@ -830,6 +835,8 @@ class ImportTypeSimple extends QueueManagerBase
                 $importService->push($dto);
             }
         }
+
+        $this->getMemoryStorage()->set('creatingPavImportJobs', false);
     }
 
     public static function clearCache(): void
