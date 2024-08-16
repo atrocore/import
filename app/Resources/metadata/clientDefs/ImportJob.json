@@ -1,6 +1,7 @@
 {
   "createDisabled": true,
   "controller": "controllers/record",
+  "acl": "import:acl/import-job",
   "boolFilterList": [
     "onlyMy",
     "onlyImportFailed24Hours",
