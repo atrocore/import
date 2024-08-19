@@ -16,5 +16,6 @@
   "hasAssignedUser": false,
   "hasTeam": false,
   "hasOwner": false,
-  "deleteWithoutConfirmation": true
+  "deleteWithoutConfirmation": true,
+  "notificationDisabled": true
 }
