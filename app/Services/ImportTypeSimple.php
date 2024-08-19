@@ -289,6 +289,8 @@ class ImportTypeSimple extends QueueManagerBase
             $this->clearMemoryOfLoadedEntities();
         }
 
+        $this->getMemoryStorage()->set('importRowNumber', 1);
+
         // create jobs for importing ProductAttributeValues
         $this->createImportPavJobs($data);
 
