@@ -8,7 +8,8 @@
     },
     "trial": {
       "type": "int",
-      "default": 0
+      "default": 0,
+      "readOnly": true
     },
     "importFeed": {
       "type": "link",
