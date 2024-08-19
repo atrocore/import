@@ -38,7 +38,7 @@ Espo.define('import:views/import-feed/record/detail', 'views/record/detail',
         },
 
         isButtonsDisabled() {
-            return !this.model.get('isActive');
+            return !this.model.get('isActive') || !this.getAcl().check('ImportJob', 'create');
         },
 
         handleButtonsDisability() {

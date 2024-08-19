@@ -12,8 +12,9 @@ Espo.define('import:views/import-job/record/row-actions/relationship', 'views/re
     return Dep.extend({
 
         getActionList() {
-            let list = [];
-            if (['Pending', 'Running'].includes(this.model.get('state')) && this.options.acl.edit) {
+            let list = [],
+                scope = this.scope || this.options.scope;
+            if (['Pending', 'Running'].includes(this.model.get('state')) && this.getAcl().check(scope, 'edit')) {
                 list.push({
                     action: 'cancelImportJob',
                     label: 'Cancel',
@@ -23,7 +24,7 @@ Espo.define('import:views/import-job/record/row-actions/relationship', 'views/re
                 });
             }
 
-            if (['Failed', 'Canceled'].includes(this.model.get('state')) && this.options.acl.edit) {
+            if (['Failed', 'Canceled'].includes(this.model.get('state')) && this.getAcl().check(scope, 'edit')) {
                 list.push({
                     action: 'tryAgainImportJob',
                     label: 'tryAgain',
@@ -33,7 +34,7 @@ Espo.define('import:views/import-job/record/row-actions/relationship', 'views/re
                 });
             }
 
-            if (this.model.get('state') === 'Success' && this.options.acl.edit) {
+            if (this.model.get('state') === 'Success' && this.getAcl().check(scope, 'edit')) {
                 list.push({
                     action: 'reCreateImportJob',
                     label: 'reCreate',
@@ -43,7 +44,7 @@ Espo.define('import:views/import-job/record/row-actions/relationship', 'views/re
                 });
             }
 
-            if (this.options.acl.delete) {
+            if (this.getAcl().check(scope, 'delete')) {
                 list.push({
                     action: 'removeRelated',
                     label: 'Remove',
