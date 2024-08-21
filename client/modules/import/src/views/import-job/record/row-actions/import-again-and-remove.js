@@ -13,7 +13,7 @@ Espo.define('import:views/import-job/record/row-actions/import-again-and-remove'
     return Dep.extend({
 
         getActionList() {
-            let list = Dep.prototype.getActionList.call(this);
+            let list = Dep.prototype.getActionList.call(this) || [];
 
             if (['Failed', 'Canceled'].includes(this.model.get('state')) && this.options.acl.edit) {
                 list.unshift({
