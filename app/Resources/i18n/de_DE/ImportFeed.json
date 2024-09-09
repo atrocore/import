@@ -34,8 +34,7 @@
   "links": {
     "connection": "Verbindung",
     "importJobs": "Importaufträge",
-    "configuratorItems": "Konfigurator",
-    "scheduledJobs": "Geplante Aufträge"
+    "configuratorItems": "Konfigurator"
   },
   "labels": {
     "parseFile": "Datei-Parsing: {{fileName}}",
@@ -47,7 +46,6 @@
     "Create ImportFeed": "Import Feed erstellen",
     "convertFile": "Datei wird geladen, bitte warten ...",
     "convertSuccess": "Datei hochgeladen",
-    "importFile": "Daten Datei",
     "addEntityField": "Entitätsfeld hinzufügen",
     "addProductAttribute": "Produktattribut hinzufügen",
     "simple": "Datei",
@@ -94,7 +92,6 @@
     "nullNoneSame": "Keiner und Nullwert dürfen nicht identisch sein.",
     "skipNoneSameEmpty": "Keiner und überspringen dürfen nicht identisch sein.",
     "skipNoneSameNull": "Nullwert und überspringen dürfen nicht identisch sein.",
-    "skipNoneSame": "Keiner und Nullwert dürfen nicht identisch sein/Keiner und überspringen dürfen nicht identisch sein/Nullwert und überspringen dürfen nicht identisch sein.",
     "unexpectedFieldType": "Der Wert '%s' is als '%s' ungültig.",
     "incorrectCurrencyValue": "Das Währungswertformat ist ungültig. Wert wie \"12 EUR\" wird erwartet.",
     "incorrectCurrency": "Die Währung '%s' für das Feld '%s' ist falsch.",

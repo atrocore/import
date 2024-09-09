@@ -1,0 +1,56 @@
+{
+  "fields": {
+    "entityIdentifier": "Identifiant",
+    "name": "Champ",
+    "column": "Champ(s) source(s)",
+    "defaultContainer": "Valeur par défaut",
+    "default": "Valeur par défaut",
+    "importFeed": "Importation de flux",
+    "importBy": "Champ(s) d'entité(s) connexe(s)",
+    "createIfNotExist": "Créer un enregistrement de données connexes",
+    "locale": "Langue",
+    "attribute": "Attribut",
+    "channel": "Canal",
+    "sourceFields": "Champs Source",
+    "type": "Type",
+    "foreignColumn": "Champ(s) source(s)",
+    "foreignImportBy": "Champ(s) d'entité(s) connexe(s)",
+    "replaceArray": "Remplacer",
+    "attributeValue": "Valeur de l'attribut",
+    "importByForListAttribute": "Champs d'entité connexes pour les listes",
+    "urlHeaders": "En-têtes de la demande"
+  },
+  "options": {
+    "attributeValue": {
+      "value": "Valeur",
+      "valueFrom": "Valeur de",
+      "valueTo": "Valeur à",
+      "valueUnitId": "Unité de valeur"
+    }
+  },
+  "links": {
+    "importFeed": "Flux d'import",
+    "channel": "Canal"
+  },
+  "labels": {
+    "main": "Principal",
+    "mapping": "Correspondance des champs pour l'insertion",
+    "search": "Cartographie des champs pour la recherche",
+    "additionalInformation": "Informations complémentaires",
+    "importByForAttributeValue": "Ceci n'est valable que pour les attributs de type liste ou liste multi-valeurs",
+    "urlHeaders": "En-têtes de la demande"
+  },
+  "exceptions": {
+    "wrongFieldsNumber": "Pour la recherche, le nombre de champs sources doit être le même que le nombre de champs d'entités liées.",
+    "wrongForeignFieldsNumber": "Pour l'insertion, le nombre de champs sources doit être le même que le nombre de champs d'entités liées.",
+    "foreignColumnsAndFieldsEmpty": "Le(s) champ(s) source et le(s) champ(s) entité(s) liée(s) ne peuvent pas être vides."
+  },
+  "tooltips": {
+    "column": "Cette (ces) valeur(s) de champ sera (seront) utilisée(s) pour rechercher si l'enregistrement de données correspondant existe déjà.",
+    "importBy": "Choisissez le(s) champ(s) d'entité connexe(s) dans votre système, qui doit/doivent être utilisé(s) pour effectuer une recherche sur la base des données fournies dans le champ de sélection \"Champ(s) source(s)\". Si un seul champ de données est fourni, le \"délimiteur de champ pour la relation\" peut s'appliquer. Dans d'autres cas, le nombre de champs de données fournis et le nombre de \"champs d'entité(s) apparentée(s)\" doivent être identiques.",
+    "createIfNotExist": "Un nouvel enregistrement de données pour l'entité concernée sera créé si rien n'est trouvé sur la base des données fournies.",
+    "foreignColumn": "Cette (ces) valeur(s) de champ sera (seront) utilisée(s) pour créer des enregistrements de données connexes.",
+    "foreignImportBy": "Choisissez le(s) champ(s) d'entité lié(s) dans votre système, qui doit/doivent être utilisé(s) pour l'insertion sur la base des données fournies dans le champ de sélection \"Champ(s) source(s)\". Si un seul champ de données est fourni, le \"délimiteur de champ pour la relation\" peut s'appliquer. Dans les autres cas, le nombre de champs de données fournis et le nombre de \"champs d'entité(s) liée(s)\" doivent être identiques.",
+    "replaceArray": "Par défaut, les enregistrements fournis sont ajoutés aux enregistrements existants. Cochez cette case si ces derniers doivent être remplacés."
+  }
+}
