@@ -46,7 +46,8 @@ class ImportConfiguratorItem extends Base
     public function getSelectAttributeList($params)
     {
         $res = parent::getSelectAttributeList($params);
-        if (!empty($this->getMetadata()->get(['scopes', 'Channel']))) {
+
+        if ($res !== null && !empty($this->getMetadata()->get(['scopes', 'Channel']))) {
             $res = array_merge($res, ['channelId', 'channelName']);
         }
 
