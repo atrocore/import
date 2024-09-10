@@ -79,7 +79,11 @@ Espo.define('import:views/import-configurator-item/fields/name', 'views/fields/e
                     }
                     let translated = [];
                     this.model.get('importBy').forEach(field => {
-                        translated.push(this.translate(field, 'fields', entityName));
+                        if (field.endsWith('Id')) {
+                            translated.push(this.translate(field.slice(0, -2), 'fields', entityName) + ` (${this.translate('id', 'fields', 'Global')})`);
+                        } else {
+                            translated.push(this.translate(field, 'fields', entityName));
+                        }
                     });
                     extraInfo = `<span class="text-muted small">${this.translate('importBy', 'fields', 'ImportConfiguratorItem')}: ${translated.join(', ')}</span>`;
                     if ((type === 'extensibleMultiEnum' || type === 'linkMultiple' || type === 'array' || type === 'multiEnum') && this.model.get('replaceArray')) {
