@@ -19,5 +19,13 @@
   "isActiveUnavailable": true,
   "duplicatableRelations": [
     "configuratorItems"
+  ],
+  "enabledCopyConfigurations": true,
+  "disabledFieldsForCopyConfigurations": [
+    "importJobs",
+    "importJobsIds",
+    "scheduledJobs",
+    "scheduledJobsIds",
+    "configuratorItemsIds"
   ]
 }
