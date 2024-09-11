@@ -72,7 +72,9 @@ Espo.define('import:views/import-configurator-item/fields/import-by', 'views/fie
             if (foreignEntity) {
                 translatedOptions['id'] = this.translate('id', 'fields', 'Global');
                 $.each(this.getMetadata().get(`entityDefs.${foreignEntity}.fields`) || {}, (name, data) => {
-                    if (
+                    if (data.type === 'link' && !name.endsWith('Unit') && !data.disabled && !data.importDisabled) {
+                        translatedOptions[name + 'Id'] = this.translate(name, 'fields', foreignEntity) + ` (${this.translate('id', 'fields', 'Global')})`;
+                    } else if (
                         data.type
                         && ['bool', 'enum', 'varchar', 'email', 'float', 'int', 'text', 'wysiwyg', 'markdown'].includes(data.type)
                         && !data.disabled
