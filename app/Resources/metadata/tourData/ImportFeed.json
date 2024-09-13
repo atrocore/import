@@ -1,0 +1,120 @@
+{
+  "edit": {
+    "[data-name=\"name\"]": {
+      "description": {
+        "en_US": "Set the name for your import feed. Try to choose a unique and clear name that reflects the essence of the imported feed. This will help you easily find the feed you need using the filter.",
+        "de_DE": "Legen Sie den Namen für Ihren Import-Feed fest. Versuchen Sie, einen eindeutigen und klaren Namen zu wählen, der das Wesentliche des importierten Feeds wiedergibt. So können Sie den gewünschten Feed mit Hilfe des Filters leicht finden.",
+        "uk_UA": "Задайте ім'я для імпортованої стрічки. Намагайтеся вибрати унікальну і зрозумілу назву, яка відображає суть імпортованої стрічки. Це допоможе вам легко знайти потрібну вам стрічку за допомогою фільтра."
+      }
+    },
+    "[data-name=\"type\"]": {
+      "description": {
+        "en_US": "Select the type of import. The configuration of the import feed depends on the selected type. This field cannot be changed later. In the free module, only File type import is available. By installing additional modules, you will get the following types:<ul> <li>(s)FTP – import from the remote file</li><li>HTTP Request – import via API</li><li> Database – import from database</li>",
+        "de_DE": "Description",
+        "uk_UA": "Description"
+      }
+    },
+    "[data-name=\"fileDataAction\"]": {
+      "description": {
+        "en_US": "Define the action to be performed in the system during the data import. Depending on the action you choose, you can create new records, update existing records, delete records, or do any combination of these actions. Choose the action carefully to achieve your import goals. For example, if you want to create new products with attributes, you need the “Create and Update” action. Since the “Create” action will only create products without attributes",
+        "de_DE": "Description",
+        "uk_UA": "Description"
+      }
+    },
+    "[data-name=\"isActive\"]": {
+      "description": {
+        "en_US": "Feeds can be activated or deactivated, which determines whether they can be executed.",
+        "de_DE": "Description",
+        "uk_UA": "Description"
+      }
+    },
+    "[data-name=\"format\"]": {
+      "description": {
+        "en_US": "Specify the format of the file from which the data will be imported. Make sure that your file matches the selected format, otherwise the system will generate an error when uploading the file.",
+        "de_DE": "Description",
+        "uk_UA": "Description"
+      }
+    },
+    "[data-name=\"file\"]": {
+      "description": {
+        "en_US": "Upload the file which is to be imported according to the selected format. You can upload a new file or select one that is already in the system. You can modify the file at any time to import other data with the specified feed parameters. Please note that if the structure of the new file differs from the previous one for which the configurator is already set up, the mismatched configurator items will be deleted.",
+        "de_DE": "Description",
+        "uk_UA": "Description"
+      }
+    },
+    "[data-name=\"entity\"]": {
+      "description": {
+        "en_US": "Select the desired entity for the imported data from the list of all entities available in the system. The available fields of the configurator depend on the selected entity. Note that if you change the entity after creating configurator items, the configurator data will be lost.",
+        "de_DE": "Description",
+        "uk_UA": "Description"
+      }
+    },
+    "[data-name=\"sourceFields\"]": {
+      "description": {
+        "en_US": "This field is initially empty. After uploading the file you will see here the list of available columns from the imported file. You can delete unnecessary fields if you don't need them. In this case, they will not be displayed as Source Fields in the Configurator.",
+        "de_DE": "Description",
+        "uk_UA": "Description"
+      }
+    },
+    ".detail-button-container:not(\".hidden\") .btn-group": {
+      "description": {
+        "en_US": "Click Save button to save your feed. You can configure it right away on the detail view page that opens or return to it later. Click Save and Create if you want to create a new feed right away.",
+        "de_DE": "Description",
+        "uk_UA": "Description"
+      }
+    },
+    ".panel-configuratorItems .panel-heading [data-action=\"createRelated\"]": {
+      "description": {
+        "en_US": "Click on this icon to create a new configurator item. The configurator associates columns in the file with entity fields. For each field or attribute that will be filled in by the import, you need to create a separate item. Specify a unique field (or set of fields) by which the entity record can be identified. If the configurator does not have an identifier, existing records will not be updated.",
+        "de_DE": "Description",
+        "uk_UA": "Description"
+      }
+    },
+    ".nav.navbar-nav.navbar-right .queue-badge-container": {
+      "description": {
+        "en_US": "Click on the Queue Manager to see the current status of the import job. Here you can also cancel a job, or pause the launch of a job by pausing the queue manager.",
+        "de_DE": "Description",
+        "uk_UA": "Description"
+      }
+    },
+    ".panel-importJobs": {
+      "description": {
+        "en_US": "After starting the import the new record will be added to the \"Import Jobs\" panel with the state “Pending”. After the import job is successfully completed the state will be automatically changed to “Success”. You can cancel or delete a job in this panel. If the job contains child jobs (when importing attribute values or if the number of imported records greater then Maximum Number of Records per Job set in settings), you can view them by clicking on the name of the job.",
+        "de_DE": "Description",
+        "uk_UA": "Description"
+      }
+    }
+  },
+  "detail": {
+    ".panel-configuratorItems .panel-heading [data-action=\"createRelated\"]": {
+      "description": {
+        "en_US": "Click on this icon to create a new configurator item. The configurator associates columns in the file with entity fields. For each field or attribute that will be filled in by the import, you need to create a separate item. Specify a unique field (or set of fields) by which the entity record can be identified. If the configurator does not have an identifier, existing records will not be updated.",
+        "de_DE": "Description",
+        "uk_UA": "Description"
+      }
+    },
+    ".detail-button-container:not(\".hidden\") .btn-group [data-action=\"runImport\"]": {
+      "description": {
+        "en_US": "Click on Import button to start the process. If the button is inactive, make sure you have not forgotten to activate your feed.",
+        "de_DE": "Description",
+        "uk_UA": "Description"
+      }
+    },
+    ".nav.navbar-nav.navbar-right .queue-badge-container": {
+      "description": {
+        "en_US": "Click on the Queue Manager to see the current status of the import job. Here you can also cancel a job, or pause the launch of a job by pausing the queue manager.",
+        "de_DE": "Description",
+        "uk_UA": "Description"
+      }
+    },
+    ".panel-importJobs": {
+      "description": {
+        "en_US": "After starting the import the new record will be added to the \"Import Jobs\" panel with the state “Pending”. After the import job is successfully completed the state will be automatically changed to “Success”. You can cancel or delete a job in this panel. If the job contains child jobs (when importing attribute values or if the number of imported records greater then Maximum Number of Records per Job set in settings), you can view them by clicking on the name of the job.",
+        "de_DE": "Description",
+        "uk_UA": "Description"
+      }
+    }
+  },
+  "list": [
+  ]
+}
