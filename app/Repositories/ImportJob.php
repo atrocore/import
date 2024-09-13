@@ -71,6 +71,21 @@ class ImportJob extends Base
                 }
                 if ($entity->get('state') === 'Canceled') {
                     $this->cancelQmJob($qmJob);
+
+                    // cancel parent if it needs
+                    if (!empty($parent = $entity->get('parent'))) {
+                        $cancelParent = true;
+                        foreach ($entity->get('children') as $child) {
+                            if (in_array($child->get('state'), ['Pending', 'Running'])) {
+                                $cancelParent = false;
+                                break;
+                            }
+                        }
+                        if ($cancelParent) {
+                            $parent->set('state', 'Canceled');
+                            $this->getEntityManager()->saveEntity($parent);
+                        }
+                    }
                 }
             }
         }
