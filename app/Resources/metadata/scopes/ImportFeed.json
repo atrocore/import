@@ -27,6 +27,5 @@
     "scheduledJobs",
     "scheduledJobsIds",
     "configuratorItemsIds"
-  ],
-  "showTour": true
+  ]
 }

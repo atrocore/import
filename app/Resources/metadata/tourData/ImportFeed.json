@@ -10,78 +10,78 @@
     "[data-name=\"type\"]": {
       "description": {
         "en_US": "Select the type of import. The configuration of the import feed depends on the selected type. This field cannot be changed later. In the free module, only File type import is available. By installing additional modules, you will get the following types:<ul> <li>(s)FTP – import from the remote file</li><li>HTTP Request – import via API</li><li> Database – import from database</li>",
-        "de_DE": "Description",
-        "uk_UA": "Description"
+        "de_DE": "Select the type of import. The configuration of the import feed depends on the selected type. This field cannot be changed later. In the free module, only File type import is available. By installing additional modules, you will get the following types:<ul> <li>(s)FTP – import from the remote file</li><li>HTTP Request – import via API</li><li> Database – import from database</li>",
+        "uk_UA": "Select the type of import. The configuration of the import feed depends on the selected type. This field cannot be changed later. In the free module, only File type import is available. By installing additional modules, you will get the following types:<ul> <li>(s)FTP – import from the remote file</li><li>HTTP Request – import via API</li><li> Database – import from database</li>"
       }
     },
     "[data-name=\"fileDataAction\"]": {
       "description": {
         "en_US": "Define the action to be performed in the system during the data import. Depending on the action you choose, you can create new records, update existing records, delete records, or do any combination of these actions. Choose the action carefully to achieve your import goals. For example, if you want to create new products with attributes, you need the “Create and Update” action. Since the “Create” action will only create products without attributes",
-        "de_DE": "Description",
-        "uk_UA": "Description"
+        "de_DE": "Definieren Sie die Aktion, die während des Datenimports im System durchgeführt werden soll. Je nach der von Ihnen gewählten Aktion können Sie neue Datensätze erstellen, bestehende Datensätze aktualisieren, Datensätze löschen oder eine beliebige Kombination dieser Aktionen durchführen. Wählen Sie die Aktion sorgfältig aus, um Ihre Importziele zu erreichen. Wenn Sie zum Beispiel neue Produkte mit Attributen erstellen möchten, benötigen Sie die Aktion „Erstellen und aktualisieren“. Da mit der Aktion „Erstellen“ nur Produkte ohne Attribute erstellt werden können",
+        "uk_UA": "Визначте дію, яка буде виконана в системі під час імпорту даних. Залежно від обраної дії ви можете створити нові записи, оновити існуючі, видалити записи або виконати будь-яку комбінацію цих дій. Ретельно обирайте дію, щоб досягти ваших цілей імпорту. Наприклад, якщо ви хочете створити нові товари з атрибутами, вам потрібна дія «Створити і оновити». Оскільки дія «Створити» створить лише продукти без атрибутів"
       }
     },
     "[data-name=\"isActive\"]": {
       "description": {
         "en_US": "Feeds can be activated or deactivated, which determines whether they can be executed.",
-        "de_DE": "Description",
-        "uk_UA": "Description"
+        "de_DE": "Feeds können aktiviert oder deaktiviert werden, wodurch bestimmt wird, ob sie ausgeführt werden können.",
+        "uk_UA": "Канали можна активувати або деактивувати, що визначає, чи можуть вони бути виконані."
       }
     },
     "[data-name=\"format\"]": {
       "description": {
         "en_US": "Specify the format of the file from which the data will be imported. Make sure that your file matches the selected format, otherwise the system will generate an error when uploading the file.",
-        "de_DE": "Description",
-        "uk_UA": "Description"
+        "de_DE": "Geben Sie das Format der Datei an, aus der die Daten importiert werden sollen. Vergewissern Sie sich, dass Ihre Datei dem ausgewählten Format entspricht, da das System sonst beim Hochladen der Datei einen Fehler erzeugt.",
+        "uk_UA": "Вкажіть формат файлу, з якого будуть імпортовані дані. Переконайтеся, що ваш файл відповідає обраному формату, інакше система видасть помилку при завантаженні файлу."
       }
     },
     "[data-name=\"file\"]": {
       "description": {
         "en_US": "Upload the file which is to be imported according to the selected format. You can upload a new file or select one that is already in the system. You can modify the file at any time to import other data with the specified feed parameters. Please note that if the structure of the new file differs from the previous one for which the configurator is already set up, the mismatched configurator items will be deleted.",
-        "de_DE": "Description",
-        "uk_UA": "Description"
+        "de_DE": "Laden Sie die Datei, die importiert werden soll, entsprechend dem gewählten Format hoch. Sie können eine neue Datei hochladen oder eine auswählen, die bereits im System vorhanden ist. Sie können die Datei jederzeit ändern, um andere Daten mit den angegebenen Feed-Parametern zu importieren. Bitte beachten Sie, dass, wenn sich die Struktur der neuen Datei von der vorherigen unterscheidet, für die der Konfigurator bereits eingerichtet ist, die nicht übereinstimmenden Konfiguratorelemente gelöscht werden.",
+        "uk_UA": "Завантажте файл, який потрібно імпортувати відповідно до обраного формату. Ви можете завантажити новий файл або вибрати той, що вже є в системі. Ви можете будь-коли змінити файл, щоб імпортувати інші дані із зазначеними параметрами стрічки. Зверніть увагу, що якщо структура нового файлу відрізняється від попереднього, для якого вже налаштовано конфігуратор, невідповідні елементи конфігуратора будуть видалені."
       }
     },
     "[data-name=\"entity\"]": {
       "description": {
         "en_US": "Select the desired entity for the imported data from the list of all entities available in the system. The available fields of the configurator depend on the selected entity. Note that if you change the entity after creating configurator items, the configurator data will be lost.",
-        "de_DE": "Description",
-        "uk_UA": "Description"
+        "de_DE": "Wählen Sie die gewünschte Entität für die importierten Daten aus der Liste aller im System verfügbaren Entitäten aus. Die verfügbaren Felder des Konfigurators hängen von der ausgewählten Entität ab. Beachten Sie, dass die Daten des Konfigurators verloren gehen, wenn Sie die Entität nach der Erstellung von Konfigurator-Elementen ändern.",
+        "uk_UA": "Виберіть потрібну сутність для імпортованих даних зі списку всіх доступних в системі сутностей. Доступні поля конфігуратора залежать від обраної сутності. Зверніть увагу, що якщо ви зміните сутність після створення елементів конфігуратора, дані конфігуратора будуть втрачені."
       }
     },
     "[data-name=\"sourceFields\"]": {
       "description": {
         "en_US": "This field is initially empty. After uploading the file you will see here the list of available columns from the imported file. You can delete unnecessary fields if you don't need them. In this case, they will not be displayed as Source Fields in the Configurator.",
-        "de_DE": "Description",
-        "uk_UA": "Description"
+        "de_DE": "Dieses Feld ist zunächst leer. Nach dem Hochladen der Datei sehen Sie hier die Liste der verfügbaren Spalten aus der importierten Datei. Sie können überflüssige Felder löschen, wenn Sie sie nicht benötigen. In diesem Fall werden sie nicht als Quellfelder im Configurator angezeigt.",
+        "uk_UA": "Це поле спочатку порожнє. Після завантаження файлу ви побачите тут список доступних стовпців з імпортованого файлу. Ви можете видалити непотрібні поля, якщо вони вам не потрібні. У цьому випадку вони не будуть відображатися як поля-джерела в Конфігураторі."
       }
     },
     ".detail-button-container:not(\".hidden\") .btn-group": {
       "description": {
         "en_US": "Click Save button to save your feed. You can configure it right away on the detail view page that opens or return to it later. Click Save and Create if you want to create a new feed right away.",
-        "de_DE": "Description",
-        "uk_UA": "Description"
+        "de_DE": "Klicken Sie auf die Schaltfläche Speichern, um Ihren Feed zu speichern. Sie können ihn sofort auf der sich öffnenden Seite der Detailansicht konfigurieren oder später darauf zurückkommen. Klicken Sie auf Speichern und Erstellen, wenn Sie sofort einen neuen Feed erstellen möchten.",
+        "uk_UA": "Натисніть кнопку Зберегти, щоб зберегти вашу стрічку. Ви можете налаштувати його одразу на сторінці детального перегляду, що відкриється, або повернутися до неї пізніше. Натисніть Зберегти і створити, якщо ви хочете створити нову стрічку негайно."
       }
     },
     ".panel-configuratorItems .panel-heading [data-action=\"createRelated\"]": {
       "description": {
         "en_US": "Click on this icon to create a new configurator item. The configurator associates columns in the file with entity fields. For each field or attribute that will be filled in by the import, you need to create a separate item. Specify a unique field (or set of fields) by which the entity record can be identified. If the configurator does not have an identifier, existing records will not be updated.",
-        "de_DE": "Description",
-        "uk_UA": "Description"
+        "de_DE": "Klicken Sie auf dieses Symbol, um ein neues Konfigurator-Element zu erstellen. Der Konfigurator verknüpft Spalten in der Datei mit Entitätsfeldern. Für jedes Feld oder Attribut, das durch den Import ausgefüllt werden soll, müssen Sie einen separaten Eintrag erstellen. Geben Sie ein eindeutiges Feld (oder einen Satz von Feldern) an, anhand dessen der Entitätsdatensatz identifiziert werden kann. Verfügt der Konfigurator nicht über einen Bezeichner, werden bestehende Datensätze nicht aktualisiert.",
+        "uk_UA": "Натисніть на цю іконку, щоб створити новий елемент конфігуратора. Конфігуратор пов'язує стовпці у файлі з полями сутності. Для кожного поля або атрибута, який буде заповнений при імпорті, потрібно створити окремий елемент. Вкажіть унікальне поле (або набір полів), за яким можна ідентифікувати запис сутності. Якщо в конфігураторі немає ідентифікатора, існуючі записи не будуть оновлені."
       }
     },
     ".nav.navbar-nav.navbar-right .queue-badge-container": {
       "description": {
         "en_US": "Click on the Queue Manager to see the current status of the import job. Here you can also cancel a job, or pause the launch of a job by pausing the queue manager.",
-        "de_DE": "Description",
-        "uk_UA": "Description"
+        "de_DE": "Klicken Sie auf den Warteschlangenmanager, um den aktuellen Status des Importauftrags zu sehen. Hier können Sie auch einen Auftrag abbrechen oder den Start eines Auftrags unterbrechen, indem Sie den Warteschlangen-Manager pausieren.",
+        "uk_UA": "Натисніть на диспетчер черги, щоб побачити поточний стан завдання імпорту. Тут ви також можете скасувати завдання або призупинити запуск завдання, призупинивши роботу диспетчера черги."
       }
     },
     ".panel-importJobs": {
       "description": {
         "en_US": "After starting the import the new record will be added to the \"Import Jobs\" panel with the state “Pending”. After the import job is successfully completed the state will be automatically changed to “Success”. You can cancel or delete a job in this panel. If the job contains child jobs (when importing attribute values or if the number of imported records greater then Maximum Number of Records per Job set in settings), you can view them by clicking on the name of the job.",
-        "de_DE": "Description",
-        "uk_UA": "Description"
+        "de_DE": "Nach dem Start des Imports wird der neue Datensatz im Fenster „Importaufträge“ mit dem Status „Ausstehend“ hinzugefügt. Nach erfolgreichem Abschluss des Importauftrags wird der Status automatisch in „Erfolgreich“ geändert. Sie können einen Auftrag in diesem Fenster abbrechen oder löschen. Wenn der Auftrag Unteraufträge enthält (beim Importieren von Attributwerten oder wenn die Anzahl der importierten Datensätze größer ist als die in den Einstellungen festgelegte maximale Anzahl von Datensätzen pro Auftrag), können Sie diese anzeigen, indem Sie auf den Namen des Auftrags klicken.",
+        "uk_UA": "Після запуску імпорту новий запис буде додано на панель «Імпорт завдань» зі статусом «Очікує». Після успішного завершення імпорту стан буде автоматично змінено на «Успішно». На цій панелі ви можете скасувати або видалити завдання. Якщо завдання містить дочірні завдання (при імпорті значень атрибутів або якщо кількість імпортованих записів перевищує встановлену в налаштуваннях максимальну кількість записів на одне завдання), ви можете переглянути їх, натиснувши на назву завдання."
       }
     }
   },
@@ -89,32 +89,30 @@
     ".panel-configuratorItems .panel-heading [data-action=\"createRelated\"]": {
       "description": {
         "en_US": "Click on this icon to create a new configurator item. The configurator associates columns in the file with entity fields. For each field or attribute that will be filled in by the import, you need to create a separate item. Specify a unique field (or set of fields) by which the entity record can be identified. If the configurator does not have an identifier, existing records will not be updated.",
-        "de_DE": "Description",
-        "uk_UA": "Description"
+        "de_DE": "Klicken Sie auf dieses Symbol, um ein neues Konfigurator-Element zu erstellen. Der Konfigurator verknüpft Spalten in der Datei mit Entitätsfeldern. Für jedes Feld oder Attribut, das durch den Import ausgefüllt werden soll, müssen Sie einen separaten Eintrag erstellen. Geben Sie ein eindeutiges Feld (oder einen Satz von Feldern) an, anhand dessen der Entitätsdatensatz identifiziert werden kann. Verfügt der Konfigurator nicht über einen Bezeichner, werden bestehende Datensätze nicht aktualisiert.",
+        "uk_UA": "Натисніть на цю іконку, щоб створити новий елемент конфігуратора. Конфігуратор пов'язує стовпці у файлі з полями сутності. Для кожного поля або атрибута, який буде заповнений при імпорті, потрібно створити окремий елемент. Вкажіть унікальне поле (або набір полів), за яким можна ідентифікувати запис сутності. Якщо в конфігураторі немає ідентифікатора, існуючі записи не будуть оновлені."
       }
     },
     ".detail-button-container:not(\".hidden\") .btn-group [data-action=\"runImport\"]": {
       "description": {
         "en_US": "Click on Import button to start the process. If the button is inactive, make sure you have not forgotten to activate your feed.",
-        "de_DE": "Description",
-        "uk_UA": "Description"
+        "de_DE": "Klicken Sie auf die Schaltfläche Importieren, um den Vorgang zu starten. Wenn die Schaltfläche inaktiv ist, stellen Sie sicher, dass Sie nicht vergessen haben, Ihren Feed zu aktivieren.",
+        "uk_UA": "Натисніть на кнопку «Імпортувати», щоб почати процес. Якщо кнопка неактивна, переконайтеся, що ви не забули активувати вашу стрічку."
       }
     },
     ".nav.navbar-nav.navbar-right .queue-badge-container": {
       "description": {
         "en_US": "Click on the Queue Manager to see the current status of the import job. Here you can also cancel a job, or pause the launch of a job by pausing the queue manager.",
-        "de_DE": "Description",
-        "uk_UA": "Description"
+        "de_DE": "Klicken Sie auf den Warteschlangenmanager, um den aktuellen Status des Importauftrags zu sehen. Hier können Sie auch einen Auftrag abbrechen oder den Start eines Auftrags unterbrechen, indem Sie den Warteschlangen-Manager pausieren.",
+        "uk_UA": "Натисніть на диспетчер черги, щоб побачити поточний стан завдання імпорту. Тут ви також можете скасувати завдання або призупинити запуск завдання, призупинивши роботу диспетчера черги."
       }
     },
     ".panel-importJobs": {
       "description": {
         "en_US": "After starting the import the new record will be added to the \"Import Jobs\" panel with the state “Pending”. After the import job is successfully completed the state will be automatically changed to “Success”. You can cancel or delete a job in this panel. If the job contains child jobs (when importing attribute values or if the number of imported records greater then Maximum Number of Records per Job set in settings), you can view them by clicking on the name of the job.",
-        "de_DE": "Description",
-        "uk_UA": "Description"
+        "de_DE": "Nach dem Start des Imports wird der neue Datensatz im Fenster „Importaufträge“ mit dem Status „Ausstehend“ hinzugefügt. Nach erfolgreichem Abschluss des Importauftrags wird der Status automatisch in „Erfolgreich“ geändert. Sie können einen Auftrag in diesem Fenster abbrechen oder löschen. Wenn der Auftrag Unteraufträge enthält (beim Importieren von Attributwerten oder wenn die Anzahl der importierten Datensätze größer ist als die in den Einstellungen festgelegte maximale Anzahl von Datensätzen pro Auftrag), können Sie diese anzeigen, indem Sie auf den Namen des Auftrags klicken.",
+        "uk_UA": "Після запуску імпорту новий запис буде додано на панель «Імпорт завдань» зі статусом «Очікує». Після успішного завершення імпорту стан буде автоматично змінено на «Успішно». На цій панелі ви можете скасувати або видалити завдання. Якщо завдання містить дочірні завдання (при імпорті значень атрибутів або якщо кількість імпортованих записів перевищує встановлену в налаштуваннях максимальну кількість записів на одне завдання), ви можете переглянути їх, натиснувши на назву завдання."
       }
     }
-  },
-  "list": [
-  ]
+  }
 }
