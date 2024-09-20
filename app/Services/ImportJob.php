@@ -322,9 +322,7 @@ class ImportJob extends Base
         $entity = parent::readEntity($id);
 
         if (!empty($entity)) {
-            $children = $entity->get('children');
             $this->prepareCounts(new EntityCollection([$entity], $entity->getEntityType()));
-            $entity->set('hasConvertedFile', empty($children[0]));
         }
 
         return $entity;
