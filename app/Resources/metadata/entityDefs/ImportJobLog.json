@@ -36,7 +36,7 @@
     },
     "entityId": {
       "type": "varchar",
-      "len": 30,
+      "len": 36,
       "readOnly": true
     },
     "message": {
