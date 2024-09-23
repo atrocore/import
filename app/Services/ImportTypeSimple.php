@@ -74,8 +74,15 @@ class ImportTypeSimple extends QueueManagerBase
             ->getArgument('result');
     }
 
+    public function createConvertedFile(string $importJobId): void
+    {
+
+    }
+
     public function run(array $data = []): bool
     {
+        $this->createConvertedFile($data['data']['importJobId']);
+
         $importJob = $this->getEntityById('ImportJob', $data['data']['importJobId']);
 
         $this->getMemoryStorage()->set('importJobId', $importJob->get('id'));
