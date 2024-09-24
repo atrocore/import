@@ -563,7 +563,6 @@ class ImportTypeSimple extends QueueManagerBase
         $file = $this->getEntityById('File', $convertedFileId);
 
         $fileData = $fileParser->getFileData($file, $data['offset'], $data['limit']);
-
         if (empty($fileData)) {
             return [];
         }
