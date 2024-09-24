@@ -74,7 +74,7 @@ class ImportTypeSimple extends QueueManagerBase
             ->getArgument('result');
     }
 
-    public function createConvertedFile(string $importJobId): void
+    public function createConvertedFile(string $importJobId, ?array $jobData = null): void
     {
         $importJob = $this->getEntityManager()->getRepository('ImportJob')->where(['id' => $importJobId])->findOne();
         if (empty($importJob)) {
@@ -85,13 +85,15 @@ class ImportTypeSimple extends QueueManagerBase
             return;
         }
 
-        $qmJob = $this->getEntityManager()->getRepository('ImportJob')->getQmJob($importJob);
-        if (empty($qmJob)) {
-            throw new BadRequest("QueueItem for ImportJob '{$importJob->get('id')}' does not exist.");
+        // prepare job data
+        if (empty($jobData)){
+            $qmJob = $this->getEntityManager()->getRepository('ImportJob')->getQmJob($importJob);
+            if (empty($qmJob)) {
+                throw new BadRequest("QueueItem for ImportJob '{$importJob->get('id')}' does not exist.");
+            }
+            $jobData = json_decode(json_encode($qmJob->get('data')), true);
         }
 
-        // prepare job data
-        $jobData = json_decode(json_encode($qmJob->get('data')), true);
         $this->prepareConfigurator($jobData);
 
         $idFields = $this->getLinkFields($jobData['data']['entity'], $jobData['data']['idField']);
