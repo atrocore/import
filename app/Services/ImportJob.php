@@ -27,7 +27,15 @@ use Import\Entities\ImportFeed as ImportFeedEntity;
 class ImportJob extends Base
 {
     private ?ImportTypeSimple $importService = null;
-    protected $mandatorySelectAttributeList = ['message', 'uploadedFileId', 'uploadedFileName', 'attachmentId', 'attachmentName'];
+    protected $mandatorySelectAttributeList = [
+        'message',
+        'uploadedFileId',
+        'uploadedFileName',
+        'attachmentId',
+        'attachmentName',
+        'convertedFileId',
+        'convertedFileName'
+    ];
 
     public function deleteOld(int $days = 14): bool
     {
@@ -202,67 +210,6 @@ class ImportJob extends Base
         $this->getEntityManager()->saveEntity($importJob);
 
         return $fileArr;
-    }
-
-    public function generateConvertedFile(string $jobId): array
-    {
-        $importJob = $this->getEntityManager()->getEntity('ImportJob', $jobId);
-        if (empty($importJob)) {
-            throw new BadRequest("ImportJob '$jobId' does not exist.");
-        }
-
-        $qmJob = $this->getEntityManager()->getRepository('ImportJob')->getQmJob($importJob);
-        if (empty($qmJob)) {
-            throw new BadRequest("QueueItem for ImportJob '{$importJob->get('id')}' does not exist.");
-        }
-
-        // prepare job data
-        $jobData = json_decode(json_encode($qmJob->get('data')), true);
-        $this->getImportTypeSimpleService()->prepareConfigurator($jobData);
-
-        $idFields = $this->getImportTypeSimpleService()->getLinkFields($jobData['data']['entity'], $jobData['data']['idField']);
-
-        $rows = [];
-        while (!empty($inputData = $this->getImportTypeSimpleService()->getInputData($jobData))) {
-            $this->getMemoryStorage()->set('importRowsPart', $inputData);
-
-            // add column converted_{field} to the row
-            foreach ($inputData as $i => $row) {
-                $this->getImportTypeSimpleService()->processConvertedFileRow($jobData, $row, $idFields);
-                if ($row === null) {
-                    unset($inputData[$i]);
-                    continue;
-                }
-                $inputData[$i] = $row;
-            }
-
-            $rows = array_merge($rows, $inputData);
-        }
-
-        if (empty($rows)) {
-            return [];
-        }
-
-        if ($jobData['isFileHeaderRow'] ?? false) {
-            $rows = array_merge([array_keys($rows[0])], $rows);
-        } else {
-            $rows[0] = array_keys($rows[0]);
-        }
-
-        $inputData = new \stdClass();
-        $inputData->name = str_replace(' ', '_', $importJob->get('name')) . '.csv';
-        $inputData->hidden = true;
-        $inputData->folderId = $this->getImportFeedService()->createImportFileFolder($importJob->get('importFeed'))->get('id');
-        $fileParser = $this->createFileParser('CSV');
-        $fileParser->setData($jobData);
-        $fileArr = $this->getFileService()->createFileViaContents($inputData, $fileParser->createFileContent($rows));
-
-        if (empty($this->getMemoryStorage()->get('importJobId'))) {
-            $importJob->set('convertedFileId', is_array($fileArr) ? $fileArr['id'] : $fileArr->get('id'));
-            $this->getEntityManager()->saveEntity($importJob);
-        }
-
-        return is_array($fileArr) ? $fileArr : $fileArr->toArray();
     }
 
     public function getImportJobsViaScope(string $scope): array

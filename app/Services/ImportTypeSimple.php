@@ -76,7 +76,63 @@ class ImportTypeSimple extends QueueManagerBase
 
     public function createConvertedFile(string $importJobId): void
     {
+        $importJob = $this->getEntityManager()->getRepository('ImportJob')->where(['id' => $importJobId])->findOne();
+        if (empty($importJob)) {
+            throw new BadRequest("ImportJob '$importJobId' does not exist.");
+        }
 
+        if (!empty($importJob->get('convertedFileId'))) {
+            return;
+        }
+
+        $qmJob = $this->getEntityManager()->getRepository('ImportJob')->getQmJob($importJob);
+        if (empty($qmJob)) {
+            throw new BadRequest("QueueItem for ImportJob '{$importJob->get('id')}' does not exist.");
+        }
+
+        // prepare job data
+        $jobData = json_decode(json_encode($qmJob->get('data')), true);
+        $this->prepareConfigurator($jobData);
+
+        $idFields = $this->getLinkFields($jobData['data']['entity'], $jobData['data']['idField']);
+
+        $rows = [];
+        while (!empty($inputData = $this->getInputData($jobData))) {
+            $this->getMemoryStorage()->set('importRowsPart', $inputData);
+            // add column converted_{field} to the row
+            foreach ($inputData as $i => $row) {
+                $this->processConvertedFileRow($jobData, $row, $idFields);
+                if ($row === null) {
+                    unset($inputData[$i]);
+                    continue;
+                }
+                $inputData[$i] = $row;
+            }
+
+            $rows = array_merge($rows, $inputData);
+        }
+
+        if (empty($rows)) {
+            return;
+        }
+
+        if ($jobData['isFileHeaderRow'] ?? false) {
+            $rows = array_merge([array_keys($rows[0])], $rows);
+        } else {
+            $rows[0] = array_keys($rows[0]);
+        }
+
+        $inputData = new \stdClass();
+        $inputData->name = str_replace(' ', '_', $importJob->get('name')) . '.csv';
+        $inputData->hidden = true;
+        $inputData->folderId = $this->getService('ImportFeed')->createImportFileFolder($importJob->get('importFeed'))->get('id');
+        $fileParser = $this->getFileParser('CSV');
+        $fileParser->setData($jobData);
+
+        $fileArr = $this->getService('File')->createFileViaContents($inputData, $fileParser->createFileContent($rows));
+
+        $importJob->set('convertedFileId', is_array($fileArr) ? $fileArr['id'] : $fileArr->get('id'));
+        $this->getEntityManager()->saveEntity($importJob);
     }
 
     public function run(array $data = []): bool
@@ -102,7 +158,7 @@ class ImportTypeSimple extends QueueManagerBase
         $fileRow = empty($data['offset']) ? 0 : (int)$data['offset'];
         $this->getMemoryStorage()->set('importRowNumber', $fileRow + 1);
 
-        while (!empty($inputData = $this->getInputData($data))) {
+        while (!empty($inputData = $this->readConvertedFile($importJob->get('convertedFileId'), $data))) {
             $this->getMemoryStorage()->set('importRowsPart', $inputData);
             while (!empty($inputData)) {
                 $row = array_shift($inputData);
@@ -492,6 +548,46 @@ class ImportTypeSimple extends QueueManagerBase
         return in_array($action, ['delete_not_found', 'create_delete', 'update_delete', 'create_update_delete']);
     }
 
+    public function readConvertedFile(string $convertedFileId, array &$data): array
+    {
+        $fileParser = $this->getFileParser('CSV');
+        $fileParser->setData($data);
+
+        // for getting header row
+        $includedHeaderRow = $data['offset'] === 1 && !empty($data['isFileHeaderRow']);
+        if ($includedHeaderRow) {
+            $data['offset'] = 0;
+        }
+
+        /** @var \Atro\Entities\File $file */
+        $file = $this->getEntityById('File', $convertedFileId);
+
+        $fileData = $fileParser->getFileData($file, $data['offset'], $data['limit']);
+
+        if (empty($fileData)) {
+            return [];
+        }
+
+        $data['offset'] = $data['offset'] + $data['limit'];
+
+        if (empty($data['sourceFields'])) {
+            $fileParser->setData(array_merge($data, ['fileData' => $fileData]));
+            $data['sourceFields'] = $fileParser->getFileColumns($file);
+            if ($includedHeaderRow) {
+                array_shift($fileData);
+            }
+        }
+
+        $newFileData = [];
+        foreach ($fileData as $line => $fileLine) {
+            foreach ($fileLine as $k => $v) {
+                $newFileData[$line][$data['sourceFields'][$k]] = $v;
+            }
+        }
+
+        return $newFileData;
+    }
+
     public function getInputData(array &$data): array
     {
         if ($this->lastIteration) {
@@ -719,7 +815,6 @@ class ImportTypeSimple extends QueueManagerBase
         $importService = $this->getService('ImportFeed');
 
         $linkFields = $this->getLinkFields('Product', $productImportData['data']['idField']);
-        $convertedFile = null;
 
         $this->getMemoryStorage()->set('creatingPavImportJobs', true);
 
@@ -787,15 +882,7 @@ class ImportTypeSimple extends QueueManagerBase
                 }
 
                 if (!empty($pavData['script']) || !empty($linkFields)) {
-                    if ($convertedFile === null) {
-                        $convertedFile = $this->getService('ImportJob')->generateConvertedFile($importJob->get('id'));
-                    }
-
-                    if (empty($convertedFile)) {
-                        continue;
-                    }
-
-                    $pavData['attachmentId'] = $convertedFile['id'];
+                    $pavData['attachmentId'] = $importJob->get('convertedFileId');
                     $pavData['fileFormat'] = 'CSV';
                     $pavData['offset'] = 1;
                     $pavData['isFileHeaderRow'] = true;
