@@ -118,12 +118,6 @@
     },
     "convertedFile": {
       "type": "file",
-      "view": "import:views/import-job/fields/generated-file",
-      "readOnly": true
-    },
-    "hasConvertedFile": {
-      "type": "bool",
-      "notStorable": true,
       "readOnly": true
     },
     "errorsAttachment": {

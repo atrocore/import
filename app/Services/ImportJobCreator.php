@@ -35,6 +35,14 @@ class ImportJobCreator extends QueueManagerBase
         /** @var \Espo\Core\ServiceFactory $serviceFactory */
         $serviceFactory = $this->getContainer()->get('serviceFactory');
 
+        // create converted file for parent job
+        if (!empty($payload->parentJobId)) {
+            $parentJob = $this->getEntityManager()->getRepository('ImportJob')->get($payload->parentJobId);
+            $jobData = $this->getImportTypeSimple()
+                ->prepareJobData($parentJob->get('importFeed'), $data['attachmentId']);
+            $this->getImportTypeSimple()->createConvertedFile($payload->parentJobId, $jobData);
+        }
+
         /** @var ImportFeed $importFeedService */
         $importFeedService = $serviceFactory->create('ImportFeed');
 
@@ -100,5 +108,10 @@ class ImportJobCreator extends QueueManagerBase
         }
 
         return true;
+    }
+
+    protected function getImportTypeSimple(): \Import\Services\ImportTypeSimple
+    {
+        return $this->getContainer()->get('serviceFactory')->create('ImportTypeSimple');
     }
 }
