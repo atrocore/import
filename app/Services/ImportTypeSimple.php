@@ -114,14 +114,12 @@ class ImportTypeSimple extends QueueManagerBase
             $rows = array_merge($rows, $inputData);
         }
 
-        if (empty($rows)) {
-            return;
-        }
-
-        if ($jobData['isFileHeaderRow'] ?? false) {
-            $rows = array_merge([array_keys($rows[0])], $rows);
-        } else {
-            $rows[0] = array_keys($rows[0]);
+        if (!empty($rows)) {
+            if ($jobData['isFileHeaderRow'] ?? false) {
+                $rows = array_merge([array_keys($rows[0])], $rows);
+            } else {
+                $rows[0] = array_keys($rows[0]);
+            }
         }
 
         $inputData = new \stdClass();
