@@ -106,6 +106,37 @@ class ImportJob extends Base
         }
     }
 
+    private function getChildJobs(string $parentId): array
+    {
+        return $this->getConnection()->createQueryBuilder()
+            ->select('id, state, entity_name')
+            ->from('import_job')
+            ->where('parent_id = :id')
+            ->andWhere('deleted = :false')
+            ->setParameter('false', false, ParameterType::BOOLEAN)
+            ->setParameter('id', $parentId)
+            ->fetchAllAssociative();
+    }
+
+    private function getQmJobStatus(string $id): ?string
+    {
+        $result = $this->getConnection()->createQueryBuilder()
+            ->select('status')
+            ->from('queue_item')
+            ->where('id = :id')
+            ->andWhere('deleted = :false')
+            ->setParameter('false', false, ParameterType::BOOLEAN)
+            ->setParameter('id', $id)
+            ->executeQuery()
+            ->fetchAssociative();
+
+        if ($result !== false) {
+            return $result['status'];
+        }
+
+        return null;
+    }
+
     public function updateParentState(Entity $entity): void
     {
         if (empty($entity->get('parentId')) || empty($parent = $entity->get('parent'))) {
@@ -119,22 +150,32 @@ class ImportJob extends Base
         }
 
         if (in_array($entity->get('state'), ['Success', 'Failed'])) {
-            $children = $this->getConnection()->createQueryBuilder()
-                ->select('id, state, entity_name')
-                ->from('import_job')
-                ->where('parent_id = :id')
-                ->andWhere('deleted = :false')
-                ->setParameter('false', false, ParameterType::BOOLEAN)
-                ->setParameter('id', $parent->get('id'))
-                ->fetchAllAssociative();
-
+            $children = $this->getChildJobs($parent->get('id'));
             $qmJob = $this->getQmJob($entity);
+
             if (!empty($qmJob)) {
                 $qmData = $qmJob->get('data');
+                if (\Import\Services\ImportTypeSimple::isDeleteAction($qmData->action)) {
+                    if (!empty($qmData->importJobCreatorId)) {
+                        do {
+                            if ($this->getQmJobStatus($qmData->importJobCreatorId) == 'Running') {
+                                $jobs = array_filter($children, function ($child) use ($parent) {
+                                    return $child['entity_name'] == $parent->get('entityName');
+                                });
+                                $jobsStates = array_unique(array_column($jobs, 'state'));
 
-                /** @var string $action */
-                $action = $qmData->action;
-                if (\Import\Services\ImportTypeSimple::isDeleteAction($action)) {
+                                if (in_array('Pending', $jobsStates) || in_array('Running', $jobsStates)) {
+                                    break;
+                                }
+
+                                sleep(1);
+                                $children = $this->getChildJobs($parent->get('id'));
+                            } else {
+                                break;
+                            }
+                        } while (true);
+                    }
+
                     $jobs = array_filter($children, function ($child) use ($parent) {
                         return $child['entity_name'] == $parent->get('entityName');
                     });

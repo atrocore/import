@@ -43,6 +43,12 @@ class ImportJobCreator extends QueueManagerBase
             $this->getImportTypeSimple()->createConvertedFile($payload->parentJobId, $jobData);
         }
 
+        if (!array_key_exists('jobData', $data)) {
+            $data['jobData'] = [];
+        }
+
+        $data['jobData']['importJobCreatorId'] = $this->qmItem->get('id');
+
         /** @var ImportFeed $importFeedService */
         $importFeedService = $serviceFactory->create('ImportFeed');
 

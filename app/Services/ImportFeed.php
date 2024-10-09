@@ -322,10 +322,15 @@ class ImportFeed extends Base
         $jobIds = array_column($jobsData, 'id');
         $entityName = $parent->get('entityName');
         $maxPerJob = (int)$importFeed->get('maxPerJob');
+        $qmData = $qmJob->get('data');
+
+        if (!$service::isDeleteAction($qmData->action)) {
+            return false;
+        }
 
         // push delete jobs only if all child jobs are succeed
         if (in_array('Success', $jobStates) && count($jobStates) === 1) {
-            $qmData = json_decode(json_encode($qmJob->get('data')), true);
+            $qmData = json_decode(json_encode($qmData), true);
             $qmData['action'] = 'delete_found';
             $qmData['fileFormat'] = 'CSV';
             $qmData['isFileHeaderRow'] = true;
