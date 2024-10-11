@@ -126,6 +126,7 @@ class ImportTypeSimple extends QueueManagerBase
         $inputData->name = str_replace(' ', '_', $importJob->get('name')) . '.csv';
         $inputData->hidden = true;
         $inputData->folderId = $this->getService('ImportFeed')->createImportFileFolder($importJob->get('importFeed'))->get('id');
+        $inputData->fileId = null;
         $fileParser = $this->getFileParser('CSV');
         $fileParser->setData($jobData);
 
