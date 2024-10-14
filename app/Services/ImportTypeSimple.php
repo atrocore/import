@@ -496,6 +496,8 @@ class ImportTypeSimple extends QueueManagerBase
             $this->getMemoryStorage()->delete($key);
         }
         $this->getMemoryStorage()->delete(self::MEMORY_EMPTY_QUERY_RES);
+
+        $this->getMemoryStorage()->delete('created_extensible_enum_options');
     }
 
     public function createMemoryKey(string $entityType, string $entityId): string
