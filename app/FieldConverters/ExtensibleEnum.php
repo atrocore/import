@@ -58,6 +58,14 @@ class ExtensibleEnum extends Link
         $where['extensibleEnumId'] = $this->getExtensibleEnumId($config);
     }
 
+    protected function findAlreadyExistsEntity(string $entityName, array $where): ?Entity
+    {
+        if (isset($where['extensibleEnumId'])) {
+            unset($where['extensibleEnumId']);
+        }
+
+        return parent::findAlreadyExistsEntity($entityName, $where);
+    }
 
     protected function beforeSetValue(Entity $entity, array $config, array $row): void
     {
