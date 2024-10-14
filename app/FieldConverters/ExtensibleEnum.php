@@ -73,12 +73,6 @@ class ExtensibleEnum extends Link
 
         try {
             $this->getEntityManager(true)->saveEntity($link);
-
-            $createdOptions = $this->getMemoryStorage()->get('import_created_extensible_enum_options_ids') ?? [];
-            if (!in_array($entity->get('id'), $createdOptions)) {
-                $createdOptions[] = $entity->get('id');
-                $this->getMemoryStorage()->set('import_created_extensible_enum_options_ids', $createdOptions);
-            }
         } catch (NotUnique|ConstraintViolationException $e) {
         }
     }
