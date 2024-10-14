@@ -105,13 +105,6 @@ class ImportTypeSimple extends QueueManagerBase
 
         $this->prepareConfigurator($jobData);
 
-        // skip converting for CSV
-        if ($jobData['fileFormat'] === 'CSV') {
-            $importJob->set('convertedFileId', $jobData['attachmentId']);
-            $this->getEntityManager()->saveEntity($importJob);
-            return;
-        }
-
         $idFields = $this->getLinkFields($jobData['data']['entity'], $jobData['data']['idField']);
 
         $rows = [];

@@ -285,11 +285,14 @@ class Link extends Varchar
         $entityName = $this->getForeignEntityName($configuration);
 
         $foreignKeys = $this->getMemoryStorage()->get(self::MEMORY_FOREIGN_KEYS);
-        if (isset($foreignKeys[$configuration['pos']][$entityName])) {
-            return;
-        }
 
         $foreignWhereKeys = $this->getMemoryStorage()->get(self::MEMORY_WHERE_FOREIGN_KEYS) ?? [];
+
+        ksort($where);
+        $jsonWhere = json_encode($where);
+        if (isset($foreignWhereKeys[$configuration['pos']][$entityName][$jsonWhere])) {
+            return;
+        }
 
         if (!empty($configuration['importBy']) && !empty($configuration['column'])) {
             $whereForCollection = $this->prepareWhereForCollection($configuration, $rows);
