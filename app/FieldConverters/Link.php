@@ -108,7 +108,7 @@ class Link extends Varchar
                     try {
                         $entity = $this->getService($entityName, true)->createEntity($input);
                     } catch (NotUnique|ConstraintViolationException $e) {
-                        $entity = $this->getEntityManager()->getRepository($entityName)->where($where)->findOne();
+                        $entity = $this->findAlreadyExistsEntity($entityName, $where);
                     } catch (\Throwable $e) {
                         $className = get_class($e);
 
@@ -336,6 +336,11 @@ class Link extends Varchar
         }
 
         return $res;
+    }
+
+    protected function findAlreadyExistsEntity(string $entityName, array $where): ?Entity
+    {
+        return $this->getEntityManager()->getRepository($entityName)->where($where)->findOne();
     }
 
     protected function findEntityInMemory(array $where, array $config): ?Entity
