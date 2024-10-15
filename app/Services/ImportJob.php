@@ -153,7 +153,7 @@ class ImportJob extends Base
             $attachmentId = $this->generateConvertedFile($jobId)['id'];
         }
 
-        $attachment = $this->getEntityManager()->getEntity('File', $attachmentId);
+        $attachment = $this->getEntityManager()->getRepository('File')->get($attachmentId);
         if (empty($attachment)) {
             throw new BadRequest("Attachment '$attachmentId' does not exist.");
         }
