@@ -118,6 +118,7 @@
     },
     "convertedFile": {
       "type": "file",
+      "view": "import:views/import-job/fields/generated-file",
       "readOnly": true
     },
     "errorsAttachment": {

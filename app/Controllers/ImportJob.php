@@ -30,6 +30,10 @@ class ImportJob extends Base
             throw new Forbidden();
         }
 
+        if ($data->field === 'convertedFile') {
+            return $this->getRecordService()->generateConvertedFile((string)$data->id);
+        }
+
         if ($data->field === 'errorsAttachment') {
             return $this->getRecordService()->generateErrorsAttachment((string)$data->id);
         }

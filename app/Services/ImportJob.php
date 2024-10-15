@@ -104,6 +104,13 @@ class ImportJob extends Base
         return true;
     }
 
+    public function generateConvertedFile(string $jobId): array
+    {
+        $this->getImportTypeSimpleService()->createConvertedFile($jobId);
+
+        return [];
+    }
+
     public function generateErrorsAttachment(string $jobId): array
     {
         $importJob = $this->getEntityManager()->getEntity('ImportJob', $jobId);
