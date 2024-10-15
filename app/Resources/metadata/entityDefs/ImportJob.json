@@ -112,10 +112,6 @@
       "type": "file",
       "readOnly": true
     },
-    "uploadedFile": {
-      "type": "file",
-      "readOnly": true
-    },
     "convertedFile": {
       "type": "file",
       "view": "import:views/import-job/fields/generated-file",

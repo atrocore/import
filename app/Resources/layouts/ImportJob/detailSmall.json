@@ -19,17 +19,11 @@
       ],
       [
         {
-          "name": "uploadedFile"
-        },
-        {
           "name": "attachment"
-        }
-      ],
-      [
+        },
         {
           "name": "convertedFile"
-        },
-        false
+        }
       ],
       [
         {

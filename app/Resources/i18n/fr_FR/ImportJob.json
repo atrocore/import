@@ -11,7 +11,6 @@
     "skippedCount": "Ignoré",
     "errorsCount": "Erreurs",
     "attachment": "Fichier importé",
-    "uploadedFile": "Fichier téléchargé",
     "convertedFile": "Fichier converti",
     "errorsAttachment": "Fichier d'erreurs",
     "importJobLogs": "Journaux d'erreurs"

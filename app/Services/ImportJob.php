@@ -29,8 +29,6 @@ class ImportJob extends Base
     private ?ImportTypeSimple $importService = null;
     protected $mandatorySelectAttributeList = [
         'message',
-        'uploadedFileId',
-        'uploadedFileName',
         'attachmentId',
         'attachmentName',
         'convertedFileId',
