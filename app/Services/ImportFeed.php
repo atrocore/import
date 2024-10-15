@@ -680,6 +680,9 @@ class ImportFeed extends Base
             if (property_exists($payload, 'parentJobId')) {
                 $entity->set('parentId', $payload->parentJobId);
             }
+            if (property_exists($payload, 'convertedFileId')) {
+                $entity->set('convertedFileId', $payload->convertedFileId);
+            }
         }
 
         $this->getEntityManager()->saveEntity($entity);
