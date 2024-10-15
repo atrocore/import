@@ -37,7 +37,6 @@
   },
   "exceptions": {
     "errorFileCreatingFailed": "Неможливо створити файл помилки.",
-    "convertedFileNotExist": "Перетворений файл не існує. Спочатку згенеруйте його.",
     "cacheWriteFailed": "Не вдалося записати дані в кеш імпорту."
   },
   "boolFilters": {

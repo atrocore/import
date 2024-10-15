@@ -74,7 +74,7 @@ class ImportTypeSimple extends QueueManagerBase
             ->getArgument('result');
     }
 
-    public function createConvertedFile(string $importJobId, ?array $jobData = null): void
+    public function createConvertedFile(string $importJobId, ?array $jobData = null): ?string
     {
         $importJob = $this->getEntityManager()->getRepository('ImportJob')->where(['id' => $importJobId])->findOne();
         if (empty($importJob)) {
@@ -82,7 +82,7 @@ class ImportTypeSimple extends QueueManagerBase
         }
 
         if (!empty($importJob->get('convertedFileId'))) {
-            return;
+            return $importJob->get('convertedFileId');
         }
 
         // prepare job data
@@ -133,6 +133,8 @@ class ImportTypeSimple extends QueueManagerBase
 
         $importJob->set('convertedFileId', is_array($fileArr) ? $fileArr['id'] : $fileArr->get('id'));
         $this->getEntityManager()->saveEntity($importJob);
+
+        return $importJob->get('convertedFileId');
     }
 
     public function run(array $data = []): bool

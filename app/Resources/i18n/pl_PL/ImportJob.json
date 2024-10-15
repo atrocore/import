@@ -36,8 +36,7 @@
     "errorsAttachment": "Wiersze z 'Zaimportowanego pliku', które nie zostały zaimportowane."
   },
   "exceptions": {
-    "errorFileCreatingFailed": "Nie można utworzyć pliku błędów.",
-    "convertedFileNotExist": "Plik skonwertowany nie istnieje. Proszę najpierw go wygenerować."
+    "errorFileCreatingFailed": "Nie można utworzyć pliku błędów."
   },
   "boolFilters": {
     "onlyImportFailed24Hours": "Tylko Zadania Importu, które nie powiodły się w ciągu ostatnich 24 godzin",
