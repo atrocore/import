@@ -36,10 +36,7 @@ Espo.define('import:views/import-job/record/detail', 'views/record/detail',
         actionGenerateFile(field) {
             this.notify(this.translate('generating', 'labels', 'ImportJob'));
             this.ajaxPostRequest('ImportJob/action/generateFile', {id: this.model.get('id'), field: field}).then(entity => {
-                if (entity.id && entity.name){
-                    this.model.set(field + 'Id', entity.id);
-                    this.model.set(field + 'Name', entity.name);
-                }
+                this.model.fetch();
                 this.notify('Done', 'success');
             });
         },
