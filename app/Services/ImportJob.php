@@ -29,8 +29,6 @@ class ImportJob extends Base
     private ?ImportTypeSimple $importService = null;
     protected $mandatorySelectAttributeList = [
         'message',
-        'uploadedFileId',
-        'uploadedFileName',
         'attachmentId',
         'attachmentName',
         'convertedFileId',
@@ -104,6 +102,24 @@ class ImportJob extends Base
         return true;
     }
 
+    public function generateConvertedFile(string $jobId): array
+    {
+        $importJob = $this->getEntityManager()->getEntity('ImportJob', $jobId);
+        if (empty($importJob)) {
+            throw new BadRequest("Import job '$jobId' does not exist.");
+        }
+
+        $jobData = $this->getImportTypeSimpleService()
+            ->prepareJobData($importJob->get('importFeed'), $importJob->get('attachmentId'));
+
+        $id = $this->getImportTypeSimpleService()
+            ->createConvertedFile($jobId, $jobData);
+
+        $file = $this->getEntityManager()->getRepository('File')->get($id);
+
+        return $file->toArray();
+    }
+
     public function generateErrorsAttachment(string $jobId): array
     {
         $importJob = $this->getEntityManager()->getEntity('ImportJob', $jobId);
@@ -125,36 +141,25 @@ class ImportJob extends Base
             throw new BadRequest($this->translate('errorFileCreatingFailed', 'exceptions', 'ImportJob'));
         }
 
-        if (empty($feed = $importJob->get('importFeed'))) {
+        $feed = $importJob->get('importFeed');
+        if (empty($feed)) {
             throw new BadRequest("ImportFeed for import job '{$importJob->get('id')}' does not exist.");
         }
 
         $errorsRowsNumbers = [];
 
-        switch ($feed->getFeedField('format')) {
-            case 'CSV':
-            case 'Excel':
-                $isFileHeaderRow = !empty($feed->getFeedField('isFileHeaderRow'));
-                $attachmentId = $importJob->get('attachmentId');
-                $delimiter = $feed->getDelimiter();
-                $enclosure = $feed->getEnclosure();
-                $format = $feed->getFeedField('format');
-                break;
-            default:
-                $isFileHeaderRow = true;
-                $attachmentId = $importJob->get('convertedFileId');
-                if (empty($attachmentId)) {
-                    throw new BadRequest($this->translate('convertedFileNotExist', 'exceptions', 'ImportJob'));
-                }
-                $delimiter = ",";
-                $enclosure = '"';
-                $format = 'CSV';
+        $attachmentId = $importJob->get('convertedFileId');
+        if (empty($attachmentId)) {
+            $attachmentId = $this->generateConvertedFile($jobId)['id'];
+        }
+
+        $attachment = $this->getEntityManager()->getRepository('File')->get($attachmentId);
+        if (empty($attachment)) {
+            throw new BadRequest("Attachment '$attachmentId' does not exist.");
         }
 
         // add header row if it needs
-        if ($isFileHeaderRow) {
-            $errorsRowsNumbers[1] = 'Import Errors';
-        }
+        $errorsRowsNumbers[1] = 'Import Errors';
 
         foreach ($errorLogs as $log) {
             $importJobLogRepo->prepareMessage($log);
@@ -162,14 +167,10 @@ class ImportJob extends Base
             $errorsRowsNumbers[$rowNumber] = $log->get('message');
         }
 
-        if (empty($attachmentId) || empty($attachment = $this->getEntityManager()->getEntity('File', $attachmentId))) {
-            throw new BadRequest("Attachment '$attachmentId' does not exist.");
-        }
-
-        $fileParser = $this->createFileParser($format);
+        $fileParser = $this->createFileParser('CSV');
         $fileParser->setData([
-            'delimiter' => $delimiter,
-            'enclosure' => $enclosure
+            'delimiter' => ",",
+            'enclosure' => '"'
         ]);
 
         $data = $fileParser->getFileData($attachment);
@@ -185,25 +186,16 @@ class ImportJob extends Base
         }
 
         // prepare attachment name
-        $nameParts = explode('.', $importJob->get('attachment')->get('name'));
+        $nameParts = explode('.', $attachment->get('name'));
         array_pop($nameParts);
         $name = 'errors-' . implode('.', $nameParts);
 
         $inputData = new \stdClass();
         $inputData->hidden = true;
         $inputData->folderId = $this->getImportFeedService()->createImportFileFolder($feed)->get('id');
-        switch ($format) {
-            case 'CSV':
-                $inputData->name = "{$name}.csv";
-                break;
-            case 'Excel':
-                $inputData->name = "{$name}.xlsx";
-                break;
-            default:
-                throw new \Error('Unknown file format');
-        }
+        $inputData->name = "{$name}.csv";
 
-        $fileParser->setData(['isFileHeaderRow' => $isFileHeaderRow]);
+        $fileParser->setData(['isFileHeaderRow' => true]);
         $fileArr = $this->getFileService()->createFileViaContents($inputData, $fileParser->createFileContent($errorsRows));
 
         $importJob->set('errorsAttachmentId', $fileArr['id']);

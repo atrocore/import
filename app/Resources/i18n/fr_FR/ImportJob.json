@@ -11,7 +11,6 @@
     "skippedCount": "Ignoré",
     "errorsCount": "Erreurs",
     "attachment": "Fichier importé",
-    "uploadedFile": "Fichier téléchargé",
     "convertedFile": "Fichier converti",
     "errorsAttachment": "Fichier d'erreurs",
     "importJobLogs": "Journaux d'erreurs"
@@ -37,7 +36,6 @@
   },
   "exceptions": {
     "errorFileCreatingFailed": "Le fichier d'erreur ne peut pas être créé.",
-    "convertedFileNotExist": "Le fichier converti n'existe pas. Veuillez d'abord le générer.",
     "cacheWriteFailed": "Impossible d'écrire des données dans le cache d'importation."
   },
   "boolFilters": {

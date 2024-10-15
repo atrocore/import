@@ -663,7 +663,7 @@ class ImportFeed extends Base
         return 'ImportType' . ucfirst($feed->get('type'));
     }
 
-    public function createImportJob(ImportFeedEntity $feed, string $entityType, string $uploadedFileId, \stdClass $payload = null, string $attachmentId = null): ImportJob
+    public function createImportJob(ImportFeedEntity $feed, string $entityType, string $attachmentId, \stdClass $payload = null): ImportJob
     {
         $entityLabel = $this->getInjection('language')->translate($entityType, 'scopeNames');
 
@@ -671,14 +671,16 @@ class ImportFeed extends Base
         $entity->set('name', "{$entityLabel}: {$feed->get('name')}");
         $entity->set('importFeedId', $feed->get('id'));
         $entity->set('entityName', $entityType);
-        $entity->set('uploadedFileId', $uploadedFileId);
-        $entity->set('attachmentId', empty($attachmentId) ? $uploadedFileId : $attachmentId);
+        $entity->set('attachmentId', $attachmentId);
         $entity->set('sortOrder', time() - (new \DateTime('2023-01-01'))->getTimestamp());
 
         if (!empty($payload)) {
             $entity->set('payload', $payload);
             if (property_exists($payload, 'parentJobId')) {
                 $entity->set('parentId', $payload->parentJobId);
+            }
+            if (property_exists($payload, 'convertedFileId')) {
+                $entity->set('convertedFileId', $payload->convertedFileId);
             }
         }
 

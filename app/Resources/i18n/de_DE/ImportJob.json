@@ -11,7 +11,6 @@
     "skippedCount": "Übersprungen",
     "errorsCount": "Fehler",
     "attachment": "Importierte Datei",
-    "uploadedFile": "Hochgeladene Datei",
     "convertedFile": "Konvertierte File",
     "errorsAttachment": "Fehlerdatei",
     "importJobLogs": "Fehlerlogs"
@@ -37,7 +36,6 @@
   },
   "exceptions": {
     "errorFileCreatingFailed": "Konvertierte Datei existiert nicht. Bitte generieren Sie es zuerst.",
-    "convertedFileNotExist": "No such converted file found. Please, generate it first.",
     "cacheWriteFailed": "Daten können nicht in den Import-Cache geschrieben werden."
   },
   "boolFilters": {

@@ -35,14 +35,6 @@ class ImportJobCreator extends QueueManagerBase
         /** @var \Espo\Core\ServiceFactory $serviceFactory */
         $serviceFactory = $this->getContainer()->get('serviceFactory');
 
-        // create converted file for parent job
-        if (!empty($payload->parentJobId)) {
-            $parentJob = $this->getEntityManager()->getRepository('ImportJob')->get($payload->parentJobId);
-            $jobData = $this->getImportTypeSimple()
-                ->prepareJobData($parentJob->get('importFeed'), $data['attachmentId']);
-            $this->getImportTypeSimple()->createConvertedFile($payload->parentJobId, $jobData);
-        }
-
         if (!array_key_exists('jobData', $data)) {
             $data['jobData'] = [];
         }
