@@ -39,7 +39,7 @@ Espo.define('import:views/import-job/record/detail', 'views/record/detail',
                 let interval = setInterval(() => {
                     this.ajaxGetRequest(`QueueItem/${response.queueItemId}`).then(res => {
                         this.notify(this.translate('generating', 'labels', 'ImportJob'));
-                        if (res.status === "Success" || res.status === "Error"){
+                        if (["Success", "Failed", "Canceled"].includes(res.status)) {
                             clearInterval(interval);
                             this.model.fetch();
                             this.notify('Done', 'success');
