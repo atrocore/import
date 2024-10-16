@@ -17,6 +17,7 @@ use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Templates\Controllers\Base;
+use Atro\DTO\QueueItemDTO;
 
 class ImportJob extends Base
 {
@@ -30,15 +31,31 @@ class ImportJob extends Base
             throw new Forbidden();
         }
 
-        if ($data->field === 'convertedFile') {
-            return $this->getRecordService()->generateConvertedFile((string)$data->id);
+        switch ($data->field) {
+            case 'convertedFile':
+                $name = 'Generate converted file';
+                break;
+            case 'errorsAttachment':
+                $name = 'Generate file with errors';
+                break;
+            default:
+                $name = null;
+                break;
         }
 
-        if ($data->field === 'errorsAttachment') {
-            return $this->getRecordService()->generateErrorsAttachment((string)$data->id);
+        if ($name === null) {
+            throw new BadRequest("Field is not defined.");
         }
 
-        return null;
+        $dto = new QueueItemDTO($name, 'ConvertedFileGenerator', [
+            'field'       => $data->field,
+            'importJobId' => $data->id,
+        ]);
+        $dto->setHash($data->id);
+
+        return [
+            'queueItemId' => $this->getContainer()->get('queueManager')->createQueueItem($dto)
+        ];
     }
 
     public function actionGetImportJobsViaScope($params, $data, $request): array
