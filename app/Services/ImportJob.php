@@ -26,7 +26,6 @@ use Import\Entities\ImportFeed as ImportFeedEntity;
 
 class ImportJob extends Base
 {
-    private ?ImportTypeSimple $importService = null;
     protected $mandatorySelectAttributeList = [
         'message',
         'attachmentId',
@@ -102,108 +101,6 @@ class ImportJob extends Base
         return true;
     }
 
-    public function generateConvertedFile(string $jobId): array
-    {
-        $importJob = $this->getEntityManager()->getEntity('ImportJob', $jobId);
-        if (empty($importJob)) {
-            throw new BadRequest("Import job '$jobId' does not exist.");
-        }
-
-        $jobData = $this->getImportTypeSimpleService()
-            ->prepareJobData($importJob->get('importFeed'), $importJob->get('attachmentId'));
-
-        $id = $this->getImportTypeSimpleService()
-            ->createConvertedFile($jobId, $jobData);
-
-        $file = $this->getEntityManager()->getRepository('File')->get($id);
-
-        return $file->toArray();
-    }
-
-    public function generateErrorsAttachment(string $jobId): array
-    {
-        $importJob = $this->getEntityManager()->getEntity('ImportJob', $jobId);
-        if (empty($importJob)) {
-            throw new BadRequest("Import job '$jobId' does not exist.");
-        }
-
-        /** @var \Import\Repositories\ImportJobLog $importJobLogRepo */
-        $importJobLogRepo = $this->getEntityManager()->getRepository('ImportJobLog');
-
-        $errorLogs = $importJobLogRepo
-            ->where([
-                'importJobId' => $importJob->get('id'),
-                'type'        => 'error'
-            ])
-            ->find();
-
-        if (empty($errorLogs[0])) {
-            throw new BadRequest($this->translate('errorFileCreatingFailed', 'exceptions', 'ImportJob'));
-        }
-
-        $feed = $importJob->get('importFeed');
-        if (empty($feed)) {
-            throw new BadRequest("ImportFeed for import job '{$importJob->get('id')}' does not exist.");
-        }
-
-        $errorsRowsNumbers = [];
-
-        $attachmentId = $importJob->get('convertedFileId');
-        if (empty($attachmentId)) {
-            $attachmentId = $this->generateConvertedFile($jobId)['id'];
-        }
-
-        $attachment = $this->getEntityManager()->getRepository('File')->get($attachmentId);
-        if (empty($attachment)) {
-            throw new BadRequest("Attachment '$attachmentId' does not exist.");
-        }
-
-        // add header row if it needs
-        $errorsRowsNumbers[1] = 'Import Errors';
-
-        foreach ($errorLogs as $log) {
-            $importJobLogRepo->prepareMessage($log);
-            $rowNumber = (int)$log->get('rowNumber');
-            $errorsRowsNumbers[$rowNumber] = $log->get('message');
-        }
-
-        $fileParser = $this->createFileParser('CSV');
-        $fileParser->setData([
-            'delimiter' => ",",
-            'enclosure' => '"'
-        ]);
-
-        $data = $fileParser->getFileData($attachment);
-
-        // collect errors rows
-        $errorsRows = [];
-        foreach ($data as $k => $row) {
-            $key = $k + 1;
-            if (isset($errorsRowsNumbers[$key])) {
-                $row[] = $errorsRowsNumbers[$key];
-                $errorsRows[] = $row;
-            }
-        }
-
-        // prepare attachment name
-        $nameParts = explode('.', $attachment->get('name'));
-        array_pop($nameParts);
-        $name = 'errors-' . implode('.', $nameParts);
-
-        $inputData = new \stdClass();
-        $inputData->hidden = true;
-        $inputData->folderId = $this->getImportFeedService()->createImportFileFolder($feed)->get('id');
-        $inputData->name = "{$name}.csv";
-
-        $fileParser->setData(['isFileHeaderRow' => true]);
-        $fileArr = $this->getFileService()->createFileViaContents($inputData, $fileParser->createFileContent($errorsRows));
-
-        $importJob->set('errorsAttachmentId', $fileArr['id']);
-        $this->getEntityManager()->saveEntity($importJob);
-
-        return $fileArr;
-    }
-
     public function getImportJobsViaScope(string $scope): array
     {
         return $this
@@ -217,30 +114,6 @@ class ImportJob extends Base
         parent::prepareCollectionForOutput($collection, $selectParams);
 
         $this->prepareCounts($collection);
-    }
-
-    protected function createFileParser(string $format): FileParserInterface
-    {
-        return $this->getInjection('container')->get(ImportFeedEntity::getFileParserClass($format));
-    }
-
-    protected function getImportTypeSimpleService(): ImportTypeSimple
-    {
-        if (!$this->importService) {
-            $this->importService = $this->getServiceFactory()->create('ImportTypeSimple');
-        }
-
-        return $this->importService;
-    }
-
-    protected function getImportFeedService(): ImportFeed
-    {
-        return $this->getServiceFactory()->create('ImportFeed');
-    }
-
-    protected function getFileService(): File
-    {
-        return $this->getServiceFactory()->create('File');
     }
 
     public function prepareCounts(EntityCollection $collection): void
