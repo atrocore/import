@@ -37,13 +37,17 @@ Espo.define('import:views/import-job/record/detail', 'views/record/detail',
             this.notify(this.translate('generating', 'labels', 'ImportJob'));
             this.ajaxPostRequest('ImportJob/action/generateFile', {id: this.model.get('id'), field: field}).then(response => {
                 let interval = setInterval(() => {
-                    this.ajaxGetRequest(`QueueItem/${response.queueItemId}`).then(res => {
+                    this.ajaxGetRequest(`QueueItem/${response.queueItemId}?silent=true`).success(res => {
                         this.notify(this.translate('generating', 'labels', 'ImportJob'));
                         if (["Success", "Failed", "Canceled"].includes(res.status)) {
                             clearInterval(interval);
                             this.model.fetch();
                             this.notify('Done', 'success');
                         }
+                    }).error(() => {
+                        clearInterval(interval);
+                        this.model.fetch();
+                        this.notify('Done', 'success');
                     });
                 }, 2000);
             });
