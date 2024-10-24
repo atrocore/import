@@ -39,8 +39,20 @@ class ConvertedFileGenerator extends QueueManagerBase
             throw new BadRequest("Import job '$jobId' does not exist.");
         }
 
+        $importFeed = $this->getEntityManager()->getEntity('ImportFeed', $importJob->get('importFeedId'));
+        if (empty($importFeed)) {
+            throw new BadRequest("ImportFeed '{$importJob->get('importFeedId')}' does not exist.");
+        }
+
         $jobData = $this->getImportTypeSimpleService()
-            ->prepareJobData($importJob->get('importFeed'), $importJob->get('attachmentId'));
+            ->prepareJobData($importFeed, $importJob->get('attachmentId'));
+
+        // for import type HttpRequest
+        if (!empty($importFeed->getFeedField('mergeResponses'))) {
+            $jobData['fileFormat'] = 'CSV';
+            $jobData['delimiter'] = ",";
+            $jobData['enclosure'] = '"';
+        }
 
         return $this->getImportTypeSimpleService()->createConvertedFileForJob($jobId, $jobData);
     }
