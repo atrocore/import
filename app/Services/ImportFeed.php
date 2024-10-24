@@ -419,7 +419,9 @@ class ImportFeed extends Base
                 'importFeedId' => $importFeed->get('id'),
                 'attachmentId' => $attachmentId,
                 'payload'      => $payload,
-                'priority'     => $priority
+                'priority'     => $priority,
+                'maxPerJob'    => (int)$importFeed->get('maxPerJob'),
+                'format'       => $importFeed->getFeedField('format')
             ];
 
             if (!empty($payload) && !empty($payload->executeNow)) {

@@ -29,6 +29,9 @@ class ImportJobCreator extends QueueManagerBase
             return false;
         }
 
+        $maxPerJob = $data['maxPerJob'] ?? (int)$importFeed->get('maxPerJob');
+        $format = $data['format'] ?? $importFeed->getFeedField('format');
+
         $payload = !empty($data['payload']) ? json_decode(json_encode($data['payload'])) : new \stdClass();
         $priority = $data['priority'];
 
@@ -49,7 +52,7 @@ class ImportJobCreator extends QueueManagerBase
 
         $isFileHeaderRow = !empty($importFeed->getFeedField('isFileHeaderRow'));
 
-        $fileParser = $importFeedService->getFileParser($importFeed->getFeedField('format'));
+        $fileParser = $importFeedService->getFileParser($format);
         $fileParser->setData([
             'isFileHeaderRow' => $isFileHeaderRow,
             'delimiter'       => $importFeed->getDelimiter(),
@@ -71,11 +74,10 @@ class ImportJobCreator extends QueueManagerBase
         $serviceName = $importFeedService->getImportTypeService($importFeed);
         $service = $serviceFactory->create($serviceName);
 
-        $maxPerJob = (int)$importFeed->get('maxPerJob');
         $partNumber = 1;
         while (!empty($fileData = $fileParser->getFileData($attachment, $offset, $maxPerJob))) {
             $part = array_merge($header, $fileData);
-            $fileExt = $importFeed->getFeedField('format') === 'CSV' ? 'csv' : 'xlsx';
+            $fileExt = $format === 'CSV' ? 'csv' : 'xlsx';
 
             $input = new \stdClass();
             $input->name = date('Y-m-d H:i:s') . ' (' . $partNumber . ')' . '.' . $fileExt;
@@ -91,7 +93,7 @@ class ImportJobCreator extends QueueManagerBase
             $jobData['sheet'] = 0;
             $jobData['rowNumberPart'] = $rowNumberPart;
             $jobData['data']['importJobId'] = $importFeedService
-                ->createImportJob($importFeed, $importFeed->getFeedField('entity'), $attachment->get('id'), $payload, $jobAttachment['id'])
+                ->createImportJob($importFeed, $importFeed->getFeedField('entity'), $jobAttachment['id'], $payload)
                 ->get('id');
 
             if (!empty($data['jobData']) && is_array($data['jobData'])) {
