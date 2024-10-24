@@ -28,9 +28,11 @@ class JsonToVerticalArray
 
         $horizontalArray = [];
         self::toHorizontalArray($array, '', $horizontalArray);
+        unset($array);
 
         $data = [];
         self::toVerticalArray($horizontalArray, $data);
+        unset($horizontalArray);
 
         while (strpos(json_encode($data), 'collection{') !== false) {
             $newData = [];
