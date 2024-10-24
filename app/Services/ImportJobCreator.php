@@ -29,11 +29,13 @@ class ImportJobCreator extends QueueManagerBase
             return false;
         }
 
-        $maxPerJob = $data['maxPerJob'] ?? (int)$importFeed->get('maxPerJob');
-        $format = $data['format'] ?? $importFeed->getFeedField('format');
-
         $payload = !empty($data['payload']) ? json_decode(json_encode($data['payload'])) : new \stdClass();
         $priority = $data['priority'];
+
+        $maxPerJob = $payload->maxPerJob ?? (int)$importFeed->get('maxPerJob');
+        $format = $payload->format ?? $importFeed->getFeedField('format');
+        $delimiter = $payload->delimiter ?? $importFeed->getDelimiter();
+        $enclosure = $payload->enclosure ?? $importFeed->getEnclosure();
 
         /** @var \Espo\Core\ServiceFactory $serviceFactory */
         $serviceFactory = $this->getContainer()->get('serviceFactory');
@@ -55,8 +57,8 @@ class ImportJobCreator extends QueueManagerBase
         $fileParser = $importFeedService->getFileParser($format);
         $fileParser->setData([
             'isFileHeaderRow' => $isFileHeaderRow,
-            'delimiter'       => $importFeed->getDelimiter(),
-            'enclosure'       => $importFeed->getEnclosure(),
+            'delimiter'       => $delimiter,
+            'enclosure'       => $enclosure,
             'sheet'           => $importFeed->get('sheet') ?? 0,
         ]);
 
@@ -87,6 +89,15 @@ class ImportJobCreator extends QueueManagerBase
             $jobAttachment = $fileService->createFileViaContents($input, $fileParser->createFileContent($part));
 
             $jobData = $service->prepareJobData($importFeed, $jobAttachment['id']);
+            if (!empty($payload->format)) {
+                $jobData['fileFormat'] = $payload->format;
+            }
+            if (!empty($payload->delimiter)) {
+                $jobData['delimiter'] = $payload->delimiter;
+            }
+            if (!empty($payload->enclosure)) {
+                $jobData['enclosure'] = $payload->enclosure;
+            }
             if (!empty($priority)) {
                 $jobData['data']['priority'] = $priority;
             }
@@ -108,10 +119,5 @@ class ImportJobCreator extends QueueManagerBase
         }
 
         return true;
-    }
-
-    protected function getImportTypeSimple(): \Import\Services\ImportTypeSimple
-    {
-        return $this->getContainer()->get('serviceFactory')->create('ImportTypeSimple');
     }
 }
