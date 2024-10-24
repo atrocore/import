@@ -42,11 +42,20 @@
         "visible": {
           "conditionGroup": [
             {
-              "type": "in",
-              "attribute": "format",
+              "type": "or",
               "value": [
-                "CSV",
-                "Excel"
+                {
+                  "type": "in",
+                  "attribute": "format",
+                  "value": [
+                    "CSV",
+                    "Excel"
+                  ]
+                },
+                {
+                  "type": "isTrue",
+                  "attribute": "mergeResponses"
+                }
               ]
             }
           ]

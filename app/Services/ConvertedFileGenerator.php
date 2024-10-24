@@ -42,7 +42,7 @@ class ConvertedFileGenerator extends QueueManagerBase
         $jobData = $this->getImportTypeSimpleService()
             ->prepareJobData($importJob->get('importFeed'), $importJob->get('attachmentId'));
 
-        return $this->getImportTypeSimpleService()->createConvertedFile($jobId, $jobData);
+        return $this->getImportTypeSimpleService()->createConvertedFileForJob($jobId, $jobData);
     }
 
     public function generateErrorsAttachment(string $jobId): ?string

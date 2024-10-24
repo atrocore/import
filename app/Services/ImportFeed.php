@@ -411,7 +411,10 @@ class ImportFeed extends Base
             $payload->parentJobId = $parentJob->get('id');
         }
 
-        if ((int)$importFeed->get('maxPerJob') > 0 && in_array($importFeed->getFeedField('format'), ['CSV', 'Excel'])) {
+        $maxPerJob = $payload->maxPerJob ?? (int)$importFeed->get('maxPerJob');
+        $format = $payload->format ?? $importFeed->getFeedField('format');
+
+        if ($maxPerJob > 0 && in_array($format, ['CSV', 'Excel'])) {
             $name = $this->getInjection('language')->translate('createImportJobs', 'labels', 'ImportFeed');
             $name = sprintf($name, $importFeed->get('name'));
 

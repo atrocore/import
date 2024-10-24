@@ -17,6 +17,7 @@ use Atro\Core\Exceptions\Error;
 use Atro\Core\Exceptions\NotModified;
 use Atro\Core\EventManager\Event;
 use Atro\DTO\QueueItemDTO;
+use Atro\Entities\File;
 use Doctrine\DBAL\ParameterType;
 use Espo\Core\EventManager\Manager;
 use Espo\Core\Exceptions\BadRequest;
@@ -74,7 +75,7 @@ class ImportTypeSimple extends QueueManagerBase
             ->getArgument('result');
     }
 
-    public function createConvertedFile(string $importJobId, ?array $jobData = null): ?string
+    public function createConvertedFileForJob(string $importJobId, ?array $jobData = null): ?string
     {
         $importJob = $this->getEntityManager()->getRepository('ImportJob')->where(['id' => $importJobId])->findOne();
         if (empty($importJob)) {
@@ -86,7 +87,7 @@ class ImportTypeSimple extends QueueManagerBase
         }
 
         // prepare job data
-        if (empty($jobData)){
+        if (empty($jobData)) {
             $qmJob = $this->getEntityManager()->getRepository('ImportJob')->getQmJob($importJob);
             if (empty($qmJob)) {
                 throw new BadRequest("QueueItem for ImportJob '{$importJob->get('id')}' does not exist.");
@@ -94,6 +95,16 @@ class ImportTypeSimple extends QueueManagerBase
             $jobData = json_decode(json_encode($qmJob->get('data')), true);
         }
 
+        $convertedFile = $this->createConvertedFile($importJob->get('importFeed'), $jobData);
+
+        $importJob->set('convertedFileId', $convertedFile->get('id'));
+        $this->getEntityManager()->saveEntity($importJob);
+
+        return $importJob->get('convertedFileId');
+    }
+
+    public function createConvertedFile(Entity $importFeed, array $jobData): File
+    {
         $this->prepareConfigurator($jobData);
 
         $idFields = $this->getLinkFields($jobData['data']['entity'], $jobData['data']['idField']);
@@ -123,23 +134,26 @@ class ImportTypeSimple extends QueueManagerBase
         }
 
         $inputData = new \stdClass();
-        $inputData->name = str_replace(' ', '_', $importJob->get('name')) . '.csv';
+        $inputData->name = str_replace(' ', '_', $importFeed->get('name')) . '.csv';
         $inputData->hidden = true;
-        $inputData->folderId = $this->getService('ImportFeed')->createImportFileFolder($importJob->get('importFeed'))->get('id');
+        $inputData->folderId = $this->getService('ImportFeed')->createImportFileFolder($importFeed)->get('id');
         $fileParser = $this->getFileParser('CSV');
         $fileParser->setData($jobData);
 
-        $fileArr = $this->getService('File')->createFileViaContents($inputData, $fileParser->createFileContent($rows));
+        $convertedFile = $this
+            ->getService('File')
+            ->createFileViaContents($inputData, $fileParser->createFileContent($rows));
 
-        $importJob->set('convertedFileId', is_array($fileArr) ? $fileArr['id'] : $fileArr->get('id'));
-        $this->getEntityManager()->saveEntity($importJob);
+        if (is_array($convertedFile)) {
+            $convertedFile = $this->getEntityManager()->getEntity('File', $convertedFile['id']);
+        }
 
-        return $importJob->get('convertedFileId');
+        return $convertedFile;
     }
 
     public function run(array $data = []): bool
     {
-        $this->createConvertedFile($data['data']['importJobId']);
+        $this->createConvertedFileForJob($data['data']['importJobId']);
 
         $importJob = $this->getEntityById('ImportJob', $data['data']['importJobId']);
 
