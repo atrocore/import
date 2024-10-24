@@ -158,6 +158,7 @@ class JsonToVerticalArray
                 }
 
                 $row[$preparedName] = $value;
+                unset($array[$name]);
             }
             $data[] = $row;
             $i++;
