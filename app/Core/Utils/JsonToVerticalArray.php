@@ -38,8 +38,10 @@ class JsonToVerticalArray
             $newData = [];
             foreach ($data as $row) {
                 self::toVerticalArray($row, $newData);
+                unset($row);
             }
             $data = $newData;
+            unset($newData);
         }
 
         $keys = [];
@@ -49,7 +51,8 @@ class JsonToVerticalArray
         $keys = array_unique($keys);
 
         $result = [];
-        foreach ($data as $v) {
+        while (!empty($data)) {
+            $v = array_shift($data);
             $row = [];
             foreach ($keys as $key) {
                 $row[$key] = isset($v[$key]) ? $v[$key] : null;
