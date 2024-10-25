@@ -20,6 +20,7 @@ use Atro\Entities\File;
 class Json extends Injectable implements FileParserInterface
 {
     protected array $data = [];
+    protected ?string $rootNode = null;
     protected array $excludedNodes = [];
     protected array $keptStringNodes = [];
 
@@ -35,6 +36,7 @@ class Json extends Injectable implements FileParserInterface
 
     public function getFileColumns(File $attachment): array
     {
+        $this->rootNode = $this->data['rootNode'] ?? null;
         $this->excludedNodes = $this->data['excludedNodes'] ?? [];
         $this->keptStringNodes = $this->data['keptStringNodes'] ?? [];
 
@@ -54,7 +56,13 @@ class Json extends Injectable implements FileParserInterface
             return [];
         }
 
-        $payload = array_merge(['data' => ['excludedNodes' => $this->excludedNodes, 'keptStringNodes' => $this->keptStringNodes]], $this->data);
+        $payload = array_merge([
+            'data' => [
+                'rootNode'        => $this->rootNode,
+                'excludedNodes'   => $this->excludedNodes,
+                'keptStringNodes' => $this->keptStringNodes
+            ]
+        ], $this->data);
 
         $data = \Import\Core\Utils\JsonToVerticalArray::mutate($contents, $payload);
 
