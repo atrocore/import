@@ -26,6 +26,17 @@ class JsonToVerticalArray
             return [];
         }
 
+        if (!empty($importPayload['data']['rootNode'])) {
+            $parts = explode('.', $importPayload['data']['rootNode']);
+            foreach ($parts as $part) {
+                $array = $array[$part] ?? [];
+            }
+        }
+
+        if (empty($array)) {
+            return [];
+        }
+
         if (self::isAssociative($array)) {
             $chunks = [$array];
         } else {
@@ -186,7 +197,6 @@ class JsonToVerticalArray
                 }
 
                 $row[$preparedName] = $value;
-                unset($array[$name]);
             }
             $data[] = $row;
             $i++;
