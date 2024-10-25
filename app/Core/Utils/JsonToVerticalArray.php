@@ -20,6 +20,22 @@ class JsonToVerticalArray
 
     public static function mutate(string $json, ?array $importPayload = null): array
     {
+        $array = @json_decode($json, true);
+        if (empty($array)) {
+            return [];
+        }
+
+        if (!empty($importPayload['data']['rootNode'])) {
+            $parts = explode('.', $importPayload['data']['rootNode']);
+            foreach ($parts as $part) {
+                $array = $array[$part] ?? [];
+            }
+        }
+
+        if (empty($array)) {
+            return [];
+        }
+
         /**
          * Prepare NULL value
          */
@@ -38,22 +54,6 @@ class JsonToVerticalArray
         }
         if (isset($importPayload['emptyValue'])) {
             self::$emptyValue = $importPayload['emptyValue'];
-        }
-
-        $array = @json_decode($json, true);
-        if (empty($array)) {
-            return [];
-        }
-
-        if (!empty($importPayload['data']['rootNode'])) {
-            $parts = explode('.', $importPayload['data']['rootNode']);
-            foreach ($parts as $part) {
-                $array = $array[$part] ?? [];
-            }
-        }
-
-        if (empty($array)) {
-            return [];
         }
 
         if (self::isAssociative($array)) {
