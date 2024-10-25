@@ -17,6 +17,7 @@ class JsonToVerticalArray
 {
     private static ?string $nullValue = null;
     private static ?string $emptyValue = '';
+    private static ?string $rootNode = null;
     private static array $excludedNodes = [];
     private static array $keptStringNodes = [];
 
@@ -27,8 +28,12 @@ class JsonToVerticalArray
             return [];
         }
 
-        if (!empty($importPayload['data']['rootNode'])) {
-            $parts = explode('.', $importPayload['data']['rootNode']);
+        if (!empty($importPayload)) {
+            self::configure($importPayload);
+        }
+
+        if (!empty(self::$rootNode)) {
+            $parts = explode('.', self::$rootNode);
             foreach ($parts as $part) {
                 $array = $array[$part] ?? [];
             }
@@ -36,10 +41,6 @@ class JsonToVerticalArray
 
         if (empty($array)) {
             return [];
-        }
-
-        if (!empty($importPayload)) {
-            self::configure($importPayload);
         }
 
         if (self::isAssociative($array)) {
@@ -205,6 +206,18 @@ class JsonToVerticalArray
 
     protected static function configure(array $importPayload): void
     {
+        if (!empty($importPayload['rootNode'])) {
+            self::$rootNode = $importPayload['rootNode'];
+        }
+
+        if (!empty($importPayload['excludedNodes']) && is_array($importPayload['excludedNodes'])) {
+            self::$excludedNodes = $importPayload['excludedNodes'];
+        }
+
+        if (!empty($importPayload['keptStringNodes']) && is_array($importPayload['keptStringNodes'])) {
+            self::$keptStringNodes = $importPayload['keptStringNodes'];
+        }
+
         if (isset($importPayload['nullValue'])) {
             self::$nullValue = $importPayload['nullValue'];
         }
@@ -217,14 +230,6 @@ class JsonToVerticalArray
         }
         if (isset($importPayload['emptyValue'])) {
             self::$emptyValue = $importPayload['emptyValue'];
-        }
-
-        if (!empty($importPayload['data']['excludedNodes']) && is_array($importPayload['data']['excludedNodes'])) {
-            self::$excludedNodes = $importPayload['data']['excludedNodes'];
-        }
-
-        if (!empty($importPayload['data']['keptStringNodes']) && is_array($importPayload['data']['keptStringNodes'])) {
-            self::$keptStringNodes = $importPayload['data']['keptStringNodes'];
         }
     }
 }

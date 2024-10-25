@@ -56,15 +56,7 @@ class Json extends Injectable implements FileParserInterface
             return [];
         }
 
-        $payload = array_merge([
-            'data' => [
-                'rootNode'        => $this->rootNode,
-                'excludedNodes'   => $this->excludedNodes,
-                'keptStringNodes' => $this->keptStringNodes
-            ]
-        ], $this->data);
-
-        $data = \Import\Core\Utils\JsonToVerticalArray::mutate($contents, $payload);
+        $data = \Import\Core\Utils\JsonToVerticalArray::mutate($contents, $this->data);
 
         return $this->getInjection('eventManager')
             ->dispatch('ImportFileParser', 'afterGetFileData', new Event(['data' => $data, 'attachment' => $attachment, 'type' => 'json']))
