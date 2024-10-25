@@ -177,6 +177,7 @@ class ImportFeed extends Base
             'enclosure'       => (property_exists($payload, 'enclosure') && $payload->enclosure == 'singleQuote') ? "'" : '"',
             'isFileHeaderRow' => (property_exists($payload, 'isHeaderRow') && is_null($payload->isHeaderRow)) ? true : !empty($payload->isHeaderRow),
             'sheet'           => property_exists($payload, 'sheet') ? (int)$payload->sheet : 0,
+            'rootNode'        => (property_exists($payload, 'rootNode') && !empty($payload->rootNode)) ? $payload->rootNode : null,
             'excludedNodes'   => (property_exists($payload, 'excludedNodes') && !empty($payload->excludedNodes)) ? $payload->excludedNodes : [],
             'keptStringNodes' => (property_exists($payload, 'keptStringNodes') && !empty($payload->keptStringNodes)) ? $payload->keptStringNodes : [],
         ]);

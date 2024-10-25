@@ -96,6 +96,20 @@
           ]
         }
       },
+      "rootNode": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "format",
+              "value": [
+                "JSON",
+                "XML"
+              ]
+            }
+          ]
+        }
+      },
       "excludedNodes": {
         "visible": {
           "conditionGroup": [

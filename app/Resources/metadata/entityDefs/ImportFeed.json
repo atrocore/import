@@ -274,6 +274,13 @@
       "options": [],
       "default": "Product"
     },
+    "rootNode": {
+      "type": "varchar",
+      "required": false,
+      "notStorable": true,
+      "dataField": true,
+      "filterDisabled": true
+    },
     "excludedNodes": {
       "type": "array",
       "required": false,

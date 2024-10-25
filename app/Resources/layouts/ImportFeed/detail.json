@@ -57,6 +57,12 @@
       ],
       [
         {
+          "name": "rootNode"
+        },
+        false
+      ],
+      [
+        {
           "name": "excludedNodes"
         },
         {
