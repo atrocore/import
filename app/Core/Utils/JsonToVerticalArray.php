@@ -157,6 +157,18 @@ class JsonToVerticalArray
                     $value = $value ? 'true' : 'false';
                 }
 
+                if (isset(self::$importPayload['nullValue'])) {
+                    if ($value === null) {
+                        $value = self::$importPayload['nullValue'];
+                    }
+                }
+
+                if (isset(self::$importPayload['emptyValue'])) {
+                    if ($value === '' && $value !== self::$importPayload['emptyValue']) {
+                        $value = self::$importPayload['emptyValue'];
+                    }
+                }
+
                 $row[$preparedName] = $value;
                 unset($array[$name]);
             }
