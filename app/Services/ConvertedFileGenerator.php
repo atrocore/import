@@ -50,7 +50,7 @@ class ConvertedFileGenerator extends QueueManagerBase
         // for import type HttpRequest
         if (!empty($importFeed->getFeedField('mergeResponses'))) {
             $jobData['fileFormat'] = 'CSV';
-            $jobData['delimiter'] = ",";
+            $jobData['delimiter'] = ";";
             $jobData['enclosure'] = '"';
         }
 
