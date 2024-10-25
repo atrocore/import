@@ -15,11 +15,30 @@ namespace Import\Core\Utils;
 
 class JsonToVerticalArray
 {
-    private static ?array $importPayload;
+    private static ?string $nullValue = null;
+    private static ?string $emptyValue = '';
 
     public static function mutate(string $json, ?array $importPayload = null): array
     {
-        self::$importPayload = $importPayload;
+        /**
+         * Prepare NULL value
+         */
+        if (isset($importPayload['nullValue'])) {
+            self::$nullValue = $importPayload['nullValue'];
+        }
+        if (isset($importPayload['data']['configuration'][0]['nullValue'])) {
+            self::$nullValue = $importPayload['data']['configuration'][0]['nullValue'];
+        }
+
+        /**
+         * Prepare EMPTY value
+         */
+        if (isset($importPayload['data']['configuration'][0]['emptyValue'])) {
+            self::$emptyValue = $importPayload['data']['configuration'][0]['emptyValue'];
+        }
+        if (isset($importPayload['emptyValue'])) {
+            self::$emptyValue = $importPayload['emptyValue'];
+        }
 
         $array = @json_decode($json, true);
         if (empty($array)) {
@@ -107,22 +126,6 @@ class JsonToVerticalArray
 
     protected static function toHorizontalArray(array $value, $key, &$result): void
     {
-        $nullValue = null;
-        $emptyValue = '';
-
-        /**
-         * Prepare NULL value and EMPTY value
-         */
-        $importPayload = self::$importPayload;
-        if (!empty($importPayload) && is_array($importPayload)) {
-            if (isset($importPayload['data']['configuration'][0]['nullValue'])) {
-                $nullValue = $importPayload['data']['configuration'][0]['nullValue'];
-            }
-            if (isset($importPayload['data']['configuration'][0]['emptyValue'])) {
-                $emptyValue = $importPayload['data']['configuration'][0]['emptyValue'];
-            }
-        }
-
         foreach ($value as $k => $v) {
             $checkName = self::createCheckName(self::concatKeys($key, $k));
             if (!empty($importPayload['data']['excludedNodes']) && is_array($importPayload['data']['excludedNodes'])) {
@@ -141,10 +144,10 @@ class JsonToVerticalArray
             } else {
                 $value = $v;
                 if ($value === null) {
-                    $value = $nullValue;
+                    $value = self::$nullValue;
                 }
                 if ($value === '') {
-                    $value = $emptyValue;
+                    $value = self::$emptyValue;
                 }
                 $result[self::concatKeys($key, $k)] = $value;
             }
@@ -184,16 +187,12 @@ class JsonToVerticalArray
                     $value = $value ? 'true' : 'false';
                 }
 
-                if (isset(self::$importPayload['nullValue'])) {
-                    if ($value === null) {
-                        $value = self::$importPayload['nullValue'];
-                    }
+                if ($value === null && $value !== self::$nullValue) {
+                    $value = self::$nullValue;
                 }
 
-                if (isset(self::$importPayload['emptyValue'])) {
-                    if ($value === '' && $value !== self::$importPayload['emptyValue']) {
-                        $value = self::$importPayload['emptyValue'];
-                    }
+                if ($value === '' && $value !== self::$emptyValue) {
+                    $value = self::$emptyValue;
                 }
 
                 $row[$preparedName] = $value;
