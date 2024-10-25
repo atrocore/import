@@ -26,38 +26,54 @@ class JsonToVerticalArray
             return [];
         }
 
-        $horizontalArray = [];
-        self::toHorizontalArray($array, '', $horizontalArray);
+        if (self::isAssociative($array)) {
+            $chunks = [$array];
+        } else {
+            $chunks = array_chunk($array, 100);
+        }
         unset($array);
 
         $data = [];
-        self::toVerticalArray($horizontalArray, $data);
-        unset($horizontalArray);
+        $columns = [];
 
-        while (strpos(json_encode($data), 'collection{') !== false) {
-            $newData = [];
-            foreach ($data as $row) {
-                self::toVerticalArray($row, $newData);
-                unset($row);
+        while (!empty($chunks)) {
+            $chunk = array_shift($chunks);
+
+            $chunkData = [];
+
+            $horizontalArray = [];
+            self::toHorizontalArray($chunk, '', $horizontalArray);
+            unset($chunk);
+
+            self::toVerticalArray($horizontalArray, $chunkData);
+            unset($horizontalArray);
+
+            while (strpos(json_encode($chunkData), 'collection{') !== false) {
+                $newData = [];
+                foreach ($chunkData as $row) {
+                    self::toVerticalArray($row, $newData);
+                    unset($row);
+                }
+                $chunkData = $newData;
+                unset($newData);
             }
-            $data = $newData;
-            unset($newData);
-        }
 
-        $keys = [];
-        foreach ($data as $row) {
-            $keys = array_merge($keys, array_keys($row));
+            foreach ($chunkData as $row) {
+                $columns = array_merge($columns, array_keys($row));
+            }
+            $columns = array_unique($columns);
+
+            $data = array_merge($data, $chunkData);
         }
-        $keys = array_unique($keys);
 
         $result = [];
         while (!empty($data)) {
             $v = array_shift($data);
-            $row = [];
-            foreach ($keys as $key) {
-                $row[$key] = isset($v[$key]) ? $v[$key] : null;
+            $diff = array_diff($columns, array_keys($v));
+            foreach ($diff as $column) {
+                $v[$column] = null;
             }
-            $result[] = $row;
+            $result[] = $v;
         }
 
         return $result;
@@ -189,5 +205,10 @@ class JsonToVerticalArray
         }
 
         return implode('.', $arr);
+    }
+
+    protected static function isAssociative(array $arr): bool
+    {
+        return array_keys($arr) !== range(0, count($arr) - 1);
     }
 }
