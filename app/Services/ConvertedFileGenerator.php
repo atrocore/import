@@ -108,7 +108,7 @@ class ConvertedFileGenerator extends QueueManagerBase
 
         $fileParser = $this->createFileParser('CSV');
         $fileParser->setData([
-            'delimiter' => ",",
+            'delimiter' => ";",
             'enclosure' => '"'
         ]);
 
