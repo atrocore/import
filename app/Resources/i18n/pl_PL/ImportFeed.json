@@ -81,7 +81,6 @@
     "fileIdIsEmpty": "Musisz ustawić plik w kanałach, aby go uruchomić",
     "noRecordsFoundFor": "Nie znaleziono rekordów w encji '%s' z: %s.",
     "convertValidationPrefix": "Błąd dla wartości '{{value}}' z kolumny '{{column}}': ",
-    "sourceFieldsEmpty": "Pola źródłowe powinny być rozpoznane.",
     "noFeedFileFound": "Brak pliku kanału.",
     "measureIsNotSet": "Nie ustawiono miary dla atrybutu \"%s\".",
     "noSpecifiedField": "Nie określono '{{key}}' dla pola '{{name}}'.",

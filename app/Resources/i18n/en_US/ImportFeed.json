@@ -85,7 +85,6 @@
     "fileIdIsEmpty": "You must set a file on the feed to run it",
     "noRecordsFoundFor": "No record(s) found in the entity '%s' with: %s.",
     "convertValidationPrefix": "Error for value '{{value}}' from column '{{column}}': ",
-    "sourceFieldsEmpty": "Source Fields should be recognized.",
     "noFeedFileFound": "Feed file is missing.",
     "measureIsNotSet": "Measure for the attribute \"%s\" is not set.",
     "noSpecifiedField": "No '{{key}}' specified for the field '{{name}}'.",

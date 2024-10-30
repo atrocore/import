@@ -64,14 +64,21 @@ Espo.define('import:views/import-configurator-item/fields/column', 'views/fields
             if (this.mode === 'list') {
                 let originalValue = this.model.get(this.name) || [];
 
+                let sourceFields = this.model.get('sourceFields') || [];
+
+                let style = '';
+
                 let items = [];
                 originalValue.forEach(column => {
+                    if (!sourceFields.includes(column)) {
+                        style = 'style="color:red"';
+                    }
                     let parts = column.split('.');
                     let last = parts.pop();
                     items.push(last);
                 });
 
-                this.$el.html('<span title="' + originalValue.join(', ') + '">' + items.join(', ') + '</span>');
+                this.$el.html('<span ' + style + ' title="' + originalValue.join(', ') + '">' + items.join(', ') + '</span>');
             }
         }
     })

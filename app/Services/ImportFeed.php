@@ -450,38 +450,6 @@ class ImportFeed extends Base
         }
     }
 
-    public function findLinkedEntities($id, $link, $params)
-    {
-        if ($link === 'configuratorItems') {
-            if (!empty($feed = $this->getRepository()->get($id))) {
-                if (!empty($this->getMetadata()->get(['scopes', 'Attribute']))) {
-                    $this->getRepository()->removeInvalidConfiguratorItems($feed);
-                }
-                $sourceFields = empty($feed->get('sourceFields')) ? [] : $feed->get('sourceFields');
-                $this->removeItemsBySourceFields($feed, $sourceFields);
-            }
-        }
-
-        return parent::findLinkedEntities($id, $link, $params);
-    }
-
-    public function removeItemsBySourceFields(Entity $importFeed, array $sourceFields): void
-    {
-        $items = $importFeed->get('configuratorItems');
-        if (!empty($items) && count($items) > 0) {
-            foreach ($items as $item) {
-                if (!empty($columns = $item->get('column'))) {
-                    foreach ($columns as $column) {
-                        if (!in_array($column, $sourceFields)) {
-                            $this->getEntityManager()->removeEntity($item);
-                            continue 2;
-                        }
-                    }
-                }
-            }
-        }
-    }
-
     /**
      * @param string $key
      *
