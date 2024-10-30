@@ -78,7 +78,6 @@
     "fileIdIsEmpty": "Sie müssen eine Datei im Feed festlegen, um ihn auszuführen",
     "noRecordsFoundFor": "Es wurden keine Datensätze in der Entität „%s“ mit: %s gefunden.",
     "convertValidationPrefix": "Fehler für den Wert '{{value}}' aus der Spalte '{{column}}': ",
-    "sourceFieldsEmpty": "Quellfelder sollten erkannt werden.",
     "noFeedFileFound": "Feeddatei fehlt.",
     "measureIsNotSet": "Maß für das Attribut \"%s\" ist nicht gesetzt.",
     "noSpecifiedField": "Für das Feld '{{name}}' ist keine '{{key}}' angegeben.",

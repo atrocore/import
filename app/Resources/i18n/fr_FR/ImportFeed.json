@@ -84,7 +84,6 @@
     "fileIdIsEmpty": "Vous devez définir un fichier sur le flux pour l'exécuter",
     "noRecordsFoundFor": "Aucun enregistrement n'a été trouvé dans l'entité '%s' avec : %s.",
     "convertValidationPrefix": "Erreur pour la valeur '{{valeur}}' de la colonne '{{colonne}}' : ",
-    "sourceFieldsEmpty": "Les champs de sources doivent être reconnus.",
     "noFeedFileFound": "Le fichier d'alimentation est manquant.",
     "measureIsNotSet": "La mesure de l'attribut \"%s\" n'est pas définie.",
     "noSpecifiedField": "Aucun '{{key}}' n'a été spécifié pour le champ '{{name}}'.",
