@@ -86,6 +86,9 @@ class JsonToVerticalArray
         $result = [];
         while (!empty($data)) {
             $v = array_shift($data);
+            if (empty($v)) {
+                continue;
+            }
             $diff = array_diff($columns, array_keys($v));
             foreach ($diff as $column) {
                 $v[$column] = null;
