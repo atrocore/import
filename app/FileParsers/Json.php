@@ -28,7 +28,7 @@ class Json extends Injectable implements FileParserInterface
 
     public function setData(array $data): void
     {
-        $this->data = $data['data'] ?? $data;
+        $this->data = $data;
     }
 
     public function getFileColumns(File $attachment): array

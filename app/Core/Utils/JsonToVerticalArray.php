@@ -208,28 +208,32 @@ class JsonToVerticalArray
     {
         if (!empty($importPayload['rootNode'])) {
             self::$rootNode = $importPayload['rootNode'];
+        } elseif (!empty($importPayload['data']['rootNode'])) {
+            self::$rootNode = $importPayload['data']['rootNode'];
         }
 
         if (!empty($importPayload['excludedNodes']) && is_array($importPayload['excludedNodes'])) {
             self::$excludedNodes = $importPayload['excludedNodes'];
+        } elseif (!empty($importPayload['data']['excludedNodes']) && is_array($importPayload['data']['excludedNodes'])) {
+            self::$excludedNodes = $importPayload['data']['excludedNodes'];
         }
 
         if (!empty($importPayload['keptStringNodes']) && is_array($importPayload['keptStringNodes'])) {
             self::$keptStringNodes = $importPayload['keptStringNodes'];
+        } elseif (!empty($importPayload['data']['keptStringNodes']) && is_array($importPayload['data']['keptStringNodes'])) {
+            self::$keptStringNodes = $importPayload['data']['keptStringNodes'];
         }
 
         if (isset($importPayload['nullValue'])) {
             self::$nullValue = $importPayload['nullValue'];
-        }
-        if (isset($importPayload['data']['configuration'][0]['nullValue'])) {
+        } elseif (isset($importPayload['data']['configuration'][0]['nullValue'])) {
             self::$nullValue = $importPayload['data']['configuration'][0]['nullValue'];
         }
 
-        if (isset($importPayload['data']['configuration'][0]['emptyValue'])) {
-            self::$emptyValue = $importPayload['data']['configuration'][0]['emptyValue'];
-        }
         if (isset($importPayload['emptyValue'])) {
             self::$emptyValue = $importPayload['emptyValue'];
+        } elseif (isset($importPayload['data']['configuration'][0]['emptyValue'])) {
+            self::$emptyValue = $importPayload['data']['configuration'][0]['emptyValue'];
         }
     }
 }
