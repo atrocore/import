@@ -11,7 +11,7 @@
 Espo.define('import:views/import-job/record/list', 'views/record/list',
     Dep => Dep.extend({
 
-        rowActionsView: 'import:views/import-job/record/row-actions/import-again-and-remove',
+        rowActionsView: 'import:views/import-job/record/row-actions/default',
 
         getSelectAttributeList: function (callback) {
             Dep.prototype.getSelectAttributeList.call(this, attributeList => {
@@ -47,5 +47,25 @@ Espo.define('import:views/import-job/record/list', 'views/record/list',
                 }, view => view.render());
             })
         },
+
+        actionGenerateErrorFile(data) {
+            const importJobModel = this.collection.get(data.id)
+
+            console.log(importJobModel);
+
+            // this.getModelFactory().create('ImportFeed', model => {
+            //     model.set({
+            //         id: data.id,
+            //         importFileId: importJobModel.get('attachmentId'),
+            //         importFileName: importJobModel.get('attachmentName')
+            //     });
+            //     this.getParentView().getParentView().createView('dialog', 'import:views/import-job/modals/recreate', {
+            //         scope: this.options.scope,
+            //         el: '[data-view="dialog"]',
+            //         model: model,
+            //     }, view => view.render());
+            // })
+        },
+
     })
 );

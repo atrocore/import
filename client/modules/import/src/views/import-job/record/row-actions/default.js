@@ -7,15 +7,17 @@
  * @copyright  Copyright (c) AtroCore GmbH (https://www.atrocore.com)
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
-Espo.define('import:views/import-job/record/row-actions/relationship', 'views/record/row-actions/relationship', Dep => {
+
+Espo.define('import:views/import-job/record/row-actions/default', 'views/record/row-actions/default', Dep => {
 
     return Dep.extend({
 
         getActionList() {
-            let list = [],
-                scope = this.scope || this.options.scope;
+            let list = Dep.prototype.getActionList.call(this);
+            let scope = this.scope || this.options.scope;
+
             if (['Pending', 'Running'].includes(this.model.get('state')) && this.getAcl().check(scope, 'edit')) {
-                list.push({
+                list.unshift({
                     action: 'cancelImportJob',
                     label: 'Cancel',
                     data: {
@@ -25,7 +27,7 @@ Espo.define('import:views/import-job/record/row-actions/relationship', 'views/re
             }
 
             if (['Failed', 'Canceled'].includes(this.model.get('state')) && this.getAcl().check(scope, 'edit')) {
-                list.push({
+                list.unshift({
                     action: 'tryAgainImportJob',
                     label: 'tryAgain',
                     data: {
@@ -34,18 +36,8 @@ Espo.define('import:views/import-job/record/row-actions/relationship', 'views/re
                 });
             }
 
-            if (['Failed', 'Canceled', 'Success'].includes(this.model.get('state')) && this.model.get('errorsCount') > 0) {
-                list.push({
-                    action: 'generateErrorFile',
-                    label: 'generateErrorFile',
-                    data: {
-                        id: this.model.id
-                    }
-                });
-            }
-
             if (this.model.get('state') === 'Success' && this.getAcl().check(scope, 'edit')) {
-                list.push({
+                list.unshift({
                     action: 'reCreateImportJob',
                     label: 'reCreate',
                     data: {
@@ -54,10 +46,10 @@ Espo.define('import:views/import-job/record/row-actions/relationship', 'views/re
                 });
             }
 
-            if (this.getAcl().check(scope, 'delete')) {
-                list.push({
-                    action: 'removeRelated',
-                    label: 'Remove',
+            if (['Failed', 'Canceled', 'Success'].includes(this.model.get('state')) && this.model.get('errorsCount') > 0) {
+                list.unshift({
+                    action: 'generateErrorFile',
+                    label: 'generateErrorFile',
                     data: {
                         id: this.model.id
                     }
@@ -66,7 +58,6 @@ Espo.define('import:views/import-job/record/row-actions/relationship', 'views/re
 
             return list;
         }
-
     });
 
 });
