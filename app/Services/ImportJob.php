@@ -31,7 +31,9 @@ class ImportJob extends Base
         'attachmentId',
         'attachmentName',
         'convertedFileId',
-        'convertedFileName'
+        'convertedFileName',
+        'errorsAttachmentId',
+        'errorsAttachmentName'
     ];
 
     public function deleteOld(int $days = 14): bool

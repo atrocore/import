@@ -49,22 +49,43 @@ Espo.define('import:views/import-job/record/list', 'views/record/list',
         },
 
         actionGenerateErrorFile(data) {
-            const importJobModel = this.collection.get(data.id)
+            let model = this.collection.get(data.id);
+            if (model.get('errorsAttachmentName')) {
+                this.downloadFile(model.get('errorsAttachmentPathsData').download, model.get('errorsAttachmentName'));
+                return;
+            }
 
-            console.log(importJobModel);
+            this.notify(this.translate('generating', 'labels', 'ImportJob'));
+            this.ajaxPostRequest('ImportJob/action/generateFile', {id: model.get('id'), field: 'errorsAttachment'}).then(response => {
+                let interval = setInterval(() => {
+                    this.ajaxGetRequest(`QueueItem/${response.queueItemId}?silent=true`).success(res => {
+                        this.notify(this.translate('generating', 'labels', 'ImportJob'));
+                        if (["Success", "Failed", "Canceled"].includes(res.status)) {
+                            clearInterval(interval);
+                            this.notify('Done', 'success');
+                            model.fetch().then(() => {
+                                if (model.get('errorsAttachmentName')) {
+                                    this.downloadFile(model.get('errorsAttachmentPathsData').download, model.get('errorsAttachmentName'));
+                                }
+                            });
+                        }
+                    }).error(() => {
+                        clearInterval(interval);
+                        this.notify('Error occured!', 'error');
+                    });
+                }, 2000);
+            });
+        },
 
-            // this.getModelFactory().create('ImportFeed', model => {
-            //     model.set({
-            //         id: data.id,
-            //         importFileId: importJobModel.get('attachmentId'),
-            //         importFileName: importJobModel.get('attachmentName')
-            //     });
-            //     this.getParentView().getParentView().createView('dialog', 'import:views/import-job/modals/recreate', {
-            //         scope: this.options.scope,
-            //         el: '[data-view="dialog"]',
-            //         model: model,
-            //     }, view => view.render());
-            // })
+        downloadFile(url, filename) {
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+
+            a.click();
+
+            document.body.removeChild(a);
         },
 
     })
