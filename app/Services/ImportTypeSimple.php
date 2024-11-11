@@ -519,32 +519,27 @@ class ImportTypeSimple extends QueueManagerBase
         return $this->getEntityManager()->getRepository($entityType)->getCacheKey($entityId);
     }
 
-    public function log(string $entityName, string $importJobId, string $type, ?string $row, ?string $data): Entity
+    public function log(string $entityName, ?string $entityId, string $importJobId, string $type, array $row, ?string $message): Entity
     {
         $log = $this->getEntityManager()->getEntity('ImportJobLog');
-        $log->set('name', $row);
         $log->set('entityName', $entityName);
-        $log->set('entityId', '');
+        $log->set('entityId', $entityId);
         $log->set('importJobId', $importJobId);
         $log->set('type', $type);
-        $log->set('rowNumber', 0);
+        $log->set('row', $row);
 
         switch ($type) {
             case 'create':
             case 'update':
-                $log->set('rowNumber', (int)$row);
-                $log->set('entityId', $data);
                 $log->set('restoreData', $this->restore);
                 break;
             case 'delete':
-                $log->set('entityId', $data);
+                $log->set('entityId', $entityId);
                 break;
             case 'skip':
-                $log->set('rowNumber', (int)$row);
                 break;
             case 'error':
-                $log->set('rowNumber', (int)$row);
-                $log->set('message', $data);
+                $log->set('message', $message);
                 break;
         }
 
@@ -671,6 +666,7 @@ class ImportTypeSimple extends QueueManagerBase
             $row = array_shift($fileData);
             $event = $this->getEventManager()->dispatch(new Event(['originalRows' => $originalRows, 'row' => $row, 'jobData' => $data, 'skip' => false]), 'prepareImportRow');
             if (!empty($event->getArgument('skip'))) {
+                file_put_contents('ttt.json', json_encode($row));
                 continue 1;
             }
             $prepared[] = $event->getArgument('row');
