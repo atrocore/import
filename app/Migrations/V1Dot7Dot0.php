@@ -20,7 +20,6 @@ class V1Dot7Dot0 extends Base
     public function up(): void
     {
         if ($this->isPgSQL()) {
-            $this->exec("DROP INDEX idx_import_job_log_row_number");
             $this->exec("DROP INDEX idx_import_job_log_unique_job_log");
             $this->exec("ALTER TABLE import_job_log ADD row TEXT DEFAULT NULL");
             $this->exec("COMMENT ON COLUMN import_job_log.row IS '(DC2Type:jsonObject)'");
@@ -33,7 +32,6 @@ class V1Dot7Dot0 extends Base
             $this->exec("DROP INDEX IDX_IMPORT_JOB_LOG_UNIQUE_JOB_LOG ON import_job_log");
             $this->exec("DROP INDEX IDX_IMPORT_JOB_LOG_MODIFIED_AT ON import_job_log");
             $this->exec("DROP INDEX IDX_IMPORT_JOB_LOG_NAME ON import_job_log");
-            $this->exec("DROP INDEX IDX_IMPORT_JOB_LOG_ROW_NUMBER ON import_job_log");
             $this->exec("ALTER TABLE import_job_log ADD skipped_by_script TINYINT(1) DEFAULT '0' NOT NULL");
             $this->exec("ALTER TABLE import_job_log ADD `row` LONGTEXT DEFAULT NULL COMMENT '(DC2Type:jsonObject)'");
             $this->exec("ALTER TABLE import_job_log DROP name");

@@ -110,6 +110,12 @@
         "deleted"
       ]
     },
+    "rowNumber": {
+      "columns": [
+        "rowNumber",
+        "deleted"
+      ]
+    },
     "createdAt": {
       "columns": [
         "createdAt",
