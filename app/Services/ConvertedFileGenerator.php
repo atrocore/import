@@ -72,6 +72,7 @@ class ConvertedFileGenerator extends QueueManagerBase
                 'importJobId' => $importJob->get('id'),
                 'type'        => 'error'
             ])
+            ->order('rowNumber')
             ->find();
 
         if (empty($errorLogs[0])) {
@@ -83,27 +84,20 @@ class ConvertedFileGenerator extends QueueManagerBase
             throw new BadRequest("ImportFeed for import job '{$importJob->get('id')}' does not exist.");
         }
 
-        $errorsRowsNumbers = [];
-
-        $attachmentId = $importJob->get('convertedFileId');
-        if (empty($attachmentId)) {
-            $attachmentId = $this->generateConvertedFile($jobId);
-        }
-
-        if (!empty($attachmentId)) {
-            $attachment = $this->getEntityManager()->getRepository('File')->get($attachmentId);
-            if (empty($attachment)) {
-                throw new BadRequest("Attachment '$attachmentId' does not exist.");
+        $errorsRows = [];
+        foreach ($errorLogs as $errorLog) {
+            $row = $errorLog->get('row');
+            if (empty($row)) {
+                continue;
             }
-        }
 
-        // add header row if it needs
-        $errorsRowsNumbers[1] = 'Import Errors';
+            $row = json_decode(json_encode($row), true);
+            $row['Import Errors'] = $errorLog->get('message');
 
-        foreach ($errorLogs as $log) {
-            $importJobLogRepo->prepareMessage($log);
-            $rowNumber = (int)$log->get('rowNumber');
-            $errorsRowsNumbers[$rowNumber] = $log->get('message');
+            if (empty($errorsRows)) {
+                $errorsRows[] = array_keys($row);
+            }
+            $errorsRows[] = array_values($row);
         }
 
         $fileParser = $this->createFileParser('CSV');
@@ -112,27 +106,10 @@ class ConvertedFileGenerator extends QueueManagerBase
             'enclosure' => '"'
         ]);
 
-        $data = $fileParser->getFileData($attachment);
-
-        // collect errors rows
-        $errorsRows = [];
-        foreach ($data as $k => $row) {
-            $key = $k + 1;
-            if (isset($errorsRowsNumbers[$key])) {
-                $row[] = $errorsRowsNumbers[$key];
-                $errorsRows[] = $row;
-            }
-        }
-
-        // prepare attachment name
-        $nameParts = explode('.', $attachment->get('name'));
-        array_pop($nameParts);
-        $name = 'errors-' . implode('.', $nameParts);
-
         $inputData = new \stdClass();
         $inputData->hidden = true;
         $inputData->folderId = $this->getImportFeedService()->createImportFileFolder($feed)->get('id');
-        $inputData->name = "{$name}.csv";
+        $inputData->name = 'errors-' . $feed->get('name') . '.csv';
 
         $fileParser->setData(['isFileHeaderRow' => true]);
         $fileArr = $this->getFileService()->createFileViaContents($inputData,

@@ -334,7 +334,6 @@ class ImportTypeSimple extends QueueManagerBase
                     } else {
                         $notModified = true;
                         try {
-                            throw new \Error("Error #$id");
                             $entityService->updateEntity($id, $input);
                             $log->set('type', 'update');
                             $log->set('entityId', $id);
