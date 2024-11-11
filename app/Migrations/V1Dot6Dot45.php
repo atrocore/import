@@ -29,12 +29,10 @@ class V1Dot6Dot45 extends Base
             // DROP INDEX idx_import_job_log_modified_at;
             //DROP INDEX idx_import_job_log_name
             // ALTER TABLE import_job_log ADD skipped_by_script BOOLEAN DEFAULT 'false' NOT NULL
+            // ALTER TABLE import_job_log DROP name
+            // ALTER TABLE import_job_log DROP restore_data
         } else {
-            // DROP INDEX IDX_IMPORT_JOB_LOG_UNIQUE_JOB_LOG ON import_job_log;
-            //DROP INDEX IDX_IMPORT_JOB_LOG_MODIFIED_AT ON import_job_log;
-            //DROP INDEX IDX_IMPORT_JOB_LOG_NAME ON import_job_log;
-            //DROP INDEX IDX_IMPORT_JOB_LOG_ROW_NUMBER ON import_job_log;
-            //ALTER TABLE import_job_log ADD skipped_by_script TINYINT(1) DEFAULT '0' NOT NULL, ADD `row` LONGTEXT DEFAULT NULL COMMENT '(DC2Type:jsonObject)', DROP `row_number`
+
         }
     }
 

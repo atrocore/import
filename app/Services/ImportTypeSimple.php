@@ -36,7 +36,6 @@ class ImportTypeSimple extends QueueManagerBase
     public const MEMORY_KEYS = 'loaded_exists_entities_keys';
     public const MEMORY_EMPTY_QUERY_RES = 'queries_with_empty_result';
     public const MEMORY_WHERE_KEYS = 'loaded_exists_entities_by_where_keys';
-    private array $restore = [];
     private bool $lastIteration = false;
     private ?string $skipValue = null;
 
@@ -252,8 +251,6 @@ class ImportTypeSimple extends QueueManagerBase
                     $input->_importJobData = $data;
                     $input->_importInputDataRow = $row;
 
-                    $restore = new \stdClass();
-
                     $this->getMemoryStorage()->set("import_job_{$importJob->get('id')}_rowNumberPart", $data['rowNumberPart'] ?? 0);
 
                     foreach ($data['data']['configuration'] as $item) {
@@ -299,9 +296,6 @@ class ImportTypeSimple extends QueueManagerBase
                             }
                             throw new BadRequest($message . lcfirst($e->getMessage()));
                         }
-                        if (!empty($entity)) {
-                            $this->getService('ImportConfiguratorItem')->getFieldConverter($type)->prepareValue($restore, $entity, $item);
-                        }
                     }
 
                     if (empty($id)) {
@@ -314,7 +308,6 @@ class ImportTypeSimple extends QueueManagerBase
                             if (self::isDeleteAction($action)) {
                                 $ids[] = $id;
                             }
-                            $this->saveRestoreRow('created', $scope, $id);
                         }
                     } elseif ($action === 'delete_found') {
                         $logAction = 'delete';
@@ -326,7 +319,6 @@ class ImportTypeSimple extends QueueManagerBase
                         try {
                             $entityService->updateEntity($id, $input);
                             $processedIds[] = $id;
-                            $this->saveRestoreRow('updated', $scope, [$id => $restore]);
                             $notModified = false;
                         } catch (NotModified $e) {
                         }
@@ -531,7 +523,6 @@ class ImportTypeSimple extends QueueManagerBase
         switch ($type) {
             case 'create':
             case 'update':
-                $log->set('restoreData', $this->restore);
                 break;
             case 'delete':
                 $log->set('entityId', $entityId);
@@ -548,8 +539,6 @@ class ImportTypeSimple extends QueueManagerBase
         } catch (\Throwable $e) {
             // ignore
         }
-
-        $this->restore = [];
 
         return $log;
     }
@@ -741,15 +730,6 @@ class ImportTypeSimple extends QueueManagerBase
         }
 
         return null;
-    }
-
-    protected function saveRestoreRow(string $action, string $entityType, $data): void
-    {
-        $this->restore[] = [
-            'action' => $action,
-            'entity' => $entityType,
-            'data'   => $data
-        ];
     }
 
     protected function getCodeMessage(int $code): string
