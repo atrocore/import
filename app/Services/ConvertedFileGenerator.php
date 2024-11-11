@@ -86,6 +86,7 @@ class ConvertedFileGenerator extends QueueManagerBase
 
         $errorColumn = 'Import Errors';
 
+        // prepare rows
         foreach ($errorLogs as $errorLog) {
             $row = $errorLog->get('row');
             if (empty($row)) {
@@ -99,10 +100,6 @@ class ConvertedFileGenerator extends QueueManagerBase
                 $row[$errorColumn] = $errorLog->get('message');
             }
 
-            // push header
-            if (empty($errorsRows)) {
-                $errorsRows[] = array_keys($row);
-            }
             $rows[$errorLog->get('rowNumber')] = $row;
         }
 
@@ -110,7 +107,12 @@ class ConvertedFileGenerator extends QueueManagerBase
             throw new BadRequest($this->translate('errorFileCreatingFailed', 'exceptions', 'ImportJob'));
         }
 
+        $errorsRows = [];
         foreach ($rows as $row) {
+            // push header
+            if (empty($errorsRows)) {
+                $errorsRows[] = array_keys($row);
+            }
             $errorsRows[] = array_values($row);
         }
 
@@ -123,7 +125,7 @@ class ConvertedFileGenerator extends QueueManagerBase
         $inputData = new \stdClass();
         $inputData->hidden = true;
         $inputData->folderId = $this->getImportFeedService()->createImportFileFolder($feed)->get('id');
-        $inputData->name = 'errors-' . $feed->get('name') . '.csv';
+        $inputData->name = 'errors-' . str_replace(' ', '_', strtolower($feed->get('name'))) . '.csv';
 
         $fileParser->setData(['isFileHeaderRow' => true]);
         $fileArr = $this->getFileService()
