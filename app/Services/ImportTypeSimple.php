@@ -643,8 +643,16 @@ class ImportTypeSimple extends QueueManagerBase
             $row = array_shift($fileData);
             $event = $this->getEventManager()->dispatch(new Event(['originalRows' => $originalRows, 'row' => $row, 'jobData' => $data, 'skip' => false]), 'prepareImportRow');
             if (!empty($event->getArgument('skip'))) {
-                file_put_contents('ttt.json', json_encode($row));
-                continue 1;
+                $log = $this->getEntityManager()->getEntity('ImportJobLog');
+                $log->set([
+                    'entityName'      => $data['data']['entity'] ?? null,
+                    'importJobId'     => $data['data']['importJobId'] ?? null,
+                    'row'             => $row,
+                    'type'            => 'skip',
+                    'skippedByScript' => true
+                ]);
+                $this->getEntityManager()->saveEntity($log);
+                continue;
             }
             $prepared[] = $event->getArgument('row');
         }
