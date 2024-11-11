@@ -84,7 +84,8 @@ class ConvertedFileGenerator extends QueueManagerBase
             throw new BadRequest("ImportFeed for import job '{$importJob->get('id')}' does not exist.");
         }
 
-        $errorsRows = [];
+        $errorColumn = 'Import Errors';
+
         foreach ($errorLogs as $errorLog) {
             $row = $errorLog->get('row');
             if (empty($row)) {
@@ -92,11 +93,24 @@ class ConvertedFileGenerator extends QueueManagerBase
             }
 
             $row = json_decode(json_encode($row), true);
-            $row['Import Errors'] = $errorLog->get('message');
+            if (isset($rows[$errorLog->get('rowNumber')])) {
+                $row[$errorColumn] = $rows[$errorLog->get('rowNumber')][$errorColumn] . ' | ' . $errorLog->get('message');
+            } else {
+                $row[$errorColumn] = $errorLog->get('message');
+            }
 
+            // push header
             if (empty($errorsRows)) {
                 $errorsRows[] = array_keys($row);
             }
+            $rows[$errorLog->get('rowNumber')] = $row;
+        }
+
+        if (empty($rows)) {
+            throw new BadRequest($this->translate('errorFileCreatingFailed', 'exceptions', 'ImportJob'));
+        }
+
+        foreach ($rows as $row){
             $errorsRows[] = array_values($row);
         }
 
@@ -112,8 +126,8 @@ class ConvertedFileGenerator extends QueueManagerBase
         $inputData->name = 'errors-' . $feed->get('name') . '.csv';
 
         $fileParser->setData(['isFileHeaderRow' => true]);
-        $fileArr = $this->getFileService()->createFileViaContents($inputData,
-            $fileParser->createFileContent($errorsRows));
+        $fileArr = $this->getFileService()
+            ->createFileViaContents($inputData, $fileParser->createFileContent($errorsRows));
 
         $importJob->set('errorsAttachmentId', $fileArr['id']);
         $this->getEntityManager()->saveEntity($importJob);
