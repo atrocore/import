@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace Import\Repositories;
 
 use Atro\Core\Templates\Repositories\Base;
-use Doctrine\DBAL\ParameterType;
 use Espo\ORM\Entity;
 
 class ImportJobLog extends Base
@@ -28,57 +27,6 @@ class ImportJobLog extends Base
         parent::afterSave($entity, $options);
 
         $this->createParentJobLog($entity, $options);
-    }
-
-    public function prepareMessage(Entity $entity): void
-    {
-        return;
-
-//        if ($entity->get('type') !== 'error' || $entity->get('message') !== null) {
-//            return;
-//        }
-//
-//        $importJob = $this->getEntityManager()->getRepository('ImportJob')->get($entity->get('importJobId'));
-//        if (!in_array($importJob->get('state'), ['Failed', 'Canceled', 'Success'])) {
-//            $entity->set('message', '...');
-//            return;
-//        }
-//
-//        $res = $this->getConnection()->createQueryBuilder()
-//            ->select('t.id, t.row_number, t.message, qi.data')
-//            ->from('import_job_log', 't')
-//            ->leftJoin('t', 'import_job', 'ij', 'ij.id=t.import_job_id')
-//            ->leftJoin('ij', 'queue_item', 'qi', 'qi.id=ij.queue_item_id')
-//            ->where('t.deleted=:false')
-//            ->andWhere('t.type=:errorType')
-//            ->andWhere('ij.parent_id=:id')
-//            ->orderBy('t.created_at', 'ASC')
-//            ->setParameter('false', false, ParameterType::BOOLEAN)
-//            ->setParameter('id', $entity->get('importJobId'))
-//            ->setParameter('errorType', 'error')
-//            ->fetchAllAssociative();
-//
-//        $messages = [];
-//        foreach ($res as $item) {
-//            $data = @json_decode((string)$item['data'], true);
-//            if (!is_array($data)) {
-//                continue;
-//            }
-//            $rowNumber = $item['row_number'] + ($data['rowNumberPart'] ?? 0);
-//            if ($rowNumber === $entity->get('rowNumber')) {
-//                $messages[] = $item['message'];
-//            }
-//        }
-//
-//        $entity->set('message', implode(' | ', $messages));
-//
-//        $this->getConnection()->createQueryBuilder()
-//            ->update('import_job_log')
-//            ->set('message', ':message')
-//            ->where('id=:id')
-//            ->setParameter('id', $entity->get('id'))
-//            ->setParameter('message', $entity->get('message'))
-//            ->executeQuery();
     }
 
     public function createParentJobLog(Entity $entity, array $options): void
@@ -99,6 +47,9 @@ class ImportJobLog extends Base
 
         $input = $this->getMemoryStorage()->get("import_job_{$importJob->get('id')}_input");
 
+        $rowNumberPart = $this->getMemoryStorage()->get("import_job_{$importJob->get('id')}_rowNumberPart") ?? 0;
+        $rowNumber = $rowNumberPart + $entity->get('rowNumber');
+
         if ($parentJob->get('entityName') === $entity->get('entityName')) {
             $parentLog = $this->getEntityManager()->getEntity('ImportJobLog');
             $parentLog->set('entityName', $entity->get('entityName'));
@@ -106,6 +57,7 @@ class ImportJobLog extends Base
             $parentLog->set('importJobId', $importJob->get('parentId'));
             $parentLog->set('type', $entity->get('type'));
             $parentLog->set('skippedByScript', $entity->get('skippedByScript'));
+            $parentLog->set('rowNumber', $rowNumber);
             $parentLog->set('row', $entity->get('row'));
             $parentLog->set('message', $entity->get('message'));
             try {
@@ -135,8 +87,9 @@ class ImportJobLog extends Base
                 $parentLog->set('importJobId', $importJob->get('parentId'));
                 $parentLog->set('type', $type);
                 $parentLog->set('skippedByScript', $entity->get('skippedByScript'));
+                $parentLog->set('rowNumber', $rowNumber);
                 $parentLog->set('row', $entity->get('row'));
-                $parentLog->set('message', null);
+                $parentLog->set('message', $entity->get('message'));
                 try {
                     $this->getEntityManager()->saveEntity($parentLog, ['skipParentLog' => true]);
                 } catch (\Throwable $e) {

@@ -24,7 +24,6 @@ class V1Dot6Dot45 extends Base
             // DROP INDEX idx_import_job_log_row_number;
             //DROP INDEX idx_import_job_log_unique_job_log;
             //ALTER TABLE import_job_log ADD row TEXT DEFAULT NULL;
-            //ALTER TABLE import_job_log DROP row_number;
             //COMMENT ON COLUMN import_job_log.row IS '(DC2Type:jsonObject)'
             // DROP INDEX idx_import_job_log_modified_at;
             //DROP INDEX idx_import_job_log_name

@@ -44,6 +44,10 @@
       "lengthOfCut": 400,
       "readOnly": true
     },
+    "rowNumber": {
+      "type": "int",
+      "readOnly": true
+    },
     "row": {
       "type": "jsonObject",
       "readOnly": true

@@ -14,16 +14,8 @@ declare(strict_types=1);
 namespace Import\Services;
 
 use Atro\Core\Templates\Services\Base;
-use Espo\ORM\Entity;
 
 class ImportJobLog extends Base
 {
     protected $mandatorySelectAttributeList = ['type', 'message', 'importJobId'];
-
-    public function prepareEntityForOutput(Entity $entity)
-    {
-        parent::prepareEntityForOutput($entity);
-
-        $this->getRepository()->prepareMessage($entity);
-    }
 }
