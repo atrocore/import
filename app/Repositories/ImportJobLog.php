@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Import\Repositories;
 
 use Atro\Core\Templates\Repositories\Base;
+use Atro\Core\Utils\Util;
 use Doctrine\DBAL\ParameterType;
 use Espo\ORM\Entity;
 
@@ -121,12 +122,12 @@ class ImportJobLog extends Base
 
         if ($parentJob->get('entityName') === $entity->get('entityName')) {
             $parentLog = $this->getEntityManager()->getEntity('ImportJobLog');
-            $parentLog->set('name', $entity->get('name'));
             $parentLog->set('entityName', $entity->get('entityName'));
             $parentLog->set('entityId', $entity->get('entityId'));
             $parentLog->set('importJobId', $importJob->get('parentId'));
             $parentLog->set('type', $entity->get('type'));
-            $parentLog->set('rowNumber', $rowNumber);
+            $parentLog->set('skippedByScript', $entity->get('skippedByScript'));
+            $parentLog->set('row', $entity->get('row'));
             $parentLog->set('message', $entity->get('message'));
             try {
                 $this->getEntityManager()->saveEntity($parentLog, ['skipParentLog' => true]);
@@ -150,12 +151,12 @@ class ImportJobLog extends Base
                 }
 
                 $parentLog = $this->getEntityManager()->getEntity('ImportJobLog');
-                $parentLog->set('name', $entity->get('name'));
                 $parentLog->set('entityName', 'Product');
                 $parentLog->set('entityId', $input->productId);
                 $parentLog->set('importJobId', $importJob->get('parentId'));
                 $parentLog->set('type', $type);
-                $parentLog->set('rowNumber', $rowNumber);
+                $parentLog->set('skippedByScript', $entity->get('skippedByScript'));
+                $parentLog->set('row', $entity->get('row'));
                 $parentLog->set('message', null);
                 try {
                     $this->getEntityManager()->saveEntity($parentLog, ['skipParentLog' => true]);
