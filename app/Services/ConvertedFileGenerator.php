@@ -110,7 +110,7 @@ class ConvertedFileGenerator extends QueueManagerBase
             throw new BadRequest($this->translate('errorFileCreatingFailed', 'exceptions', 'ImportJob'));
         }
 
-        foreach ($rows as $row){
+        foreach ($rows as $row) {
             $errorsRows[] = array_values($row);
         }
 
