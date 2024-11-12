@@ -56,11 +56,13 @@ Espo.define('import:views/import-job/record/detail', 'views/record/detail',
                     label: this.translate('generateFileSkippedBySystem', 'labels', 'ImportJob'),
                 });
 
-                this.dropdownItemList.push({
-                    name: 'generateFileSkippedByScript',
-                    action: 'generateFileSkippedByScript',
-                    label: this.translate('generateFileSkippedByScript', 'labels', 'ImportJob'),
-                });
+                if (this.getMetadata().get('scopes.Synchronization.type')) {
+                    this.dropdownItemList.push({
+                        name: 'generateFileSkippedByScript',
+                        action: 'generateFileSkippedByScript',
+                        label: this.translate('generateFileSkippedByScript', 'labels', 'ImportJob'),
+                    });
+                }
 
                 this.dropdownItemList.push({
                     name: 'generateFileErrors',

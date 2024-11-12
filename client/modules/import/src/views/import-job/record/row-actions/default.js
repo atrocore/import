@@ -56,14 +56,16 @@ Espo.define('import:views/import-job/record/row-actions/default', 'views/record/
                     }
                 });
 
-                list.unshift({
-                    action: 'generateFileForJob',
-                    label: this.translate('generateFileSkippedByScript', 'labels', 'ImportJob'),
-                    data: {
-                        id: this.model.id,
-                        type: 'skippedByScript'
-                    }
-                });
+                if (this.getMetadata().get('scopes.Synchronization.type')) {
+                    list.unshift({
+                        action: 'generateFileForJob',
+                        label: this.translate('generateFileSkippedByScript', 'labels', 'ImportJob'),
+                        data: {
+                            id: this.model.id,
+                            type: 'skippedByScript'
+                        }
+                    });
+                }
 
                 list.unshift({
                     action: 'generateFileForJob',
