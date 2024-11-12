@@ -23,9 +23,9 @@ class ConvertedFileGenerator extends QueueManagerBase
 {
     public function run(array $data = []): bool
     {
-        if ($data['field'] === 'convertedFile') {
+        if ($data['type'] === 'convertedFile') {
             $this->generateConvertedFile((string)$data['importJobId']);
-        } elseif ($data['field'] === 'errorsAttachment') {
+        } elseif ($data['type'] === 'errors') {
             $this->generateErrorsAttachment((string)$data['importJobId']);
         }
 
@@ -123,7 +123,7 @@ class ConvertedFileGenerator extends QueueManagerBase
         ]);
 
         $inputData = new \stdClass();
-        $inputData->hidden = true;
+        $inputData->hidden = false;
         $inputData->folderId = $this->getImportFeedService()->createImportFileFolder($feed)->get('id');
         $inputData->name = 'errors-' . str_replace(' ', '_', strtolower($feed->get('name'))) . '.csv';
 
@@ -131,8 +131,12 @@ class ConvertedFileGenerator extends QueueManagerBase
         $fileArr = $this->getFileService()
             ->createFileViaContents($inputData, $fileParser->createFileContent($errorsRows));
 
-        $importJob->set('errorsAttachmentId', $fileArr['id']);
-        $this->getEntityManager()->saveEntity($importJob);
+        $entity = $this->getEntityManager()->getEntity('ImportJobFile');
+        $entity->set([
+            'importJobId' => $importJob->get('id'),
+            'fileId'      => $fileArr['id']
+        ]);
+        $this->getEntityManager()->saveEntity($entity);
 
         return $fileArr['id'];
     }

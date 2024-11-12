@@ -23,7 +23,7 @@ class ImportJob extends Base
 {
     public function actionGenerateFile($params, \stdClass $data, $request)
     {
-        if (!$request->isPost() || !property_exists($data, 'id') || !property_exists($data, 'field')) {
+        if (!$request->isPost() || !property_exists($data, 'id') || !property_exists($data, 'type')) {
             throw new BadRequest();
         }
 
@@ -31,11 +31,11 @@ class ImportJob extends Base
             throw new Forbidden();
         }
 
-        switch ($data->field) {
+        switch ($data->type) {
             case 'convertedFile':
                 $name = 'Generate converted file';
                 break;
-            case 'errorsAttachment':
+            case 'errors':
                 $name = 'Generate file with errors';
                 break;
             default:
@@ -48,7 +48,7 @@ class ImportJob extends Base
         }
 
         $dto = new QueueItemDTO($name, 'ConvertedFileGenerator', [
-            'field'       => $data->field,
+            'type'        => $data->type,
             'importJobId' => $data->id,
         ]);
         $dto->setHash($data->id);

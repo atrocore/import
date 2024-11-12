@@ -11,7 +11,7 @@
 Espo.define('import:views/import-job/record/detail', 'views/record/detail',
     Dep => Dep.extend({
 
-        buttonsDisabled: true,
+        duplicateAction: false,
 
         events: _.extend({
             'click [data-action="generateFile"]': function (e) {
@@ -25,17 +25,45 @@ Espo.define('import:views/import-job/record/detail', 'views/record/detail',
         setupActionItems: function () {
             if (['Failed', 'Canceled'].includes(this.model.get('state'))) {
                 this.dropdownItemList.push({
-                    'name': 'tryAgainImportJob',
+                    name: 'tryAgainImportJob',
                     action: 'tryAgainImportJob',
                     label: 'tryAgain',
                 });
             }
+
+            this.dropdownItemList.push({
+                name: 'generateErrorFile',
+                action: 'generateErrorFile',
+                label: 'generateErrorFile',
+            });
+
             Dep.prototype.setupActionItems.call(this);
+        },
+
+        actionGenerateErrorFile(){
+            this.notify(this.translate('generating', 'labels', 'ImportJob'));
+            this.ajaxPostRequest('ImportJob/action/generateFile', {id: this.model.get('id'), type: 'errors'}).then(response => {
+                let interval = setInterval(() => {
+                    this.ajaxGetRequest(`QueueItem/${response.queueItemId}?silent=true`).success(res => {
+                        this.notify(this.translate('generating', 'labels', 'ImportJob'));
+                        if (["Success", "Failed", "Canceled"].includes(res.status)) {
+                            clearInterval(interval);
+                            this.model.fetch();
+                            this.notify('Done', 'success');
+                            $('.action[data-action=refresh][data-panel=files]').click();
+                        }
+                    }).error(() => {
+                        clearInterval(interval);
+                        this.model.fetch();
+                        this.notify('Done', 'success');
+                    });
+                }, 2000);
+            });
         },
 
         actionGenerateFile(field) {
             this.notify(this.translate('generating', 'labels', 'ImportJob'));
-            this.ajaxPostRequest('ImportJob/action/generateFile', {id: this.model.get('id'), field: field}).then(response => {
+            this.ajaxPostRequest('ImportJob/action/generateFile', {id: this.model.get('id'), type: field}).then(response => {
                 let interval = setInterval(() => {
                     this.ajaxGetRequest(`QueueItem/${response.queueItemId}?silent=true`).success(res => {
                         this.notify(this.translate('generating', 'labels', 'ImportJob'));
