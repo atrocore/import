@@ -48,10 +48,56 @@ Espo.define('import:views/import-job/record/row-actions/default', 'views/record/
 
             if (['Failed', 'Canceled', 'Success'].includes(this.model.get('state')) && this.model.get('errorsCount') > 0) {
                 list.unshift({
-                    action: 'generateErrorFile',
-                    label: 'generateErrorFile',
+                    action: 'generateFileForJob',
+                    label: this.translate('generateFileErrors', 'labels', 'ImportJob'),
                     data: {
-                        id: this.model.id
+                        id: this.model.id,
+                        type: 'errors'
+                    }
+                });
+
+                list.unshift({
+                    action: 'generateFileForJob',
+                    label: this.translate('generateFileSkippedByScript', 'labels', 'ImportJob'),
+                    data: {
+                        id: this.model.id,
+                        type: 'skippedByScript'
+                    }
+                });
+
+                list.unshift({
+                    action: 'generateFileForJob',
+                    label: this.translate('generateFileSkippedBySystem', 'labels', 'ImportJob'),
+                    data: {
+                        id: this.model.id,
+                        type: 'skippedBySystem'
+                    }
+                });
+
+                list.unshift({
+                    action: 'generateFileForJob',
+                    label: this.translate('generateFileDeleted', 'labels', 'ImportJob'),
+                    data: {
+                        id: this.model.id,
+                        type: 'deleted'
+                    }
+                });
+
+                list.unshift({
+                    action: 'generateFileForJob',
+                    label: this.translate('generateFileUpdated', 'labels', 'ImportJob'),
+                    data: {
+                        id: this.model.id,
+                        type: 'updated'
+                    }
+                });
+
+                list.unshift({
+                    action: 'generateFileForJob',
+                    label: this.translate('generateFileCreated', 'labels', 'ImportJob'),
+                    data: {
+                        id: this.model.id,
+                        type: 'created'
                     }
                 });
             }
