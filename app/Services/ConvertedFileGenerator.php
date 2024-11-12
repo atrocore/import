@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Import\Services;
 
+use Atro\Core\Utils\Util;
 use Atro\Services\File;
 use Atro\Services\QueueManagerBase;
 use Espo\Core\Exceptions\BadRequest;
@@ -56,6 +57,11 @@ class ConvertedFileGenerator extends QueueManagerBase
         return null;
     }
 
+    public function generateErrorsFile(string $jobId): ?string
+    {
+        return $this->generateFile($jobId, 'error', true);
+    }
+
     public function generateConvertedFile(string $jobId): ?string
     {
         $importJob = $this->getEntityManager()->getEntity('ImportJob', $jobId);
@@ -81,26 +87,23 @@ class ConvertedFileGenerator extends QueueManagerBase
         return $this->getImportTypeSimpleService()->createConvertedFileForJob($jobId, $jobData);
     }
 
-    public function generateErrorsFile(string $jobId): ?string
+    public function generateFile(string $jobId, string $type, bool $hasReason = false): ?string
     {
         $importJob = $this->getEntityManager()->getEntity('ImportJob', $jobId);
         if (empty($importJob)) {
             throw new BadRequest("Import job '$jobId' does not exist.");
         }
 
-        /** @var \Import\Repositories\ImportJobLog $importJobLogRepo */
-        $importJobLogRepo = $this->getEntityManager()->getRepository('ImportJobLog');
-
-        $errorLogs = $importJobLogRepo
+        $errorLogs = $this->getEntityManager()->getRepository('ImportJobLog')
             ->where([
                 'importJobId' => $importJob->get('id'),
-                'type'        => 'error'
+                'type'        => $type
             ])
             ->order('rowNumber')
             ->find();
 
         if (empty($errorLogs[0])) {
-            throw new BadRequest($this->translate('errorFileCreatingFailed', 'exceptions', 'ImportJob'));
+            return null;
         }
 
         $feed = $importJob->get('importFeed');
@@ -108,7 +111,7 @@ class ConvertedFileGenerator extends QueueManagerBase
             throw new BadRequest("ImportFeed for import job '{$importJob->get('id')}' does not exist.");
         }
 
-        $errorColumn = 'Import Errors';
+        $reasonColumn = 'Reason';
 
         // prepare rows
         foreach ($errorLogs as $errorLog) {
@@ -118,17 +121,20 @@ class ConvertedFileGenerator extends QueueManagerBase
             }
 
             $row = json_decode(json_encode($row), true);
-            if (isset($rows[$errorLog->get('rowNumber')])) {
-                $row[$errorColumn] = $rows[$errorLog->get('rowNumber')][$errorColumn] . ' | ' . $errorLog->get('message');
-            } else {
-                $row[$errorColumn] = $errorLog->get('message');
+
+            if ($hasReason) {
+                if (isset($rows[$errorLog->get('rowNumber')])) {
+                    $row[$reasonColumn] = $rows[$errorLog->get('rowNumber')][$reasonColumn] . ' | ' . $errorLog->get('message');
+                } else {
+                    $row[$reasonColumn] = $errorLog->get('message');
+                }
             }
 
             $rows[$errorLog->get('rowNumber')] = $row;
         }
 
         if (empty($rows)) {
-            throw new BadRequest($this->translate('errorFileCreatingFailed', 'exceptions', 'ImportJob'));
+            return null;
         }
 
         $errorsRows = [];
@@ -149,7 +155,9 @@ class ConvertedFileGenerator extends QueueManagerBase
         $inputData = new \stdClass();
         $inputData->hidden = false;
         $inputData->folderId = $this->getImportFeedService()->createImportFileFolder($feed)->get('id');
-        $inputData->name = 'errors-' . str_replace(' ', '-', strtolower($feed->get('name'))) . '.csv';
+        $inputData->name = str_replace('_', '-', Util::toUnderScore($type))
+            . '-'
+            . str_replace(' ', '-', strtolower($feed->get('name'))) . '.csv';
 
         $fileParser->setData(['isFileHeaderRow' => true]);
         $fileArr = $this->getFileService()

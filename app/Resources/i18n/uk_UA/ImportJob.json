@@ -35,7 +35,6 @@
     "errorsAttachment": "Рядки з 'Imported file', які не були проімпортовані."
   },
   "exceptions": {
-    "errorFileCreatingFailed": "Неможливо створити файл помилки.",
     "cacheWriteFailed": "Не вдалося записати дані в кеш імпорту."
   },
   "boolFilters": {

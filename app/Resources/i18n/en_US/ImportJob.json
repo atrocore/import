@@ -43,7 +43,6 @@
     "errorsAttachment": "Rows from 'Imported file' that have not been imported."
   },
   "exceptions": {
-    "errorFileCreatingFailed": "Error file can not be created.",
     "cacheWriteFailed": "Cannot write data to the import cache."
   },
   "boolFilters": {

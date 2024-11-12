@@ -35,7 +35,6 @@
     "errorsAttachment": "Lignes du \"Fichier importé\" qui n'ont pas été importées."
   },
   "exceptions": {
-    "errorFileCreatingFailed": "Le fichier d'erreur ne peut pas être créé.",
     "cacheWriteFailed": "Impossible d'écrire des données dans le cache d'importation."
   },
   "boolFilters": {

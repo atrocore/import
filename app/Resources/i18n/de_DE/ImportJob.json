@@ -35,7 +35,6 @@
     "errorsAttachment": "Zeilen aus 'Importierter Datei', die nicht importiert wurden."
   },
   "exceptions": {
-    "errorFileCreatingFailed": "Konvertierte Datei existiert nicht. Bitte generieren Sie es zuerst.",
     "cacheWriteFailed": "Daten können nicht in den Import-Cache geschrieben werden."
   },
   "boolFilters": {
