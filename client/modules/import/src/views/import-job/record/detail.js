@@ -46,7 +46,7 @@ Espo.define('import:views/import-job/record/detail', 'views/record/detail',
             Dep.prototype.setupActionItems.call(this);
         },
 
-        generateFileCreated(){
+        actionGenerateFileCreated(){
             this.actionGenerateFile('created');
         },
 

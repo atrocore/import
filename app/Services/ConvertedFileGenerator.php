@@ -31,6 +31,11 @@ class ConvertedFileGenerator extends QueueManagerBase
         return true;
     }
 
+    public function generateCreatedFile(string $jobId): ?string
+    {
+        return null;
+    }
+
     public function generateConvertedFile(string $jobId): ?string
     {
         $importJob = $this->getEntityManager()->getEntity('ImportJob', $jobId);
