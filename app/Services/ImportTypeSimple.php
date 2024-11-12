@@ -645,16 +645,18 @@ class ImportTypeSimple extends QueueManagerBase
             $row = array_shift($fileData);
             $event = $this->getEventManager()->dispatch(new Event(['originalRows' => $originalRows, 'row' => $row, 'jobData' => $data, 'skip' => false]), 'prepareImportRow');
             if (!empty($event->getArgument('skip'))) {
-                $log = $this->getEntityManager()->getEntity('ImportJobLog');
-                $log->set([
-                    'entityName'      => $data['data']['entity'] ?? null,
-                    'importJobId'     => $data['data']['importJobId'] ?? null,
-                    'rowNumber'       => $this->getMemoryStorage()->get('importRowNumber'),
-                    'row'             => $row,
-                    'type'            => 'skip',
-                    'skippedByScript' => true
-                ]);
-                $this->getEntityManager()->saveEntity($log);
+                if (!empty($data['data']['importJobId']) && !empty($data['data']['entity'])) {
+                    $log = $this->getEntityManager()->getEntity('ImportJobLog');
+                    $log->set([
+                        'entityName'      => $data['data']['entity'],
+                        'importJobId'     => $data['data']['importJobId'],
+                        'rowNumber'       => $this->getMemoryStorage()->get('importRowNumber'),
+                        'row'             => $row,
+                        'type'            => 'skip',
+                        'skippedByScript' => true
+                    ]);
+                    $this->getEntityManager()->saveEntity($log);
+                }
                 continue;
             }
             $prepared[] = $event->getArgument('row');
