@@ -117,12 +117,6 @@
       "view": "import:views/import-job/fields/generated-file",
       "readOnly": true
     },
-    "errorsAttachment": {
-      "type": "file",
-      "view": "import:views/import-job/fields/generated-file",
-      "readOnly": true,
-      "tooltip": true
-    },
     "importJobLogs": {
       "type": "linkMultiple",
       "layoutDetailDisabled": true,

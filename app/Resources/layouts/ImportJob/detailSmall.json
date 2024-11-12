@@ -45,9 +45,7 @@
         {
           "name": "errorsCount"
         },
-        {
-          "name": "errorsAttachment"
-        }
+        false
       ]
     ]
   }
