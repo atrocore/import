@@ -48,26 +48,26 @@ Espo.define('import:views/import-job/record/list', 'views/record/list',
             })
         },
 
-        actionGenerateErrorFile(data) {
+        actionGenerateFileForJob(data) {
             let model = this.collection.get(data.id);
-            if (model.get('errorsAttachmentName')) {
-                this.downloadFile(model.get('errorsAttachmentPathsData').download, model.get('errorsAttachmentName'));
-                return;
-            }
+            // if (model.get('errorsAttachmentName')) {
+            //     this.downloadFile(model.get('errorsAttachmentPathsData').download, model.get('errorsAttachmentName'));
+            //     return;
+            // }
 
             this.notify(this.translate('generating', 'labels', 'ImportJob'));
-            this.ajaxPostRequest('ImportJob/action/generateFile', {id: model.get('id'), field: 'errorsAttachment'}).then(response => {
+            this.ajaxPostRequest('ImportJob/action/generateFile', {id: model.get('id'), type: data.type}).then(response => {
                 let interval = setInterval(() => {
                     this.ajaxGetRequest(`QueueItem/${response.queueItemId}?silent=true`).success(res => {
                         this.notify(this.translate('generating', 'labels', 'ImportJob'));
                         if (["Success", "Failed", "Canceled"].includes(res.status)) {
                             clearInterval(interval);
                             this.notify('Done', 'success');
-                            model.fetch().then(() => {
-                                if (model.get('errorsAttachmentName')) {
-                                    this.downloadFile(model.get('errorsAttachmentPathsData').download, model.get('errorsAttachmentName'));
-                                }
-                            });
+                            // model.fetch().then(() => {
+                            //     if (model.get('errorsAttachmentName')) {
+                            //         this.downloadFile(model.get('errorsAttachmentPathsData').download, model.get('errorsAttachmentName'));
+                            //     }
+                            // });
                         }
                     }).error(() => {
                         clearInterval(interval);

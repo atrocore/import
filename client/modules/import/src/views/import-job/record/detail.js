@@ -31,41 +31,43 @@ Espo.define('import:views/import-job/record/detail', 'views/record/detail',
                 });
             }
 
-            this.dropdownItemList.push({
-                name: 'generateFileCreated',
-                action: 'generateFileCreated',
-                label: this.translate('generateFileCreated', 'labels', 'ImportJob'),
-            });
+            if (['Failed', 'Canceled', 'Success'].includes(this.model.get('state'))) {
+                this.dropdownItemList.push({
+                    name: 'generateFileCreated',
+                    action: 'generateFileCreated',
+                    label: this.translate('generateFileCreated', 'labels', 'ImportJob'),
+                });
 
-            this.dropdownItemList.push({
-                name: 'generateFileUpdated',
-                action: 'generateFileUpdated',
-                label: this.translate('generateFileUpdated', 'labels', 'ImportJob'),
-            });
+                this.dropdownItemList.push({
+                    name: 'generateFileUpdated',
+                    action: 'generateFileUpdated',
+                    label: this.translate('generateFileUpdated', 'labels', 'ImportJob'),
+                });
 
-            this.dropdownItemList.push({
-                name: 'generateFileDeleted',
-                action: 'generateFileDeleted',
-                label: this.translate('generateFileDeleted', 'labels', 'ImportJob'),
-            });
+                this.dropdownItemList.push({
+                    name: 'generateFileDeleted',
+                    action: 'generateFileDeleted',
+                    label: this.translate('generateFileDeleted', 'labels', 'ImportJob'),
+                });
 
-            this.dropdownItemList.push({
-                name: 'generateFileSkippedBySystem',
-                action: 'generateFileSkippedBySystem',
-                label: this.translate('generateFileSkippedBySystem', 'labels', 'ImportJob'),
-            });
+                this.dropdownItemList.push({
+                    name: 'generateFileSkippedBySystem',
+                    action: 'generateFileSkippedBySystem',
+                    label: this.translate('generateFileSkippedBySystem', 'labels', 'ImportJob'),
+                });
 
-            this.dropdownItemList.push({
-                name: 'generateFileSkippedByScript',
-                action: 'generateFileSkippedByScript',
-                label: this.translate('generateFileSkippedByScript', 'labels', 'ImportJob'),
-            });
+                this.dropdownItemList.push({
+                    name: 'generateFileSkippedByScript',
+                    action: 'generateFileSkippedByScript',
+                    label: this.translate('generateFileSkippedByScript', 'labels', 'ImportJob'),
+                });
 
-            this.dropdownItemList.push({
-                name: 'generateFileErrors',
-                action: 'generateFileErrors',
-                label: this.translate('generateFileErrors', 'labels', 'ImportJob'),
-            });
+                this.dropdownItemList.push({
+                    name: 'generateFileErrors',
+                    action: 'generateFileErrors',
+                    label: this.translate('generateFileErrors', 'labels', 'ImportJob'),
+                });
+            }
 
             Dep.prototype.setupActionItems.call(this);
         },
