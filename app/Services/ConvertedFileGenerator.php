@@ -94,7 +94,12 @@ class ConvertedFileGenerator extends QueueManagerBase
             throw new BadRequest("Import job '$jobId' does not exist.");
         }
 
-        $errorLogs = $this->getEntityManager()->getRepository('ImportJobLog')
+        $feed = $importJob->get('importFeed');
+        if (empty($feed)) {
+            throw new BadRequest("ImportFeed for import job '{$importJob->get('id')}' does not exist.");
+        }
+
+        $logs = $this->getEntityManager()->getRepository('ImportJobLog')
             ->where([
                 'importJobId' => $importJob->get('id'),
                 'type'        => $type
@@ -102,20 +107,15 @@ class ConvertedFileGenerator extends QueueManagerBase
             ->order('rowNumber')
             ->find();
 
-        if (empty($errorLogs[0])) {
+        if (empty($logs[0])) {
             return null;
-        }
-
-        $feed = $importJob->get('importFeed');
-        if (empty($feed)) {
-            throw new BadRequest("ImportFeed for import job '{$importJob->get('id')}' does not exist.");
         }
 
         $reasonColumn = 'Reason';
 
         // prepare rows
-        foreach ($errorLogs as $errorLog) {
-            $row = $errorLog->get('row');
+        foreach ($logs as $log) {
+            $row = $log->get('row');
             if (empty($row)) {
                 continue;
             }
@@ -123,27 +123,27 @@ class ConvertedFileGenerator extends QueueManagerBase
             $row = json_decode(json_encode($row), true);
 
             if ($hasReason) {
-                if (isset($rows[$errorLog->get('rowNumber')])) {
-                    $row[$reasonColumn] = $rows[$errorLog->get('rowNumber')][$reasonColumn] . ' | ' . $errorLog->get('message');
+                if (isset($rows[$log->get('rowNumber')])) {
+                    $row[$reasonColumn] = $rows[$log->get('rowNumber')][$reasonColumn] . ' | ' . $log->get('message');
                 } else {
-                    $row[$reasonColumn] = $errorLog->get('message');
+                    $row[$reasonColumn] = $log->get('message');
                 }
             }
 
-            $rows[$errorLog->get('rowNumber')] = $row;
+            $rows[$log->get('rowNumber')] = $row;
         }
 
         if (empty($rows)) {
             return null;
         }
 
-        $errorsRows = [];
+        $preparedRows = [];
         foreach ($rows as $row) {
             // push header
-            if (empty($errorsRows)) {
-                $errorsRows[] = array_keys($row);
+            if (empty($preparedRows)) {
+                $preparedRows[] = array_keys($row);
             }
-            $errorsRows[] = array_values($row);
+            $preparedRows[] = array_values($row);
         }
 
         $fileParser = $this->createFileParser('CSV');
@@ -161,7 +161,7 @@ class ConvertedFileGenerator extends QueueManagerBase
 
         $fileParser->setData(['isFileHeaderRow' => true]);
         $fileArr = $this->getFileService()
-            ->createFileViaContents($inputData, $fileParser->createFileContent($errorsRows));
+            ->createFileViaContents($inputData, $fileParser->createFileContent($preparedRows));
 
         $entity = $this->getEntityManager()->getEntity('ImportJobFile');
         $entity->set([
