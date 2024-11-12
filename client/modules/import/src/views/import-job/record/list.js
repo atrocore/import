@@ -48,26 +48,19 @@ Espo.define('import:views/import-job/record/list', 'views/record/list',
             })
         },
 
-        actionGenerateErrorFile(data) {
-            let model = this.collection.get(data.id);
-            if (model.get('errorsAttachmentName')) {
-                this.downloadFile(model.get('errorsAttachmentPathsData').download, model.get('errorsAttachmentName'));
-                return;
-            }
-
+        actionGenerateFileForJob(data) {
             this.notify(this.translate('generating', 'labels', 'ImportJob'));
-            this.ajaxPostRequest('ImportJob/action/generateFile', {id: model.get('id'), field: 'errorsAttachment'}).then(response => {
+            this.ajaxPostRequest('ImportJob/action/generateFile', {id: data.id, type: data.type}).then(response => {
                 let interval = setInterval(() => {
                     this.ajaxGetRequest(`QueueItem/${response.queueItemId}?silent=true`).success(res => {
                         this.notify(this.translate('generating', 'labels', 'ImportJob'));
-                        if (["Success", "Failed", "Canceled"].includes(res.status)) {
+                        if (res.status === 'Success') {
                             clearInterval(interval);
                             this.notify('Done', 'success');
-                            model.fetch().then(() => {
-                                if (model.get('errorsAttachmentName')) {
-                                    this.downloadFile(model.get('errorsAttachmentPathsData').download, model.get('errorsAttachmentName'));
-                                }
-                            });
+                            this.downloadFile(res.data.downloadUrl, res.data.fileName);
+                        } else if (["Failed", "Canceled"].includes(res.status)) {
+                            clearInterval(interval);
+                            this.notify('Error occured!', 'error');
                         }
                     }).error(() => {
                         clearInterval(interval);

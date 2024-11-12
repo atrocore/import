@@ -117,12 +117,6 @@
       "view": "import:views/import-job/fields/generated-file",
       "readOnly": true
     },
-    "errorsAttachment": {
-      "type": "file",
-      "view": "import:views/import-job/fields/generated-file",
-      "readOnly": true,
-      "tooltip": true
-    },
     "importJobLogs": {
       "type": "linkMultiple",
       "layoutDetailDisabled": true,
@@ -150,6 +144,12 @@
       "importDisabled": true,
       "textFilterDisabled": true,
       "emHidden": true
+    },
+    "files": {
+      "type": "linkMultiple",
+      "layoutDetailDisabled": true,
+      "massUpdateDisabled": true,
+      "noLoad": true
     },
     "createdAt": {
       "type": "datetime",
@@ -194,6 +194,12 @@
       "type": "hasMany",
       "foreign": "importJob",
       "entity": "ImportJobLog"
+    },
+    "files": {
+      "type": "hasMany",
+      "relationName": "importJobFile",
+      "foreign": "importJobs",
+      "entity": "File"
     },
     "createdBy": {
       "type": "belongsTo",

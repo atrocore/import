@@ -260,9 +260,9 @@ class ImportJob extends Base
             $this->getEntityManager()->removeEntity($convertedFile);
         }
 
-        $errorsAttachment = $entity->get('errorsAttachment');
-        if (!empty($errorsAttachment)) {
-            $this->getEntityManager()->removeEntity($errorsAttachment);
+        // delete generated files
+        foreach ($entity->get('files') as $file) {
+            $this->getEntityManager()->removeEntity($file);
         }
 
         parent::afterRemove($entity, $options);

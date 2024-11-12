@@ -1,10 +1,5 @@
 {
   "fields": {
-    "name": {
-      "type": "varchar",
-      "trim": true,
-      "readOnly": true
-    },
     "importJob": {
       "type": "link",
       "readOnly": true
@@ -29,6 +24,10 @@
       "default": "create",
       "readOnly": true
     },
+    "skippedByScript": {
+      "type": "bool",
+      "readOnly": true
+    },
     "entityName": {
       "type": "varchar",
       "len": 100,
@@ -49,6 +48,10 @@
       "type": "int",
       "readOnly": true
     },
+    "row": {
+      "type": "jsonObject",
+      "readOnly": true
+    },
     "createdAt": {
       "type": "datetime",
       "readOnly": true
@@ -66,13 +69,6 @@
       "type": "link",
       "readOnly": true,
       "view": "views/fields/user"
-    },
-    "restoreData": {
-      "type": "array",
-      "layoutDetailDisabled": true,
-      "layoutMassUpdateDisabled": true,
-      "noLoad": true,
-      "readOnly": true
     }
   },
   "links": {
@@ -95,23 +91,7 @@
     "asc": true,
     "fullTextSearch": false
   },
-  "uniqueIndexes": {
-    "unique_job_log": [
-      "import_job_id",
-      "entity_id",
-      "type",
-      "entity_name",
-      "row_number",
-      "deleted"
-    ]
-  },
   "indexes": {
-    "name": {
-      "columns": [
-        "name",
-        "deleted"
-      ]
-    },
     "type": {
       "columns": [
         "type",
@@ -139,12 +119,6 @@
     "createdAt": {
       "columns": [
         "createdAt",
-        "deleted"
-      ]
-    },
-    "modifiedAt": {
-      "columns": [
-        "modifiedAt",
         "deleted"
       ]
     }

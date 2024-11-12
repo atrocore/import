@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Import\Services;
 
+use Atro\Core\Utils\Util;
 use Atro\Services\File;
 use Atro\Services\QueueManagerBase;
 use Espo\Core\Exceptions\BadRequest;
@@ -23,13 +24,42 @@ class ConvertedFileGenerator extends QueueManagerBase
 {
     public function run(array $data = []): bool
     {
-        if ($data['field'] === 'convertedFile') {
-            $this->generateConvertedFile((string)$data['importJobId']);
-        } elseif ($data['field'] === 'errorsAttachment') {
-            $this->generateErrorsAttachment((string)$data['importJobId']);
+        $method = "generate" . ucfirst($data['type'] . "File");
+        if (method_exists($this, $method)) {
+            $this->$method((string)$data['importJobId']);
         }
 
         return true;
+    }
+
+    public function generateCreatedFile(string $jobId): ?string
+    {
+        return $this->generateFile($jobId, 'create');
+    }
+
+    public function generateUpdatedFile(string $jobId): ?string
+    {
+        return $this->generateFile($jobId, 'update');
+    }
+
+    public function generateDeletedFile(string $jobId): ?string
+    {
+        return $this->generateFile($jobId, 'delete');
+    }
+
+    public function generateSkippedBySystemFile(string $jobId): ?string
+    {
+        return $this->generateFile($jobId, 'skippedBySystem');
+    }
+
+    public function generateSkippedByScriptFile(string $jobId): ?string
+    {
+        return $this->generateFile($jobId, 'skippedByScript', true);
+    }
+
+    public function generateErrorsFile(string $jobId): ?string
+    {
+        return $this->generateFile($jobId, 'error', true);
     }
 
     public function generateConvertedFile(string $jobId): ?string
@@ -57,25 +87,11 @@ class ConvertedFileGenerator extends QueueManagerBase
         return $this->getImportTypeSimpleService()->createConvertedFileForJob($jobId, $jobData);
     }
 
-    public function generateErrorsAttachment(string $jobId): ?string
+    public function generateFile(string $jobId, string $type, bool $hasReason = false): ?string
     {
         $importJob = $this->getEntityManager()->getEntity('ImportJob', $jobId);
         if (empty($importJob)) {
             throw new BadRequest("Import job '$jobId' does not exist.");
-        }
-
-        /** @var \Import\Repositories\ImportJobLog $importJobLogRepo */
-        $importJobLogRepo = $this->getEntityManager()->getRepository('ImportJobLog');
-
-        $errorLogs = $importJobLogRepo
-            ->where([
-                'importJobId' => $importJob->get('id'),
-                'type'        => 'error'
-            ])
-            ->find();
-
-        if (empty($errorLogs[0])) {
-            throw new BadRequest($this->translate('errorFileCreatingFailed', 'exceptions', 'ImportJob'));
         }
 
         $feed = $importJob->get('importFeed');
@@ -83,27 +99,44 @@ class ConvertedFileGenerator extends QueueManagerBase
             throw new BadRequest("ImportFeed for import job '{$importJob->get('id')}' does not exist.");
         }
 
-        $errorsRowsNumbers = [];
+        $logs = $this->getEntityManager()->getRepository('ImportJobLog')
+            ->where([
+                'importJobId'     => $importJob->get('id'),
+                'type'            => in_array($type, ['skippedBySystem', 'skippedByScript']) ? 'skip' : $type,
+                'skippedByScript' => $type === 'skippedByScript'
+            ])
+            ->order('rowNumber')
+            ->find();
 
-        $attachmentId = $importJob->get('convertedFileId');
-        if (empty($attachmentId)) {
-            $attachmentId = $this->generateConvertedFile($jobId);
-        }
+        $reasonColumn = 'Reason';
 
-        if (!empty($attachmentId)) {
-            $attachment = $this->getEntityManager()->getRepository('File')->get($attachmentId);
-            if (empty($attachment)) {
-                throw new BadRequest("Attachment '$attachmentId' does not exist.");
+        // prepare rows
+        foreach ($logs as $log) {
+            $row = $log->get('row');
+            if (empty($row)) {
+                continue;
             }
+
+            $row = json_decode(json_encode($row), true);
+
+            if ($hasReason) {
+                if (isset($rows[$log->get('rowNumber')])) {
+                    $row[$reasonColumn] = $rows[$log->get('rowNumber')][$reasonColumn] . ' | ' . $log->get('message');
+                } else {
+                    $row[$reasonColumn] = $log->get('message');
+                }
+            }
+
+            $rows[$log->get('rowNumber')] = $row;
         }
 
-        // add header row if it needs
-        $errorsRowsNumbers[1] = 'Import Errors';
-
-        foreach ($errorLogs as $log) {
-            $importJobLogRepo->prepareMessage($log);
-            $rowNumber = (int)$log->get('rowNumber');
-            $errorsRowsNumbers[$rowNumber] = $log->get('message');
+        $preparedRows = [];
+        foreach ($rows as $row) {
+            // push header
+            if (empty($preparedRows)) {
+                $preparedRows[] = array_keys($row);
+            }
+            $preparedRows[] = array_values($row);
         }
 
         $fileParser = $this->createFileParser('CSV');
@@ -112,34 +145,27 @@ class ConvertedFileGenerator extends QueueManagerBase
             'enclosure' => '"'
         ]);
 
-        $data = $fileParser->getFileData($attachment);
-
-        // collect errors rows
-        $errorsRows = [];
-        foreach ($data as $k => $row) {
-            $key = $k + 1;
-            if (isset($errorsRowsNumbers[$key])) {
-                $row[] = $errorsRowsNumbers[$key];
-                $errorsRows[] = $row;
-            }
-        }
-
-        // prepare attachment name
-        $nameParts = explode('.', $attachment->get('name'));
-        array_pop($nameParts);
-        $name = 'errors-' . implode('.', $nameParts);
-
         $inputData = new \stdClass();
-        $inputData->hidden = true;
+        $inputData->hidden = false;
         $inputData->folderId = $this->getImportFeedService()->createImportFileFolder($feed)->get('id');
-        $inputData->name = "{$name}.csv";
+        $inputData->name = str_replace('_', '-', Util::toUnderScore($type))
+            . '-'
+            . str_replace(' ', '-', strtolower($feed->get('name'))) . '.csv';
 
         $fileParser->setData(['isFileHeaderRow' => true]);
-        $fileArr = $this->getFileService()->createFileViaContents($inputData,
-            $fileParser->createFileContent($errorsRows));
+        $fileArr = $this->getFileService()
+            ->createFileViaContents($inputData, $fileParser->createFileContent($preparedRows));
 
-        $importJob->set('errorsAttachmentId', $fileArr['id']);
-        $this->getEntityManager()->saveEntity($importJob);
+        $entity = $this->getEntityManager()->getEntity('ImportJobFile');
+        $entity->set([
+            'importJobId' => $importJob->get('id'),
+            'fileId'      => $fileArr['id']
+        ]);
+        $this->getEntityManager()->saveEntity($entity);
+
+        $this->qmItem->get('data')->fileName = $fileArr['name'];
+        $this->qmItem->get('data')->downloadUrl = $fileArr['downloadUrl'];
+        $this->getEntityManager()->saveEntity($this->qmItem);
 
         return $fileArr['id'];
     }

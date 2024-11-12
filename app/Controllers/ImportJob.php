@@ -17,13 +17,14 @@ use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Templates\Controllers\Base;
+use Atro\Core\Utils\Language;
 use Atro\DTO\QueueItemDTO;
 
 class ImportJob extends Base
 {
     public function actionGenerateFile($params, \stdClass $data, $request)
     {
-        if (!$request->isPost() || !property_exists($data, 'id') || !property_exists($data, 'field')) {
+        if (!$request->isPost() || !property_exists($data, 'id') || !property_exists($data, 'type')) {
             throw new BadRequest();
         }
 
@@ -31,24 +32,11 @@ class ImportJob extends Base
             throw new Forbidden();
         }
 
-        switch ($data->field) {
-            case 'convertedFile':
-                $name = 'Generate converted file';
-                break;
-            case 'errorsAttachment':
-                $name = 'Generate file with errors';
-                break;
-            default:
-                $name = null;
-                break;
-        }
-
-        if ($name === null) {
-            throw new BadRequest("Field is not defined.");
-        }
+        $type = $data->type === 'convertedFile' ? 'converted' : $data->type;
+        $name = $this->getLanguage()->translate('generateFile' . ucfirst($type), 'labels', 'ImportJob');
 
         $dto = new QueueItemDTO($name, 'ConvertedFileGenerator', [
-            'field'       => $data->field,
+            'type'        => $type,
             'importJobId' => $data->id,
         ]);
         $dto->setHash($data->id);
@@ -81,7 +69,8 @@ class ImportJob extends Base
             throw new Forbidden();
         }
 
-        return $this->getRecordService()->reCreateImportJob((string)$data->id, property_exists($data, 'attachmentId') ? $data->attachmentId : null);
+        return $this->getRecordService()->reCreateImportJob((string)$data->id,
+            property_exists($data, 'attachmentId') ? $data->attachmentId : null);
     }
 
     /**
@@ -130,5 +119,10 @@ class ImportJob extends Base
     public function actionCreateLink($params, $data, $request)
     {
         throw new NotFound();
+    }
+
+    protected function getLanguage(): Language
+    {
+        return $this->getContainer()->get('language');
     }
 }

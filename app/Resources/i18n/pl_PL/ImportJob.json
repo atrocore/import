@@ -34,9 +34,6 @@
   "tooltips": {
     "errorsAttachment": "Wiersze z 'Zaimportowanego pliku', które nie zostały zaimportowane."
   },
-  "exceptions": {
-    "errorFileCreatingFailed": "Nie można utworzyć pliku błędów."
-  },
   "boolFilters": {
     "onlyImportFailed24Hours": "Tylko Zadania Importu, które nie powiodły się w ciągu ostatnich 24 godzin",
     "onlyImportFailed7Days": "Tylko Zadania Importu, które nie powiodły się w ciągu ostatnich 7 dni",

@@ -12,12 +12,13 @@
     "errorsCount": "Errors",
     "attachment": "Imported File",
     "convertedFile": "Converted File",
-    "errorsAttachment": "Error file",
-    "importJobLogs": "Error Logs"
+    "importJobLogs": "Error Logs",
+    "files": "Files"
   },
   "links": {
     "importFeed": "Import Feed",
-    "importJobLogs": "Error Logs"
+    "importJobLogs": "Error Logs",
+    "files": "Files"
   },
   "labels": {
     "Create ImportJob": "Create Import Job",
@@ -30,13 +31,18 @@
     "generating": "Generating",
     "tryAgain": "Import again",
     "reCreate": "Recreate",
-    "generateErrorFile": "Generate error file"
+    "generateFileConverted": "Generate File: Converted",
+    "generateFileCreated": "Generate File: Created",
+    "generateFileUpdated": "Generate File: Updated",
+    "generateFileDeleted": "Generate File: Deleted",
+    "generateFileSkippedBySystem": "Generate File: Skipped by System",
+    "generateFileSkippedByScript": "Generate File: Skipped by Script",
+    "generateFileErrors": "Generate File: Errors"
   },
   "tooltips": {
     "errorsAttachment": "Rows from 'Imported file' that have not been imported."
   },
   "exceptions": {
-    "errorFileCreatingFailed": "Error file can not be created.",
     "cacheWriteFailed": "Cannot write data to the import cache."
   },
   "boolFilters": {
