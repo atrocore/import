@@ -36,6 +36,26 @@ class ConvertedFileGenerator extends QueueManagerBase
         return null;
     }
 
+    public function generateUpdatedFile(string $jobId): ?string
+    {
+        return null;
+    }
+
+    public function generateDeletedFile(string $jobId): ?string
+    {
+        return null;
+    }
+
+    public function generateSkippedBySystemFile(string $jobId): ?string
+    {
+        return null;
+    }
+
+    public function generateSkippedByScriptFile(string $jobId): ?string
+    {
+        return null;
+    }
+
     public function generateConvertedFile(string $jobId): ?string
     {
         $importJob = $this->getEntityManager()->getEntity('ImportJob', $jobId);

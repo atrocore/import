@@ -33,6 +33,10 @@
     "reCreate": "Recreate",
     "generateFileConverted": "Generate File: Converted",
     "generateFileCreated": "Generate File: Created",
+    "generateFileUpdated": "Generate File: Updated",
+    "generateFileDeleted": "Generate File: Deleted",
+    "generateFileSkippedBySystem": "Generate File: Skipped by System",
+    "generateFileSkippedByScript": "Generate File: Skipped by Script",
     "generateFileErrors": "Generate File: Errors"
   },
   "tooltips": {
