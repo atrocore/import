@@ -34,7 +34,7 @@ class ConvertedFileGenerator extends QueueManagerBase
 
     public function generateCreatedFile(string $jobId): ?string
     {
-        return null;
+        return $this->generateFile($jobId, 'created', true);
     }
 
     public function generateUpdatedFile(string $jobId): ?string
@@ -107,10 +107,6 @@ class ConvertedFileGenerator extends QueueManagerBase
             ->order('rowNumber')
             ->find();
 
-        if (empty($logs[0])) {
-            return null;
-        }
-
         $reasonColumn = 'Reason';
 
         // prepare rows
@@ -131,10 +127,6 @@ class ConvertedFileGenerator extends QueueManagerBase
             }
 
             $rows[$log->get('rowNumber')] = $row;
-        }
-
-        if (empty($rows)) {
-            return null;
         }
 
         $preparedRows = [];
