@@ -46,7 +46,7 @@ Espo.define('import:views/import-job/record/row-actions/default', 'views/record/
                 });
             }
 
-            if (['Failed', 'Canceled', 'Success'].includes(this.model.get('state')) && this.model.get('errorsCount') > 0) {
+            if (['Failed', 'Canceled', 'Success'].includes(this.model.get('state'))) {
                 list.unshift({
                     action: 'generateFileForJob',
                     label: this.translate('generateFileErrors', 'labels', 'ImportJob'),
