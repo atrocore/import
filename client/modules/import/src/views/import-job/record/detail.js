@@ -32,15 +32,25 @@ Espo.define('import:views/import-job/record/detail', 'views/record/detail',
             }
 
             this.dropdownItemList.push({
-                name: 'generateErrorFile',
-                action: 'generateErrorFile',
-                label: this.translate('generateErrorsFile', 'labels', 'ImportJob'),
+                name: 'generateFileCreated',
+                action: 'generateFileCreated',
+                label: this.translate('generateFileCreated', 'labels', 'ImportJob'),
+            });
+
+            this.dropdownItemList.push({
+                name: 'generateFileErrors',
+                action: 'generateFileErrors',
+                label: this.translate('generateFileErrors', 'labels', 'ImportJob'),
             });
 
             Dep.prototype.setupActionItems.call(this);
         },
 
-        actionGenerateErrorFile(){
+        generateFileCreated(){
+            this.actionGenerateFile('created');
+        },
+
+        actionGenerateFileErrors(){
             this.actionGenerateFile('errors');
         },
 

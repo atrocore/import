@@ -23,13 +23,9 @@ class ConvertedFileGenerator extends QueueManagerBase
 {
     public function run(array $data = []): bool
     {
-        switch ($data['type']) {
-            case 'convertedFile':
-                $this->generateConvertedFile((string)$data['importJobId']);
-                break;
-            case 'errors':
-                $this->generateErrorsFile((string)$data['importJobId']);
-                break;
+        $method = "generate" . ucfirst($data['type'] . "File");
+        if (method_exists($this, $method)) {
+            $this->$method((string)$data['importJobId']);
         }
 
         return true;

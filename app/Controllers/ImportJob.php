@@ -31,24 +31,11 @@ class ImportJob extends Base
             throw new Forbidden();
         }
 
-        switch ($data->type) {
-            case 'convertedFile':
-                $name = 'Generate converted file';
-                break;
-            case 'errors':
-                $name = 'Generate file with errors';
-                break;
-            default:
-                $name = null;
-                break;
-        }
-
-        if ($name === null) {
-            throw new BadRequest("Field is not defined.");
-        }
+        $type = $data->type === 'convertedFile' ? 'converted' : $data->type;
+        $name = $this->getContainer()->get('language')->translate('generateFile' . ucfirst($type), 'labels', 'ImportJob');
 
         $dto = new QueueItemDTO($name, 'ConvertedFileGenerator', [
-            'type'        => $data->type,
+            'type'        => $type,
             'importJobId' => $data->id,
         ]);
         $dto->setHash($data->id);
