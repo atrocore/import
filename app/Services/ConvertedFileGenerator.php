@@ -34,27 +34,27 @@ class ConvertedFileGenerator extends QueueManagerBase
 
     public function generateCreatedFile(string $jobId): ?string
     {
-        return $this->generateFile($jobId, 'created', true);
+        return $this->generateFile($jobId, 'create');
     }
 
     public function generateUpdatedFile(string $jobId): ?string
     {
-        return null;
+        return $this->generateFile($jobId, 'update');
     }
 
     public function generateDeletedFile(string $jobId): ?string
     {
-        return null;
+        return $this->generateFile($jobId, 'delete');
     }
 
     public function generateSkippedBySystemFile(string $jobId): ?string
     {
-        return null;
+        return $this->generateFile($jobId, 'skippedBySystem', true);
     }
 
     public function generateSkippedByScriptFile(string $jobId): ?string
     {
-        return null;
+        return $this->generateFile($jobId, 'skippedByScript', true);
     }
 
     public function generateErrorsFile(string $jobId): ?string
@@ -101,8 +101,9 @@ class ConvertedFileGenerator extends QueueManagerBase
 
         $logs = $this->getEntityManager()->getRepository('ImportJobLog')
             ->where([
-                'importJobId' => $importJob->get('id'),
-                'type'        => $type
+                'importJobId'     => $importJob->get('id'),
+                'type'            => in_array($type, ['skippedBySystem', 'skippedByScript']) ? 'skip' : $type,
+                'skippedByScript' => $type === 'skippedByScript'
             ])
             ->order('rowNumber')
             ->find();
