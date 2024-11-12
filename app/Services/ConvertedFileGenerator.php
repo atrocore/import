@@ -49,7 +49,7 @@ class ConvertedFileGenerator extends QueueManagerBase
 
     public function generateSkippedBySystemFile(string $jobId): ?string
     {
-        return $this->generateFile($jobId, 'skippedBySystem', true);
+        return $this->generateFile($jobId, 'skippedBySystem');
     }
 
     public function generateSkippedByScriptFile(string $jobId): ?string

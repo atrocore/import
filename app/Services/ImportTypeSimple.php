@@ -653,7 +653,8 @@ class ImportTypeSimple extends QueueManagerBase
                         'rowNumber'       => $this->getMemoryStorage()->get('importRowNumber'),
                         'row'             => $row,
                         'type'            => 'skip',
-                        'skippedByScript' => true
+                        'skippedByScript' => true,
+                        'message'         => $event->getArgument('skipReason') ?? null
                     ]);
                     $this->getEntityManager()->saveEntity($log);
                 }
