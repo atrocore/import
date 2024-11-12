@@ -13,11 +13,13 @@
     "attachment": "Imported File",
     "convertedFile": "Converted File",
     "errorsAttachment": "Error file",
-    "importJobLogs": "Error Logs"
+    "importJobLogs": "Error Logs",
+    "files": "Files"
   },
   "links": {
     "importFeed": "Import Feed",
-    "importJobLogs": "Error Logs"
+    "importJobLogs": "Error Logs",
+    "files": "Files"
   },
   "labels": {
     "Create ImportJob": "Create Import Job",

@@ -151,6 +151,12 @@
       "textFilterDisabled": true,
       "emHidden": true
     },
+    "files": {
+      "type": "linkMultiple",
+      "layoutDetailDisabled": true,
+      "massUpdateDisabled": true,
+      "noLoad": true
+    },
     "createdAt": {
       "type": "datetime",
       "readOnly": true
@@ -194,6 +200,12 @@
       "type": "hasMany",
       "foreign": "importJob",
       "entity": "ImportJobLog"
+    },
+    "files": {
+      "type": "hasMany",
+      "relationName": "importJobFile",
+      "foreign": "importJobs",
+      "entity": "File"
     },
     "createdBy": {
       "type": "belongsTo",
