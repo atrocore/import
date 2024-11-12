@@ -17,6 +17,7 @@ use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Templates\Controllers\Base;
+use Atro\Core\Utils\Language;
 use Atro\DTO\QueueItemDTO;
 
 class ImportJob extends Base
@@ -32,7 +33,7 @@ class ImportJob extends Base
         }
 
         $type = $data->type === 'convertedFile' ? 'converted' : $data->type;
-        $name = $this->getContainer()->get('language')->translate('generateFile' . ucfirst($type), 'labels', 'ImportJob');
+        $name = $this->getLanguage()->translate('generateFile' . ucfirst($type), 'labels', 'ImportJob');
 
         $dto = new QueueItemDTO($name, 'ConvertedFileGenerator', [
             'type'        => $type,
@@ -68,7 +69,8 @@ class ImportJob extends Base
             throw new Forbidden();
         }
 
-        return $this->getRecordService()->reCreateImportJob((string)$data->id, property_exists($data, 'attachmentId') ? $data->attachmentId : null);
+        return $this->getRecordService()->reCreateImportJob((string)$data->id,
+            property_exists($data, 'attachmentId') ? $data->attachmentId : null);
     }
 
     /**
@@ -117,5 +119,10 @@ class ImportJob extends Base
     public function actionCreateLink($params, $data, $request)
     {
         throw new NotFound();
+    }
+
+    protected function getLanguage(): Language
+    {
+        return $this->getContainer()->get('language');
     }
 }
