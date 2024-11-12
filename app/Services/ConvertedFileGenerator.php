@@ -23,10 +23,13 @@ class ConvertedFileGenerator extends QueueManagerBase
 {
     public function run(array $data = []): bool
     {
-        if ($data['type'] === 'convertedFile') {
-            $this->generateConvertedFile((string)$data['importJobId']);
-        } elseif ($data['type'] === 'errors') {
-            $this->generateErrorsAttachment((string)$data['importJobId']);
+        switch ($data['type']) {
+            case 'convertedFile':
+                $this->generateConvertedFile((string)$data['importJobId']);
+                break;
+            case 'errors':
+                $this->generateErrorsFile((string)$data['importJobId']);
+                break;
         }
 
         return true;
@@ -57,7 +60,7 @@ class ConvertedFileGenerator extends QueueManagerBase
         return $this->getImportTypeSimpleService()->createConvertedFileForJob($jobId, $jobData);
     }
 
-    public function generateErrorsAttachment(string $jobId): ?string
+    public function generateErrorsFile(string $jobId): ?string
     {
         $importJob = $this->getEntityManager()->getEntity('ImportJob', $jobId);
         if (empty($importJob)) {
@@ -125,7 +128,7 @@ class ConvertedFileGenerator extends QueueManagerBase
         $inputData = new \stdClass();
         $inputData->hidden = false;
         $inputData->folderId = $this->getImportFeedService()->createImportFileFolder($feed)->get('id');
-        $inputData->name = 'errors-' . str_replace(' ', '_', strtolower($feed->get('name'))) . '.csv';
+        $inputData->name = 'errors-' . str_replace(' ', '-', strtolower($feed->get('name'))) . '.csv';
 
         $fileParser->setData(['isFileHeaderRow' => true]);
         $fileArr = $this->getFileService()

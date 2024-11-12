@@ -133,7 +133,7 @@ class ImportTypeSimple extends QueueManagerBase
         }
 
         $inputData = new \stdClass();
-        $inputData->name = 'converted-' . str_replace(' ', '_', strtolower($importFeed->get('name'))) . '.csv';
+        $inputData->name = 'converted-' . str_replace(' ', '-', strtolower($importFeed->get('name'))) . '.csv';
         $inputData->hidden = true;
         $inputData->folderId = $this->getService('ImportFeed')->createImportFileFolder($importFeed)->get('id');
         $fileParser = $this->getFileParser('CSV');

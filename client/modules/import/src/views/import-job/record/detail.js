@@ -34,15 +34,19 @@ Espo.define('import:views/import-job/record/detail', 'views/record/detail',
             this.dropdownItemList.push({
                 name: 'generateErrorFile',
                 action: 'generateErrorFile',
-                label: 'generateErrorFile',
+                label: this.translate('generateErrorsFile', 'labels', 'ImportJob'),
             });
 
             Dep.prototype.setupActionItems.call(this);
         },
 
         actionGenerateErrorFile(){
+            this.actionGenerateFile('errors');
+        },
+
+        actionGenerateFile(type) {
             this.notify(this.translate('generating', 'labels', 'ImportJob'));
-            this.ajaxPostRequest('ImportJob/action/generateFile', {id: this.model.get('id'), type: 'errors'}).then(response => {
+            this.ajaxPostRequest('ImportJob/action/generateFile', {id: this.model.get('id'), type: type}).then(response => {
                 let interval = setInterval(() => {
                     this.ajaxGetRequest(`QueueItem/${response.queueItemId}?silent=true`).success(res => {
                         this.notify(this.translate('generating', 'labels', 'ImportJob'));
@@ -51,26 +55,6 @@ Espo.define('import:views/import-job/record/detail', 'views/record/detail',
                             this.model.fetch();
                             this.notify('Done', 'success');
                             $('.action[data-action=refresh][data-panel=files]').click();
-                        }
-                    }).error(() => {
-                        clearInterval(interval);
-                        this.model.fetch();
-                        this.notify('Done', 'success');
-                    });
-                }, 2000);
-            });
-        },
-
-        actionGenerateFile(field) {
-            this.notify(this.translate('generating', 'labels', 'ImportJob'));
-            this.ajaxPostRequest('ImportJob/action/generateFile', {id: this.model.get('id'), type: field}).then(response => {
-                let interval = setInterval(() => {
-                    this.ajaxGetRequest(`QueueItem/${response.queueItemId}?silent=true`).success(res => {
-                        this.notify(this.translate('generating', 'labels', 'ImportJob'));
-                        if (["Success", "Failed", "Canceled"].includes(res.status)) {
-                            clearInterval(interval);
-                            this.model.fetch();
-                            this.notify('Done', 'success');
                         }
                     }).error(() => {
                         clearInterval(interval);
