@@ -72,27 +72,27 @@ Espo.define('import:views/import-job/record/detail', 'views/record/detail',
             Dep.prototype.setupActionItems.call(this);
         },
 
-        actionGenerateFileCreated(){
+        actionGenerateFileCreated() {
             this.actionGenerateFile('created');
         },
 
-        actionGenerateFileUpdated(){
+        actionGenerateFileUpdated() {
             this.actionGenerateFile('updated');
         },
 
-        actionGenerateFileDeleted(){
+        actionGenerateFileDeleted() {
             this.actionGenerateFile('deleted');
         },
 
-        actionGenerateFileSkippedBySystem(){
+        actionGenerateFileSkippedBySystem() {
             this.actionGenerateFile('skippedBySystem');
         },
 
-        actionGenerateFileSkippedByScript(){
+        actionGenerateFileSkippedByScript() {
             this.actionGenerateFile('skippedByScript');
         },
 
-        actionGenerateFileErrors(){
+        actionGenerateFileErrors() {
             this.actionGenerateFile('errors');
         },
 
@@ -102,19 +102,32 @@ Espo.define('import:views/import-job/record/detail', 'views/record/detail',
                 let interval = setInterval(() => {
                     this.ajaxGetRequest(`QueueItem/${response.queueItemId}?silent=true`).success(res => {
                         this.notify(this.translate('generating', 'labels', 'ImportJob'));
-                        if (["Success", "Failed", "Canceled"].includes(res.status)) {
+                        if (res.status === 'Success') {
                             clearInterval(interval);
-                            this.model.fetch();
                             this.notify('Done', 'success');
                             $('.action[data-action=refresh][data-panel=files]').click();
+                            this.downloadFile(res.data.downloadUrl, res.data.fileName);
+                        } else if (["Failed", "Canceled"].includes(res.status)) {
+                            clearInterval(interval);
+                            this.notify('Error occured!', 'error');
                         }
                     }).error(() => {
                         clearInterval(interval);
-                        this.model.fetch();
-                        this.notify('Done', 'success');
+                        this.notify('Error occured!', 'error');
                     });
                 }, 2000);
             });
+        },
+
+        downloadFile(url, filename) {
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+
+            a.click();
+
+            document.body.removeChild(a);
         },
 
     })

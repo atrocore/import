@@ -163,6 +163,10 @@ class ConvertedFileGenerator extends QueueManagerBase
         ]);
         $this->getEntityManager()->saveEntity($entity);
 
+        $this->qmItem->get('data')->fileName = $fileArr['name'];
+        $this->qmItem->get('data')->downloadUrl = $fileArr['downloadUrl'];
+        $this->getEntityManager()->saveEntity($this->qmItem);
+
         return $fileArr['id'];
     }
 
