@@ -35,6 +35,10 @@ class ImportJobLog extends Base
             return;
         }
 
+        if (empty($entity->get('importJobId'))) {
+            return;
+        }
+
         $importJob = $this->getCachedImportJob($entity->get('importJobId'));
         if (empty($importJob->get('parentId'))) {
             return;
