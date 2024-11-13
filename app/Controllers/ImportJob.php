@@ -111,14 +111,13 @@ class ImportJob extends Base
         throw new NotFound();
     }
 
-    /**
-     * @inheritDoc
-     *
-     * @throws NotFound
-     */
     public function actionCreateLink($params, $data, $request)
     {
-        throw new NotFound();
+        if (empty($params['link']) || $params['link'] !== 'files') {
+            throw new NotFound();
+        }
+
+        return parent::actionCreateLink($params, $data, $request);
     }
 
     protected function getLanguage(): Language
