@@ -92,7 +92,7 @@ Espo.define('import:views/import-feed/fields/source-fields', 'views/fields/multi
                 sheet: this.model.get('sheet')
             };
 
-            this.ajaxPostRequest(`ImportFeed/action/ParseFileColumns`, data).success(response => {
+            this.ajaxPostRequest(`ImportFeed/action/ParseFileColumns`, data, {async: false}).success(response => {
                 if (response.jobId) {
                     Backbone.trigger('showQueuePanel');
                     this.$el.html('<img alt="preloader" class="preloader" style="height:19px;margin-top:6px;margin-left:-8px" src="client/img/atro-loader.svg" />');
