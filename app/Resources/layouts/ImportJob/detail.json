@@ -45,11 +45,17 @@
       ],
       [
         {
-          "name": "skippedCount"
+          "name": "deletedCount"
         },
         {
-          "name": "errorsCount"
+          "name": "skippedCount"
         }
+      ],
+      [
+        {
+          "name": "errorsCount"
+        },
+        false
       ]
     ]
   }
