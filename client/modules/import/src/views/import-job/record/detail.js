@@ -107,7 +107,11 @@ Espo.define('import:views/import-job/record/detail', 'views/record/detail',
                         if (res.status === 'Success') {
                             clearInterval(interval);
                             this.notify('Done', 'success');
-                            $('.action[data-action=refresh][data-panel=files]').click();
+                            if (type === 'convertedFile') {
+                                this.model.fetch();
+                            } else {
+                                $('.action[data-action=refresh][data-panel=files]').click();
+                            }
                             this.downloadFile(res.data.downloadUrl, res.data.fileName);
                         } else if (["Failed", "Canceled"].includes(res.status)) {
                             clearInterval(interval);

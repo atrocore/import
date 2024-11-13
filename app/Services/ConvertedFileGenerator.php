@@ -84,7 +84,15 @@ class ConvertedFileGenerator extends QueueManagerBase
             $jobData['enclosure'] = '"';
         }
 
-        return $this->getImportTypeSimpleService()->createConvertedFileForJob($jobId, $jobData);
+        $fileId = $this->getImportTypeSimpleService()->createConvertedFileForJob($jobId, $jobData);
+
+        $file = $this->getEntityManager()->getEntity('File', $fileId);
+
+        $this->qmItem->get('data')->fileName = $file->get('name');
+        $this->qmItem->get('data')->downloadUrl = $file->getDownloadUrl();
+        $this->getEntityManager()->saveEntity($this->qmItem);
+
+        return $fileId;
     }
 
     public function generateFile(string $jobId, string $type, bool $hasReason = false): ?string
