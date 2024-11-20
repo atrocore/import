@@ -18,7 +18,7 @@ Espo.define('import:views/import-feed/fields/source-fields', 'views/fields/multi
                 let action = fieldName === 'file' ? 'fileUpdate' : 'change:' + fieldName;
                 this.listenTo(this.model, action, () => {
                     if (this.getParentView().getView(fieldName).mode === 'edit') {
-                        this.loadFileColumns();
+                        this.loadFileColumns(action);
                     }
                 });
             });
@@ -71,7 +71,7 @@ Espo.define('import:views/import-feed/fields/source-fields', 'views/fields/multi
             });
         },
 
-        loadFileColumns() {
+        loadFileColumns(action) {
             let fileId = this.model.get('fileId');
             if (!fileId) {
                 return;
@@ -92,7 +92,12 @@ Espo.define('import:views/import-feed/fields/source-fields', 'views/fields/multi
                 sheet: this.model.get('sheet')
             };
 
-            this.ajaxPostRequest(`ImportFeed/action/ParseFileColumns`, data, {async: false}).success(response => {
+            let options = {};
+            if (action !== 'fileUpdate') {
+                options.async = false;
+            }
+
+            this.ajaxPostRequest(`ImportFeed/action/ParseFileColumns`, data, options).success(response => {
                 if (response.jobId) {
                     Backbone.trigger('showQueuePanel');
                     this.$el.html('<img alt="preloader" class="preloader" style="height:19px;margin-top:6px;margin-left:-8px" src="client/img/atro-loader.svg" />');
