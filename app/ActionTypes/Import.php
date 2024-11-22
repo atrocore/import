@@ -13,25 +13,15 @@ declare(strict_types=1);
 
 namespace Import\ActionTypes;
 
-use Atro\Core\Container;
-use Atro\ActionTypes\TypeInterface;
+use Atro\ActionTypes\AbstractAction;
 use Atro\Core\EventManager\Event;
-use Espo\Core\ServiceFactory;
 use Espo\ORM\Entity;
-use Espo\ORM\EntityManager;
 
-class Import implements TypeInterface
+class Import extends AbstractAction
 {
-    private Container $container;
-
-    public function __construct(Container $container)
-    {
-        $this->container = $container;
-    }
-
     public function executeViaWorkflow(array $workflowData, Event $event): bool
     {
-        $action = $this->getEntityManager()->getEntity('Action', $workflowData['id']);
+        $action = $this->getActionById($workflowData['id']);
         $action->set('sourceEntity', $event->getArgument('entity')->getEntityType());
 
         $input = new \stdClass();
@@ -44,7 +34,7 @@ class Import implements TypeInterface
         return $this->executeNow($action, $input);
     }
 
-    public function executeNow(Entity $action, \stdClass $input): bool
+    public function execute(Entity $action, \stdClass $input): bool
     {
         $payload = empty($action->get('payload')) ? '' : (string)$action->get('payload');
         $templateData = [];
@@ -84,7 +74,7 @@ class Import implements TypeInterface
             }
         }
 
-        $payload = $this->container->get('twig')->renderTemplate($payload, $templateData);
+        $payload = $this->getTwig()->renderTemplate($payload, $templateData);
         $payload = @json_decode((string)$payload, true);
 
         if (!empty($input->_relationData)) {
@@ -119,13 +109,4 @@ class Import implements TypeInterface
         return true;
     }
 
-    protected function getEntityManager(): EntityManager
-    {
-        return $this->container->get('entityManager');
-    }
-
-    protected function getServiceFactory(): ServiceFactory
-    {
-        return $this->container->get('serviceFactory');
-    }
 }
