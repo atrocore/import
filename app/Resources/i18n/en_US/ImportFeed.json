@@ -82,6 +82,7 @@
     "importNow": "Are you sure you want to import data from the selected source?"
   },
   "exceptions": {
+    "noEntityIdentifier": "Please, choose Identifier column for configurator.",
     "fileIdIsEmpty": "You must set a file on the feed to run it",
     "noRecordsFoundFor": "No record(s) found in the entity '%s' with: %s.",
     "convertValidationPrefix": "Error for value '{{value}}' from column '{{column}}': ",

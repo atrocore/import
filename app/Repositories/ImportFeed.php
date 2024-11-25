@@ -84,6 +84,17 @@ class ImportFeed extends Base
         if ($entity->getFeedField('skipValue') === $entity->getFeedField('nullValue')) {
             throw new BadRequest($this->getLanguage()->translate("skipNoneSameNull", "exceptions", "ImportFeed"));
         }
+
+        $idItem = $this->getEntityManager()->getRepository('ImportConfiguratorItem')
+            ->where([
+                'entityIdentifier' => true,
+                'importFeedId'     => $entity->get('id')
+            ])
+            ->findOne();
+
+        if (empty($idItem)) {
+            throw new BadRequest($this->getLanguage()->translate("noEntityIdentifier", "exceptions", "ImportFeed"));
+        }
     }
 
     protected function setFeedFieldsToDataJson(Entity $entity): void
