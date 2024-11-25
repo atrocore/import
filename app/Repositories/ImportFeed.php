@@ -100,7 +100,9 @@ class ImportFeed extends Base
 
                 switch ($row['type']) {
                     case 'int':
-                        $data['feedFields'][$field] = (int)$data['feedFields'][$field];
+                        if ($data['feedFields'][$field] !== null || !empty($row['notNull'])) {
+                            $data['feedFields'][$field] = (int)$data['feedFields'][$field];
+                        }
                         break;
                     case 'bool':
                         $data['feedFields'][$field] = !empty($data['feedFields'][$field]);
