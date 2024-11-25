@@ -31,10 +31,10 @@ class Import extends AbstractAction
             $input->_relationData = $workflow['_relationData'];
         }
 
-        return $this->executeNow($action, $input);
+        return $this->getActionManager()->executeNow($action, $input);
     }
 
-    public function execute(Entity $action, \stdClass $input): bool
+    public function executeNow(Entity $action, \stdClass $input): bool
     {
         $payload = empty($action->get('payload')) ? '' : (string)$action->get('payload');
         $templateData = [];
