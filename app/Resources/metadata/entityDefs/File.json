@@ -1,0 +1,18 @@
+{
+  "fields": {
+    "importJobs": {
+      "type": "linkMultiple",
+      "layoutDetailDisabled": true,
+      "layoutMassUpdateDisabled": true,
+      "noLoad": true
+    }
+  },
+  "links": {
+    "importJobs": {
+      "type": "hasMany",
+      "relationName": "importJobFile",
+      "foreign": "files",
+      "entity": "ImportJob"
+    }
+  }
+}

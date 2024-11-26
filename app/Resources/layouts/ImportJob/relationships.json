@@ -3,6 +3,9 @@
     "name": "children"
   },
   {
+    "name": "files"
+  },
+  {
     "name": "importJobLogs"
   }
 ]

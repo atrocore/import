@@ -52,43 +52,20 @@ class ImportFeed extends Base
         return $res;
     }
 
-    public function removeInvalidConfiguratorItems(ImportFeedEntity $feed): void
-    {
-        $this->getConnection()->createQueryBuilder()
-            ->delete('import_configurator_item')
-            ->where('import_feed_id = :id')
-            ->andWhere('type = :type')
-            ->andWhere("attribute_id NOT IN (SELECT id FROM {$this->getConnection()->quoteIdentifier('attribute')} WHERE deleted=:false)")
-            ->setParameter('id', $feed->get('id'))
-            ->setParameter('type', 'Attribute')
-            ->setParameter('false', false, ParameterType::BOOLEAN)
-            ->executeQuery();
-    }
-
     protected function beforeSave(Entity $entity, array $options = [])
     {
         parent::beforeSave($entity, $options);
 
-        $fetchedEntity = $entity->getFeedField('entity');
-
         $this->setFeedFieldsToDataJson($entity);
 
         $this->validateFeed($entity);
-
-        if ($entity->get('type') === 'simple') {
-            // remove configurator items on Entity change
-            if (!$entity->isNew() && $entity->has('entity') && $fetchedEntity !== $entity->get('entity')) {
-                $this->getEntityManager()->getRepository('ImportConfiguratorItem')->where(['importFeedId' => $entity->get('id')])->removeCollection();
-            }
-        }
     }
 
-    public function validateFeed(Entity $entity): void
+    public function validateFeed(Entity $entity, bool $checkEntityIdentifier = false): void
     {
         $delimiters = [
             $entity->getFeedField('delimiter'),
             $entity->getFeedField('decimalMark'),
-            //$entity->getFeedField('thousandSeparator'),
             $entity->getFeedField('fieldDelimiterForRelation')
         ];
 
@@ -108,8 +85,17 @@ class ImportFeed extends Base
             throw new BadRequest($this->getLanguage()->translate("skipNoneSameNull", "exceptions", "ImportFeed"));
         }
 
-        if (empty($entity->get('sourceFields'))) {
-            throw new BadRequest($this->getLanguage()->translate("sourceFieldsEmpty", "exceptions", "ImportFeed"));
+        if ($checkEntityIdentifier) {
+            $idItem = $this->getEntityManager()->getRepository('ImportConfiguratorItem')
+                ->where([
+                    'entityIdentifier' => true,
+                    'importFeedId'     => $entity->get('id')
+                ])
+                ->findOne();
+
+            if (empty($idItem)) {
+                throw new BadRequest($this->getLanguage()->translate("noEntityIdentifier", "exceptions", "ImportFeed"));
+            }
         }
     }
 
@@ -127,7 +113,9 @@ class ImportFeed extends Base
 
                 switch ($row['type']) {
                     case 'int':
-                        $data['feedFields'][$field] = (int)$data['feedFields'][$field];
+                        if ($data['feedFields'][$field] !== null || !empty($row['notNull'])) {
+                            $data['feedFields'][$field] = (int)$data['feedFields'][$field];
+                        }
                         break;
                     case 'bool':
                         $data['feedFields'][$field] = !empty($data['feedFields'][$field]);

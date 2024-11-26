@@ -177,6 +177,7 @@ class ImportFeed extends Base
             'enclosure'       => (property_exists($payload, 'enclosure') && $payload->enclosure == 'singleQuote') ? "'" : '"',
             'isFileHeaderRow' => (property_exists($payload, 'isHeaderRow') && is_null($payload->isHeaderRow)) ? true : !empty($payload->isHeaderRow),
             'sheet'           => property_exists($payload, 'sheet') ? (int)$payload->sheet : 0,
+            'rootNode'        => (property_exists($payload, 'rootNode') && !empty($payload->rootNode)) ? $payload->rootNode : null,
             'excludedNodes'   => (property_exists($payload, 'excludedNodes') && !empty($payload->excludedNodes)) ? $payload->excludedNodes : [],
             'keptStringNodes' => (property_exists($payload, 'keptStringNodes') && !empty($payload->keptStringNodes)) ? $payload->keptStringNodes : [],
         ]);
@@ -281,7 +282,7 @@ class ImportFeed extends Base
         $feed = $this->getImportFeed($importFeedId);
 
         // firstly, validate feed
-        $this->getRepository()->validateFeed($feed);
+        $this->getRepository()->validateFeed($feed, true);
 
         $serviceName = $this->getImportTypeService($feed);
         $service = $this->getServiceFactory()->create($serviceName);
@@ -411,7 +412,10 @@ class ImportFeed extends Base
             $payload->parentJobId = $parentJob->get('id');
         }
 
-        if ((int)$importFeed->get('maxPerJob') > 0 && in_array($importFeed->getFeedField('format'), ['CSV', 'Excel'])) {
+        $maxPerJob = $payload->maxPerJob ?? (int)$importFeed->get('maxPerJob');
+        $format = $payload->format ?? $importFeed->getFeedField('format');
+
+        if ($maxPerJob > 0 && in_array($format, ['CSV', 'Excel'])) {
             $name = $this->getInjection('language')->translate('createImportJobs', 'labels', 'ImportFeed');
             $name = sprintf($name, $importFeed->get('name'));
 
@@ -443,38 +447,6 @@ class ImportFeed extends Base
             }
             $data['data']['importJobId'] = $this->createImportJob($importFeed, $importFeed->getFeedField('entity'), $attachmentId, $payload)->get('id');
             $this->push($this->getName($importFeed), $serviceName, $data);
-        }
-    }
-
-    public function findLinkedEntities($id, $link, $params)
-    {
-        if ($link === 'configuratorItems') {
-            if (!empty($feed = $this->getRepository()->get($id))) {
-                if (!empty($this->getMetadata()->get(['scopes', 'Attribute']))) {
-                    $this->getRepository()->removeInvalidConfiguratorItems($feed);
-                }
-                $sourceFields = empty($feed->get('sourceFields')) ? [] : $feed->get('sourceFields');
-                $this->removeItemsBySourceFields($feed, $sourceFields);
-            }
-        }
-
-        return parent::findLinkedEntities($id, $link, $params);
-    }
-
-    public function removeItemsBySourceFields(Entity $importFeed, array $sourceFields): void
-    {
-        $items = $importFeed->get('configuratorItems');
-        if (!empty($items) && count($items) > 0) {
-            foreach ($items as $item) {
-                if (!empty($columns = $item->get('column'))) {
-                    foreach ($columns as $column) {
-                        if (!in_array($column, $sourceFields)) {
-                            $this->getEntityManager()->removeEntity($item);
-                            continue 2;
-                        }
-                    }
-                }
-            }
         }
     }
 
@@ -663,7 +635,7 @@ class ImportFeed extends Base
         return 'ImportType' . ucfirst($feed->get('type'));
     }
 
-    public function createImportJob(ImportFeedEntity $feed, string $entityType, string $uploadedFileId, \stdClass $payload = null, string $attachmentId = null): ImportJob
+    public function createImportJob(ImportFeedEntity $feed, string $entityType, string $attachmentId, \stdClass $payload = null): ImportJob
     {
         $entityLabel = $this->getInjection('language')->translate($entityType, 'scopeNames');
 
@@ -671,14 +643,16 @@ class ImportFeed extends Base
         $entity->set('name', "{$entityLabel}: {$feed->get('name')}");
         $entity->set('importFeedId', $feed->get('id'));
         $entity->set('entityName', $entityType);
-        $entity->set('uploadedFileId', $uploadedFileId);
-        $entity->set('attachmentId', empty($attachmentId) ? $uploadedFileId : $attachmentId);
+        $entity->set('attachmentId', $attachmentId);
         $entity->set('sortOrder', time() - (new \DateTime('2023-01-01'))->getTimestamp());
 
         if (!empty($payload)) {
             $entity->set('payload', $payload);
             if (property_exists($payload, 'parentJobId')) {
                 $entity->set('parentId', $payload->parentJobId);
+            }
+            if (property_exists($payload, 'convertedFileId')) {
+                $entity->set('convertedFileId', $payload->convertedFileId);
             }
         }
 

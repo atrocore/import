@@ -11,7 +11,7 @@
 Espo.define('import:views/import-job/record/list', 'views/record/list',
     Dep => Dep.extend({
 
-        rowActionsView: 'import:views/import-job/record/row-actions/import-again-and-remove',
+        rowActionsView: 'import:views/import-job/record/row-actions/default',
 
         getSelectAttributeList: function (callback) {
             Dep.prototype.getSelectAttributeList.call(this, attributeList => {
@@ -47,5 +47,39 @@ Espo.define('import:views/import-job/record/list', 'views/record/list',
                 }, view => view.render());
             })
         },
+
+        actionGenerateFileForJob(data) {
+            this.notify(this.translate('generating', 'labels', 'ImportJob'));
+            this.ajaxPostRequest('ImportJob/action/generateFile', {id: data.id, type: data.type}).then(response => {
+                let interval = setInterval(() => {
+                    this.ajaxGetRequest(`QueueItem/${response.queueItemId}?silent=true`).success(res => {
+                        this.notify(this.translate('generating', 'labels', 'ImportJob'));
+                        if (res.status === 'Success') {
+                            clearInterval(interval);
+                            this.notify('Done', 'success');
+                            this.downloadFile(res.data.downloadUrl, res.data.fileName);
+                        } else if (["Failed", "Canceled"].includes(res.status)) {
+                            clearInterval(interval);
+                            this.notify('Error occured!', 'error');
+                        }
+                    }).error(() => {
+                        clearInterval(interval);
+                        this.notify('Error occured!', 'error');
+                    });
+                }, 2000);
+            });
+        },
+
+        downloadFile(url, filename) {
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+
+            a.click();
+
+            document.body.removeChild(a);
+        },
+
     })
 );

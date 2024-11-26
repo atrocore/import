@@ -25,7 +25,7 @@ Espo.define('import:views/import-feed/fields/file', 'views/fields/file',
                     this.prepareAccept();
                     this.reRender();
                 });
-                this.shouldAvoidAutomaticallyExtensionUpdate = true;
+                this.shouldAvoidAutomaticalExtensionUpdate  = true;
             }
         },
 

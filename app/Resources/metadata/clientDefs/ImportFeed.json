@@ -16,6 +16,8 @@
   "relationshipPanels": {
     "configuratorItems": {
       "select": false,
+      "hideShowFullList": true,
+      "canClose": false,
       "dragDrop": {
         "isActive": true,
         "maxSize": 20,
@@ -26,6 +28,7 @@
     "importJobs": {
       "create": false,
       "select": false,
+      "canClose": false,
       "where": [
         {
           "type": "isNull",
@@ -42,11 +45,20 @@
         "visible": {
           "conditionGroup": [
             {
-              "type": "in",
-              "attribute": "format",
+              "type": "or",
               "value": [
-                "CSV",
-                "Excel"
+                {
+                  "type": "in",
+                  "attribute": "format",
+                  "value": [
+                    "CSV",
+                    "Excel"
+                  ]
+                },
+                {
+                  "type": "isTrue",
+                  "attribute": "mergeResponses"
+                }
               ]
             }
           ]
@@ -82,6 +94,20 @@
               "value": [
                 "CSV",
                 "Excel"
+              ]
+            }
+          ]
+        }
+      },
+      "rootNode": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "format",
+              "value": [
+                "JSON",
+                "XML"
               ]
             }
           ]

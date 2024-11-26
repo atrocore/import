@@ -21,17 +21,11 @@
       ],
       [
         {
-          "name": "uploadedFile"
-        },
-        {
           "name": "attachment"
-        }
-      ],
-      [
+        },
         {
           "name": "convertedFile"
-        },
-        false
+        }
       ],
       [
         {
@@ -51,11 +45,17 @@
       ],
       [
         {
-          "name": "errorsCount"
+          "name": "deletedCount"
         },
         {
-          "name": "errorsAttachment"
+          "name": "skippedCount"
         }
+      ],
+      [
+        {
+          "name": "errorsCount"
+        },
+        false
       ]
     ]
   }

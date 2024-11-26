@@ -108,7 +108,7 @@ class Link extends Varchar
                     try {
                         $entity = $this->getService($entityName, true)->createEntity($input);
                     } catch (NotUnique|ConstraintViolationException $e) {
-                        $entity = $this->getEntityManager()->getRepository($entityName)->where($where)->findOne();
+                        $entity = $this->findAlreadyExistsEntity($entityName, $where);
                     } catch (\Throwable $e) {
                         $className = get_class($e);
 
@@ -285,11 +285,14 @@ class Link extends Varchar
         $entityName = $this->getForeignEntityName($configuration);
 
         $foreignKeys = $this->getMemoryStorage()->get(self::MEMORY_FOREIGN_KEYS);
-        if (isset($foreignKeys[$configuration['pos']][$entityName])) {
-            return;
-        }
 
         $foreignWhereKeys = $this->getMemoryStorage()->get(self::MEMORY_WHERE_FOREIGN_KEYS) ?? [];
+
+        ksort($where);
+        $jsonWhere = json_encode($where);
+        if (isset($foreignWhereKeys[$configuration['pos']][$entityName][$jsonWhere])) {
+            return;
+        }
 
         if (!empty($configuration['importBy']) && !empty($configuration['column'])) {
             $whereForCollection = $this->prepareWhereForCollection($configuration, $rows);
@@ -333,6 +336,11 @@ class Link extends Varchar
         }
 
         return $res;
+    }
+
+    protected function findAlreadyExistsEntity(string $entityName, array $where): ?Entity
+    {
+        return $this->getEntityManager()->getRepository($entityName)->where($where)->findOne();
     }
 
     protected function findEntityInMemory(array $where, array $config): ?Entity

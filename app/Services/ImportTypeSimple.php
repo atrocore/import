@@ -17,6 +17,7 @@ use Atro\Core\Exceptions\Error;
 use Atro\Core\Exceptions\NotModified;
 use Atro\Core\EventManager\Event;
 use Atro\DTO\QueueItemDTO;
+use Atro\Entities\File;
 use Doctrine\DBAL\ParameterType;
 use Espo\Core\EventManager\Manager;
 use Espo\Core\Exceptions\BadRequest;
@@ -35,7 +36,6 @@ class ImportTypeSimple extends QueueManagerBase
     public const MEMORY_KEYS = 'loaded_exists_entities_keys';
     public const MEMORY_EMPTY_QUERY_RES = 'queries_with_empty_result';
     public const MEMORY_WHERE_KEYS = 'loaded_exists_entities_by_where_keys';
-    private array $restore = [];
     private bool $lastIteration = false;
     private ?string $skipValue = null;
 
@@ -74,7 +74,7 @@ class ImportTypeSimple extends QueueManagerBase
             ->getArgument('result');
     }
 
-    public function createConvertedFile(string $importJobId, ?array $jobData = null): void
+    public function createConvertedFileForJob(string $importJobId, ?array $jobData = null): ?string
     {
         $importJob = $this->getEntityManager()->getRepository('ImportJob')->where(['id' => $importJobId])->findOne();
         if (empty($importJob)) {
@@ -82,11 +82,11 @@ class ImportTypeSimple extends QueueManagerBase
         }
 
         if (!empty($importJob->get('convertedFileId'))) {
-            return;
+            return $importJob->get('convertedFileId');
         }
 
         // prepare job data
-        if (empty($jobData)){
+        if (empty($jobData)) {
             $qmJob = $this->getEntityManager()->getRepository('ImportJob')->getQmJob($importJob);
             if (empty($qmJob)) {
                 throw new BadRequest("QueueItem for ImportJob '{$importJob->get('id')}' does not exist.");
@@ -94,6 +94,16 @@ class ImportTypeSimple extends QueueManagerBase
             $jobData = json_decode(json_encode($qmJob->get('data')), true);
         }
 
+        $convertedFile = $this->createConvertedFile($importJob->get('importFeed'), $jobData);
+
+        $importJob->set('convertedFileId', $convertedFile->get('id'));
+        $this->getEntityManager()->saveEntity($importJob);
+
+        return $importJob->get('convertedFileId');
+    }
+
+    public function createConvertedFile(Entity $importFeed, array $jobData): File
+    {
         $this->prepareConfigurator($jobData);
 
         $idFields = $this->getLinkFields($jobData['data']['entity'], $jobData['data']['idField']);
@@ -123,21 +133,26 @@ class ImportTypeSimple extends QueueManagerBase
         }
 
         $inputData = new \stdClass();
-        $inputData->name = str_replace(' ', '_', $importJob->get('name')) . '.csv';
+        $inputData->name = 'converted-' . str_replace(' ', '-', strtolower($importFeed->get('name'))) . '.csv';
         $inputData->hidden = true;
-        $inputData->folderId = $this->getService('ImportFeed')->createImportFileFolder($importJob->get('importFeed'))->get('id');
+        $inputData->folderId = $this->getService('ImportFeed')->createImportFileFolder($importFeed)->get('id');
         $fileParser = $this->getFileParser('CSV');
         $fileParser->setData($jobData);
 
-        $fileArr = $this->getService('File')->createFileViaContents($inputData, $fileParser->createFileContent($rows));
+        $convertedFile = $this
+            ->getService('File')
+            ->createFileViaContents($inputData, $fileParser->createFileContent($rows));
 
-        $importJob->set('convertedFileId', is_array($fileArr) ? $fileArr['id'] : $fileArr->get('id'));
-        $this->getEntityManager()->saveEntity($importJob);
+        if (is_array($convertedFile)) {
+            $convertedFile = $this->getEntityManager()->getEntity('File', $convertedFile['id']);
+        }
+
+        return $convertedFile;
     }
 
     public function run(array $data = []): bool
     {
-        $this->createConvertedFile($data['data']['importJobId']);
+        $this->createConvertedFileForJob($data['data']['importJobId']);
 
         $importJob = $this->getEntityById('ImportJob', $data['data']['importJobId']);
 
@@ -167,8 +182,18 @@ class ImportTypeSimple extends QueueManagerBase
                 $fileRow++;
                 $this->getMemoryStorage()->set('importRowNumber', $fileRow);
 
+                // prepare log entity
+                $log = $this->getEntityManager()->getEntity('ImportJobLog');
+                $log->set([
+                    'entityName'  => $scope,
+                    'importJobId' => $importJob->get('id'),
+                    'row'         => $row,
+                    'rowNumber'   => $fileRow
+                ]);
+
                 if ($this->skipRow($row, $data)) {
-                    $this->log($scope, $importJob->get('id'), 'skip', (string)$fileRow, null);
+                    $log->set('type', 'skip');
+                    $this->getEntityManager()->saveEntity($log);
                     continue;
                 }
 
@@ -194,7 +219,8 @@ class ImportTypeSimple extends QueueManagerBase
                                 $processedIds = [];
                                 break;
                             case 'skip':
-                                $this->log($scope, $importJob->get('id'), 'skip', (string)$fileRow, null);
+                                $log->set('type', 'skip');
+                                $this->getEntityManager()->saveEntity($log);
                                 continue 2;
                                 break;
                             default:
@@ -202,7 +228,9 @@ class ImportTypeSimple extends QueueManagerBase
                         }
                     }
                 } catch (\Throwable $e) {
-                    $this->log($scope, $importJob->get('id'), 'error', (string)$fileRow, $e->getMessage());
+                    $log->set('type', 'skip');
+                    $this->getEntityManager()->saveEntity($log);
+
                     if ($this->getConfig()->get('tracingImportErrors')) {
                         $GLOBALS['log']->error("Import Job '{$importJob->get('id')}' Failed. Message: '{$e->getMessage()}'. Trace: '{$e->getTraceAsString()}'.");
                     }
@@ -211,17 +239,20 @@ class ImportTypeSimple extends QueueManagerBase
                 }
 
                 if (in_array($data['action'], ['create', 'create_delete']) && !empty($entity)) {
-                    $this->log($scope, $importJob->get('id'), 'skip', (string)$fileRow, null);
+                    $log->set('type', 'skip');
+                    $this->getEntityManager()->saveEntity($log);
                     continue 1;
                 }
 
                 if (in_array($data['action'], ['delete_found', 'update', 'update_delete']) && empty($entity)) {
-                    $this->log($scope, $importJob->get('id'), 'skip', (string)$fileRow, null);
+                    $log->set('type', 'skip');
+                    $this->getEntityManager()->saveEntity($log);
                     continue 1;
                 }
 
                 if ($data['action'] == 'delete_not_found') {
-                    $this->log($scope, $importJob->get('id'), 'skip', (string)$fileRow, null);
+                    $log->set('type', 'skip');
+                    $this->getEntityManager()->saveEntity($log);
                     continue 1;
                 }
 
@@ -235,8 +266,6 @@ class ImportTypeSimple extends QueueManagerBase
                     $input = new \stdClass();
                     $input->_importJobData = $data;
                     $input->_importInputDataRow = $row;
-
-                    $restore = new \stdClass();
 
                     $this->getMemoryStorage()->set("import_job_{$importJob->get('id')}_rowNumberPart", $data['rowNumberPart'] ?? 0);
 
@@ -283,34 +312,32 @@ class ImportTypeSimple extends QueueManagerBase
                             }
                             throw new BadRequest($message . lcfirst($e->getMessage()));
                         }
-                        if (!empty($entity)) {
-                            $this->getService('ImportConfiguratorItem')->getFieldConverter($type)->prepareValue($restore, $entity, $item);
-                        }
                     }
 
                     if (empty($id)) {
                         if ($action == 'delete_found') {
-                            $logAction = 'delete';
+                            $log->set('type', 'delete');
                         } else {
-                            $logAction = 'create';
                             $id = $entityService->createEntity($input)->get('id');
+                            $log->set('type', 'create');
+                            $log->set('entityId', $id);
                             $processedIds[] = $id;
                             if (self::isDeleteAction($action)) {
                                 $ids[] = $id;
                             }
-                            $this->saveRestoreRow('created', $scope, $id);
                         }
                     } elseif ($action === 'delete_found') {
-                        $logAction = 'delete';
                         $entityService->deleteEntity($id);
+                        $log->set('type', 'delete');
+                        $log->set('entityId', $id);
                         $processedIds[] = $id;
                     } else {
-                        $logAction = 'update';
                         $notModified = true;
                         try {
                             $entityService->updateEntity($id, $input);
+                            $log->set('type', 'update');
+                            $log->set('entityId', $id);
                             $processedIds[] = $id;
-                            $this->saveRestoreRow('updated', $scope, [$id => $restore]);
                             $notModified = false;
                         } catch (NotModified $e) {
                         }
@@ -331,9 +358,12 @@ class ImportTypeSimple extends QueueManagerBase
                     $message = empty($e->getMessage()) ? $this->getCodeMessage($e->getCode()) : $e->getMessage();
 
                     if (!$e instanceof NotModified) {
-                        $this->log($scope, $importJob->get('id'), 'error', (string)$fileRow, $message);
+                        $log->set('type', 'error');
+                        $log->set('message', $message);
+                        $this->getEntityManager()->saveEntity($log);
                     } else {
-                        $this->log($scope, $importJob->get('id'), 'skip', (string)$fileRow, null);
+                        $log->set('type', 'skip');
+                        $this->getEntityManager()->saveEntity($log);
                     }
 
                     $this->afterRowProceed($entityService->getEntityType(), $where, $id);
@@ -341,11 +371,11 @@ class ImportTypeSimple extends QueueManagerBase
                     continue;
                 }
 
-                if (!empty($id)) {
-                    $this->log($scope, $importJob->get('id'), $logAction, (string)$fileRow, $id);
-                } else {
-                    $this->log($scope, $importJob->get('id'), 'skip', (string)$fileRow, null);
+                if (empty($id)) {
+                    $log->set('type', 'skip');
                 }
+
+                $this->getEntityManager()->saveEntity($log);
 
                 $this->afterRowProceed($entityService->getEntityType(), $where, $id);
             }
@@ -503,46 +533,6 @@ class ImportTypeSimple extends QueueManagerBase
         return $this->getEntityManager()->getRepository($entityType)->getCacheKey($entityId);
     }
 
-    public function log(string $entityName, string $importJobId, string $type, ?string $row, ?string $data): Entity
-    {
-        $log = $this->getEntityManager()->getEntity('ImportJobLog');
-        $log->set('name', $row);
-        $log->set('entityName', $entityName);
-        $log->set('entityId', '');
-        $log->set('importJobId', $importJobId);
-        $log->set('type', $type);
-        $log->set('rowNumber', 0);
-
-        switch ($type) {
-            case 'create':
-            case 'update':
-                $log->set('rowNumber', (int)$row);
-                $log->set('entityId', $data);
-                $log->set('restoreData', $this->restore);
-                break;
-            case 'delete':
-                $log->set('entityId', $data);
-                break;
-            case 'skip':
-                $log->set('rowNumber', (int)$row);
-                break;
-            case 'error':
-                $log->set('rowNumber', (int)$row);
-                $log->set('message', $data);
-                break;
-        }
-
-        try {
-            $this->getEntityManager()->saveEntity($log);
-        } catch (\Throwable $e) {
-            // ignore
-        }
-
-        $this->restore = [];
-
-        return $log;
-    }
-
     public static function isDeleteAction(string $action): bool
     {
         return in_array($action, ['delete_not_found', 'create_delete', 'update_delete', 'create_update_delete']);
@@ -655,7 +645,20 @@ class ImportTypeSimple extends QueueManagerBase
             $row = array_shift($fileData);
             $event = $this->getEventManager()->dispatch(new Event(['originalRows' => $originalRows, 'row' => $row, 'jobData' => $data, 'skip' => false]), 'prepareImportRow');
             if (!empty($event->getArgument('skip'))) {
-                continue 1;
+                if (!empty($data['data']['importJobId']) && !empty($data['data']['entity'])) {
+                    $log = $this->getEntityManager()->getEntity('ImportJobLog');
+                    $log->set([
+                        'entityName'      => $data['data']['entity'],
+                        'importJobId'     => $data['data']['importJobId'],
+                        'rowNumber'       => $this->getMemoryStorage()->get('importRowNumber'),
+                        'row'             => $row,
+                        'type'            => 'skip',
+                        'skippedByScript' => true,
+                        'message'         => $event->getArgument('skipReason') ?? null
+                    ]);
+                    $this->getEntityManager()->saveEntity($log);
+                }
+                continue;
             }
             $prepared[] = $event->getArgument('row');
         }
@@ -729,15 +732,6 @@ class ImportTypeSimple extends QueueManagerBase
         }
 
         return null;
-    }
-
-    protected function saveRestoreRow(string $action, string $entityType, $data): void
-    {
-        $this->restore[] = [
-            'action' => $action,
-            'entity' => $entityType,
-            'data'   => $data
-        ];
     }
 
     protected function getCodeMessage(int $code): string
@@ -919,6 +913,7 @@ class ImportTypeSimple extends QueueManagerBase
                 if (!empty($importJob->get('parentId'))) {
                     $payload->parentJobId = $importJob->get('parentId');
                 }
+                $payload->convertedFileId = $importJob->get('convertedFileId');
                 $pavJob = $importService->createImportJob($importFeed, 'ProductAttributeValue', $pavData['attachmentId'], $payload);
 
                 $pavData['data']['importJobId'] = $pavJob->get('id');
@@ -1160,6 +1155,14 @@ class ImportTypeSimple extends QueueManagerBase
                         $attribute = $this->getEntityById('Attribute', $attributeId);
                         $type = $attribute->get('type');
                     }
+                }
+
+                if ($fieldName == 'value' && in_array($type, ['int', 'float', 'rangeInt', 'rangeFloat', 'varchar'])) {
+                    if (!isset($attribute) && isset($item['attributeId'])) {
+                        $attribute = $this->getEntityById('Attribute', $item['attributeId']);
+                    }
+
+                    $type = !empty($attribute) && !empty($attribute->get('measureId')) ? 'valueWithUnit' : $type;
                 }
 
                 if (in_array($fieldName, ['valueFrom', 'valueTo'])) {

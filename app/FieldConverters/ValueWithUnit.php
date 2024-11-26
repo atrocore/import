@@ -21,7 +21,7 @@ class ValueWithUnit extends Varchar
 {
     public function convert(\stdClass $inputRow, array $config, array $row): void
     {
-        $default = @json_decode($config['default'], true);
+        $default = !empty($config['default']) ? @json_decode($config['default'], true) : null;
         if (!empty($default)) {
             $default = "{$default['value']} {$default['unitId']}";
         } else {
@@ -55,9 +55,19 @@ class ValueWithUnit extends Varchar
             }
 
 
-            $mainField = $this->getMetadata()->get(['entityDefs', $config['entity'], 'fields', $name, 'mainField']);
-            $mainFieldType = $this->getMetadata()->get(['entityDefs', $config['entity'], 'fields', $mainField, 'type']);
-            $measureId = $this->getMetadata()->get(['entityDefs', $config['entity'], 'fields', $mainField, 'measureId']);
+            if (!empty($config['attributeId'])) {
+                $attribute = $this->configuratorItem->getAttributeById($config['attributeId']);
+
+                if (!empty($attribute)) {
+                    $mainField = 'value';
+                    $mainFieldType = $attribute->get('type');
+                    $measureId = $attribute->get('measureId');
+                }
+            } else {
+                $mainField = $this->getMetadata()->get(['entityDefs', $config['entity'], 'fields', $name, 'mainField']);
+                $mainFieldType = $this->getMetadata()->get(['entityDefs', $config['entity'], 'fields', $mainField, 'type']);
+                $measureId = $this->getMetadata()->get(['entityDefs', $config['entity'], 'fields', $mainField, 'measureId']);
+            }
 
             $this->getService('ImportConfiguratorItem')->getFieldConverter($mainFieldType)
                 ->convert($inputRow, array_merge($config, ['name' => $mainField, 'column' => [$mainField]]), array_merge($row, [$mainField => $floatPart]));

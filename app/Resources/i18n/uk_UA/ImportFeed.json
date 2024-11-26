@@ -81,7 +81,6 @@
     "fileIdIsEmpty": "Ви повинні встановити файл у каналі, щоб його запустити",
     "noRecordsFoundFor": "Не знайдено записів в сутності \"%s\" з: %s.",
     "convertValidationPrefix": "Помилка значення '{{value}}' для колонки '{{column}}': ",
-    "sourceFieldsEmpty": "Вихідні поля повинні бути розпізнані.",
     "noFeedFileFound": "Файл фіда відсутній.",
     "measureIsNotSet": "Міру для атрибута \"%s\" не задано.",
     "noSpecifiedField": "'{{{key}}' не вказано для поля '{{name}}'.",

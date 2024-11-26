@@ -17,12 +17,14 @@ use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Templates\Controllers\Base;
+use Atro\Core\Utils\Language;
+use Atro\DTO\QueueItemDTO;
 
 class ImportJob extends Base
 {
     public function actionGenerateFile($params, \stdClass $data, $request)
     {
-        if (!$request->isPost() || !property_exists($data, 'id') || !property_exists($data, 'field')) {
+        if (!$request->isPost() || !property_exists($data, 'id') || !property_exists($data, 'type')) {
             throw new BadRequest();
         }
 
@@ -30,11 +32,18 @@ class ImportJob extends Base
             throw new Forbidden();
         }
 
-        if ($data->field === 'errorsAttachment') {
-            return $this->getRecordService()->generateErrorsAttachment((string)$data->id);
-        }
+        $type = $data->type === 'convertedFile' ? 'converted' : $data->type;
+        $name = $this->getLanguage()->translate('generateFile' . ucfirst($type), 'labels', 'ImportJob');
 
-        return null;
+        $dto = new QueueItemDTO($name, 'ConvertedFileGenerator', [
+            'type'        => $type,
+            'importJobId' => $data->id,
+        ]);
+        $dto->setHash($data->id);
+
+        return [
+            'queueItemId' => $this->getContainer()->get('queueManager')->createQueueItem($dto)
+        ];
     }
 
     public function actionGetImportJobsViaScope($params, $data, $request): array
@@ -60,7 +69,8 @@ class ImportJob extends Base
             throw new Forbidden();
         }
 
-        return $this->getRecordService()->reCreateImportJob((string)$data->id, property_exists($data, 'attachmentId') ? $data->attachmentId : null);
+        return $this->getRecordService()->reCreateImportJob((string)$data->id,
+            property_exists($data, 'attachmentId') ? $data->attachmentId : null);
     }
 
     /**
@@ -101,13 +111,17 @@ class ImportJob extends Base
         throw new NotFound();
     }
 
-    /**
-     * @inheritDoc
-     *
-     * @throws NotFound
-     */
     public function actionCreateLink($params, $data, $request)
     {
-        throw new NotFound();
+        if (empty($params['link']) || $params['link'] !== 'files') {
+            throw new NotFound();
+        }
+
+        return parent::actionCreateLink($params, $data, $request);
+    }
+
+    protected function getLanguage(): Language
+    {
+        return $this->getContainer()->get('language');
     }
 }
