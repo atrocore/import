@@ -2,7 +2,7 @@
   "name": "atrocore/import",
   "description": "",
   "require": {
-    "atrocore/core": "~1.11.18",
+    "atrocore/core": "~1.11.50",
     "ext-simplexml": "*",
     "phpoffice/phpspreadsheet": "~1.16.0"
   },
