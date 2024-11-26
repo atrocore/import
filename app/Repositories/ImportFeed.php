@@ -61,7 +61,7 @@ class ImportFeed extends Base
         $this->validateFeed($entity);
     }
 
-    public function validateFeed(Entity $entity): void
+    public function validateFeed(Entity $entity, bool $checkEntityIdentifier = false): void
     {
         $delimiters = [
             $entity->getFeedField('delimiter'),
@@ -85,15 +85,17 @@ class ImportFeed extends Base
             throw new BadRequest($this->getLanguage()->translate("skipNoneSameNull", "exceptions", "ImportFeed"));
         }
 
-        $idItem = $this->getEntityManager()->getRepository('ImportConfiguratorItem')
-            ->where([
-                'entityIdentifier' => true,
-                'importFeedId'     => $entity->get('id')
-            ])
-            ->findOne();
+        if ($checkEntityIdentifier) {
+            $idItem = $this->getEntityManager()->getRepository('ImportConfiguratorItem')
+                ->where([
+                    'entityIdentifier' => true,
+                    'importFeedId'     => $entity->get('id')
+                ])
+                ->findOne();
 
-        if (empty($idItem)) {
-            throw new BadRequest($this->getLanguage()->translate("noEntityIdentifier", "exceptions", "ImportFeed"));
+            if (empty($idItem)) {
+                throw new BadRequest($this->getLanguage()->translate("noEntityIdentifier", "exceptions", "ImportFeed"));
+            }
         }
     }
 

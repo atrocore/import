@@ -282,7 +282,7 @@ class ImportFeed extends Base
         $feed = $this->getImportFeed($importFeedId);
 
         // firstly, validate feed
-        $this->getRepository()->validateFeed($feed);
+        $this->getRepository()->validateFeed($feed, true);
 
         $serviceName = $this->getImportTypeService($feed);
         $service = $this->getServiceFactory()->create($serviceName);
