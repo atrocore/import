@@ -152,6 +152,10 @@ class ImportTypeSimple extends QueueManagerBase
 
     public function run(array $data = []): bool
     {
+        // prepare file row
+        $fileRow = (int) (($data['rowNumberPart'] ?? 0) + ($data['offset'] ?? 1));
+        $this->getMemoryStorage()->set('importRowNumber', $fileRow);
+
         $this->createConvertedFileForJob($data['data']['importJobId']);
 
         $importJob = $this->getEntityById('ImportJob', $data['data']['importJobId']);
@@ -168,10 +172,6 @@ class ImportTypeSimple extends QueueManagerBase
         $ids = [];
 
         $processedIds = [];
-
-        // prepare file row
-        $fileRow = empty($data['offset']) ? 0 : (int)$data['offset'];
-        $this->getMemoryStorage()->set('importRowNumber', $fileRow + 1);
 
         while (!empty($inputData = $this->readConvertedFile($importJob->get('convertedFileId'), $data))) {
             $this->getMemoryStorage()->set('importRowsPart', $inputData);
@@ -382,7 +382,7 @@ class ImportTypeSimple extends QueueManagerBase
             $this->clearMemoryOfLoadedEntities();
         }
 
-        $this->getMemoryStorage()->set('importRowNumber', 1);
+        $this->getMemoryStorage()->set('importRowNumber', (int) (($data['rowNumberPart'] ?? 0) + ($data['offset'] ?? 1)));
 
         // create jobs for importing ProductAttributeValues
         $this->createImportPavJobs($data);
@@ -595,6 +595,8 @@ class ImportTypeSimple extends QueueManagerBase
             $data['offset'] = 0;
         }
 
+        $rowNumber = $this->getMemoryStorage()->get('importRowNumber') ?? (($data['rowNumberPart'] ?? 0) + ($data['offset'] ?? 1) + 1);
+
         switch ($data['fileFormat']) {
             case 'CSV':
             case 'Excel':
@@ -639,9 +641,8 @@ class ImportTypeSimple extends QueueManagerBase
          */
         $prepared = [];
         $originalRows = $fileData;
-        $rowNumber = $this->getMemoryStorage()->get('importRowNumber') ?? $data['offset'] + 1;
         while (count($fileData) > 0) {
-            $this->getMemoryStorage()->set('importRowNumber', $rowNumber++);
+            $this->getMemoryStorage()->set('importRowNumber', ++$rowNumber);
             $row = array_shift($fileData);
             $event = $this->getEventManager()->dispatch(new Event(['originalRows' => $originalRows, 'row' => $row, 'jobData' => $data, 'skip' => false]), 'prepareImportRow');
             if (!empty($event->getArgument('skip'))) {
@@ -650,7 +651,7 @@ class ImportTypeSimple extends QueueManagerBase
                     $log->set([
                         'entityName'      => $data['data']['entity'],
                         'importJobId'     => $data['data']['importJobId'],
-                        'rowNumber'       => $this->getMemoryStorage()->get('importRowNumber'),
+                        'rowNumber'       => $rowNumber,
                         'row'             => $row,
                         'type'            => 'skip',
                         'skippedByScript' => true,
