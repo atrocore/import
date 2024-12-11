@@ -188,7 +188,7 @@
     },
     "queueItem": {
       "type": "belongsTo",
-      "entity": "QueueItem"
+      "entity": "Job"
     },
     "importJobLogs": {
       "type": "hasMany",

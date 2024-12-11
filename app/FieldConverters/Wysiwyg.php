@@ -23,6 +23,7 @@ use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Metadata;
 use Espo\ORM\EntityManager;
 use Import\Exceptions\DeleteProductAttributeValue;
+use Import\Jobs\ImportTypeSimple;
 use Import\Services\ImportConfiguratorItem;
 
 class Wysiwyg
@@ -128,7 +129,10 @@ class Wysiwyg
 
     protected function getEntityById(string $scope, string $id): Entity
     {
-        return $this->getService('ImportTypeSimple')->getEntityById($scope, $id);
+        /** @var ImportTypeSimple $service */
+        $service = $this->container->get(ImportTypeSimple::class);
+
+        return $service->getEntityById($scope, $id);
     }
 
     protected function getMemoryStorage(): StorageInterface

@@ -16,8 +16,8 @@ namespace Import\Services;
 use Atro\Core\EventManager\Event;
 use Atro\Core\Exceptions\Error;
 use Atro\Core\FileStorage\FileStorageInterface;
-use Atro\DTO\QueueItemDTO;
 use Atro\Entities\File;
+use Atro\Jobs\JobInterface;
 use Atro\Services\File as FileService;
 use Atro\Entities\Folder;
 use Espo\Core\Exceptions\BadRequest;
@@ -29,12 +29,19 @@ use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
 use Import\Entities\ImportFeed as ImportFeedEntity;
 use Import\Entities\ImportJob;
+use Import\Jobs\ImportJobCreator;
 
 class ImportFeed extends Base
 {
     public const TMP_DIR = 'data/import-tmp';
 
     protected $mandatorySelectAttributeList = ['sourceFields', 'sheet', 'data'];
+
+    public const PRIORITIES = [
+        "Low"    => 50,
+        "Normal" => 100,
+        "High"   => 150
+    ];
 
     public function prepareCollectionForOutput(EntityCollection $collection, array $selectParams = []): void
     {
@@ -121,11 +128,19 @@ class ImportFeed extends Base
 
         if ($attachment->get('size') > $maxSize) {
             $name = str_replace("{{fileName}}", $attachment->get('name'), $this->translate('parseFile'));
-            $id = $this
-                ->getInjection('queueManager')
-                ->createQueueItem($name, 'BackgroundFileParser', ['payload' => $payload]);
+
+            $jobEntity = $this->getEntityManager()->getEntity('Job');
+            $jobEntity->set([
+                'name'    => $name,
+                'type'    => 'BackgroundFileParser',
+                'payload' => [
+                    'payload' => $payload
+                ]
+            ]);
+            $this->getEntityManager()->saveEntity($jobEntity);
+
             return [
-                'jobId' => $id
+                'jobId' => $jobEntity->get('id')
             ];
         }
 
@@ -284,8 +299,7 @@ class ImportFeed extends Base
         // firstly, validate feed
         $this->getRepository()->validateFeed($feed, true);
 
-        $serviceName = $this->getImportTypeService($feed);
-        $service = $this->getServiceFactory()->create($serviceName);
+        $service = $this->getImportTypeService($feed);
 
         if (method_exists($service, 'runImport')) {
             return $service->runImport($feed, $attachmentId, $payload, $priority);
@@ -317,8 +331,7 @@ class ImportFeed extends Base
         /** @var ImportFeedEntity $importFeed */
         $importFeed = $parent->get('importFeed');
 
-        /** @var ImportTypeSimple $service */
-        $service = $this->getServiceFactory()->create($this->getImportTypeService($importFeed));
+        $service = $this->getImportTypeService($importFeed);
         $jobStates = array_unique(array_column($jobsData, 'state'));
         $jobIds = array_column($jobsData, 'id');
         $entityName = $parent->get('entityName');
@@ -379,8 +392,7 @@ class ImportFeed extends Base
                 $rowNumberPart += $maxPerJob;
                 $deleteJob = $this->createImportJob($importFeed, $parent->get('entityName'), $fileId, $payload);
                 $qmData['data']['importJobId'] = $deleteJob->get('id');
-                $dto = new QueueItemDTO($this->getName($importFeed), 'ImportTypeSimple', $qmData);
-                $this->push($dto);
+                $this->push($this->getName($importFeed), 'ImportTypeSimple', $qmData);
             }
 
             return true;
@@ -391,7 +403,7 @@ class ImportFeed extends Base
 
     public function hasParentJob(ImportFeedEntity $importFeed): bool
     {
-        $hasParent = (int)$importFeed->get('maxPerJob') > 0 || \Import\Services\ImportTypeSimple::isDeleteAction($importFeed->get('fileDataAction') ?? '');
+        $hasParent = (int)$importFeed->get('maxPerJob') > 0 || \Import\Jobs\ImportTypeSimple::isDeleteAction($importFeed->get('fileDataAction') ?? '');
         if (!$hasParent && $importFeed->getFeedField('entity') === 'Product') {
             $configuratorItemTypes = array_column($importFeed->get('configuratorItems')->toArray(), 'type');
             $hasParent = in_array('Attribute', $configuratorItemTypes);
@@ -427,26 +439,32 @@ class ImportFeed extends Base
             ];
 
             if (!empty($payload) && !empty($payload->executeNow)) {
-                $this->getServiceFactory()->create('ImportJobCreator')->run($qmJobData);
+                $this->getInjection('container')->get(ImportJobCreator::class)->runNow($qmJobData);
             } else {
-                $id = $this->getInjection('queueManager')->createQueueItem($name, 'ImportJobCreator', $qmJobData);
+                $jobEntity = $this->getEntityManager()->getEntity('Job');
+                $jobEntity->set([
+                    'name' => $name,
+                    'type' => 'ImportJobCreator',
+                    'payload' => $qmJobData
+                ]);
+                $this->getEntityManager()->saveEntity($jobEntity);
+
                 $this->getEntityManager()->getConnection()->createQueryBuilder()
                     ->update('import_job')
                     ->set('queue_item_id', ':queueItemId')
                     ->where('id = :id')
-                    ->setParameter('queueItemId', $id)
+                    ->setParameter('queueItemId', $jobEntity->get('id'))
                     ->setParameter('id', $parentJob->get('id'))
                     ->executeQuery();
             }
         } else {
-            $serviceName = $this->getImportTypeService($importFeed);
-            $data = $this->getServiceFactory()->create($serviceName)->prepareJobData($importFeed, $attachmentId);
+            $data = $this->getImportTypeService($importFeed)->prepareJobData($importFeed, $attachmentId);
             $data['payload'] = $payload;
             if (!empty($priority)) {
                 $data['data']['priority'] = $priority;
             }
             $data['data']['importJobId'] = $this->createImportJob($importFeed, $importFeed->getFeedField('entity'), $attachmentId, $payload)->get('id');
-            $this->push($this->getName($importFeed), $serviceName, $data);
+            $this->push($this->getName($importFeed), 'ImportType' . ucfirst($importFeed->get('type')), $data);
         }
     }
 
@@ -468,7 +486,6 @@ class ImportFeed extends Base
         parent::init();
 
         $this->addDependency('language');
-        $this->addDependency('queueManager');
         $this->addDependency('filePathBuilder');
         $this->addDependency('container');
     }
@@ -521,24 +538,8 @@ class ImportFeed extends Base
         return $this->getInjection('language')->translate($key, 'labels', 'ImportFeed');
     }
 
-    /**
-     * @param QueueItemDTO $dto
-     *
-     * @return bool
-     */
-    public function push(...$input): bool
+    public function push(string $name, string $type, array $data = []): bool
     {
-        $dto = $input[0];
-        if (!$input[0] instanceof QueueItemDTO) {
-            $dto = new QueueItemDTO($input[0], $input[1], $input[2] ?? []);
-        }
-
-        $data = $dto->getData();
-
-        if (isset($data['data']['priority'])) {
-            $dto->setPriority($data['data']['priority']);
-        }
-
         if (!empty($data['payload']) && !empty($data['payload']->executeNow)) {
             if (empty($data['data']['importJobId'])) {
                 return false;
@@ -548,7 +549,8 @@ class ImportFeed extends Base
                 return false;
             }
             try {
-                $this->getServiceFactory()->create($dto->getServiceName())->run($dto->getData());
+                $className = $this->getMetadata()->get(['app', 'jobTypes', $type, 'handler']);
+                $this->getInjection('container')->get($className)->runNow($data);
                 $importJob->set('state', 'Success');
             } catch (\Throwable $e) {
                 $importJob->set('state', 'Failed');
@@ -560,19 +562,22 @@ class ImportFeed extends Base
             return true;
         }
 
-        $id = $this->getInjection('queueManager')->createQueueItem($dto);
+        $jobEntity = $this->getEntityManager()->getEntity('Job');
+        $jobEntity->set([
+            'name'     => $name,
+            'type'     => $type,
+            'priority' => isset($data['data']['priority']) ? self::PRIORITIES[$data['data']['priority']] : 100,
+            'payload'  => $data
+        ]);
+        $this->getEntityManager()->saveEntity($jobEntity);
 
-        $queueItem = $this->getEntityManager()->getRepository('QueueItem')->get($id);
-
-        $connection = $this->getEntityManager()->getConnection();
-
-        $connection->createQueryBuilder()
+        $this->getEntityManager()->getConnection()->createQueryBuilder()
             ->update('import_job')
             ->set('sort_order', ':sortOrder')
             ->set('queue_item_id', ':queueItemId')
             ->where('id = :id')
-            ->setParameter('sortOrder', $queueItem->get('sortOrder'))
-            ->setParameter('queueItemId', $queueItem->get('id'))
+            ->setParameter('sortOrder', time())
+            ->setParameter('queueItemId', $jobEntity->get('id'))
             ->setParameter('id', $data['data']['importJobId'])
             ->executeQuery();
 
@@ -625,14 +630,11 @@ class ImportFeed extends Base
         return $this->translate("Import") . ": <strong>{$feed->get("name")}</strong>";
     }
 
-    /**
-     * @param ImportFeedEntity $feed
-     *
-     * @return string
-     */
-    public function getImportTypeService(ImportFeedEntity $feed): string
+    public function getImportTypeService(ImportFeedEntity $feed): JobInterface
     {
-        return 'ImportType' . ucfirst($feed->get('type'));
+        $className = $this->getMetadata()->get(['app', 'jobTypes', 'ImportType' . ucfirst($feed->get('type')), 'handler']);
+
+        return $this->getInjection('container')->get($className);
     }
 
     public function createImportJob(ImportFeedEntity $feed, string $entityType, string $attachmentId, \stdClass $payload = null): ImportJob

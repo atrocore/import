@@ -14,15 +14,10 @@ declare(strict_types=1);
 namespace Import\Services;
 
 use Atro\Core\Exceptions\NotFound;
-use Atro\DTO\QueueItemDTO;
-use Atro\Services\File;
 use Doctrine\DBAL\ParameterType;
-use Espo\Core\Exceptions\BadRequest;
 use Atro\Core\Templates\Services\Base;
 use Espo\Core\Utils\Util;
 use Espo\ORM\EntityCollection;
-use Import\FileParsers\FileParserInterface;
-use Import\Entities\ImportFeed as ImportFeedEntity;
 
 class ImportJob extends Base
 {
@@ -60,10 +55,10 @@ class ImportJob extends Base
 
         // delete queue items
         while (true) {
-            $toDeleteItem = $this->getEntityManager()->getRepository('QueueItem')
+            $toDeleteItem = $this->getEntityManager()->getRepository('Job')
                 ->where([
                     'modifiedAt<' => (new \DateTime())->modify("-$days days")->format('Y-m-d H:i:s'),
-                    'serviceName' => ['ImportJobCreator', 'ImportTypeSimple'],
+                    'type'        => ['ImportJobCreator', 'ImportTypeSimple'],
                     'status'      => ['Success', 'Failed', 'Canceled']
                 ])
                 ->limit(0, 2000)
@@ -170,10 +165,10 @@ class ImportJob extends Base
                 $importJob->set('attachmentId', !empty($attachmentId) ? $attachmentId : $job->get('attachmentId'));
                 $this->getEntityManager()->saveEntity($importJob);
 
-                $data = $queueItem->get('data');
+                $data = $queueItem->get('payload');
                 $data->data->importJobId = $importJob->get('id');
                 $data->attachmentId = $importJob->get('attachmentId');
-                $importService->push(new QueueItemDTO($queueItem->get('name'), $queueItem->get('serviceName'), json_decode(json_encode($data), true)));
+                $importService->push($queueItem->get('name'), $queueItem->get('type'), json_decode(json_encode($data), true));
             }
             return true;
         }

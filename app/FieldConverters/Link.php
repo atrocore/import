@@ -18,7 +18,7 @@ use Doctrine\DBAL\Exception\ConstraintViolationException;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
-use Import\Services\ImportTypeSimple;
+use Import\Jobs\ImportTypeSimple;
 
 class Link extends Varchar
 {
@@ -280,7 +280,7 @@ class Link extends Varchar
     protected function loadToMemory(array $configuration, array $rows, array $where): void
     {
         /** @var ImportTypeSimple $service */
-        $service = $this->getService('ImportTypeSimple');
+        $service = $this->container->get(ImportTypeSimple::class);
 
         $entityName = $this->getForeignEntityName($configuration);
 

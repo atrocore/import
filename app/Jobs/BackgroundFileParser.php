@@ -17,19 +17,19 @@ use Atro\Entities\Job;
 use Atro\Jobs\AbstractJob;
 use Atro\Jobs\JobInterface;
 
-class ImportFeed extends AbstractJob implements JobInterface
+class BackgroundFileParser extends AbstractJob implements JobInterface
 {
     public function run(Job $job): void
     {
-        if (empty($job->get('scheduledJobId'))) {
+        $data = $job->getPayload();
+        if (empty($data['payload'])) {
             return;
         }
 
-        $scheduledJob = $this->getEntityManager()->getEntity('ScheduledJob', $job->get('scheduledJobId'));
-        if (empty($scheduledJob) || empty($scheduledJob->get('importFeedId'))) {
-            return;
-        }
+        $sourceFields = $this->getServiceFactory()->create('ImportFeed')
+            ->getFileColumns(json_decode(json_encode($data['payload'])));
 
-        $this->getServiceFactory()->create('ImportFeed')->runImport($scheduledJob->get('importFeedId'), '');
+        $job->get('payload')->sourceFields = $sourceFields;
+        $this->getEntityManager()->saveEntity($job, ['skipAll' => true]);
     }
 }

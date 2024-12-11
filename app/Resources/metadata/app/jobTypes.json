@@ -1,0 +1,22 @@
+{
+  "ImportFeed": {
+    "scheduledJob": true,
+    "handler": "\\Import\\Jobs\\ImportFeed"
+  },
+  "ConvertedFileGenerator": {
+    "scheduledJob": false,
+    "handler": "\\Import\\Jobs\\ConvertedFileGenerator"
+  },
+  "ImportJobCreator": {
+    "scheduledJob": false,
+    "handler": "\\Import\\Jobs\\ImportJobCreator"
+  },
+  "BackgroundFileParser": {
+    "scheduledJob": false,
+    "handler": "\\Import\\Jobs\\BackgroundFileParser"
+  },
+  "ImportTypeSimple": {
+    "scheduledJob": false,
+    "handler": "\\Import\\Jobs\\ImportTypeSimple"
+  }
+}

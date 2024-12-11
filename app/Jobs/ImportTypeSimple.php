@@ -16,21 +16,21 @@ namespace Import\Services;
 use Atro\Core\Exceptions\Error;
 use Atro\Core\Exceptions\NotModified;
 use Atro\Core\EventManager\Event;
-use Atro\DTO\QueueItemDTO;
 use Atro\Entities\File;
+use Atro\Entities\Job;
+use Atro\Jobs\AbstractJob;
+use Atro\Jobs\JobInterface;
+use Atro\Core\EventManager\Manager;
+use Atro\Core\Exceptions\BadRequest;
+use Atro\Core\Utils\Util;
+use Atro\Services\AbstractService;
 use Doctrine\DBAL\ParameterType;
-use Espo\Core\EventManager\Manager;
-use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Utils\Metadata;
-use Espo\Core\Utils\Util;
 use Espo\ORM\Entity;
-use Atro\Services\QueueManagerBase;
-use Espo\Core\Services\Base;
 use Import\Entities\ImportFeed;
 use Import\Exceptions\DeleteProductAttributeValue;
 use Import\FieldConverters\Link;
 
-class ImportTypeSimple extends QueueManagerBase
+class ImportTypeSimple extends AbstractJob implements JobInterface
 {
     private const CACHE_DIR = 'data/import-cache';
     public const MEMORY_KEYS = 'loaded_exists_entities_keys';
@@ -89,9 +89,9 @@ class ImportTypeSimple extends QueueManagerBase
         if (empty($jobData)) {
             $qmJob = $this->getEntityManager()->getRepository('ImportJob')->getQmJob($importJob);
             if (empty($qmJob)) {
-                throw new BadRequest("QueueItem for ImportJob '{$importJob->get('id')}' does not exist.");
+                throw new BadRequest("Job for ImportJob '{$importJob->get('id')}' does not exist.");
             }
-            $jobData = json_decode(json_encode($qmJob->get('data')), true);
+            $jobData = json_decode(json_encode($qmJob->get('payload')), true);
         }
 
         $convertedFile = $this->createConvertedFile($importJob->get('importFeed'), $jobData);
@@ -150,8 +150,10 @@ class ImportTypeSimple extends QueueManagerBase
         return $convertedFile;
     }
 
-    public function run(array $data = []): bool
+    public function run(Job $job): void
     {
+        $data = $job->getPayload();
+
         // prepare file row
         $fileRow = (int) (($data['rowNumberPart'] ?? 0) + ($data['offset'] ?? 1));
         $this->getMemoryStorage()->set('importRowNumber', $fileRow);
@@ -410,8 +412,6 @@ class ImportTypeSimple extends QueueManagerBase
 
             fclose($cacheFile);
         }
-
-        return true;
     }
 
     public function afterRowProceed(string $entityType, array $where, ?string $id): void
@@ -915,15 +915,18 @@ class ImportTypeSimple extends QueueManagerBase
                     $payload->parentJobId = $importJob->get('parentId');
                 }
                 $payload->convertedFileId = $importJob->get('convertedFileId');
-                $pavJob = $importService->createImportJob($importFeed, 'ProductAttributeValue', $pavData['attachmentId'], $payload);
+                $pavJob = $importService
+                    ->createImportJob($importFeed, 'ProductAttributeValue', $pavData['attachmentId'], $payload);
 
                 $pavData['data']['importJobId'] = $pavJob->get('id');
 
-                $event = $this->getEventManager()->dispatch(new Event(['importFeed' => $importFeed, 'pavData' => $pavData]), 'prepareImportPavJob');
-                $dto = new QueueItemDTO($importService->getName($importFeed), 'ImportTypeSimple', $event->getArgument('pavData'));
-                $dto->setParentId($qmJob->get('id'));
+                $event = $this->getEventManager()
+                    ->dispatch(new Event(['importFeed' => $importFeed, 'pavData' => $pavData]), 'prepareImportPavJob');
 
-                $importService->push($dto);
+                $pavData = $event->getArgument('pavData');
+                $pavData['parentJobId'] = $qmJob->get('id');
+
+                $importService->push($importService->getName($importFeed), 'ImportTypeSimple', $pavData);
             }
         }
 
@@ -1097,7 +1100,7 @@ class ImportTypeSimple extends QueueManagerBase
         }
     }
 
-    protected function getService(string $name): Base
+    protected function getService(string $name): AbstractService
     {
         $key = "service_{$name}";
 
@@ -1106,11 +1109,6 @@ class ImportTypeSimple extends QueueManagerBase
         }
 
         return $this->getMemoryStorage()->get($key);
-    }
-
-    protected function getMetadata(): Metadata
-    {
-        return $this->getContainer()->get('metadata');
     }
 
     protected function getEventManager(): Manager

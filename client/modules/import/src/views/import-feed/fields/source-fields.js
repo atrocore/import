@@ -52,13 +52,13 @@ Espo.define('import:views/import-feed/fields/source-fields', 'views/fields/multi
         },
 
         readSourceFieldsFromJob(jobId) {
-            this.ajaxGetRequest(`QueueItem/${jobId}`).success(queueItem => {
+            this.ajaxGetRequest(`Job/${jobId}`).success(queueItem => {
                 if (queueItem.status === 'Canceled') {
                     $('.attachment-upload .remove-attachment').click();
                     this.model.set('sourceFields', []);
                     this.$el.html('');
                 } else if (queueItem.status === 'Success') {
-                    this.model.set('sourceFields', queueItem.data.sourceFields);
+                    this.model.set('sourceFields', queueItem.payload.sourceFields);
                 } else {
                     setTimeout(() => {
                         this.readSourceFieldsFromJob(jobId);

@@ -13,9 +13,9 @@ declare(strict_types=1);
 
 namespace Import\Repositories;
 
-use Doctrine\DBAL\ParameterType;
-use Espo\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Templates\Repositories\Base;
+use Doctrine\DBAL\ParameterType;
 use Espo\ORM\Entity;
 
 class ImportJob extends Base
@@ -122,7 +122,7 @@ class ImportJob extends Base
     {
         $result = $this->getConnection()->createQueryBuilder()
             ->select('status')
-            ->from('queue_item')
+            ->from($this->getConnection()->quoteIdentifier('job'))
             ->where('id = :id')
             ->andWhere('deleted = :false')
             ->setParameter('false', false, ParameterType::BOOLEAN)
@@ -155,7 +155,7 @@ class ImportJob extends Base
 
             if (!empty($qmJob)) {
                 $qmData = $qmJob->get('data');
-                if (\Import\Services\ImportTypeSimple::isDeleteAction($qmData->action)) {
+                if (\Import\Jobs\ImportTypeSimple::isDeleteAction($qmData->action)) {
                     if (!empty($qmData->importJobCreatorId)) {
                         do {
                             if ($this->getQmJobStatus($qmData->importJobCreatorId) == 'Running') {
@@ -299,14 +299,15 @@ class ImportJob extends Base
     public function getQmJob(Entity $importJob): ?Entity
     {
         if (!empty($importJob->get('queueItemId'))) {
-            return $this->getEntityManager()->getRepository('QueueItem')->get($importJob->get('queueItemId'));
+            return $this->getEntityManager()->getRepository('Job')->get($importJob->get('queueItemId'));
         }
         return null;
     }
 
     protected function toPendingQmJob(Entity $qmJob): void
     {
-        $this->getInjection('queueManager')->tryAgain($qmJob->get('id'));
+        $qmJob->set('status', 'Pending');
+        $this->getEntityManager()->saveEntity($qmJob);
     }
 
     protected function cancelQmJob(Entity $qmJob): void
@@ -328,6 +329,5 @@ class ImportJob extends Base
 
         $this->addDependency('serviceFactory');
         $this->addDependency('fileStorageManager');
-        $this->addDependency('queueManager');
     }
 }
