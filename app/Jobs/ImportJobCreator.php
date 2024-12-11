@@ -119,7 +119,7 @@ class ImportJobCreator extends AbstractJob implements JobInterface
                 $jobData = array_merge($jobData, $data['jobData']);
             }
 
-            $importFeedService->push($importFeedService->getName($importFeed) . ' (' . $partNumber . ')', $serviceName, $jobData);
+            $importFeedService->push($importFeedService->getName($importFeed) . ' (' . $partNumber . ')', 'ImportType' . ucfirst($importFeed->get('type')), $jobData);
 
             $offset = $offset + $maxPerJob;
             $rowNumberPart = $rowNumberPart + $maxPerJob;
