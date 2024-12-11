@@ -82,8 +82,7 @@ class ImportJobCreator extends AbstractJob implements JobInterface
             $offset = 1;
         }
 
-        $serviceName = $importFeedService->getImportTypeService($importFeed);
-        $service = $serviceFactory->create($serviceName);
+        $service = $importFeedService->getImportTypeService($importFeed);
 
         $partNumber = 1;
         while (!empty($fileData = $fileParser->getFileData($attachment, $offset, $maxPerJob))) {

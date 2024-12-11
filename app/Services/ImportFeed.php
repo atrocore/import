@@ -17,6 +17,7 @@ use Atro\Core\EventManager\Event;
 use Atro\Core\Exceptions\Error;
 use Atro\Core\FileStorage\FileStorageInterface;
 use Atro\Entities\File;
+use Atro\Jobs\JobInterface;
 use Atro\Services\File as FileService;
 use Atro\Entities\Folder;
 use Espo\Core\Exceptions\BadRequest;
@@ -298,8 +299,7 @@ class ImportFeed extends Base
         // firstly, validate feed
         $this->getRepository()->validateFeed($feed, true);
 
-        $serviceName = $this->getImportTypeService($feed);
-        $service = $this->getServiceFactory()->create($serviceName);
+        $service = $this->getImportTypeService($feed);
 
         if (method_exists($service, 'runImport')) {
             return $service->runImport($feed, $attachmentId, $payload, $priority);
@@ -331,8 +331,7 @@ class ImportFeed extends Base
         /** @var ImportFeedEntity $importFeed */
         $importFeed = $parent->get('importFeed');
 
-        /** @var ImportTypeSimple $service */
-        $service = $this->getServiceFactory()->create($this->getImportTypeService($importFeed));
+        $service = $this->getImportTypeService($importFeed);
         $jobStates = array_unique(array_column($jobsData, 'state'));
         $jobIds = array_column($jobsData, 'id');
         $entityName = $parent->get('entityName');
@@ -404,7 +403,7 @@ class ImportFeed extends Base
 
     public function hasParentJob(ImportFeedEntity $importFeed): bool
     {
-        $hasParent = (int)$importFeed->get('maxPerJob') > 0 || \Import\Services\ImportTypeSimple::isDeleteAction($importFeed->get('fileDataAction') ?? '');
+        $hasParent = (int)$importFeed->get('maxPerJob') > 0 || \Import\Jobs\ImportTypeSimple::isDeleteAction($importFeed->get('fileDataAction') ?? '');
         if (!$hasParent && $importFeed->getFeedField('entity') === 'Product') {
             $configuratorItemTypes = array_column($importFeed->get('configuratorItems')->toArray(), 'type');
             $hasParent = in_array('Attribute', $configuratorItemTypes);
@@ -459,14 +458,13 @@ class ImportFeed extends Base
                     ->executeQuery();
             }
         } else {
-            $serviceName = $this->getImportTypeService($importFeed);
-            $data = $this->getServiceFactory()->create($serviceName)->prepareJobData($importFeed, $attachmentId);
+            $data = $this->getImportTypeService($importFeed)->prepareJobData($importFeed, $attachmentId);
             $data['payload'] = $payload;
             if (!empty($priority)) {
                 $data['data']['priority'] = $priority;
             }
             $data['data']['importJobId'] = $this->createImportJob($importFeed, $importFeed->getFeedField('entity'), $attachmentId, $payload)->get('id');
-            $this->push($this->getName($importFeed), $serviceName, $data);
+            $this->push($this->getName($importFeed), 'ImportType' . ucfirst($importFeed->get('type')), $data);
         }
     }
 
@@ -632,14 +630,11 @@ class ImportFeed extends Base
         return $this->translate("Import") . ": <strong>{$feed->get("name")}</strong>";
     }
 
-    /**
-     * @param ImportFeedEntity $feed
-     *
-     * @return string
-     */
-    public function getImportTypeService(ImportFeedEntity $feed): string
+    public function getImportTypeService(ImportFeedEntity $feed): JobInterface
     {
-        return 'ImportType' . ucfirst($feed->get('type'));
+        $className = $this->getMetadata()->get(['app', 'jobTypes', 'ImportType' . ucfirst($feed->get('type')), 'handler']);
+
+        return $this->getInjection('container')->get($className);
     }
 
     public function createImportJob(ImportFeedEntity $feed, string $entityType, string $attachmentId, \stdClass $payload = null): ImportJob
