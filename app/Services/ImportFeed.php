@@ -16,7 +16,6 @@ namespace Import\Services;
 use Atro\Core\EventManager\Event;
 use Atro\Core\Exceptions\Error;
 use Atro\Core\FileStorage\FileStorageInterface;
-use Atro\DTO\QueueItemDTO;
 use Atro\Entities\File;
 use Atro\Services\File as FileService;
 use Atro\Entities\Folder;
@@ -36,6 +35,12 @@ class ImportFeed extends Base
     public const TMP_DIR = 'data/import-tmp';
 
     protected $mandatorySelectAttributeList = ['sourceFields', 'sheet', 'data'];
+
+    public const PRIORITIES = [
+        "Low"    => 50,
+        "Normal" => 100,
+        "High"   => 150
+    ];
 
     public function prepareCollectionForOutput(EntityCollection $collection, array $selectParams = []): void
     {
@@ -122,11 +127,19 @@ class ImportFeed extends Base
 
         if ($attachment->get('size') > $maxSize) {
             $name = str_replace("{{fileName}}", $attachment->get('name'), $this->translate('parseFile'));
-            $id = $this
-                ->getInjection('queueManager')
-                ->createQueueItem($name, 'BackgroundFileParser', ['payload' => $payload]);
+
+            $jobEntity = $this->getEntityManager()->getEntity('Job');
+            $jobEntity->set([
+                'name'    => $name,
+                'type'    => 'BackgroundFileParser',
+                'payload' => [
+                    'payload' => $payload
+                ]
+            ]);
+            $this->getEntityManager()->saveEntity($jobEntity);
+
             return [
-                'jobId' => $id
+                'jobId' => $jobEntity->get('id')
             ];
         }
 
@@ -476,7 +489,6 @@ class ImportFeed extends Base
         parent::init();
 
         $this->addDependency('language');
-        $this->addDependency('queueManager');
         $this->addDependency('filePathBuilder');
         $this->addDependency('container');
     }
@@ -529,24 +541,8 @@ class ImportFeed extends Base
         return $this->getInjection('language')->translate($key, 'labels', 'ImportFeed');
     }
 
-    /**
-     * @param QueueItemDTO $dto
-     *
-     * @return bool
-     */
-    public function push(...$input): bool
+    public function push(string $name, string $type, array $data = []): bool
     {
-        $dto = $input[0];
-        if (!$input[0] instanceof QueueItemDTO) {
-            $dto = new QueueItemDTO($input[0], $input[1], $input[2] ?? []);
-        }
-
-        $data = $dto->getData();
-
-        if (isset($data['data']['priority'])) {
-            $dto->setPriority($data['data']['priority']);
-        }
-
         if (!empty($data['payload']) && !empty($data['payload']->executeNow)) {
             if (empty($data['data']['importJobId'])) {
                 return false;
@@ -556,7 +552,8 @@ class ImportFeed extends Base
                 return false;
             }
             try {
-                $this->getServiceFactory()->create($dto->getServiceName())->run($dto->getData());
+                $className = $this->getMetadata()->get(['app', 'jobTypes', $type, 'handler']);
+                $this->getInjection('container')->get($className)->runNow($data);
                 $importJob->set('state', 'Success');
             } catch (\Throwable $e) {
                 $importJob->set('state', 'Failed');
@@ -568,19 +565,22 @@ class ImportFeed extends Base
             return true;
         }
 
-        $id = $this->getInjection('queueManager')->createQueueItem($dto);
+        $jobEntity = $this->getEntityManager()->getEntity('Job');
+        $jobEntity->set([
+            'name'     => $name,
+            'type'     => $type,
+            'priority' => isset($data['data']['priority']) ? self::PRIORITIES[$data['data']['priority']] : 100,
+            'payload'  => $data
+        ]);
+        $this->getEntityManager()->saveEntity($jobEntity);
 
-        $queueItem = $this->getEntityManager()->getRepository('QueueItem')->get($id);
-
-        $connection = $this->getEntityManager()->getConnection();
-
-        $connection->createQueryBuilder()
+        $this->getEntityManager()->getConnection()->createQueryBuilder()
             ->update('import_job')
             ->set('sort_order', ':sortOrder')
             ->set('queue_item_id', ':queueItemId')
             ->where('id = :id')
-            ->setParameter('sortOrder', $queueItem->get('sortOrder'))
-            ->setParameter('queueItemId', $queueItem->get('id'))
+            ->setParameter('sortOrder', time())
+            ->setParameter('queueItemId', $jobEntity->get('id'))
             ->setParameter('id', $data['data']['importJobId'])
             ->executeQuery();
 

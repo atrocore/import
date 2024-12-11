@@ -10,5 +10,9 @@
   "ImportJobCreator": {
     "scheduledJob": false,
     "handler": "\\Import\\Jobs\\ImportJobCreator"
+  },
+  "BackgroundFileParser": {
+    "scheduledJob": false,
+    "handler": "\\Import\\Jobs\\BackgroundFileParser"
   }
 }

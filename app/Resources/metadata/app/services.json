@@ -1,5 +1,4 @@
 {
-  "BackgroundFileParser": "\\Import\\Services\\BackgroundFileParser",
   "ImportTypeSimple": "\\Import\\Services\\ImportTypeSimple",
   "DataSyncErrorsImportDashlet": "\\Import\\Services\\DataSyncErrorsImportDashlet"
 }
