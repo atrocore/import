@@ -52,12 +52,12 @@ Espo.define('import:views/import-job/record/list', 'views/record/list',
             this.notify(this.translate('generating', 'labels', 'ImportJob'));
             this.ajaxPostRequest('ImportJob/action/generateFile', {id: data.id, type: data.type}).then(response => {
                 let interval = setInterval(() => {
-                    this.ajaxGetRequest(`QueueItem/${response.queueItemId}?silent=true`).success(res => {
+                    this.ajaxGetRequest(`Job/${response.queueItemId}?silent=true`).success(res => {
                         this.notify(this.translate('generating', 'labels', 'ImportJob'));
                         if (res.status === 'Success') {
                             clearInterval(interval);
                             this.notify('Done', 'success');
-                            this.downloadFile(res.data.downloadUrl, res.data.fileName);
+                            this.downloadFile(res.payload.downloadUrl, res.payload.fileName);
                         } else if (["Failed", "Canceled"].includes(res.status)) {
                             clearInterval(interval);
                             this.notify('Error occured!', 'error');

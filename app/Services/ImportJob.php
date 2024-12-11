@@ -14,15 +14,10 @@ declare(strict_types=1);
 namespace Import\Services;
 
 use Atro\Core\Exceptions\NotFound;
-use Atro\DTO\QueueItemDTO;
-use Atro\Services\File;
 use Doctrine\DBAL\ParameterType;
-use Espo\Core\Exceptions\BadRequest;
 use Atro\Core\Templates\Services\Base;
 use Espo\Core\Utils\Util;
 use Espo\ORM\EntityCollection;
-use Import\FileParsers\FileParserInterface;
-use Import\Entities\ImportFeed as ImportFeedEntity;
 
 class ImportJob extends Base
 {
