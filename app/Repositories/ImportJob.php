@@ -155,7 +155,7 @@ class ImportJob extends Base
 
             if (!empty($qmJob)) {
                 $qmData = $qmJob->get('data');
-                if (\Import\Services\ImportTypeSimple::isDeleteAction($qmData->action)) {
+                if (\Import\Jobs\ImportTypeSimple::isDeleteAction($qmData->action)) {
                     if (!empty($qmData->importJobCreatorId)) {
                         do {
                             if ($this->getQmJobStatus($qmData->importJobCreatorId) == 'Running') {

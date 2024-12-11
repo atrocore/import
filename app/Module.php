@@ -32,7 +32,7 @@ class Module extends AbstractModule
 
     public static function afterUpdate(): void
     {
-        \Import\Services\ImportTypeSimple::clearCache();
+        \Import\Jobs\ImportTypeSimple::clearCache();
         Util::removeDir(\Import\Services\ImportFeed::TMP_DIR);
     }
 

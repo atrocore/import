@@ -22,7 +22,6 @@ use Atro\Core\Exceptions\BadRequest;
 use Import\Entities\ImportFeed as ImportFeedEntity;
 use Import\FileParsers\FileParserInterface;
 use Import\Services\ImportFeed;
-use Import\Services\ImportTypeSimple;
 
 class ConvertedFileGenerator extends AbstractJob implements JobInterface
 {
@@ -188,7 +187,7 @@ class ConvertedFileGenerator extends AbstractJob implements JobInterface
 
     protected function getImportTypeSimpleService(): ImportTypeSimple
     {
-        return $this->getContainer()->get('serviceFactory')->create('ImportTypeSimple');
+        return $this->getContainer()->get(ImportTypeSimple::class);
     }
 
     protected function createFileParser(string $format): FileParserInterface

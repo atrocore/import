@@ -14,5 +14,9 @@
   "BackgroundFileParser": {
     "scheduledJob": false,
     "handler": "\\Import\\Jobs\\BackgroundFileParser"
+  },
+  "ImportTypeSimple": {
+    "scheduledJob": false,
+    "handler": "\\Import\\Jobs\\ImportTypeSimple"
   }
 }

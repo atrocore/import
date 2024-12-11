@@ -393,8 +393,7 @@ class ImportFeed extends Base
                 $rowNumberPart += $maxPerJob;
                 $deleteJob = $this->createImportJob($importFeed, $parent->get('entityName'), $fileId, $payload);
                 $qmData['data']['importJobId'] = $deleteJob->get('id');
-                $dto = new QueueItemDTO($this->getName($importFeed), 'ImportTypeSimple', $qmData);
-                $this->push($dto);
+                $this->push($this->getName($importFeed), 'ImportTypeSimple', $qmData);
             }
 
             return true;
