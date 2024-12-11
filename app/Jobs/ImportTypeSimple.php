@@ -11,7 +11,7 @@
 
 declare(strict_types=1);
 
-namespace Import\Services;
+namespace Import\Jobs;
 
 use Atro\Core\Exceptions\Error;
 use Atro\Core\Exceptions\NotModified;
