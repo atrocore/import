@@ -11,25 +11,33 @@
 
 declare(strict_types=1);
 
-namespace Import\Services;
+namespace Import\Jobs;
 
 use Atro\Core\Utils\Util;
+use Atro\Entities\Job;
+use Atro\Jobs\AbstractJob;
+use Atro\Jobs\JobInterface;
 use Atro\Services\File;
-use Atro\Services\QueueManagerBase;
-use Espo\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\BadRequest;
 use Import\Entities\ImportFeed as ImportFeedEntity;
 use Import\FileParsers\FileParserInterface;
+use Import\Services\ImportFeed;
+use Import\Services\ImportTypeSimple;
 
-class ConvertedFileGenerator extends QueueManagerBase
+class ConvertedFileGenerator extends AbstractJob implements JobInterface
 {
-    public function run(array $data = []): bool
+    protected Job $currentJob;
+
+    public function run(Job $job): void
     {
+        $this->currentJob = $job;
+
+        $data = $job->getPayload();
+
         $method = "generate" . ucfirst($data['type'] . "File");
         if (method_exists($this, $method)) {
             $this->$method((string)$data['importJobId']);
         }
-
-        return true;
     }
 
     public function generateCreatedFile(string $jobId): ?string
@@ -88,9 +96,9 @@ class ConvertedFileGenerator extends QueueManagerBase
 
         $file = $this->getEntityManager()->getEntity('File', $fileId);
 
-        $this->qmItem->get('data')->fileName = $file->get('name');
-        $this->qmItem->get('data')->downloadUrl = $file->getDownloadUrl();
-        $this->getEntityManager()->saveEntity($this->qmItem);
+        $this->currentJob->get('payload')->fileName = $file->get('name');
+        $this->currentJob->get('payload')->downloadUrl = $file->getDownloadUrl();
+        $this->getEntityManager()->saveEntity($this->currentJob);
 
         return $fileId;
     }
@@ -171,9 +179,9 @@ class ConvertedFileGenerator extends QueueManagerBase
         ]);
         $this->getEntityManager()->saveEntity($entity);
 
-        $this->qmItem->get('data')->fileName = $fileArr['name'];
-        $this->qmItem->get('data')->downloadUrl = $fileArr['downloadUrl'];
-        $this->getEntityManager()->saveEntity($this->qmItem);
+        $this->currentJob->get('payload')->fileName = $fileArr['name'];
+        $this->currentJob->get('payload')->downloadUrl = $fileArr['downloadUrl'];
+        $this->getEntityManager()->saveEntity($this->currentJob);
 
         return $fileArr['id'];
     }
@@ -185,7 +193,7 @@ class ConvertedFileGenerator extends QueueManagerBase
 
     protected function createFileParser(string $format): FileParserInterface
     {
-        return $this->getInjection('container')->get(ImportFeedEntity::getFileParserClass($format));
+        return $this->getContainer()->get(ImportFeedEntity::getFileParserClass($format));
     }
 
     protected function getImportFeedService(): ImportFeed

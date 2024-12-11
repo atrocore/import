@@ -1,0 +1,10 @@
+{
+  "ImportFeed": {
+    "scheduledJob": true,
+    "handler": "\\Import\\Jobs\\ImportFeed"
+  },
+  "ConvertedFileGenerator": {
+    "scheduledJob": false,
+    "handler": "\\Import\\Jobs\\ConvertedFileGenerator"
+  }
+}

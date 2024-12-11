@@ -13,17 +13,23 @@ declare(strict_types=1);
 
 namespace Import\Jobs;
 
-use Espo\Core\Jobs\Base;
+use Atro\Entities\Job;
+use Atro\Jobs\AbstractJob;
+use Atro\Jobs\JobInterface;
 
-class ImportFeed extends Base
+class ImportFeed extends AbstractJob implements JobInterface
 {
-    public function run($data, $targetId, $targetType, $scheduledJobId): bool
+    public function run(Job $job): void
     {
-        $scheduledJob = $this->getEntityManager()->getEntity('ScheduledJob', $scheduledJobId);
-        if (empty($scheduledJob) || empty($importFeedId = $scheduledJob->get('importFeedId'))) {
-            return true;
+        if (empty($job->get('scheduledJobId'))) {
+            return;
         }
 
-        return $this->getServiceFactory()->create('ImportFeed')->runImport($importFeedId, '');
+        $scheduledJob = $this->getEntityManager()->getEntity('ScheduledJob', $job->get('scheduledJobId'));
+        if (empty($scheduledJob) || empty($scheduledJob->get('importFeedId'))) {
+            return;
+        }
+
+        $this->getServiceFactory()->create('ImportFeed')->runImport($scheduledJob->get('importFeedId'), '');
     }
 }

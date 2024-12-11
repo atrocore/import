@@ -10,10 +10,8 @@
     "importFeeds": "Import Feeds"
   },
   "options": {
-    "job": {
-      "ImportFeed": "Import Feed",
-      "TrialImport": "Failed Import Job retrial",
-      "ImportJobRemove": "Import Job Remover"
+    "type": {
+      "ImportFeed": "Import Feed"
     }
   },
   "tooltips": {

@@ -35,14 +35,19 @@ class ImportJob extends Base
         $type = $data->type === 'convertedFile' ? 'converted' : $data->type;
         $name = $this->getLanguage()->translate('generateFile' . ucfirst($type), 'labels', 'ImportJob');
 
-        $dto = new QueueItemDTO($name, 'ConvertedFileGenerator', [
-            'type'        => $type,
-            'importJobId' => $data->id,
+        $jobEntity = $this->getEntityManager()->getEntity('Job');
+        $jobEntity->set([
+            'name'    => $name,
+            'type'    => 'ConvertedFileGenerator',
+            'payload' => [
+                'type'        => $type,
+                'importJobId' => $data->id,
+            ]
         ]);
-        $dto->setHash($data->id);
+        $this->getEntityManager()->saveEntity($jobEntity);
 
         return [
-            'queueItemId' => $this->getContainer()->get('queueManager')->createQueueItem($dto)
+            'queueItemId' => $jobEntity->get('id')
         ];
     }
 

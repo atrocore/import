@@ -2,6 +2,5 @@
   "BackgroundFileParser": "\\Import\\Services\\BackgroundFileParser",
   "ImportTypeSimple": "\\Import\\Services\\ImportTypeSimple",
   "DataSyncErrorsImportDashlet": "\\Import\\Services\\DataSyncErrorsImportDashlet",
-  "ImportJobCreator": "\\Import\\Services\\ImportJobCreator",
-  "ConvertedFileGenerator": "\\Import\\Services\\ConvertedFileGenerator"
+  "ImportJobCreator": "\\Import\\Services\\ImportJobCreator"
 }
