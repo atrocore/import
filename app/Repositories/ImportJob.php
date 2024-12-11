@@ -154,7 +154,7 @@ class ImportJob extends Base
             $qmJob = $this->getQmJob($entity);
 
             if (!empty($qmJob)) {
-                $qmData = $qmJob->get('data');
+                $qmData = $qmJob->get('payload');
                 if (\Import\Jobs\ImportTypeSimple::isDeleteAction($qmData->action)) {
                     if (!empty($qmData->importJobCreatorId)) {
                         do {
