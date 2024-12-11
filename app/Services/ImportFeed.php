@@ -29,6 +29,7 @@ use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
 use Import\Entities\ImportFeed as ImportFeedEntity;
 use Import\Entities\ImportJob;
+use Import\Jobs\ImportJobCreator;
 
 class ImportFeed extends Base
 {
@@ -427,14 +428,21 @@ class ImportFeed extends Base
             ];
 
             if (!empty($payload) && !empty($payload->executeNow)) {
-                $this->getServiceFactory()->create('ImportJobCreator')->run($qmJobData);
+                $this->getInjection('container')->get(ImportJobCreator::class)->runNow($qmJobData);
             } else {
-                $id = $this->getInjection('queueManager')->createQueueItem($name, 'ImportJobCreator', $qmJobData);
+                $jobEntity = $this->getEntityManager()->getEntity('Job');
+                $jobEntity->set([
+                    'name' => $name,
+                    'type' => 'ImportJobCreator',
+                    'payload' => $qmJobData
+                ]);
+                $this->getEntityManager()->saveEntity($jobEntity);
+
                 $this->getEntityManager()->getConnection()->createQueryBuilder()
                     ->update('import_job')
                     ->set('queue_item_id', ':queueItemId')
                     ->where('id = :id')
-                    ->setParameter('queueItemId', $id)
+                    ->setParameter('queueItemId', $jobEntity->get('id'))
                     ->setParameter('id', $parentJob->get('id'))
                     ->executeQuery();
             }

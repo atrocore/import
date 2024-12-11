@@ -60,10 +60,10 @@ class ImportJob extends Base
 
         // delete queue items
         while (true) {
-            $toDeleteItem = $this->getEntityManager()->getRepository('QueueItem')
+            $toDeleteItem = $this->getEntityManager()->getRepository('Job')
                 ->where([
                     'modifiedAt<' => (new \DateTime())->modify("-$days days")->format('Y-m-d H:i:s'),
-                    'serviceName' => ['ImportJobCreator', 'ImportTypeSimple'],
+                    'type'        => ['ImportJobCreator', 'ImportTypeSimple'],
                     'status'      => ['Success', 'Failed', 'Canceled']
                 ])
                 ->limit(0, 2000)

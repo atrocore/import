@@ -6,5 +6,9 @@
   "ConvertedFileGenerator": {
     "scheduledJob": false,
     "handler": "\\Import\\Jobs\\ConvertedFileGenerator"
+  },
+  "ImportJobCreator": {
+    "scheduledJob": false,
+    "handler": "\\Import\\Jobs\\ImportJobCreator"
   }
 }
