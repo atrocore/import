@@ -11,22 +11,30 @@
 
 declare(strict_types=1);
 
-namespace Import\Services;
+namespace Import\Jobs;
 
-use Atro\Services\QueueManagerBase;
+use Atro\Entities\Job;
+use Atro\Jobs\AbstractJob;
+use Atro\Jobs\JobInterface;
+use Import\Services\ImportFeed;
 
-class ImportJobCreator extends QueueManagerBase
+class ImportJobCreator extends AbstractJob implements JobInterface
 {
-    public function run(array $data = []): bool
+    public function run(Job $job): void
+    {
+        $this->runNow($job->getPayload(), $job);
+    }
+
+    public function runNow(array $data, Job $job = null): void
     {
         $importFeed = $this->getEntityManager()->getRepository('ImportFeed')->get($data['importFeedId']);
         if (empty($importFeed)) {
-            return false;
+            return;
         }
 
         $attachment = $this->getEntityManager()->getEntity('File', $data['attachmentId']);
         if (empty($attachment)) {
-            return false;
+            return;
         }
 
         $payload = !empty($data['payload']) ? json_decode(json_encode($data['payload'])) : new \stdClass();
@@ -37,14 +45,15 @@ class ImportJobCreator extends QueueManagerBase
         $delimiter = $payload->delimiter ?? $importFeed->getDelimiter();
         $enclosure = $payload->enclosure ?? $importFeed->getEnclosure();
 
-        /** @var \Espo\Core\ServiceFactory $serviceFactory */
-        $serviceFactory = $this->getContainer()->get('serviceFactory');
+        $serviceFactory = $this->getServiceFactory();
 
         if (!array_key_exists('jobData', $data)) {
             $data['jobData'] = [];
         }
 
-        $data['jobData']['importJobCreatorId'] = $this->qmItem->get('id');
+        if (!empty($job)) {
+            $data['jobData']['importJobCreatorId'] = $job->get('id');
+        }
 
         /** @var ImportFeed $importFeedService */
         $importFeedService = $serviceFactory->create('ImportFeed');
@@ -117,7 +126,5 @@ class ImportJobCreator extends QueueManagerBase
             $rowNumberPart = $rowNumberPart + $maxPerJob;
             $partNumber++;
         }
-
-        return true;
     }
 }
