@@ -91,7 +91,7 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
             if (empty($qmJob)) {
                 throw new BadRequest("Job for ImportJob '{$importJob->get('id')}' does not exist.");
             }
-            $jobData = json_decode(json_encode($qmJob->get('data')), true);
+            $jobData = json_decode(json_encode($qmJob->get('payload')), true);
         }
 
         $convertedFile = $this->createConvertedFile($importJob->get('importFeed'), $jobData);

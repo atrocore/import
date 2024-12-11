@@ -21,5 +21,7 @@
   "hasAssignedUser": false,
   "hasTeam": false,
   "hasOwner": false,
-  "hideFieldTypeFilters": true
+  "hideFieldTypeFilters": true,
+  "autoDeleteAfterDays": 21,
+  "clearDeletedAfterDays": 35
 }
