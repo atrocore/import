@@ -17,12 +17,12 @@ use Espo\ORM\Entity;
 use Atro\Listeners\AbstractListener;
 use Atro\Core\EventManager\Event;
 
-class QueueItemEntity extends AbstractListener
+class JobEntity extends AbstractListener
 {
     public function afterSave(Event $event): void
     {
         $entity = $event->getArgument('entity');
-        if (!empty($entity->get('data')->data->importJobId)) {
+        if (!empty($entity->get('payload')->data->importJobId)) {
             $this->updateImportJobState($entity);
         }
     }
@@ -30,14 +30,14 @@ class QueueItemEntity extends AbstractListener
     public function afterRemove(Event $event): void
     {
         $entity = $event->getArgument('entity');
-        if (!empty($entity->get('data')->data->importJobId)) {
+        if (!empty($entity->get('payload')->data->importJobId)) {
             $this->removeImportJob($entity);
         }
     }
 
     protected function updateImportJobState(Entity $entity): bool
     {
-        $importJob = $this->getEntityManager()->getEntity('ImportJob', $entity->get('data')->data->importJobId);
+        $importJob = $this->getEntityManager()->getEntity('ImportJob', $entity->get('payload')->data->importJobId);
         if (empty($importJob)) {
             return false;
         }
@@ -53,7 +53,7 @@ class QueueItemEntity extends AbstractListener
 
     protected function removeImportJob(Entity $entity): bool
     {
-        $importJob = $this->getEntityManager()->getEntity('ImportJob', $entity->get('data')->data->importJobId);
+        $importJob = $this->getEntityManager()->getEntity('ImportJob', $entity->get('payload')->data->importJobId);
         if (empty($importJob)) {
             return false;
         }

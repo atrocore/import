@@ -18,7 +18,6 @@ use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Templates\Controllers\Base;
 use Atro\Core\Utils\Language;
-use Atro\DTO\QueueItemDTO;
 
 class ImportJob extends Base
 {

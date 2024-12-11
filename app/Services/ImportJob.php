@@ -170,10 +170,10 @@ class ImportJob extends Base
                 $importJob->set('attachmentId', !empty($attachmentId) ? $attachmentId : $job->get('attachmentId'));
                 $this->getEntityManager()->saveEntity($importJob);
 
-                $data = $queueItem->get('data');
+                $data = $queueItem->get('payload');
                 $data->data->importJobId = $importJob->get('id');
                 $data->attachmentId = $importJob->get('attachmentId');
-                $importService->push(new QueueItemDTO($queueItem->get('name'), $queueItem->get('serviceName'), json_decode(json_encode($data), true)));
+                $importService->push($queueItem->get('name'), $queueItem->get('type'), json_decode(json_encode($data), true));
             }
             return true;
         }
