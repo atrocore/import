@@ -60,7 +60,7 @@ class LayoutController extends \Atro\Listeners\AbstractListener
         $newRows = [];
         foreach ($result[0]['rows'] as $row) {
             $newRows[] = $row;
-            if ($row[0]['name'] === 'job') {
+            if ($row[0]['name'] === 'type') {
                 $newRows[] = [['name' => 'importFeed'], false];
                 $newRows[] = [['name' => 'importFeeds'], false];
                 if(!$this->checkIfFieldExists('maximumHoursToLookBack', $result[0]['rows'])){
