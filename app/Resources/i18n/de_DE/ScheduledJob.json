@@ -1,13 +1,11 @@
 {
   "fields": {
     "importFeed": "Import Feed",
-    "importFeeds": "Import Feeds",
     "maximumHoursToLookBack": "Maximale Stundenzahl für die Rückschau",
     "maximumDaysForJobExist": "Maximale Aufbewahrungsfrist in Tagen"
   },
   "links": {
-    "importFeed": "Import Feed",
-    "importFeeds": "Import Feeds"
+    "importFeed": "Import Feed"
   },
   "options": {
     "job": {
@@ -15,8 +13,5 @@
       "TrialImport": "Wiederholung von fehlgeschlagenen Import Jobs",
       "ImportJobRemove": "Entfernung von Import Jobs"
     }
-  },
-  "tooltips": {
-    "importFeeds": "Wenn kein Import-Feed ausgewählt ist, werden alle fehlgeschlagenen Importjobs erneut ausgeführt."
   }
 }

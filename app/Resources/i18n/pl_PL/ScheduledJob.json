@@ -1,13 +1,11 @@
 {
 	"fields": {
 		"importFeed": "Importuj Źródło",
-		"importFeeds": "Importuj Źródła",
 		"maximumHoursToLookBack": "Maksymalna liczba godzin do cofnięcia",
 		"maximumDaysForJobExist": "Maksymalny okres retencji w dniach"
 	},
 	"links": {
-		"importFeed": "Importuj Źródło",
-		"importFeeds": "Importuj Źródła"
+		"importFeed": "Importuj Źródło"
 	},
 	"options": {
 		"job": {
@@ -15,8 +13,5 @@
 			"TrialImport": "Ponowne próbowanie nieudanego importu",
 			"ImportJobRemove": "Usuwanie Zadania Importu"
 		}
-	},
-	"tooltips": {
-		"importFeeds": "Jeśli nie zostanie wybrane żadne źródło importu, wszystkie nieudane zadania importu zostaną ponowione."
 	}
 }

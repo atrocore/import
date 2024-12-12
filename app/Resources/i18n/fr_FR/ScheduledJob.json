@@ -1,13 +1,11 @@
 {
   "fields": {
     "importFeed": "Importation de flux",
-    "importFeeds": "Import des flux",
     "maximumHoursToLookBack": "Un maximum d'heures pour regarder en arrière",
     "maximumDaysForJobExist": "Durée maximale de conservation en jours"
   },
   "links": {
-    "importFeed": "Flux d'import",
-    "importFeeds": "Import des flux"
+    "importFeed": "Flux d'import"
   },
   "options": {
     "job": {
@@ -15,8 +13,5 @@
       "TrialImport": "Échec de la nouvelle tentative d'importation",
       "ImportJobRemove": "Suppression des travaux d'importation"
     }
-  },
-  "tooltips": {
-    "importFeeds": "Si aucun flux d'importation n'est sélectionné, toutes les tâches d'importation qui ont échoué seront relancées."
   }
 }

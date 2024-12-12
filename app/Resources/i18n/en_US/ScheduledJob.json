@@ -1,20 +1,15 @@
 {
   "fields": {
     "importFeed": "Import Feed",
-    "importFeeds": "Import Feeds",
     "maximumHoursToLookBack": "Maximum hours to look back",
     "maximumDaysForJobExist": "Maximum retention period in days"
   },
   "links": {
-    "importFeed": "Import Feed",
-    "importFeeds": "Import Feeds"
+    "importFeed": "Import Feed"
   },
   "options": {
     "type": {
       "ImportFeed": "Import Feed"
     }
-  },
-  "tooltips": {
-    "importFeeds": "If no Import Feed is selected, all failed Import Jobs will be retried."
   }
 }
