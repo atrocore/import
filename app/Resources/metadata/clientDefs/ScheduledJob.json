@@ -6,7 +6,7 @@
           "conditionGroup": [
             {
               "type": "in",
-              "attribute": "job",
+              "attribute": "type",
               "value": ["ImportFeed"]
             }
           ]
@@ -15,19 +15,8 @@
           "conditionGroup": [
             {
               "type": "in",
-              "attribute": "job",
+              "attribute": "type",
               "value": ["ImportFeed"]
-            }
-          ]
-        }
-      },
-      "importFeeds": {
-        "visible": {
-          "conditionGroup": [
-            {
-              "type": "equals",
-              "attribute": "job",
-              "value": "TrialImport"
             }
           ]
         }
