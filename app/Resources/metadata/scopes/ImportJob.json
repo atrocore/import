@@ -9,7 +9,7 @@
     "edit",
     "delete"
   ],
-  "customizable": false,
+  "customizable": true,
   "importable": false,
   "notifications": false,
   "stream": false,
