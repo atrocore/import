@@ -29,5 +29,11 @@ class V1Dot8Dot1 extends Base
             ->where('type=:type')
             ->setParameter('type', 'ImportJobRemove')
             ->executeQuery();
+
+        $this->getConnection()->createQueryBuilder()
+            ->delete($this->getConnection()->quoteIdentifier('job'))
+            ->where('type=:type')
+            ->setParameter('type', 'ImportJobRemove')
+            ->executeQuery();
     }
 }
