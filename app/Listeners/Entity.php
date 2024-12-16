@@ -31,7 +31,7 @@ class Entity extends AbstractListener
 
         if (!empty($params['where'])) {
             foreach ($params['where'] as $k => $item) {
-                if (!empty($callback = $this->prepareImportJobFilterCallback($entityType, $item))) {
+                if (is_array($item) && !empty($callback = $this->prepareImportJobFilterCallback($entityType, $item))) {
                     $params['filterCallbacks'][] = $callback;
                     unset($params['where'][$k]);
                     $params['where'] = array_values($params['where']);
