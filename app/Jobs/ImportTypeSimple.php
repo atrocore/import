@@ -152,13 +152,16 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
 
     public function run(Job $job): void
     {
-        $data = $job->getPayload();
+        $this->runNow($job->getPayload(), $job);
+    }
 
+    public function runNow(array $data, ?Job $job = null): void
+    {
         // prepare file row
         $fileRow = (int) (($data['rowNumberPart'] ?? 0) + ($data['offset'] ?? 1));
         $this->getMemoryStorage()->set('importRowNumber', $fileRow);
 
-        $this->createConvertedFileForJob($data['data']['importJobId']);
+        $this->createConvertedFileForJob($data['data']['importJobId'], $data);
 
         $importJob = $this->getEntityById('ImportJob', $data['data']['importJobId']);
 
