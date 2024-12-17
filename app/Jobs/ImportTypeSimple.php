@@ -415,6 +415,10 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
 
             fclose($cacheFile);
         }
+
+        $this->getMemoryStorage()->delete('importJobId');
+        $this->getMemoryStorage()->delete('skipAssignmentNotifications');
+        $this->getMemoryStorage()->delete('skipHooks');
     }
 
     public function afterRowProceed(string $entityType, array $where, ?string $id): void
