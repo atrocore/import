@@ -19,6 +19,11 @@ use Espo\ORM\Entity;
 
 class Import extends AbstractAction
 {
+    public function useMassActions(Entity $action, \stdClass $input): bool
+    {
+        return false;
+    }
+
     public function executeViaWorkflow(array $workflowData, Event $event): bool
     {
         $action = $this->getActionById($workflowData['id']);
