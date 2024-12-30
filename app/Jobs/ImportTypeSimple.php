@@ -289,7 +289,7 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
                             }
                         }
 
-                        if ($item['entity'] === 'ProductAttributeValue' && in_array($item['name'], ['value', 'valueFrom', 'valueTo', 'valueUnitId'])) {
+                        if ($item['entity'] === 'ProductAttributeValue' && in_array($item['name'], ['value', 'valueFrom', 'valueTo', 'valueMain', 'valueUnitId'])) {
                             $item = json_decode(json_encode($item), true);
                             // if there is attributeId in input data (We have to put it in configurator item)
                             if (property_exists($input, 'attributeId')) {
@@ -298,6 +298,10 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
                         }
 
                         $type = $this->prepareFieldType($item, $input, $entity ?? null);
+
+                        if ($item['entity'] === 'ProductAttributeValue' && $item['name'] === 'valueMain') {
+                            $item['name'] = 'value';
+                        }
 
                         try {
                             $this->getService('ImportConfiguratorItem')->getFieldConverter($type)->convert($input, $item, $row);
@@ -1144,7 +1148,7 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
         $type = $this->getMetadata()->get(['entityDefs', $item['entity'], 'fields', $fieldName, 'type'], 'varchar');
 
         if ($item['entity'] === 'ProductAttributeValue') {
-            if (in_array($fieldName, ['value', 'valueFrom', 'valueTo'])) {
+            if (in_array($fieldName, ['value', 'valueMain', 'valueFrom', 'valueTo'])) {
                 if (isset($item['attributeType'])) {
                     $type = $item['attributeType'];
                 } elseif (property_exists($input, 'attributeType')) {
@@ -1163,12 +1167,12 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
                     }
                 }
 
-                if ($fieldName == 'value' && in_array($type, ['int', 'float', 'rangeInt', 'rangeFloat', 'varchar'])) {
+                if (in_array($fieldName, ['value', 'valueMain']) && in_array($type, ['int', 'float', 'rangeInt', 'rangeFloat', 'varchar'])) {
                     if (!isset($attribute) && isset($item['attributeId'])) {
                         $attribute = $this->getEntityById('Attribute', $item['attributeId']);
                     }
 
-                    $type = !empty($attribute) && !empty($attribute->get('measureId')) ? 'valueWithUnit' : $type;
+                    $type = !empty($attribute) && !empty($attribute->get('measureId')) && $fieldName != 'valueMain' ? 'valueWithUnit' : $type;
                 }
 
                 if (in_array($fieldName, ['valueFrom', 'valueTo'])) {

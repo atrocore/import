@@ -50,12 +50,18 @@ Espo.define('import:views/import-configurator-item/fields/attribute-value', 'vie
                 }
             } else if (['float', 'int', 'varchar'].includes(type)) {
                 if (this.hasUnit()) {
+                    this.params.options.push('valueMain')
                     this.params.options.push('valueUnitId')
                 }
             }
 
             this.params.options.forEach(option => {
-                this.translatedOptions[option] = this.getLanguage().translateOption(option, 'attributeValue', 'ImportConfiguratorItem');
+                if (option === 'valueMain') {
+                    let translatedType = this.getLanguage().translate(type, 'fieldTypes', 'Admin')
+                    this.translatedOptions[option] = this.getLanguage().translateOption(option, 'attributeValue', 'ImportConfiguratorItem').replace('%s', translatedType);
+                } else {
+                    this.translatedOptions[option] = this.getLanguage().translateOption(option, 'attributeValue', 'ImportConfiguratorItem');
+                }
             });
         }
     },

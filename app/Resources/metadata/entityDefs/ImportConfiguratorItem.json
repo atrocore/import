@@ -168,13 +168,15 @@
         "value",
         "valueFrom",
         "valueTo",
-        "valueUnitId"
+        "valueUnitId",
+        "valueMain"
       ],
       "options": [
         "value",
         "valueFrom",
         "valueTo",
-        "valueUnitId"
+        "valueUnitId",
+        "valueMain"
       ]
     }
   },

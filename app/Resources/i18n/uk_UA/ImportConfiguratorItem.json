@@ -25,7 +25,8 @@
       "value": "Значення",
       "valueFrom": "Значення від",
       "valueTo": "Значення до",
-      "valueUnitId": "Значення міра"
+      "valueUnitId": "Значення міра",
+      "valueMain": "Значення %s"
     }
   },
   "links": {

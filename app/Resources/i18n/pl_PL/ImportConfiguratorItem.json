@@ -24,7 +24,8 @@
       "value": "Wartość",
       "valueFrom": "Wartość od",
       "valueTo": "Wartość do",
-      "valueUnitId": "Jednostka wartości"
+      "valueUnitId": "Jednostka wartości",
+      "valueMain": "Wartość %s"
     }
   },
   "links": {
