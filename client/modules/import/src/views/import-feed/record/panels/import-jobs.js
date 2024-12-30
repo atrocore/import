@@ -20,13 +20,22 @@ Espo.define('import:views/import-feed/record/panels/import-jobs', 'views/record/
                     clearTimeout(timeout);
                 }
                 timeout = setTimeout(() => {
-                    this.collection.fetch();
+                    const hash = this.collectionToString()
+                    this.collection.fetch({
+                        noRebuild: () => {
+                            return hash === this.collectionToString()
+                        }
+                    });
                 }, 5000);
             });
 
             this.listenTo(this.model, 'importRun', () => {
                 this.actionRefresh();
             });
+        },
+
+        collectionToString() {
+            return JSON.stringify(this.collection.toArray().map(model => model.attributes))
         },
 
         actionCancelImportJob(data) {

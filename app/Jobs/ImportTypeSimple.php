@@ -109,6 +109,7 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
         $idFields = $this->getLinkFields($jobData['data']['entity'], $jobData['data']['idField']);
 
         $rows = [];
+        $this->lastIteration = false;
         while (!empty($inputData = $this->getInputData($jobData))) {
             $this->getMemoryStorage()->set('importRowsPart', $inputData);
             // add column converted_{field} to the row
@@ -158,7 +159,7 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
     public function runNow(array $data, ?Job $job = null): void
     {
         // prepare file row
-        $fileRow = (int) (($data['rowNumberPart'] ?? 0) + ($data['offset'] ?? 1));
+        $fileRow = (int)(($data['rowNumberPart'] ?? 0) + ($data['offset'] ?? 1));
         $this->getMemoryStorage()->set('importRowNumber', $fileRow);
 
         $this->createConvertedFileForJob($data['data']['importJobId'], $data);
@@ -387,7 +388,7 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
             $this->clearMemoryOfLoadedEntities();
         }
 
-        $this->getMemoryStorage()->set('importRowNumber', (int) (($data['rowNumberPart'] ?? 0) + ($data['offset'] ?? 1)));
+        $this->getMemoryStorage()->set('importRowNumber', (int)(($data['rowNumberPart'] ?? 0) + ($data['offset'] ?? 1)));
 
         // create jobs for importing ProductAttributeValues
         $this->createImportPavJobs($data);
@@ -419,6 +420,7 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
         $this->getMemoryStorage()->delete('importJobId');
         $this->getMemoryStorage()->delete('skipAssignmentNotifications');
         $this->getMemoryStorage()->delete('skipHooks');
+        $this->getMemoryStorage()->delete('importRowNumber');
     }
 
     public function afterRowProceed(string $entityType, array $where, ?string $id): void
