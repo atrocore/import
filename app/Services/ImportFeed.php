@@ -30,6 +30,7 @@ use Espo\ORM\EntityCollection;
 use Import\Entities\ImportFeed as ImportFeedEntity;
 use Import\Entities\ImportJob;
 use Import\Jobs\ImportJobCreator;
+use Import\Jobs\ImportTypeSimple;
 
 class ImportFeed extends Base
 {
@@ -338,7 +339,7 @@ class ImportFeed extends Base
         $maxPerJob = (int)$importFeed->get('maxPerJob');
         $qmData = $qmJob->get('data');
 
-        if (!$service::isDeleteAction($qmData->action)) {
+        if (!ImportTypeSimple::isDeleteAction($qmData->action)) {
             return false;
         }
 
@@ -403,7 +404,7 @@ class ImportFeed extends Base
 
     public function hasParentJob(ImportFeedEntity $importFeed): bool
     {
-        $hasParent = (int)$importFeed->get('maxPerJob') > 0 || \Import\Jobs\ImportTypeSimple::isDeleteAction($importFeed->get('fileDataAction') ?? '');
+        $hasParent = (int)$importFeed->get('maxPerJob') > 0 || ImportTypeSimple::isDeleteAction($importFeed->get('fileDataAction') ?? '');
         if (!$hasParent && $importFeed->getFeedField('entity') === 'Product') {
             $configuratorItemTypes = array_column($importFeed->get('configuratorItems')->toArray(), 'type');
             $hasParent = in_array('Attribute', $configuratorItemTypes);
