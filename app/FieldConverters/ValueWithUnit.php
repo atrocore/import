@@ -102,8 +102,7 @@ class ValueWithUnit extends Varchar
         $entity->set('default', Json::encode($data));
     }
 
-    public
-    function prepareForOutputConfiguratorDefaultField(Entity $entity): void
+    public function prepareForOutputConfiguratorDefaultField(Entity $entity): void
     {
         $data = Json::decode($entity->get('default'), true);
         if (!empty($data)) {

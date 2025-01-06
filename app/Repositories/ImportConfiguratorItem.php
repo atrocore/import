@@ -99,6 +99,9 @@ class ImportConfiguratorItem extends Base
                 throw new BadRequest('No such Attribute.');
             }
             $type = self::prepareConverterType($attribute->get('type'), $entity->get('attributeValue'));
+            if ($entity->get('attributeValue') == 'value' && !empty($attribute->get('measureId'))) {
+                $type = 'valueWithUnit';
+            }
         }
 
         $this->prepareDefaultField($type, $entity);

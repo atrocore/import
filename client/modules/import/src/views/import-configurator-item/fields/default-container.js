@@ -209,6 +209,13 @@ Espo.define('import:views/import-configurator-item/fields/default-container', 'v
                 }
             }
 
+            if (this.model.get('type') === 'Attribute'
+                && this.model.get('attributeValue') === 'value'
+                && ['int', 'float', 'varchar'].includes(type)
+                && this.model.get('attributeData').measureId !== null) {
+                viewName = "views/fields/unit-" + type;
+            }
+
             this.createView('default', viewName, {
                 el: `${this.options.el} > .field[data-name="default"]`,
                 model: this.model,
