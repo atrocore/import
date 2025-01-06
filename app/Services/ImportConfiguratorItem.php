@@ -198,6 +198,9 @@ class ImportConfiguratorItem extends Base
         if ($type === 'varchar' && !empty($this->getMetadata()->get(['entityDefs', $entity->get('entity'), 'fields', $entity->get('name'), 'unitField']))) {
             $type = 'valueWithUnit';
         }
+        if (!empty($attribute = $entity->get('attribute')) && $entity->get('attributeValue') == 'value' && !empty($attribute->get('measureId'))) {
+            $type = 'valueWithUnit';
+        }
         $converter = $this->getFieldConverter(ImportConfiguratorItemRepository::prepareConverterType($type, $entity->get('attributeValue')));
         if (!empty($converter)) {
             $converter->prepareForOutputConfiguratorDefaultField($entity);

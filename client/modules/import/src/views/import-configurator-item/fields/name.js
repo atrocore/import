@@ -94,7 +94,8 @@ Espo.define('import:views/import-configurator-item/fields/name', 'views/fields/e
 
             if (this.model.get('type') === 'Attribute') {
                 extraInfo = '';
-                if (['extensibleEnum', 'extensibleMultiEnum'].includes(this.model.get('attributeData').type)) {
+                let type = this.model.get('attributeData').type;
+                if (['extensibleEnum', 'extensibleMultiEnum'].includes(type)) {
                     let translated = [];
                     this.model.get('importBy').forEach(field => {
                         translated.push(this.translate(field, 'fields', 'ExtensibleEnumOption'));
@@ -103,7 +104,12 @@ Espo.define('import:views/import-configurator-item/fields/name', 'views/fields/e
                 }
 
                 extraInfo += `<span class="text-muted small">${this.translate('code', 'fields', 'Attribute')}: ${this.model.get('attributeData').code}</span>`;
-                extraInfo += `<br><span class="text-muted small">${this.translate('attributeValue', 'fields', 'ImportConfiguratorItem')}: ${this.getLanguage().translateOption(this.model.get('attributeValue'), 'attributeValue', 'ImportConfiguratorItem')}</span>`;
+                if (['float', 'int', 'varchar'].includes(type) && this.model.get('attributeValue') === 'valueMain') {
+                    let translatedType = this.getLanguage().translate(type, 'fieldTypes', 'Admin');
+                    extraInfo += `<br><span class="text-muted small">${this.translate('attributeValue', 'fields', 'ImportConfiguratorItem')}: ${this.getLanguage().translateOption(this.model.get('attributeValue'), 'attributeValue', 'ImportConfiguratorItem').replace('%s', translatedType)}</span>`;
+                } else {
+                    extraInfo += `<br><span class="text-muted small">${this.translate('attributeValue', 'fields', 'ImportConfiguratorItem')}: ${this.getLanguage().translateOption(this.model.get('attributeValue'), 'attributeValue', 'ImportConfiguratorItem')}</span>`;
+                }
                 if (this.model.get('channelName')){
                     extraInfo += `<br><span class="text-muted small">${this.translate('Channel', 'scopeNames', 'Global')}: ${this.model.get('channelName')}</span>`;
                 }
