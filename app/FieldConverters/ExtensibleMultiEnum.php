@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Import\FieldConverters;
 
+use Espo\Core\Utils\Json;
 use Espo\ORM\Entity;
 
 class ExtensibleMultiEnum extends LinkMultiple
@@ -57,5 +58,29 @@ class ExtensibleMultiEnum extends LinkMultiple
     protected function getForeignEntityName(array $config): string
     {
         return 'ExtensibleEnumOption';
+    }
+
+    public function prepareForSaveConfiguratorDefaultField(Entity $entity): void
+    {
+        if ($entity->has('default')) {
+            $entity->set('default', Json::encode($entity->get('default')));
+        }
+    }
+
+    public function prepareForOutputConfiguratorDefaultField(Entity $entity): void
+    {
+        $entity->set('default', empty($entity->get('default')) ? null : Json::decode($entity->get('default'), true));
+        if (!empty($entity->get('default'))) {
+            $options = $this->getEntityManager()->getRepository('ExtensibleEnumOption')
+                ->select(['id', 'name'])
+                ->where(['id' => $entity->get('default')])
+                ->find();
+
+            $names = [];
+            foreach ($options as $option) {
+                $names[$option->get('id')] = $option->get('name');
+            }
+            $entity->set('defaultNames', $names);
+        }
     }
 }
