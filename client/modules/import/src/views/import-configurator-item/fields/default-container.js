@@ -200,9 +200,9 @@ Espo.define('import:views/import-configurator-item/fields/default-container', 'v
             if (type === 'unit') {
                 viewName = 'views/fields/unit-link'
             } else if (type === 'extensibleEnum') {
-                viewName = 'views/admin/field-manager/fields/link/extensible-enum-default';
+                viewName = 'views/admin/field-manager/fields/extensible-enum-default';
             } else if (type === 'extensibleMultiEnum') {
-                viewName = 'views/admin/field-manager/fields/linkMultiple/extensible-multi-enum-default';
+                viewName = 'views/admin/field-manager/fields/extensible-multi-enum-default';
             } else if (type === 'varchar') {
                 if (this.getMetadata().get(`entityDefs.${this.model.get('entity')}.fields.${this.model.get('name')}.unitField`)) {
                     viewName = this.getMetadata().get(`entityDefs.${this.model.get('entity')}.fields.${this.model.get('name')}.view`);
