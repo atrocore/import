@@ -337,7 +337,7 @@ class ImportFeed extends Base
         $jobIds = array_column($jobsData, 'id');
         $entityName = $parent->get('entityName');
         $maxPerJob = (int)$importFeed->get('maxPerJob');
-        $qmData = $qmJob->get('data');
+        $qmData = $qmJob->get('payload');
 
         if (!ImportTypeSimple::isDeleteAction($qmData->action)) {
             return false;
