@@ -63,20 +63,26 @@ class ExtensibleMultiEnum extends LinkMultiple
     public function prepareForSaveConfiguratorDefaultField(Entity $entity): void
     {
         if ($entity->has('default')) {
-            $entity->set('default', Json::encode($entity->get('default')));
+            $entity->set('default', !is_array($entity->get('default')) ? null : json_encode($entity->get('default')));
         }
     }
 
     public function prepareForOutputConfiguratorDefaultField(Entity $entity): void
     {
-        $entity->set('default', empty($entity->get('default')) ? null : Json::decode($entity->get('default'), true));
+        $default = @json_decode($entity->get('default'), true);
+        if (!is_array($default)) {
+            $default = null;
+        }
+
+        $entity->set('default', $default);
+        $entity->set('defaultNames', null);
+
         if (!empty($entity->get('default'))) {
+            $names = [];
             $options = $this->getEntityManager()->getRepository('ExtensibleEnumOption')
                 ->select(['id', 'name'])
                 ->where(['id' => $entity->get('default')])
                 ->find();
-
-            $names = [];
             foreach ($options as $option) {
                 $names[$option->get('id')] = $option->get('name');
             }
