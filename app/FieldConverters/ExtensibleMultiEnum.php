@@ -69,7 +69,7 @@ class ExtensibleMultiEnum extends LinkMultiple
 
     public function prepareForOutputConfiguratorDefaultField(Entity $entity): void
     {
-        $default = @json_decode($entity->get('default'), true);
+        $default = @json_decode((string)$entity->get('default'), true);
         if (!is_array($default)) {
             $default = null;
         }
