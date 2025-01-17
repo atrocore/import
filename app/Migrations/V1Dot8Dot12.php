@@ -38,7 +38,7 @@ class V1Dot8Dot12 extends Base
         }
 
         $offset = 0;
-        $limit = 2000;
+        $limit = 100;
         while (true) {
             $rows = $this->getConnection()->createQueryBuilder()
                 ->select('id')
