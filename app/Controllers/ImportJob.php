@@ -16,11 +16,40 @@ namespace Import\Controllers;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Exceptions\Forbidden;
+use Atro\Core\Slim\Http\Request;
 use Atro\Core\Templates\Controllers\Base;
 use Atro\Core\Utils\Language;
+use Espo\ORM\EntityCollection;
 
 class ImportJob extends Base
 {
+    public function actionGetRecordCounters($params, $data, Request $request): array
+    {
+        if (!$request->isGet() || empty($params['id'])) {
+            throw new BadRequest();
+        }
+
+        if (!$this->getAcl()->check($this->name, 'read')) {
+            throw new Forbidden();
+        }
+
+        $importJob = $this->getEntityManager()->getEntity('ImportJob', $params['id']);
+        if (empty($importJob)) {
+            throw new NotFound();
+        }
+
+        if ($importJob->get('state') === 'Running') {
+            $this->getService('ImportJob')->prepareCounts(new EntityCollection([$importJob]));
+        }
+
+        $result = ['id' => $importJob->id];
+        foreach (['createdCount', 'updatedCount', 'deletedCount', 'skippedCount', 'errorsCount'] as $field) {
+            $result[$field] = $importJob->get($field) ?? 0;
+        }
+
+        return $result;
+    }
+
     public function actionGenerateFile($params, \stdClass $data, $request)
     {
         if (!$request->isPost() || !property_exists($data, 'id') || !property_exists($data, 'type')) {

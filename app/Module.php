@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Import;
 
-use Espo\Core\OpenApiGenerator;
 use Atro\Core\ModuleManager\AbstractModule;
 use Espo\Core\Utils\Util;
 
@@ -34,37 +33,5 @@ class Module extends AbstractModule
     {
         \Import\Jobs\ImportTypeSimple::clearCache();
         Util::removeDir(\Import\Services\ImportFeed::TMP_DIR);
-    }
-
-    public function prepareApiDocs(array &$data, array $schemas): void
-    {
-        parent::prepareApiDocs($data, $schemas);
-
-        $data['paths']["/ImportFeed/action/runImport"]['post'] = [
-            'tags'        => ['ImportFeed'],
-            "summary"     => "Run import",
-            "description" => "Run import",
-            "operationId" => "runImport",
-            'security'    => [['Authorization-Token' => []]],
-            'requestBody' => [
-                'required' => true,
-                'content'  => [
-                    'application/json' => [
-                        'schema' => [
-                            "type"       => "object",
-                            "properties" => [
-                                "importFeedId" => [
-                                    "type" => "string",
-                                ],
-                                "attachmentId" => [
-                                    "type" => "string",
-                                ],
-                            ],
-                        ]
-                    ]
-                ],
-            ],
-            "responses"   => OpenApiGenerator::prepareResponses(["type" => "boolean"]),
-        ];
     }
 }
