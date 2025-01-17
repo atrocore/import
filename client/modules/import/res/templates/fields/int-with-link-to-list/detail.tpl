@@ -1,3 +1,3 @@
-{{#if isNotEmpty}}<a href="javascript:" title="{{value}}" data-action="showList">{{value}}</a>{{else}}
+{{#if isNotEmpty}}<a href="javascript:" title="{{translate 'seeRelevantRecords' scope='ImportJob' category='labels'}}" data-action="showList">{{value}}</a>{{else}}
     {{#if valueIsSet}}{{{translate 'None'}}}{{else}}...{{/if}}
 {{/if}}

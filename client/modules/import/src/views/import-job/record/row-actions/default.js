@@ -12,6 +12,36 @@ Espo.define('import:views/import-job/record/row-actions/default', 'views/record/
 
     return Dep.extend({
 
+        events: {
+            'click [data-action=loadCounters]': function (e) {
+                e.currentTarget?.classList.add('fa-spin');
+                this.ajaxGetRequest(`ImportJob/${this.model.id}/recordCounters`).then(response => {
+                    e.currentTarget?.classList.remove('fa-spin');
+                    this.model.set('lastCounterData', response, {silent: true});
+                    this.model.trigger('importCounterChanged');
+                }).done(() => e.currentTarget?.classList.remove('fa-spin'));
+            }
+        },
+
+        setup() {
+            Dep.prototype.setup.call(this);
+
+            this.once('after:render', () => {
+                if (this.model.get('state') !== 'Running') {
+                    this.$el.find('.list-row-buttons > .icons-container').remove();
+                    return;
+                }
+
+                const iconContainer = $("<div class='icons-container'> </div>");
+                this.$el.find('.list-row-buttons').prepend(iconContainer);
+                iconContainer.html('<button type="button" class="btn btn-link btn-sm" data-action="loadCounters"><span class="fas fa-sync"></span></button>');
+
+                this.listenTo(this.model, 'importCancel', () => {
+                    this.$el?.find('.list-row-buttons > .icons-container').remove();
+                });
+            });
+        },
+
         getActionList() {
             let list = Dep.prototype.getActionList.call(this);
             let scope = this.scope || this.options.scope;

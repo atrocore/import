@@ -8,7 +8,7 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('import:views/fields/int-with-link-to-list', 'views/fields/int',
+Espo.define('import:views/fields/int-with-link-to-list', 'import:views/import-job/fields/records-counter',
     Dep => Dep.extend({
 
         listTemplate: 'import:fields/int-with-link-to-list/list',

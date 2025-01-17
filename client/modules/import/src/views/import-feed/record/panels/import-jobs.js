@@ -45,6 +45,7 @@ Espo.define('import:views/import-feed/record/panels/import-jobs', 'views/record/
             model.set('state', 'Canceled');
             model.save().then(() => {
                 this.notify('Saved', 'success');
+                this.reRender();
             });
         },
 
