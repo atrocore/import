@@ -277,22 +277,17 @@ class ImportJob extends Base
 
     public function getJobsCounts(array $ids): array
     {
-        return static::getImportJobsCounters($this->getConnection(), $ids);
-    }
-
-    public static function getImportJobsCounters(\Doctrine\DBAL\Connection $connection, array $ids): array
-    {
-        $data = $connection->createQueryBuilder()
+        $data = $this->getConnection()->createQueryBuilder()
             ->select('id')
             ->addSelect("(SELECT COUNT(id) FROM import_job_log WHERE deleted=:false AND type='create' AND import_job_id=import_job.id) created_count")
-            ->addSelect("(SELECT COUNT(DISTINCT " . $connection->quoteIdentifier('row_number') . ") FROM import_job_log WHERE deleted=:false AND type='update' AND import_job_id=import_job.id) updated_count")
+            ->addSelect("(SELECT COUNT(DISTINCT " . $this->getConnection()->quoteIdentifier('row_number') . ") FROM import_job_log WHERE deleted=:false AND type='update' AND import_job_id=import_job.id) updated_count")
             ->addSelect("(SELECT COUNT(id) FROM import_job_log WHERE deleted=:false AND type='delete' AND import_job_id=import_job.id) deleted_count")
             ->addSelect("(SELECT COUNT(id) FROM import_job_log WHERE deleted=:false AND type='error' AND import_job_id=import_job.id) errors_count")
             ->addSelect("(SELECT COUNT(id) FROM import_job_log WHERE deleted=:false AND type='skip' AND import_job_id=import_job.id) skipped_count")
             ->from('import_job')
             ->where('id IN (:ids)')
             ->andWhere('deleted=:false')
-            ->setParameter('ids', $ids, $connection::PARAM_STR_ARRAY)
+            ->setParameter('ids', $ids, $this->getConnection()::PARAM_STR_ARRAY)
             ->setParameter('false', false, ParameterType::BOOLEAN)
             ->fetchAllAssociative();
 

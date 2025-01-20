@@ -38,13 +38,18 @@ class ImportJob extends Base
             throw new NotFound();
         }
 
-        if ($importJob->get('state') === 'Running') {
-            $this->getService('ImportJob')->prepareCounts(new EntityCollection([$importJob]));
+        $result = ['id' => $importJob->id, 'state' => $importJob->get('state')];
+        $fields = ['createdCount', 'updatedCount', 'deletedCount', 'skippedCount', 'errorsCount'];
+        foreach ($fields as $field) {
+            if ($importJob->get($field) === null) {
+                $this->getService('ImportJob')->prepareCounts(new EntityCollection([$importJob]));
+            }
+
+            $result[$field] = $importJob->get($field) ?? 0;
         }
 
-        $result = ['id' => $importJob->id];
-        foreach (['createdCount', 'updatedCount', 'deletedCount', 'skippedCount', 'errorsCount'] as $field) {
-            $result[$field] = $importJob->get($field) ?? 0;
+        if (!in_array($importJob->get('state'), ['Pending', 'Running'])) {
+            $this->getEntityManager()->saveEntity($importJob);
         }
 
         return $result;

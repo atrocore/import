@@ -65,6 +65,10 @@
           "type": "string",
           "example": "a01jfbct0pped8805vejs0rqf3g"
         },
+        "state": {
+          "type": "string",
+          "example": "Running"
+        },
         "createdCount": {
           "type": "integer",
           "example": 50
