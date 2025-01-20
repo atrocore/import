@@ -82,33 +82,30 @@
     },
     "createdCount": {
       "type": "int",
-      "default": 0,
       "readOnly": true,
       "view": "import:views/import-job/fields/created-count"
     },
     "updatedCount": {
       "type": "int",
-      "default": 0,
       "readOnly": true,
       "view": "import:views/import-job/fields/updated-count"
     },
     "deletedCount": {
       "type": "int",
-      "default": 0,
       "readOnly": true,
       "view": "import:views/import-job/fields/records-counter"
     },
     "skippedCount": {
       "type": "int",
-      "default": 0,
       "readOnly": true,
-      "view": "import:views/import-job/fields/records-counter"
+      "view": "import:views/import-job/fields/records-counter",
+      "disableFormatting": true
     },
     "errorsCount": {
       "type": "int",
-      "default": 0,
       "readOnly": true,
-      "view": "import:views/import-job/fields/errors-count"
+      "view": "import:views/import-job/fields/errors-count",
+      "disableFormatting": true
     },
     "attachment": {
       "type": "file",
