@@ -1,0 +1,95 @@
+[
+  {
+    "route": "/ImportFeed/action/runImport",
+    "method": "post",
+    "params": {
+      "controller": "ImportFeed",
+      "action": "runImport"
+    },
+    "tags": ["ImportFeed"],
+    "summary": "Run import",
+    "description": "Run import",
+    "operationId": "runImport",
+    "security": [
+      {
+        "Authorization-Token": []
+      }
+    ],
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "importFeedId": {
+                "type": "string"
+              },
+              "attachmentId": {
+                "type": "string",
+                "nullable": true
+              }
+            }
+          }
+        }
+      }
+    },
+    "response": {
+      "type": "boolean"
+    }
+  },
+  {
+    "route": "/ImportJob/:id/recordCounters",
+    "method": "get",
+    "params": {
+      "controller": "ImportJob",
+      "action": "getRecordCounters"
+    },
+    "description": "Retrieve counters of selected ImportJob",
+    "requestParameters": [
+      {
+        "name": "id",
+        "in": "path",
+        "required": true,
+        "description": "Identifier of an ImportJob record",
+        "schema": {
+          "type": "string",
+          "example": "a01jfbct0pped8805vejs0rqf3g"
+        }
+      }
+    ],
+    "response": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "example": "a01jfbct0pped8805vejs0rqf3g"
+        },
+        "state": {
+          "type": "string",
+          "example": "Running"
+        },
+        "createdCount": {
+          "type": "integer",
+          "example": 50
+        },
+        "updatedCount": {
+          "type": "integer",
+          "example": 100
+        },
+        "skippedCount": {
+          "type": "integer",
+          "example": 500
+        },
+        "deletedCount": {
+          "type": "integer",
+          "example": 0
+        },
+        "errorsCount": {
+          "type": "integer",
+          "example": 3
+        }
+      }
+    }
+  }
+]

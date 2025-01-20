@@ -1,0 +1,1 @@
+<span>{{#if isNotEmpty}}{{value}}{{else}}...{{/if}}</span>
