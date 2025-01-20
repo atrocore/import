@@ -13,27 +13,14 @@ declare(strict_types=1);
 
 namespace Import\Listeners;
 
-use Espo\Core\Utils\Json;
+use Atro\Listeners\AbstractLayoutListener;
 use Atro\Core\EventManager\Event;
 
-class LayoutController extends \Atro\Listeners\AbstractListener
+class Layout extends AbstractLayoutListener
 {
-    public function afterActionRead(Event $event): void
-    {
-        $scope = $event->getArgument('params')['scope'];
-
-        $name = $event->getArgument('params')['name'];
-
-        $method = 'modify' . $scope . ucfirst($name);
-
-        if (method_exists($this, $method)) {
-            $this->{$method}($event);
-        }
-    }
-
     protected function modifyActionDetail(Event $event): void
     {
-        $result = Json::decode($event->getArgument('result'), true);
+        $result = $event->getArgument('result');
 
         if (strpos(json_encode($result[0]['rows']), '"name":"importFeed"') === false) {
             $result[0]['rows'][] = [['name' => 'importFeed'], false];
@@ -45,17 +32,12 @@ class LayoutController extends \Atro\Listeners\AbstractListener
 
         $result[0]['rows'][] = [['name' => 'payload', 'fullWidth' => true]];
 
-        $event->setArgument('result', Json::encode($result));
-    }
-
-    protected function modifyActionDetailSmall(Event $event): void
-    {
-        $this->modifyActionDetail($event);
+        $event->setArgument('result',  $result);
     }
 
     protected function modifyScheduledJobDetail(Event $event): void
     {
-        $result = Json::decode($event->getArgument('result'), true);
+        $result = $event->getArgument('result');
 
         $newRows = [];
         foreach ($result[0]['rows'] as $row) {
@@ -73,7 +55,7 @@ class LayoutController extends \Atro\Listeners\AbstractListener
 
         $result[0]['rows'] = $newRows;
 
-        $event->setArgument('result', Json::encode($result));
+        $event->setArgument('result',  $result);
     }
 
     public function checkIfFieldExists(string $fieldName, array $array): bool
