@@ -11,7 +11,7 @@
 Espo.define('import:views/fields/int-with-link-to-list', 'import:views/import-job/fields/records-counter',
     Dep => Dep.extend({
 
-        listTemplate: 'import:fields/int-with-link-to-list/list',
+        listTemplate: 'import:fields/int-with-link-to-list/detail',
 
         detailTemplate: 'import:fields/int-with-link-to-list/detail',
 

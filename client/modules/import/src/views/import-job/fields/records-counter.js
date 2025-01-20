@@ -11,24 +11,29 @@
 Espo.define('import:views/import-job/fields/records-counter', 'views/fields/int',
     Dep => Dep.extend({
 
-        syncedValue: null,
+        listTemplate: 'import:fields/records-counter/detail',
+
+        detailTemplate: 'import:fields/records-counter/detail',
 
         setup() {
             Dep.prototype.setup.call(this);
 
             this.listenTo(this.model, 'importCounterChanged', () => {
+                this.updateCounterData();
                 this.reRender();
             } );
         },
 
+        updateCounterData() {
+            const counterData = this.model.get('lastCounterData');
+            if (counterData) {
+                this.model.set(this.name, counterData[this.name] || 0);
+            }
+        },
+
         getValueForDisplay: function() {
-            if (this.model.get('state') === 'Running' && ['list', 'listSmall'].includes(this.mode)) {
-                const counterData = this.model.get('lastCounterData');
-                if (counterData) {
-                    this.model.set(this.name, counterData[this.name] || 0);
-                } else {
-                    return '...';
-                }
+            if (this.model.get(this.name) === null) {
+                this.updateCounterData();
             }
 
             return Dep.prototype.getValueForDisplay.call(this);

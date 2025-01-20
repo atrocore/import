@@ -14,25 +14,40 @@ Espo.define('import:views/import-job/record/row-actions/relationship', 'views/re
         events: {
             'click [data-action=loadCounters]': function (e) {
                 e.currentTarget?.classList.add('fa-spin');
+
                 this.ajaxGetRequest(`ImportJob/${this.model.id}/recordCounters`).then(response => {
+                    if (response.state) {
+                        this.model.set('state', response.state);
+                    }
+
                     this.model.set('lastCounterData', response, {silent: true});
                     this.model.trigger('importCounterChanged');
+
+                    this.reRender();
                 }).done(() => e.currentTarget?.classList.remove('fa-spin'));
             }
+        },
+
+        hasUndefinedCounters() {
+            return ['createdCount', 'updatedCount', 'deletedCount', 'skippedCount', 'errorsCount'].some(field => this.model.get(field) === null)
+                || ['Pending', 'Running'].includes(this.model.get('state'));
         },
 
         setup() {
             Dep.prototype.setup.call(this);
 
-            this.once('after:render', () => {
-                if (this.model.get('state') !== 'Running') {
-                    this.$el.find('.list-row-buttons > .icons-container').remove();
-                    return;
+            this.on('after:render', () => {
+                if (this.hasUndefinedCounters()) {
+                    const iconContainer = $("<div class='icons-container'></div>");
+                    iconContainer.html('<button type="button" class="btn btn-link btn-sm" data-action="loadCounters" title="' + this.translate('loadCounters', 'labels', 'ImportJob') + '"><span class="fas fa-sync"></span></button>');
+                    this.$el?.find('.list-row-buttons').prepend(iconContainer);
                 }
 
-                const iconContainer = $("<div class='icons-container'> </div>");
-                iconContainer.html('<button type="button" class="btn btn-link btn-sm" data-action="loadCounters" title="'+ this.translate('loadCounters', 'labels', 'ImportJob') +'"><span class="fas fa-sync"></span></button>');
-                this.$el.find('.list-row-buttons').prepend(iconContainer);
+                this.listenTo(this.model, 'importCounterChanged', () => {
+                    if (!['Pending', 'Running'].includes(this.model.get('state'))) {
+                        this.$el?.find('.list-row-buttons > .icons-container').remove();
+                    }
+                })
 
                 this.listenTo(this.model, 'importCancel', () => {
                     this.$el?.find('.list-row-buttons > .icons-container').remove();
