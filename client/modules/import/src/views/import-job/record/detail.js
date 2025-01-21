@@ -23,11 +23,12 @@ Espo.define('import:views/import-job/record/detail', 'views/record/detail',
         }, Dep.prototype.events),
 
         setupActionItems: function () {
+            this.additionalButtons = this.additionalButtons.filter(button => button.name !== 'loadCounters');
             if (['createdCount', 'updatedCount', 'deletedCount', 'skippedCount', 'errorsCount'].some(field => this.model.get(field) === null)) {
                 this.additionalButtons.push({
                     name: 'loadCounters',
                     action: 'loadCounters',
-                    html: '<span class="fas fa-sync"></span>',
+                    html: '<span class="fas fa-sync" style="font-size: 14px"></span>',
                     tooltip: this.translate('loadCounters', 'labels', 'ImportJob'),
                 });
             }
@@ -127,7 +128,10 @@ Espo.define('import:views/import-job/record/detail', 'views/record/detail',
 
         actionGenerateFile(type) {
             this.notify(this.translate('generating', 'labels', 'ImportJob'));
-            this.ajaxPostRequest('ImportJob/action/generateFile', {id: this.model.get('id'), type: type}).then(response => {
+            this.ajaxPostRequest('ImportJob/action/generateFile', {
+                id: this.model.get('id'),
+                type: type
+            }).then(response => {
                 let interval = setInterval(() => {
                     this.ajaxGetRequest(`Job/${response.queueItemId}?silent=true`).success(res => {
                         this.notify(this.translate('generating', 'labels', 'ImportJob'));
