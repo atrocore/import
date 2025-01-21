@@ -38,7 +38,7 @@ Espo.define('import:views/import-job/record/row-actions/relationship', 'views/re
 
             this.on('after:render', () => {
                 if (this.hasUndefinedCounters()) {
-                    const iconContainer = $("<div class='icons-container'></div>");
+                    const iconContainer = $("<div class='icons-container fixed'></div>");
                     iconContainer.html('<button type="button" class="btn btn-link btn-sm" data-action="loadCounters" title="' + this.translate('loadCounters', 'labels', 'ImportJob') + '"><span class="fas fa-sync"></span></button>');
                     this.$el?.find('.list-row-buttons').prepend(iconContainer);
                 }
