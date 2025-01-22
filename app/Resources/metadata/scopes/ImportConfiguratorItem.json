@@ -17,5 +17,6 @@
   "hasOwner": false,
   "deleteWithoutConfirmation": true,
   "notificationDisabled": true,
-  "hideFieldTypeFilters": true
+  "hideFieldTypeFilters": true,
+  "emHidden": true
 }
