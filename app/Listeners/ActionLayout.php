@@ -18,7 +18,7 @@ use Atro\Core\EventManager\Event;
 
 class ActionLayout extends AbstractLayoutListener
 {
-    protected function detail(Event $event): void
+    public function detail(Event $event): void
     {
         $result = $event->getArgument('result');
 
