@@ -22,6 +22,7 @@ use Espo\ORM\IEntity;
 
 class Entity extends AbstractListener
 {
+    private ?string $importJobEntity = null;
     public array $filterData;
 
     public function beforeGetSelectParams(Event $event): void
@@ -73,8 +74,33 @@ class Entity extends AbstractListener
         $qb->setParameter('filterScope', $this->filterData['scope']);
     }
 
+    public function applyFilterByEntityName(QueryBuilder $qb, IEntity $relEntity, array $params, Mapper $mapper): void
+    {
+        if (!$this->importJobEntity) {
+            return;
+        }
+
+        $alias = $mapper->getQueryConverter()->getMainTableAlias();
+        $logQb = $this->getEntityManager()->getConnection()->createQueryBuilder();
+        $logQb->distinct()
+            ->select('ijl.import_job_id')
+            ->from('import_job_log', 'ijl')
+            ->where("ijl.import_job_id = $alias.id")
+            ->andWhere('ijl.deleted = :false')
+            ->andWhere('ijl.entity_name = :entity_name');
+
+        $qb->andWhere($logQb->expr()->in("$alias.id", $logQb->getSQL()));
+        $qb->setParameter('false', false, ParameterType::BOOLEAN);
+        $qb->setParameter('entity_name', $this->importJobEntity);
+    }
+
     protected function prepareImportJobFilterCallback(string $scope, array $item): array
     {
+        if ($scope == 'ImportJob' && ($item['attribute'] ?? null) == 'entityName' && !empty($item['value'])) {
+            $this->importJobEntity = $item['value'];
+            return [$this, 'applyFilterByEntityName'];
+        }
+
         if (
             isset($item['attribute'])
             && in_array($item['attribute'], ['filterCreateImportJob', 'filterUpdateImportJob'])

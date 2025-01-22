@@ -29,7 +29,9 @@
     "generate": "Generieren",
     "generating": "Erstellen",
     "tryAgain": "Erneut importeren",
-    "reCreate": "Nachschaffen"
+    "reCreate": "Nachschaffen",
+    "loadCounters": "Klicken Sie auf das Aktualisierungs-Icon, um den Wert zu berechnen",
+    "seeRelevantRecords": "Klicken Sie hier, um die entsprechenden Datensätze zu sehen"
   },
   "tooltips": {
     "errorsAttachment": "Zeilen aus 'Importierter Datei', die nicht importiert wurden."

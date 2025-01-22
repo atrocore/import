@@ -8,24 +8,30 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('import:views/fields/filter-import-job', 'views/fields/enum',
+Espo.define('import:views/fields/filter-import-job', 'views/fields/link',
     Dep => Dep.extend({
 
+        foreignScope: 'ImportJob',
+
+        searchTypeList: ['is', 'isNot', 'isOneOf', 'isNotOneOf'],
+
+        searchScope: null,
+
         setup() {
-            const scope = this.model.defs.fields.filterCreateImportJob.scope;
-
-            this.params.options = [];
-            this.translatedOptions = {};
-
-            this.ajaxGetRequest(`ImportJob/action/getImportJobsViaScope`, {scope: scope}, {async: false}).then(list => {
-                list.forEach(item => {
-                    this.params.options.push(item.id);
-                    this.translatedOptions[item.id] = item.name;
-                });
-            });
-
+            this.idName = this.name;
+            this.searchScope = this.model.defs.fields.filterCreateImportJob?.scope;
             Dep.prototype.setup.call(this);
         },
+
+        getSelectFilters: function () {
+            if (this.searchScope) {
+                return [{
+                    type: 'equals',
+                    attribute: 'entityName',
+                    value: this.searchScope
+                }];
+            }
+        }
 
     })
 );

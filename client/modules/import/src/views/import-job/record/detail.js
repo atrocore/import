@@ -23,6 +23,16 @@ Espo.define('import:views/import-job/record/detail', 'views/record/detail',
         }, Dep.prototype.events),
 
         setupActionItems: function () {
+            this.additionalButtons = this.additionalButtons.filter(button => button.name !== 'loadCounters');
+            if (['createdCount', 'updatedCount', 'deletedCount', 'skippedCount', 'errorsCount'].some(field => this.model.get(field) === null)) {
+                this.additionalButtons.push({
+                    name: 'loadCounters',
+                    action: 'loadCounters',
+                    html: '<span class="fas fa-sync" style="font-size: 14px"></span>',
+                    tooltip: this.translate('loadCounters', 'labels', 'ImportJob'),
+                });
+            }
+
             if (['Failed', 'Canceled'].includes(this.model.get('state'))) {
                 this.dropdownItemList.push({
                     name: 'tryAgainImportJob',
@@ -74,6 +84,24 @@ Espo.define('import:views/import-job/record/detail', 'views/record/detail',
             Dep.prototype.setupActionItems.call(this);
         },
 
+        actionLoadCounters: function (data, e) {
+            e.currentTarget.disabled = true;
+            this.notify('Loading...');
+            this.ajaxGetRequest(`ImportJob/${this.model.id}/recordCounters`).success(response => {
+                this.model.set('lastCounterData', response, {silent: true});
+                this.model.trigger('importCounterChanged');
+
+                if (!['Pending', 'Running'].includes(this.model.get('state'))) {
+                    this.additionalButtons = (this.additionalButtons || []).filter(button => button.name !== 'loadCounters');
+                }
+
+                this.reRender();
+            }).done(() => {
+                this.notify(false);
+                e.currentTarget.disabled = false;
+            });
+        },
+
         actionGenerateFileCreated() {
             this.actionGenerateFile('created');
         },
@@ -100,7 +128,10 @@ Espo.define('import:views/import-job/record/detail', 'views/record/detail',
 
         actionGenerateFile(type) {
             this.notify(this.translate('generating', 'labels', 'ImportJob'));
-            this.ajaxPostRequest('ImportJob/action/generateFile', {id: this.model.get('id'), type: type}).then(response => {
+            this.ajaxPostRequest('ImportJob/action/generateFile', {
+                id: this.model.get('id'),
+                type: type
+            }).then(response => {
                 let interval = setInterval(() => {
                     this.ajaxGetRequest(`Job/${response.queueItemId}?silent=true`).success(res => {
                         this.notify(this.translate('generating', 'labels', 'ImportJob'));

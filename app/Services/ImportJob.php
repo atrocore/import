@@ -106,13 +106,6 @@ class ImportJob extends Base
             ->getImportJobsViaScope($scope);
     }
 
-    public function prepareCollectionForOutput(EntityCollection $collection, array $selectParams = []): void
-    {
-        parent::prepareCollectionForOutput($collection, $selectParams);
-
-        $this->prepareCounts($collection);
-    }
-
     public function prepareCounts(EntityCollection $collection): void
     {
         $data = $this->getRepository()->getJobsCounts(array_column($collection->toArray(), 'id'));
@@ -124,17 +117,6 @@ class ImportJob extends Base
             $entity->set('skippedCount', $data[$entity->get('id')]['skipped_count'] ?? 0);
             $entity->set('errorsCount', $data[$entity->get('id')]['errors_count'] ?? 0);
         }
-    }
-
-    public function readEntity($id)
-    {
-        $entity = parent::readEntity($id);
-
-        if (!empty($entity)) {
-            $this->prepareCounts(new EntityCollection([$entity], $entity->getEntityType()));
-        }
-
-        return $entity;
     }
 
     public function reCreateImportJob(string $id, ?string $attachmentId = null): bool

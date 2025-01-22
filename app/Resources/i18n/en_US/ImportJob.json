@@ -37,7 +37,9 @@
     "generateFileDeleted": "Generate File: Deleted",
     "generateFileSkippedBySystem": "Generate File: Skipped by System",
     "generateFileSkippedByScript": "Generate File: Skipped by Script",
-    "generateFileErrors": "Generate File: Errors"
+    "generateFileErrors": "Generate File: Errors",
+    "loadCounters": "Click the refresh icon to calculate the value.",
+    "seeRelevantRecords": "Click here to see the relevant records."
   },
   "tooltips": {
     "errorsAttachment": "Rows from 'Imported file' that have not been imported."

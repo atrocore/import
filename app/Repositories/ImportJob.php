@@ -17,6 +17,7 @@ use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Templates\Repositories\Base;
 use Doctrine\DBAL\ParameterType;
 use Espo\ORM\Entity;
+use Espo\ORM\EntityCollection;
 
 class ImportJob extends Base
 {
@@ -51,6 +52,8 @@ class ImportJob extends Base
                 if ($entity->get('state') == 'Success') {
                     $entity->set('end', date('Y-m-d H:i:s'));
                 }
+
+                $this->getInjection('serviceFactory')->create('ImportJob')->prepareCounts(new EntityCollection([$entity]));
             }
         }
 

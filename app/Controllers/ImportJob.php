@@ -16,11 +16,45 @@ namespace Import\Controllers;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Exceptions\Forbidden;
+use Atro\Core\Slim\Http\Request;
 use Atro\Core\Templates\Controllers\Base;
 use Atro\Core\Utils\Language;
+use Espo\ORM\EntityCollection;
 
 class ImportJob extends Base
 {
+    public function actionGetRecordCounters($params, $data, Request $request): array
+    {
+        if (!$request->isGet() || empty($params['id'])) {
+            throw new BadRequest();
+        }
+
+        if (!$this->getAcl()->check($this->name, 'read')) {
+            throw new Forbidden();
+        }
+
+        $importJob = $this->getEntityManager()->getEntity('ImportJob', $params['id']);
+        if (empty($importJob)) {
+            throw new NotFound();
+        }
+
+        $result = ['id' => $importJob->id, 'state' => $importJob->get('state')];
+        $fields = ['createdCount', 'updatedCount', 'deletedCount', 'skippedCount', 'errorsCount'];
+        foreach ($fields as $field) {
+            if ($importJob->get($field) === null) {
+                $this->getService('ImportJob')->prepareCounts(new EntityCollection([$importJob]));
+            }
+
+            $result[$field] = $importJob->get($field) ?? 0;
+        }
+
+        if (!in_array($importJob->get('state'), ['Pending', 'Running'])) {
+            $this->getEntityManager()->saveEntity($importJob);
+        }
+
+        return $result;
+    }
+
     public function actionGenerateFile($params, \stdClass $data, $request)
     {
         if (!$request->isPost() || !property_exists($data, 'id') || !property_exists($data, 'type')) {
