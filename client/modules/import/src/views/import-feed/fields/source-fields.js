@@ -78,6 +78,8 @@ Espo.define('import:views/import-feed/fields/source-fields', 'views/fields/multi
             }
 
             this.model.set('sourceFields', [], {silent: true});
+            this.selected = [];
+            this.reRender();
 
             let data = {
                 importFeedId: this.model.get('id'),
@@ -103,10 +105,11 @@ Espo.define('import:views/import-feed/fields/source-fields', 'views/fields/multi
                     this.$el.html('<img alt="preloader" class="preloader" style="height:19px;margin-top:6px;margin-left:-8px" src="client/img/atro-loader.svg" />');
                     this.readSourceFieldsFromJob(response.jobId);
                 } else {
-                    this.model.set('sourceFields', response);
+                    this.model.set('sourceFields', response, {silent: true});
+                    this.selected = response;
+                    this.reRender();
                 }
             });
-        },
-
+        }
     })
 );

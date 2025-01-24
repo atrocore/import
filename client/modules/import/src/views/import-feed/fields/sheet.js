@@ -28,8 +28,8 @@ Espo.define('import:views/import-feed/fields/sheet', 'views/fields/enum',
 
             Dep.prototype.setup.call(this);
         },
-        loadFileSheets() {
 
+        loadFileSheets() {
             let fileId = this.model.get('fileId');
             if (!fileId) {
                 return;
@@ -51,10 +51,6 @@ Espo.define('import:views/import-feed/fields/sheet', 'views/fields/enum',
 
                 this.reRender();
             });
-        },
-
-        afterRender() {
-            Dep.prototype.afterRender.call(this);
-        },
+        }
     })
 );
