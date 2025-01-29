@@ -97,6 +97,24 @@ Espo.define('import:views/import-configurator-item/fields/default-container', 'v
                 if (type === 'language') {
                     this.model.defs.fields["default"]['prohibitedEmptyValue'] = true;
                 }
+            } else if (type === 'groupedEnum') {
+                this.params.groups = this.getMetadata().get(`entityDefs.${this.model.get('entity')}.fields.${this.model.get('name')}.groups`) || {};
+                this.params.translatedOptions = {};
+                this.params.translatedGroups = this.getLanguage().translate(this.model.get('name'), 'groups', this.model.get('entity')) || {};
+
+                Object.keys(this.params.groups).forEach(group => {
+                    (this.params.groups[group] || []).forEach(option => {
+                        let label = this.getLanguage().translateOption(option, this.model.get('name'), this.model.get('entity'));
+                        if (option === label) {
+                            label = this.translate(option, 'labels', this.model.get('entity'));
+                        }
+                        this.params.translatedOptions[option.toString()] = label;
+                    })
+                });
+
+                if (type === 'language') {
+                    this.model.defs.fields["default"]['prohibitedEmptyValue'] = true;
+                }
             } else if (type === 'unit') {
                 this.params.measureId = this.getMetadata().get(`entityDefs.${this.model.get('entity')}.fields.${this.model.get('name')}.measureId`);
                 this.model.defs.fields["default"]['extensibleEnumId'] = this.params.measureId;
@@ -152,8 +170,8 @@ Espo.define('import:views/import-configurator-item/fields/default-container', 'v
             if (this.model.get('type') === 'Field') {
                 type = this.getMetadata().get(`entityDefs.${this.model.get('entity')}.fields.${this.model.get('name')}.type`) || 'varchar';
                 options = this.getMetadata().get(`entityDefs.${this.model.get('entity')}.fields.${this.model.get('name')}.options`) || [];
-                if(type === 'bool'){
-                    this.params.notNull = this.getMetadata().get(`entityDefs.${this.model.get('entity')}.fields.${this.model.get('name')}.notNull`) ;
+                if (type === 'bool') {
+                    this.params.notNull = this.getMetadata().get(`entityDefs.${this.model.get('entity')}.fields.${this.model.get('name')}.notNull`);
                 }
             }
 
@@ -170,8 +188,8 @@ Espo.define('import:views/import-configurator-item/fields/default-container', 'v
                     type = 'unit'
                 }
 
-                if(type === 'bool'){
-                    this.params.notNull = !!this.model.get('attributeData').notNull ;
+                if (type === 'bool') {
+                    this.params.notNull = !!this.model.get('attributeData').notNull;
                 }
             }
 
