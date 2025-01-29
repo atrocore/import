@@ -84,6 +84,7 @@ Espo.define('import:views/import-configurator-item/fields/default-container', 'v
                     entity: linkEntity
                 };
             } else if (['enum', 'multiEnum', 'array', 'language'].includes(type)) {
+                this.params.groupOptions = this.getMetadata().get(`entityDefs.${this.model.get('entity')}.fields.${this.model.get('name')}.groupOptions`)
                 this.params.options = options;
                 this.params.translatedOptions = {};
                 options.forEach(option => {
@@ -92,24 +93,6 @@ Espo.define('import:views/import-configurator-item/fields/default-container', 'v
                         label = this.translate(option, 'labels', this.model.get('entity'));
                     }
                     this.params.translatedOptions[option.toString()] = label;
-                });
-
-                if (type === 'language') {
-                    this.model.defs.fields["default"]['prohibitedEmptyValue'] = true;
-                }
-            } else if (type === 'groupedEnum') {
-                this.params.groups = this.getMetadata().get(`entityDefs.${this.model.get('entity')}.fields.${this.model.get('name')}.groups`) || {};
-                this.params.translatedOptions = {};
-                this.params.translatedGroups = this.getLanguage().translate(this.model.get('name'), 'groups', this.model.get('entity')) || {};
-
-                Object.keys(this.params.groups).forEach(group => {
-                    (this.params.groups[group] || []).forEach(option => {
-                        let label = this.getLanguage().translateOption(option, this.model.get('name'), this.model.get('entity'));
-                        if (option === label) {
-                            label = this.translate(option, 'labels', this.model.get('entity'));
-                        }
-                        this.params.translatedOptions[option.toString()] = label;
-                    })
                 });
 
                 if (type === 'language') {
