@@ -84,6 +84,7 @@ Espo.define('import:views/import-configurator-item/fields/default-container', 'v
                     entity: linkEntity
                 };
             } else if (['enum', 'multiEnum', 'array', 'language'].includes(type)) {
+                this.params.groupOptions = this.getMetadata().get(`entityDefs.${this.model.get('entity')}.fields.${this.model.get('name')}.groupOptions`)
                 this.params.options = options;
                 this.params.translatedOptions = {};
                 options.forEach(option => {
@@ -152,8 +153,8 @@ Espo.define('import:views/import-configurator-item/fields/default-container', 'v
             if (this.model.get('type') === 'Field') {
                 type = this.getMetadata().get(`entityDefs.${this.model.get('entity')}.fields.${this.model.get('name')}.type`) || 'varchar';
                 options = this.getMetadata().get(`entityDefs.${this.model.get('entity')}.fields.${this.model.get('name')}.options`) || [];
-                if(type === 'bool'){
-                    this.params.notNull = this.getMetadata().get(`entityDefs.${this.model.get('entity')}.fields.${this.model.get('name')}.notNull`) ;
+                if (type === 'bool') {
+                    this.params.notNull = this.getMetadata().get(`entityDefs.${this.model.get('entity')}.fields.${this.model.get('name')}.notNull`);
                 }
             }
 
@@ -170,8 +171,8 @@ Espo.define('import:views/import-configurator-item/fields/default-container', 'v
                     type = 'unit'
                 }
 
-                if(type === 'bool'){
-                    this.params.notNull = !!this.model.get('attributeData').notNull ;
+                if (type === 'bool') {
+                    this.params.notNull = !!this.model.get('attributeData').notNull;
                 }
             }
 
