@@ -16,5 +16,6 @@
   "hasTeam": false,
   "hasOwner": false,
   "notificationDisabled": true,
-  "hideFieldTypeFilters": true
+  "hideFieldTypeFilters": true,
+  "disableActionHistory": true
 }

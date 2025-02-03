@@ -23,5 +23,6 @@
   "hasOwner": false,
   "hideFieldTypeFilters": true,
   "autoDeleteAfterDays": 21,
-  "clearDeletedAfterDays": 35
+  "clearDeletedAfterDays": 35,
+  "disableActionHistory": true
 }
