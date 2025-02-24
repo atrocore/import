@@ -17,6 +17,20 @@
       "required": false,
       "min": 0
     },
+    "executeAs": {
+      "type": "enum",
+      "prohibitedEmptyValue": true,
+      "default": "system",
+      "optionsIds": [
+        "system",
+        "sameUser"
+      ],
+      "options": [
+        "system",
+        "sameUser"
+      ],
+      "tooltip": true
+    },
     "configuratorItems": {
       "type": "linkMultiple",
       "layoutDetailDisabled": true,
