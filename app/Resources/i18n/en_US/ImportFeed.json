@@ -34,7 +34,8 @@
     "skipValue": "Skip Value",
     "markForNoRelation": "Marking for no relation",
     "fieldDelimiterForRelation": "Field Delimiter for Relation",
-    "scheduledJobs": "Scheduled Jobs"
+    "scheduledJobs": "Scheduled Jobs",
+    "executeAs": "Execute As"
   },
   "links": {
     "connection": "Connection",
@@ -125,6 +126,10 @@
       "mistake": "Generate mistake for repeated records",
       "repeat": "Allow repeated data record processing",
       "skip": "Skip repeated data records"
+    },
+    "executeAs": {
+      "system": "System",
+      "sameUser": "Same User"
     }
   },
   "tooltips": {
@@ -134,7 +139,8 @@
     "markForNoRelation": "Marks relation which should not be linked to the respective entity.",
     "nullValue": "Value will be interpreted as \"NULL\" value.",
     "emptyValue": "Value will be interpreted as \"empty\" value.",
-    "skipValue": "Will be interpreted as value to be skipped."
+    "skipValue": "Will be interpreted as value to be skipped.",
+    "executeAs": "Specify which user the system will use to perform the import"
   },
   "boolFilters": {
     "onlyImportFailed24Hours": "Only Import Feeds that failed during last 24 hours",

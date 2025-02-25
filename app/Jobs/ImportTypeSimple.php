@@ -66,6 +66,7 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
             "data"             => $feed->getConfiguratorData(),
             "repeatProcessing" => $feed->get("repeatProcessing"),
             "sheet"            => $feed->get("sheet"),
+            "executeAs"        => $feed->get("executeAs"),
         ];
 
         return $this
@@ -158,6 +159,14 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
 
     public function runNow(array $data, ?Job $job = null): void
     {
+        $executeAs = $data['executeAs'] ?? 'system';
+        $currentUserId = $this->getContainer()->get('user')->get('id');
+        $userChanged = false;
+
+        if ($executeAs === 'system' && $currentUserId !== 'system') {
+            $userChanged = $this->auth('system');
+        }
+
         // prepare file row
         $fileRow = (int)(($data['rowNumberPart'] ?? 0) + ($data['offset'] ?? 1));
         $this->getMemoryStorage()->set('importRowNumber', $fileRow);
@@ -425,6 +434,26 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
         $this->getMemoryStorage()->delete('skipAssignmentNotifications');
         $this->getMemoryStorage()->delete('skipHooks');
         $this->getMemoryStorage()->delete('importRowNumber');
+
+        if (!empty($userChanged)) {
+            $this->auth($currentUserId);
+        }
+    }
+
+    protected function auth(string $userId): bool
+    {
+        $user = $this->getEntityManager()->getRepository('User')->get($userId);
+        if (empty($user)) {
+            return false;
+        }
+        if ($userId === 'system') {
+            $user->set('isAdmin', true);
+            $user->set('ipAddress', $_SERVER['REMOTE_ADDR']);
+        }
+        $this->getEntityManager()->setUser($user);
+        $this->getContainer()->setUser($user);
+        $this->getContainer()->get('acl')->setUser($user);
+        return true;
     }
 
     public function afterRowProceed(string $entityType, array $where, ?string $id): void
