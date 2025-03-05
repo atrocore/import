@@ -6,7 +6,7 @@
     "onlyImportFailed7Days",
     "onlyImportFailed28Days"
   ],
-  "iconClass": "fas fa-cloud-download-alt",
+  "iconClass": "input",
   "views": {
     "detail": "import:views/import-feed/detail"
   },
