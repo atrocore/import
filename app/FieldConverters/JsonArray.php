@@ -43,7 +43,12 @@ class JsonArray extends Varchar
         }
 
         if (is_string($value)) {
-            $value = explode($config['delimiter'], $value);
+            $jsonValue = @json_decode($value, true);
+            if (json_last_error() === JSON_ERROR_NONE && is_array($jsonValue)) {
+                $value = array_values($jsonValue);
+            } else {
+                $value = explode($config['delimiter'], $value);
+            }
         }
 
         if (!empty($inputRow->{$config['name']}) && is_array($inputRow->{$config['name']}) && is_array($value)) {
