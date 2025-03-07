@@ -44,7 +44,7 @@ class JsonArray extends Varchar
 
         if (is_string($value)) {
             $jsonValue = @json_decode($value, true);
-            if (json_last_error() === JSON_ERROR_NONE && is_array($jsonValue)) {
+            if (json_last_error() === JSON_ERROR_NONE && is_array($jsonValue) && count(array_filter($jsonValue, 'is_array')) === 0) {
                 $value = array_values($jsonValue);
             } else {
                 $value = explode($config['delimiter'], $value);
