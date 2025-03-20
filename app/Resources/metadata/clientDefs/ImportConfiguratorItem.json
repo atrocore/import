@@ -94,6 +94,14 @@
         }
       },
       "foreignColumn": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "createIfNotExist"
+            }
+          ]
+        },
         "required": {
           "conditionGroup": [
             {
@@ -104,6 +112,14 @@
         }
       },
       "foreignImportBy": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "createIfNotExist"
+            }
+          ]
+        },
         "required": {
           "conditionGroup": [
             {

@@ -85,21 +85,7 @@
           "fullWidth": true
         }
       ]
-    ],
-    "dynamicLogicVisible": {
-      "conditionGroup": [
-        {
-          "type": "equals",
-          "attribute": "name",
-          "value": "url"
-        },
-        {
-          "type": "equals",
-          "attribute": "entity",
-          "value": "File"
-        }
-      ]
-    }
+    ]
   },
   {
     "label": "mapping",
@@ -117,15 +103,7 @@
           "fullWidth": true
         }
       ]
-    ],
-    "dynamicLogicVisible": {
-      "conditionGroup": [
-        {
-          "type": "isTrue",
-          "attribute": "createIfNotExist"
-        }
-      ]
-    }
+    ]
   },
   {
     "label": "additionalInformation",
