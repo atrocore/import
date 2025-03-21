@@ -19,6 +19,10 @@ class ImportJobLog extends Base
 {
     protected function access(&$result)
     {
+        if ($this->getUser()->isAdmin()) {
+            return;
+        }
+
         $repository = $this->getEntityManager()->getRepository('ImportJob');
 
         $sp = $this->createSelectManager('ImportJob')->getSelectParams([], true, true);
