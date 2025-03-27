@@ -23,6 +23,7 @@ Espo.define('import:views/import-job/record/detail', 'views/record/detail',
         }, Dep.prototype.events),
 
         setupActionItems: function () {
+            this.buttonList = this.buttonList.filter(button => button.name !== 'edit');
             this.additionalButtons = this.additionalButtons.filter(button => button.name !== 'loadCounters');
             if (['createdCount', 'updatedCount', 'deletedCount', 'skippedCount', 'errorsCount'].some(field => this.model.get(field) === null)) {
                 this.additionalButtons.push({
@@ -37,7 +38,7 @@ Espo.define('import:views/import-job/record/detail', 'views/record/detail',
                 this.dropdownItemList.push({
                     name: 'tryAgainImportJob',
                     action: 'tryAgainImportJob',
-                    label: 'tryAgain',
+                    label: this.translate('tryAgain', 'labels', 'ImportJob'),
                 });
             }
 
@@ -85,7 +86,9 @@ Espo.define('import:views/import-job/record/detail', 'views/record/detail',
         },
 
         actionLoadCounters: function (data, e) {
-            e.currentTarget.disabled = true;
+            const target = e.currentTarget;
+
+            target.disabled = true;
             this.notify('Loading...');
             this.ajaxGetRequest(`ImportJob/${this.model.id}/recordCounters`).success(response => {
                 this.model.set('lastCounterData', response, {silent: true});
@@ -98,7 +101,7 @@ Espo.define('import:views/import-job/record/detail', 'views/record/detail',
                 this.reRender();
             }).done(() => {
                 this.notify(false);
-                e.currentTarget.disabled = false;
+                target.disabled = false;
             });
         },
 
