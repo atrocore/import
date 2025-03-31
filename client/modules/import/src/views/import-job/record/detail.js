@@ -29,7 +29,7 @@ Espo.define('import:views/import-job/record/detail', 'views/record/detail',
                 this.additionalButtons.push({
                     name: 'loadCounters',
                     action: 'loadCounters',
-                    html: '<span class="fas fa-sync" style="font-size: 14px"></span>',
+                    html: '<svg class="icon icon-small"><use href="client/img/icons/icons.svg#sync"></use></svg>',
                     tooltip: this.translate('loadCounters', 'labels', 'ImportJob'),
                 });
             }
