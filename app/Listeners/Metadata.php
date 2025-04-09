@@ -87,28 +87,31 @@ class Metadata extends AbstractListener
 
         foreach ($this->getMemoryStorage()->get('dynamic_action') ?? [] as $action) {
             if ($action['type'] === 'import') {
-                if ($action['usage'] === 'record' && !empty($action['source_entity'])) {
-                    $data['clientDefs'][$action['source_entity']]['dynamicRecordActions'][] = [
-                        'id'         => $action['id'],
-                        'name'       => $action['name'],
-                        'display'    => $action['display'],
+                $params = [
+                    'id'      => $action['id'],
+                    'name'    => $action['name'],
+                    'display' => $action['display'],
+                    'acl'     => [
+                        'scope'  => 'ImportFeed',
+                        'action' => 'read',
+                    ]
+                ];
+
+                if ($action['usage'] === 'record' && !empty($action['source_entity']) && !empty($action['target_entity'])) {
+                    $data['clientDefs'][$action['source_entity']]['dynamicRecordActions'][] = array_merge($params, [
                         'massAction' => !empty($action['mass_action']),
-                        'acl'        => [
-                            'scope'  => 'ImportFeed',
-                            'action' => 'read',
-                        ]
-                    ];
+                    ]);
                 }
-                if ($action['usage'] === 'entity' && !empty($action['source_entity'])) {
-                    $data['clientDefs'][$action['source_entity']]['dynamicEntityActions'][] = [
-                        'id'      => $action['id'],
-                        'name'    => $action['name'],
-                        'display' => $action['display'],
-                        'acl'     => [
-                            'scope'  => 'ImportFeed',
-                            'action' => 'read',
-                        ]
-                    ];
+
+                if ($action['usage'] === 'entity' && !empty($action['source_entity']) && !empty($action['target_entity'])) {
+                    $data['clientDefs'][$action['source_entity']]['dynamicEntityActions'][] = $params;
+                }
+
+                if ($action['usage'] === 'field' && !empty($action['source_entity']) && !empty($action['display_field'])) {
+                    $data['clientDefs'][$action['source_entity']]['dynamicFieldActions'][] = array_merge($params, [
+                        'displayField' => $action['display_field'],
+                        'massAction'   => !empty($action['mass_action']),
+                    ]);
                 }
             }
         }
