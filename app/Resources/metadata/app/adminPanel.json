@@ -1,7 +1,7 @@
 {
-  "data": {
-    "label": "Import",
+  "tools": {
     "itemList": [
+      "__APPEND__",
       {
         "url": "#ImportFeed",
         "label": "importFeed",
