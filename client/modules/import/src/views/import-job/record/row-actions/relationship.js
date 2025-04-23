@@ -13,7 +13,7 @@ Espo.define('import:views/import-job/record/row-actions/relationship', 'views/re
 
         events: {
             'click [data-action=loadCounters]': function (e) {
-                e.currentTarget?.classList.add('fa-spin');
+                e.currentTarget?.classList.add('ph-spin');
 
                 this.ajaxGetRequest(`ImportJob/${this.model.id}/recordCounters`).then(response => {
                     if (response.state) {
@@ -24,7 +24,7 @@ Espo.define('import:views/import-job/record/row-actions/relationship', 'views/re
                     this.model.trigger('importCounterChanged');
 
                     this.reRender();
-                }).done(() => e.currentTarget?.classList.remove('fa-spin'));
+                }).done(() => e.currentTarget?.classList.remove('ph-spin'));
             }
         },
 
@@ -39,7 +39,7 @@ Espo.define('import:views/import-job/record/row-actions/relationship', 'views/re
             this.on('after:render', () => {
                 if (this.hasUndefinedCounters()) {
                     const iconContainer = $("<div class='icons-container fixed'></div>");
-                    iconContainer.html('<button type="button" class="btn btn-link btn-sm" data-action="loadCounters" title="' + this.translate('loadCounters', 'labels', 'ImportJob') + '"><svg class="icon icon-small"><use href="client/img/icons/icons.svg#sync"></use></svg></button>');
+                    iconContainer.html('<button type="button" class="btn btn-link btn-sm" data-action="loadCounters" title="' + this.translate('loadCounters', 'labels', 'ImportJob') + '"><i class="ph ph-arrows-clockwise"></i></button>');
                     this.$el?.find('.list-row-buttons').prepend(iconContainer);
                 }
 
