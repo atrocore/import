@@ -32,20 +32,27 @@ Espo.define('import:views/import-configurator-item/fields/name', 'views/fields/e
         },
 
         prepareListOptions() {
-            this.params.options = [];
-            this.translatedOptions = {};
+            this.params.options = ['id'];
+            this.translatedOptions = {'id': this.translate('id', 'fields', 'Global')};
 
             let entity = this.model.get('entity');
+            let hasAttribute = this.getMetadata().get(`scopes.${entity}.hasAttribute`);
 
-            $.each(this.getEntityFields(entity), field => {
-                this.params.options.push(field);
-                this.translatedOptions[field] = this.translate(field, 'fields', entity);
-            });
+            let notAvailableTypes = [
+                'address',
+                'attachmentMultiple',
+                'currencyConverted',
+                'linkParent',
+                'personName',
+                'autoincrement'
+            ];
 
-            if (this.getMetadata().get(`scopes.${entity}.hasAttribute`)) {
-                this.params.options.push('_addAttribute');
-                this.translatedOptions['_addAttribute'] = this.translate('_addAttribute', 'labels', 'ImportConfiguratorItem');
+            let notAvailableFieldsList = [
+                'createdAt',
+                'modifiedAt'
+            ];
 
+            if (hasAttribute) {
                 this.params.groupOptions = [
                     {
                         name: "attributes",
@@ -53,10 +60,27 @@ Espo.define('import:views/import-configurator-item/fields/name', 'views/fields/e
                     },
                     {
                         name: "fields",
-                        options: this.params.options.filter(o => !(["_addAttribute"].includes(o)))
+                        options: []
                     }
-                ]
+                ];
+                this.params.options.push('_addAttribute');
+                this.translatedOptions['_addAttribute'] = this.translate('_addAttribute', 'labels', 'ImportConfiguratorItem');
             }
+
+            $.each(this.getMetadata().get(['entityDefs', entity, 'fields'], {}), (field, fieldDefs) => {
+                if (!fieldDefs.disabled && !notAvailableFieldsList.includes(field) && !notAvailableTypes.includes(fieldDefs.type) && !fieldDefs.importDisabled) {
+                    this.params.options.push(field);
+                    this.translatedOptions[field] = this.translate(field, 'fields', entity);
+                }
+
+                if (hasAttribute) {
+                    if (fieldDefs.attributeId) {
+                        this.params.groupOptions[0].options.push(field);
+                    } else {
+                        this.params.groupOptions[1].options.push(field);
+                    }
+                }
+            })
 
             this.params.options.sort((a, b) => {
                 return this.translatedOptions[a].localeCompare(this.translatedOptions[b])
@@ -198,35 +222,6 @@ Espo.define('import:views/import-configurator-item/fields/name', 'views/fields/e
             }
 
             return extraInfo;
-        },
-
-        getEntityFields(entity) {
-            let result = {};
-            let notAvailableTypes = [
-                'address',
-                'attachmentMultiple',
-                'currencyConverted',
-                'linkParent',
-                'personName',
-                'autoincrement'
-            ];
-            let notAvailableFieldsList = [
-                'createdAt',
-                'modifiedAt'
-            ];
-            if (entity) {
-                let fields = this.getMetadata().get(['entityDefs', entity, 'fields']) || {};
-                result.id = {
-                    type: 'varchar'
-                };
-                Object.keys(fields).forEach(name => {
-                    let field = fields[name];
-                    if (!field.disabled && !notAvailableFieldsList.includes(name) && !notAvailableTypes.includes(field.type) && !field.importDisabled) {
-                        result[name] = field;
-                    }
-                });
-            }
-            return result;
         },
 
     })
