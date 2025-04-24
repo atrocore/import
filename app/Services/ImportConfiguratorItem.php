@@ -15,6 +15,7 @@ namespace Import\Services;
 
 use Atro\Core\Container;
 use Atro\Core\Exceptions\BadRequest;
+use Atro\Core\KeyValueStorages\StorageInterface;
 use Atro\Core\Templates\Services\Base;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
@@ -191,7 +192,9 @@ class ImportConfiguratorItem extends Base
 
             $importJobId = $this->getMemoryStorage()->get('importJobId');
             if(!empty($importJobId)) {
-                $this->container2->get('memoryStorage')->set('importJobId', $importJobId);
+                /** @var StorageInterface $memoryStorage */
+                $memoryStorage = $this->container2->get('memoryStorage');
+                $memoryStorage->set('importJobId', $importJobId);
             }
         }
 
