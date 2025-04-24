@@ -112,7 +112,6 @@ Espo.define('import:views/import-configurator-item/fields/name', 'views/fields/e
                         entityName: entity,
                         attributesIds: [model.id]
                     }, {async: false}).success(res => {
-                        this.params.groupOptions[0].options = ['_addAttribute'];
                         $.each(res, (field, fieldDefs) => {
                             this.params.options.push(field);
                             this.translatedOptions[field] = fieldDefs.label;
