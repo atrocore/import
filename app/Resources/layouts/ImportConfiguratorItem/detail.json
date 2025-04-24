@@ -14,8 +14,14 @@
           "name": "name"
         },
         {
-          "name": "entityIdentifier"
+          "name": "entityAttribute"
         }
+      ],
+      [
+        {
+          "name": "entityIdentifier"
+        },
+        false
       ],
       [
         {

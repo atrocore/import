@@ -9,6 +9,7 @@
     "importBy": "Related entity field(s)",
     "createIfNotExist": "Create related data record",
     "locale": "Language",
+    "entityAttribute": "Attribute",
     "attribute": "Attribute",
     "channel": "Channel",
     "sourceFields": "Source Fields",

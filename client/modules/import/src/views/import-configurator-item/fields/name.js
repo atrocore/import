@@ -17,8 +17,8 @@ Espo.define('import:views/import-configurator-item/fields/name', 'views/fields/e
             let entity = this.model.get('entity');
             let fields = this.getEntityFields(entity);
 
-            this.params.options = [];
-            this.translatedOptions = {};
+            this.params.options = [''];
+            this.translatedOptions = {'':''};
 
             $.each(fields, field => {
                 this.params.options.push(field);

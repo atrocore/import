@@ -59,6 +59,9 @@
       "view": "import:views/import-configurator-item/fields/foreign-import-by",
       "tooltip": true
     },
+    "entityAttribute": {
+      "type": "link"
+    },
     "attribute": {
       "type": "link",
       "view": "import:views/import-configurator-item/fields/attribute"
@@ -186,6 +189,10 @@
       "foreign": "configuratorItems",
       "entity": "ImportFeed",
       "audited": false
+    },
+    "entityAttribute": {
+      "type": "belongsTo",
+      "entity": "Attribute"
     },
     "attribute": {
       "type": "belongsTo",
