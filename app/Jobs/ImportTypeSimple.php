@@ -167,19 +167,25 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
             $userChanged = $this->auth('system');
         }
 
+        $importJobId = $data['data']['importJobId'];
+        $scope = $data['data']['entity'];
+
+        $importJob = $this->getEntityById('ImportJob', $importJobId);
+
+        if (!empty($scope) && $this->getMetadata()->get("scopes.$scope.hasAttribute")) {
+            $this->getService('ImportFeed')->putAttributesToMetadata($importJob->get('importFeedId'));
+        }
+
         // prepare file row
         $fileRow = (int)(($data['rowNumberPart'] ?? 0) + ($data['offset'] ?? 1));
         $this->getMemoryStorage()->set('importRowNumber', $fileRow);
 
-        $this->createConvertedFileForJob($data['data']['importJobId'], $data);
-
-        $importJob = $this->getEntityById('ImportJob', $data['data']['importJobId']);
+        $this->createConvertedFileForJob($importJobId, $data);
 
         $this->getMemoryStorage()->set('importJobId', $importJob->get('id'));
         $this->getMemoryStorage()->set('skipAssignmentNotifications', true);
         $this->getMemoryStorage()->set('skipHooks', true);
 
-        $scope = $data['data']['entity'];
         $entityService = $this->getService($scope);
 
         $this->prepareConfigurator($data);
@@ -448,7 +454,7 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
         }
         if ($userId === 'system') {
             $user->set('isAdmin', true);
-            $user->set('ipAddress', $_SERVER['REMOTE_ADDR']);
+            $user->set('ipAddress', $_SERVER['REMOTE_ADDR'] ?? null);
         }
         $this->getEntityManager()->setUser($user);
         $this->getContainer()->setUser($user);
