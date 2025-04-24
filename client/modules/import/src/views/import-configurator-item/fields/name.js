@@ -27,6 +27,8 @@ Espo.define('import:views/import-configurator-item/fields/name', 'views/fields/e
 
                 if (this.model.get(this.name) === '_addAttribute') {
                     this.actionSelectAttribute();
+                } else {
+                    this.model.set('entityAttributeId', this.getMetadata().get(['entityDefs', this.model.get('entity'), 'fields', this.model.get(this.name), 'attributeId']));
                 }
             });
         },
