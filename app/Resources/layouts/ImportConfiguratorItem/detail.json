@@ -14,14 +14,8 @@
           "name": "name"
         },
         {
-          "name": "entityAttribute"
-        }
-      ],
-      [
-        {
           "name": "entityIdentifier"
-        },
-        false
+        }
       ],
       [
         {

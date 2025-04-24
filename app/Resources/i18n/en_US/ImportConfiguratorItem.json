@@ -30,6 +30,12 @@
       "valueMain": "Value %s"
     }
   },
+  "groupOptions": {
+    "name": {
+      "fields": "Fields",
+      "attributes": "Attributes"
+    }
+  },
   "links": {
     "importFeed": "Import Feed",
     "channel": "Channel"
@@ -40,7 +46,8 @@
     "search": "Field mapping for search",
     "additionalInformation": "Additional Information",
     "importByForAttributeValue": "This is only for Attribute of type List or Multi-value list",
-    "urlHeaders": "Request Headers"
+    "urlHeaders": "Request Headers",
+    "_addAttribute": "[Add Attribute]"
   },
   "exceptions": {
     "wrongFieldsNumber": "For search the amount of source fields should be the same as the amount of related entity fields.",

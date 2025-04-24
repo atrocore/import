@@ -16,46 +16,103 @@ Espo.define('import:views/import-configurator-item/fields/name', 'views/fields/e
         setup() {
             this.prepareListOptions();
             this.listenTo(this.model, 'change:entityAttributeId', () => {
-                this.model.set(this.name, null);
                 this.prepareListOptions();
                 this.reRender();
             });
 
+            Dep.prototype.setup.call(this);
+
+            if (this.model.isNew() && !this.model.get(this.name) && this.model.get('type') === 'Field') {
+                this.model.set(this.name, 'id');
+            }
+
             this.listenTo(this.model, `change:${this.name}`, () => {
                 this.model.set('createIfNotExist', false);
-            });
 
-            Dep.prototype.setup.call(this);
+                if (this.model.get(this.name) === '_addAttribute') {
+                    this.actionSelectAttribute();
+                }
+            });
         },
 
         prepareListOptions() {
-            this.params.options = [''];
-            this.translatedOptions = {'': ''};
+            this.params.options = [];
+            this.translatedOptions = {};
 
             let entity = this.model.get('entity');
 
-            if (this.model.get('entityAttributeId')) {
-                this.wait(true);
-                this.notify('Loading...');
-                this.ajaxGetRequest('Attribute/action/attributesDefs', {entityName: entity, attributesIds: [this.model.get('entityAttributeId')]}, {async: false}).success(res => {
-                    $.each(res, (field, fieldDefs) => {
-                        this.params.options.push(field);
-                        this.translatedOptions[field] = fieldDefs.label;
-                        this.getMetadata().data.entityDefs[entity].fields[field] = fieldDefs;
-                        this.getLanguage().data[entity].fields[field] = fieldDefs.label;
-                    });
-                    this.wait(false);
-                    this.notify(false);
-                })
-            } else {
-                $.each(this.getEntityFields(entity), field => {
-                    this.params.options.push(field);
-                    this.translatedOptions[field] = this.translate(field, 'fields', entity);
-                });
+            $.each(this.getEntityFields(entity), field => {
+                this.params.options.push(field);
+                this.translatedOptions[field] = this.translate(field, 'fields', entity);
+            });
+
+
+            if (this.getMetadata().get(`scopes.${entity}.hasAttribute`)) {
+                this.params.options.push('_addAttribute');
+                this.translatedOptions['_addAttribute'] = this.translate('_addAttribute', 'labels', 'ImportConfiguratorItem');
+
+                this.params.groupOptions = [
+                    {
+                        name: "attributes",
+                        options: ['_addAttribute']
+                    },
+                    {
+                        name: "fields",
+                        options: this.params.options.filter(o => !(["_addAttribute"].includes(o)))
+                    }
+                ]
+
+                if (this.model.get('entityAttributeId')) {
+                    this.wait(true);
+                    this.notify('Loading...');
+                    this.ajaxGetRequest('Attribute/action/attributesDefs', {
+                        entityName: entity,
+                        attributesIds: [this.model.get('entityAttributeId')]
+                    }, {async: false}).success(res => {
+                        $.each(res, (field, fieldDefs) => {
+                            if (this.model.get(this.name) === '_addAttribute') {
+                                this.model.set(this.name, field);
+                            }
+
+                            this.params.options.push(field);
+                            this.translatedOptions[field] = fieldDefs.label;
+
+                            this.getMetadata().data.entityDefs[entity].fields[field] = fieldDefs;
+                            this.getLanguage().data[entity].fields[field] = fieldDefs.label;
+
+                            this.params.groupOptions[0].options.push(field);
+                        });
+
+
+                        this.wait(false);
+                        this.notify(false);
+                    })
+                }
             }
 
             this.params.options.sort((a, b) => {
                 return this.translatedOptions[a].localeCompare(this.translatedOptions[b])
+            });
+        },
+
+        actionSelectAttribute() {
+            const scope = 'Attribute';
+            const viewName = this.getMetadata().get(['clientDefs', scope, 'modalViews', 'select']) || 'views/modals/select-records';
+
+            this.notify('Loading...');
+            this.createView('dialog', viewName, {
+                scope: scope,
+                multiple: false,
+                createButton: false,
+                massRelateEnabled: false,
+                allowSelectAllResult: false,
+            }, dialog => {
+                dialog.render();
+                this.notify(false);
+                dialog.once('select', model => {
+                    this.model.set('entityAttributeId', model.id);
+                    this.model.set('entityAttributeName', model.get('name'));
+                });
             });
         },
 
@@ -134,7 +191,7 @@ Espo.define('import:views/import-configurator-item/fields/name', 'views/fields/e
                 } else {
                     extraInfo += `<br><span class="text-muted small">${this.translate('attributeValue', 'fields', 'ImportConfiguratorItem')}: ${this.getLanguage().translateOption(this.model.get('attributeValue'), 'attributeValue', 'ImportConfiguratorItem')}</span>`;
                 }
-                if (this.model.get('channelName')){
+                if (this.model.get('channelName')) {
                     extraInfo += `<br><span class="text-muted small">${this.translate('Channel', 'scopeNames', 'Global')}: ${this.model.get('channelName')}</span>`;
                 }
             }

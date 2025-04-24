@@ -60,8 +60,7 @@
       "tooltip": true
     },
     "entityAttribute": {
-      "type": "link",
-      "view": "import:views/import-configurator-item/fields/entity-attribute"
+      "type": "link"
     },
     "attribute": {
       "type": "link",
