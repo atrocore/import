@@ -70,10 +70,6 @@ Espo.define('import:views/import-configurator-item/fields/name', 'views/fields/e
                         attributesIds: [this.model.get('entityAttributeId')]
                     }, {async: false}).success(res => {
                         $.each(res, (field, fieldDefs) => {
-                            if (this.model.get(this.name) === '_addAttribute') {
-                                this.model.set(this.name, field);
-                            }
-
                             this.params.options.push(field);
                             this.translatedOptions[field] = fieldDefs.label;
 
@@ -81,8 +77,11 @@ Espo.define('import:views/import-configurator-item/fields/name', 'views/fields/e
                             this.getLanguage().data[entity].fields[field] = fieldDefs.label;
 
                             this.params.groupOptions[0].options.push(field);
-                        });
 
+                            if (this.model.get(this.name) === '_addAttribute') {
+                                this.model.set(this.name, field);
+                            }
+                        });
 
                         this.wait(false);
                         this.notify(false);
