@@ -13,9 +13,11 @@ declare(strict_types=1);
 
 namespace Import\Services;
 
+use Atro\Core\AttributeFieldConverter;
 use Atro\Core\EventManager\Event;
 use Atro\Core\Exceptions\Error;
 use Atro\Core\FileStorage\FileStorageInterface;
+use Atro\Core\Utils\Language;
 use Atro\Entities\File;
 use Atro\Jobs\JobInterface;
 use Atro\Services\File as FileService;
@@ -24,6 +26,7 @@ use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Templates\Services\Base;
+use Doctrine\DBAL\ParameterType;
 use Espo\Core\Utils\Util;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
@@ -43,6 +46,55 @@ class ImportFeed extends Base
         "Normal" => 100,
         "High"   => 150
     ];
+
+    public function findLinkedEntities($id, $link, $params)
+    {
+        if ($link === 'configuratorItems') {
+            $this->putAttributesToMetadata($id);
+        }
+
+        return parent::findLinkedEntities($id, $link, $params);
+    }
+
+    public function putAttributesToMetadata(string $importFeedId): void
+    {
+        $importFeed = $this->getEntityManager()->getEntity('ImportFeed', $importFeedId);
+        if (empty($importFeed)) {
+            return;
+        }
+
+        $entityName = $importFeed->getFeedField('entity');
+
+        if ($this->getMetadata()->get("scopes.$entityName.hasAttribute")) {
+            $conn = $this->getEntityManager()->getConnection();
+            $attributes = $conn->createQueryBuilder()
+                ->select('a.*')
+                ->distinct()
+                ->from($conn->quoteIdentifier('attribute'), 'a')
+                ->innerJoin('a', 'import_configurator_item', 'i', 'i.entity_attribute_id=a.id AND i.deleted=:false')
+                ->innerJoin('i', 'import_feed', 'e', 'i.import_feed_id=e.id AND e.deleted=:false')
+                ->where('a.deleted=:false')
+                ->andWhere('e.id=:importFeedId')
+                ->setParameter('false', false, ParameterType::BOOLEAN)
+                ->setParameter('importFeedId', $importFeed->get('id'))
+                ->fetchAllAssociative();
+
+            $importEntity = $this->getEntityManager()->getEntity($entityName);
+
+            $attributesDefs = [];
+            foreach ($attributes as $row) {
+                $this->getAttributeFieldConverter()->convert($importEntity, $row, $attributesDefs);
+            }
+
+            foreach ($attributesDefs as $name => $attributeDefs) {
+                $this
+                    ->getMetadata()
+                    ->set('entityDefs', $entityName, ['fields' => [$name => $attributeDefs]]);
+
+                $this->getLanguage()->set($entityName, 'fields', $name, $attributeDefs['label']);
+            }
+        }
+    }
 
     public function prepareCollectionForOutput(EntityCollection $collection, array $selectParams = []): void
     {
@@ -636,6 +688,16 @@ class ImportFeed extends Base
         $className = $this->getMetadata()->get(['app', 'jobTypes', 'ImportType' . ucfirst($feed->get('type')), 'handler']);
 
         return $this->getInjection('container')->get($className);
+    }
+
+    protected function getAttributeFieldConverter(): AttributeFieldConverter
+    {
+        return $this->getInjection('container')->get(AttributeFieldConverter::class);
+    }
+
+    protected function getLanguage(): Language
+    {
+        return $this->getInjection('container')->get('language');
     }
 
     public function createImportJob(ImportFeedEntity $feed, string $entityType, string $attachmentId, \stdClass $payload = null): ImportJob
