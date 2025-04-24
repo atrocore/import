@@ -6,7 +6,7 @@
     "onlyImportFailed7Days",
     "onlyImportFailed28Days"
   ],
-  "iconClass": "input",
+  "iconClass": "download-simple",
   "views": {
     "detail": "import:views/import-feed/detail"
   },

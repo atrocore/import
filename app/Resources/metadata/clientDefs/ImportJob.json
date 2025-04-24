@@ -14,7 +14,7 @@
   "modalViews": {
     "detail": "import:views/import-job/modals/detail"
   },
-  "iconClass": "task_alt",
+  "iconClass": "list-checks",
   "relationshipPanels": {
     "children": {
       "create": false,
