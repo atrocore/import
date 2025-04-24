@@ -14,25 +14,49 @@ Espo.define('import:views/import-configurator-item/fields/name', 'views/fields/e
         listTemplate: 'import:import-configurator-item/fields/name/list',
 
         setup() {
-            let entity = this.model.get('entity');
-            let fields = this.getEntityFields(entity);
-
-            this.params.options = [''];
-            this.translatedOptions = {'':''};
-
-            $.each(fields, field => {
-                this.params.options.push(field);
-                this.translatedOptions[field] = this.translate(field, 'fields', entity);
+            this.prepareListOptions();
+            this.listenTo(this.model, 'change:entityAttributeId', () => {
+                this.model.set(this.name, null);
+                this.prepareListOptions();
+                this.reRender();
             });
+
+            this.listenTo(this.model, `change:${this.name}`, () => {
+                this.model.set('createIfNotExist', false);
+            });
+
+            Dep.prototype.setup.call(this);
+        },
+
+        prepareListOptions() {
+            this.params.options = [''];
+            this.translatedOptions = {'': ''};
+
+            let entity = this.model.get('entity');
+
+            if (this.model.get('entityAttributeId')) {
+                this.wait(true);
+                this.notify('Loading...');
+                this.ajaxGetRequest('Attribute/action/attributesDefs', {entityName: entity, attributesIds: [this.model.get('entityAttributeId')]}, {async: false}).success(res => {
+                    $.each(res, (field, fieldDefs) => {
+                        this.params.options.push(field);
+                        this.translatedOptions[field] = fieldDefs.label;
+                        this.getMetadata().data.entityDefs[entity].fields[field] = fieldDefs;
+                        this.getLanguage().data[entity].fields[field] = fieldDefs.label;
+                    });
+                    this.wait(false);
+                    this.notify(false);
+                })
+            } else {
+                $.each(this.getEntityFields(entity), field => {
+                    this.params.options.push(field);
+                    this.translatedOptions[field] = this.translate(field, 'fields', entity);
+                });
+            }
+
             this.params.options.sort((a, b) => {
                 return this.translatedOptions[a].localeCompare(this.translatedOptions[b])
             });
-
-            this.listenTo(this.model, `change:${this.name}`, function () {
-                this.model.set('createIfNotExist', false);
-            }, this);
-
-            Dep.prototype.setup.call(this);
         },
 
         data() {
