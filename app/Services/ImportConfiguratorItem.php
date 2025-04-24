@@ -31,6 +31,7 @@ class ImportConfiguratorItem extends Base
             'replaceArray',
             'default',
             'type',
+            'entityAttributeId',
             'attributeId',
             'locale',
             'sortOrder',
@@ -131,6 +132,10 @@ class ImportConfiguratorItem extends Base
 
         $entity->set('entity', $importFeed->getFeedField('entity'));
         $entity->set('sourceFields', $importFeed->get('sourceFields'));
+
+        if ($entity->get('type') === 'Field'){
+            $entity->set('fieldDefs', $this->getMetadata()->get(['entityDefs', $entity->get('entity'), 'fields', $entity->get('name')]));
+        }
 
         if ($entity->get('type') === 'Attribute') {
             $attribute = $this->getServiceFactory()->create('Attribute')->getEntity($entity->get('attributeId'));

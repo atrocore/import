@@ -15,10 +15,6 @@ Espo.define('import:views/import-configurator-item/fields/name', 'views/fields/e
 
         setup() {
             this.prepareListOptions();
-            this.listenTo(this.model, 'change:entityAttributeId', () => {
-                this.prepareListOptions();
-                this.reRender();
-            });
 
             Dep.prototype.setup.call(this);
 
@@ -46,7 +42,6 @@ Espo.define('import:views/import-configurator-item/fields/name', 'views/fields/e
                 this.translatedOptions[field] = this.translate(field, 'fields', entity);
             });
 
-
             if (this.getMetadata().get(`scopes.${entity}.hasAttribute`)) {
                 this.params.options.push('_addAttribute');
                 this.translatedOptions['_addAttribute'] = this.translate('_addAttribute', 'labels', 'ImportConfiguratorItem');
@@ -61,14 +56,37 @@ Espo.define('import:views/import-configurator-item/fields/name', 'views/fields/e
                         options: this.params.options.filter(o => !(["_addAttribute"].includes(o)))
                     }
                 ]
+            }
 
-                if (this.model.get('entityAttributeId')) {
+            this.params.options.sort((a, b) => {
+                return this.translatedOptions[a].localeCompare(this.translatedOptions[b])
+            });
+        },
+
+        actionSelectAttribute() {
+            const scope = 'Attribute';
+            const viewName = this.getMetadata().get(['clientDefs', scope, 'modalViews', 'select']) || 'views/modals/select-records';
+
+            let entity = this.model.get('entity');
+
+            this.notify('Loading...');
+            this.createView('dialog', viewName, {
+                scope: scope,
+                multiple: false,
+                createButton: false,
+                massRelateEnabled: false,
+                allowSelectAllResult: false,
+            }, dialog => {
+                dialog.render();
+                this.notify(false);
+                dialog.once('select', model => {
                     this.wait(true);
                     this.notify('Loading...');
                     this.ajaxGetRequest('Attribute/action/attributesDefs', {
                         entityName: entity,
-                        attributesIds: [this.model.get('entityAttributeId')]
+                        attributesIds: [model.id]
                     }, {async: false}).success(res => {
+                        this.params.groupOptions[0].options = ['_addAttribute'];
                         $.each(res, (field, fieldDefs) => {
                             this.params.options.push(field);
                             this.translatedOptions[field] = fieldDefs.label;
@@ -83,34 +101,14 @@ Espo.define('import:views/import-configurator-item/fields/name', 'views/fields/e
                             }
                         });
 
+                        this.model.set('entityAttributeId', model.id);
+                        this.model.set('entityAttributeName', model.get('name'));
+
                         this.wait(false);
                         this.notify(false);
+
+                        this.reRender();
                     })
-                }
-            }
-
-            this.params.options.sort((a, b) => {
-                return this.translatedOptions[a].localeCompare(this.translatedOptions[b])
-            });
-        },
-
-        actionSelectAttribute() {
-            const scope = 'Attribute';
-            const viewName = this.getMetadata().get(['clientDefs', scope, 'modalViews', 'select']) || 'views/modals/select-records';
-
-            this.notify('Loading...');
-            this.createView('dialog', viewName, {
-                scope: scope,
-                multiple: false,
-                createButton: false,
-                massRelateEnabled: false,
-                allowSelectAllResult: false,
-            }, dialog => {
-                dialog.render();
-                this.notify(false);
-                dialog.once('select', model => {
-                    this.model.set('entityAttributeId', model.id);
-                    this.model.set('entityAttributeName', model.get('name'));
                 });
             });
         },
