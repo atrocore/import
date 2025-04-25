@@ -13,7 +13,7 @@ Espo.define('import:views/fields/filter-import-job', 'views/fields/link',
 
         foreignScope: 'ImportJob',
 
-        searchTypeList: ['is', 'isNot', 'isOneOf', 'isNotOneOf'],
+        searchTypeList: ['isOneOf', 'isNotOneOf'],
 
         searchScope: null,
 
@@ -31,6 +31,14 @@ Espo.define('import:views/fields/filter-import-job', 'views/fields/link',
                     value: this.searchScope
                 }];
             }
+        },
+
+        chooseMultipleOnSearch() {
+            return false;
+        },
+
+        getFilterName(type = null) {
+            return this.filterName ?? this.name;
         }
 
     })

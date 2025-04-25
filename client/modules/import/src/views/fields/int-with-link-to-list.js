@@ -8,8 +8,9 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('import:views/fields/int-with-link-to-list', 'import:views/import-job/fields/records-counter',
-    Dep => Dep.extend({
+Espo.define('import:views/fields/int-with-link-to-list',
+    ['import:views/import-job/fields/records-counter','import:views/fields/filter-import-job'],
+    (Dep,Filter) => Dep.extend({
 
         listTemplate: 'import:fields/int-with-link-to-list/detail',
 
@@ -27,12 +28,16 @@ Espo.define('import:views/fields/int-with-link-to-list', 'import:views/import-jo
 
         actionShowList() {
             const searchFilter = this.getSearchFilter();
-            this.getStorage().set('listSearch', this.listScope, searchFilter);
+            this.getStorage().set('listQueryBuilder', this.listScope, searchFilter);
             window.open(`#${this.listScope}`, '_blank');
         },
 
         getSearchFilter() {
             return {};
+        },
+
+        createQueryBuilderFilter(type) {
+            Filter.prototype.call(this, type);
         }
 
     })

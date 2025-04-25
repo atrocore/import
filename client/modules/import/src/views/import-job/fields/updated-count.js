@@ -18,21 +18,33 @@ Espo.define('import:views/import-job/fields/updated-count', 'import:views/fields
         },
 
         getSearchFilter() {
+            let nameHash = {};
+            nameHash[this.model.id] = this.model.get('name');
+
             return {
                 textFilter: '',
                 primary: null,
                 presetName: null,
                 bool: {},
-                advanced: {
-                    'filterUpdateImportJob-1': {
-                        type: 'in',
-                        value: [this.model.id],
-                        data: {
-                            type: 'anyOf',
-                            valueList: [this.model.id]
+                queryBuilder: {
+                    condition: 'AND',
+                    rules: [
+                        {
+                            id: 'filterUpdateImportJob',
+                            field: 'filterUpdateImportJob',
+                            type: 'string',
+                            operator: 'in',
+                            value: [this.model.id],
+                            data:{
+                                nameHash: {
+                                    [this.model.id]: this.model.get('name')
+                                }
+                            }
                         }
-                    }
-                }
+                    ],
+                    valid: true
+                },
+                queryBuilderApplied: 'apply'
             };
         }
 

@@ -34,7 +34,8 @@ Espo.define('import:views/dashlets/fields/link-feeds', 'import:views/fields/int-
             return {
                 textFilter: '',
                 primary: null,
-                bool: bool
+                bool: bool,
+                queryBuilderApplied: false
             };
         }
     })
