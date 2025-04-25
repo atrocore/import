@@ -63,6 +63,7 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
             "adapter"          => $feed->getFeedField('adapter'),
             "action"           => $feed->get('fileDataAction'),
             "attachmentId"     => $attachmentId,
+            "importFeedId"     => $feed->get('id'),
             "data"             => $feed->getConfiguratorData(),
             "repeatProcessing" => $feed->get("repeatProcessing"),
             "sheet"            => $feed->get("sheet"),
@@ -159,6 +160,13 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
 
     public function runNow(array $data, ?Job $job = null): void
     {
+        $importFeedId = $data['importFeedId'] ?? null;
+        $importJobId = $data['data']['importJobId'] ?? null;
+        $scope = $data['data']['entity'] ?? null;
+        if (empty($importFeedId) || empty($importJobId) || empty($scope)) {
+            throw new Error('importFeedId, importJobId or entity is empty');
+        }
+
         $executeAs = $data['executeAs'] ?? 'system';
         $currentUserId = $this->getContainer()->get('user')->get('id');
         $userChanged = false;
@@ -167,19 +175,22 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
             $userChanged = $this->auth('system');
         }
 
+        if ($this->getMetadata()->get("scopes.$scope.hasAttribute")) {
+            $this->getService('ImportFeed')->putAttributesToMetadata($importFeedId);
+        }
+
         // prepare file row
         $fileRow = (int)(($data['rowNumberPart'] ?? 0) + ($data['offset'] ?? 1));
         $this->getMemoryStorage()->set('importRowNumber', $fileRow);
 
-        $this->createConvertedFileForJob($data['data']['importJobId'], $data);
+        $this->createConvertedFileForJob($importJobId, $data);
 
-        $importJob = $this->getEntityById('ImportJob', $data['data']['importJobId']);
+        $importJob = $this->getEntityById('ImportJob', $importJobId);
 
         $this->getMemoryStorage()->set('importJobId', $importJob->get('id'));
         $this->getMemoryStorage()->set('skipAssignmentNotifications', true);
         $this->getMemoryStorage()->set('skipHooks', true);
 
-        $scope = $data['data']['entity'];
         $entityService = $this->getService($scope);
 
         $this->prepareConfigurator($data);
@@ -448,7 +459,7 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
         }
         if ($userId === 'system') {
             $user->set('isAdmin', true);
-            $user->set('ipAddress', $_SERVER['REMOTE_ADDR']);
+            $user->set('ipAddress', $_SERVER['REMOTE_ADDR'] ?? null);
         }
         $this->getEntityManager()->setUser($user);
         $this->getContainer()->setUser($user);

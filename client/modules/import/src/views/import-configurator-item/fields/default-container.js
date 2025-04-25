@@ -35,10 +35,15 @@ Espo.define('import:views/import-configurator-item/fields/default-container', 'v
                 this.listenTo(this.model, 'change:name change:attributeValue change:createIfNotExist', () => {
                     this.clearDefaultField();
                     this.createDefaultField();
+                    this.reRender();
                 });
 
-                this.listenTo(this.model, 'change:defaultId change:defaultIds', () => {
-                    if (!this.model.get('defaultId') && !this.model.get('defaultIds')) {
+                this.listenTo(this.model, 'change:defaultId', () => {
+                    this.model.set('default', this.model.get('defaultId'));
+                });
+
+                this.listenTo(this.model, 'change:defaultIds', () => {
+                    if (!this.model.get('defaultIds')) {
                         this.model.set('default', null);
                     }
                 });
@@ -74,6 +79,19 @@ Espo.define('import:views/import-configurator-item/fields/default-container', 'v
 
             // clear view
             this.clearView('default');
+        },
+
+        afterRender() {
+            Dep.prototype.afterRender.call(this);
+
+            this.$el.parent().hide();
+            if (this.model.get('type') === 'Field' && this.model.get('name')) {
+                this.$el.parent().show();
+            }
+
+            if (this.model.get('type') === 'Attribute' && this.model.get('attributeId') && this.model.get('attributeData')) {
+                this.$el.parent().show();
+            }
         },
 
         prepareDefaultModel(type, options) {
@@ -151,6 +169,9 @@ Espo.define('import:views/import-configurator-item/fields/default-container', 'v
             let options = [];
 
             if (this.model.get('type') === 'Field') {
+                if (!this.model.get('name')) {
+                    return;
+                }
                 type = this.getMetadata().get(`entityDefs.${this.model.get('entity')}.fields.${this.model.get('name')}.type`) || 'varchar';
                 options = this.getMetadata().get(`entityDefs.${this.model.get('entity')}.fields.${this.model.get('name')}.options`) || [];
                 if (type === 'bool') {
@@ -158,7 +179,10 @@ Espo.define('import:views/import-configurator-item/fields/default-container', 'v
                 }
             }
 
-            if (this.model.get('type') === 'Attribute' && this.model.get('attributeId') && this.model.get('attributeData')) {
+            if (this.model.get('type') === 'Attribute') {
+                if (!this.model.get('attributeId') || !this.model.get('attributeData')) {
+                    return;
+                }
                 type = this.model.get('attributeData').type;
                 if (type === 'rangeInt') {
                     type = 'int'

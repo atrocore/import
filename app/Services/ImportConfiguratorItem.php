@@ -15,6 +15,7 @@ namespace Import\Services;
 
 use Atro\Core\Container;
 use Atro\Core\Exceptions\BadRequest;
+use Atro\Core\KeyValueStorages\StorageInterface;
 use Atro\Core\Templates\Services\Base;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
@@ -31,6 +32,7 @@ class ImportConfiguratorItem extends Base
             'replaceArray',
             'default',
             'type',
+            'entityAttributeId',
             'attributeId',
             'locale',
             'sortOrder',
@@ -54,76 +56,9 @@ class ImportConfiguratorItem extends Base
         return $res;
     }
 
-    public function prepareCollectionForOutput(EntityCollection $collection, array $selectParams = []): void
-    {
-        parent::prepareCollectionForOutput($collection, $selectParams);
-
-        foreach ($collection as $entity) {
-            if (!empty($entity->get('importFeedId'))) {
-                $importFeedsIds[] = $entity->get('importFeedId');
-            }
-
-            if ($entity->get('type') === 'Attribute' && !empty($entity->get('attributeId'))) {
-                $attributesIds[] = $entity->get('attributeId');
-            }
-        }
-
-        if (empty($importFeedsIds)) {
-            return;
-        }
-
-        $importFeeds = $this
-            ->getEntityManager()
-            ->getRepository('ImportFeed')
-            ->where(['id' => $importFeedsIds])
-            ->find();
-
-        if (!empty($attributesIds)) {
-            $params = [
-                'disableCount' => true,
-                'where'        => [
-                    [
-                        'type'      => 'in',
-                        'attribute' => 'id',
-                        'value'     => $attributesIds
-                    ]
-                ]
-            ];
-            $attributes = $this->getServiceFactory()->create('Attribute')->findEntities($params)['collection'];
-        }
-
-        foreach ($collection as $entity) {
-            foreach ($importFeeds as $importFeed) {
-                if ($importFeed->get('id') === $entity->get('importFeedId')) {
-                    $entity->set('entity', $importFeed->getFeedField('entity'));
-                    $entity->set('sourceFields', $importFeed->get('sourceFields'));
-                    break 1;
-                }
-            }
-
-            $fieldType = $this->getMetadata()->get(['entityDefs', $entity->get('entity'), 'fields', $entity->get('name'), 'type'], 'varchar');
-            if ($entity->get('type') === 'Attribute' && !empty($attributesIds)) {
-                foreach ($attributes as $attribute) {
-                    if ($attribute->get('id') === $entity->get('attributeId')) {
-                        $entity->set('name', $attribute->get('name'));
-                        $entity->set('attributeData', $attribute->toArray());
-                        $fieldType = $attribute->get('type');
-                        break 1;
-                    }
-                }
-            }
-
-            $this->prepareDefaultField($fieldType, $entity);
-        }
-    }
-
     public function prepareEntityForOutput(Entity $entity)
     {
         parent::prepareEntityForOutput($entity);
-
-        if ($entity->has('entity')) {
-            return;
-        }
 
         if (empty($importFeed = $entity->get('importFeed'))) {
             return;
@@ -131,6 +66,11 @@ class ImportConfiguratorItem extends Base
 
         $entity->set('entity', $importFeed->getFeedField('entity'));
         $entity->set('sourceFields', $importFeed->get('sourceFields'));
+
+        // prepare field defs
+        if ($entity->get('type') === 'Field') {
+            $entity->set('fieldDefs', $this->getMetadata()->get("entityDefs.{$entity->get('entity')}.fields.{$entity->get('name')}"));
+        }
 
         if ($entity->get('type') === 'Attribute') {
             $attribute = $this->getServiceFactory()->create('Attribute')->getEntity($entity->get('attributeId'));
@@ -186,7 +126,9 @@ class ImportConfiguratorItem extends Base
 
             $importJobId = $this->getMemoryStorage()->get('importJobId');
             if(!empty($importJobId)) {
-                $this->container2->get('memoryStorage')->set('importJobId', $importJobId);
+                /** @var StorageInterface $memoryStorage */
+                $memoryStorage = $this->container2->get('memoryStorage');
+                $memoryStorage->set('importJobId', $importJobId);
             }
         }
 

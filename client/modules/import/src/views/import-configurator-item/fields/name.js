@@ -14,25 +14,128 @@ Espo.define('import:views/import-configurator-item/fields/name', 'views/fields/e
         listTemplate: 'import:import-configurator-item/fields/name/list',
 
         setup() {
-            let entity = this.model.get('entity');
-            let fields = this.getEntityFields(entity);
+            this.prepareListOptions();
 
-            this.params.options = [];
-            this.translatedOptions = {};
+            Dep.prototype.setup.call(this);
 
-            $.each(fields, field => {
-                this.params.options.push(field);
-                this.translatedOptions[field] = this.translate(field, 'fields', entity);
+            if (this.model.isNew() && !this.model.get(this.name) && this.model.get('type') === 'Field') {
+                this.model.set(this.name, 'id');
+            }
+
+            this.listenTo(this.model, `change:${this.name}`, () => {
+                this.model.set('createIfNotExist', false);
+
+                if (this.model.get(this.name) === '_addAttribute') {
+                    this.actionSelectAttribute();
+                } else {
+                    this.model.set('entityAttributeId', this.getMetadata().get(['entityDefs', this.model.get('entity'), 'fields', this.model.get(this.name), 'attributeId']));
+                }
             });
+        },
+
+        prepareListOptions() {
+            this.params.options = ['id'];
+            this.translatedOptions = {'id': this.translate('id', 'fields', 'Global')};
+
+            let entity = this.model.get('entity');
+            let hasAttribute = this.getMetadata().get(`scopes.${entity}.hasAttribute`);
+
+            let notAvailableTypes = [
+                'address',
+                'attachmentMultiple',
+                'currencyConverted',
+                'linkParent',
+                'personName',
+                'autoincrement'
+            ];
+
+            let notAvailableFieldsList = [
+                'createdAt',
+                'modifiedAt'
+            ];
+
+            if (hasAttribute) {
+                this.params.groupOptions = [
+                    {
+                        name: "attributes",
+                        options: ['_addAttribute']
+                    },
+                    {
+                        name: "fields",
+                        options: []
+                    }
+                ];
+                this.params.options.push('_addAttribute');
+                this.translatedOptions['_addAttribute'] = this.translate('_addAttribute', 'labels', 'ImportConfiguratorItem');
+            }
+
+            $.each(this.getMetadata().get(['entityDefs', entity, 'fields'], {}), (field, fieldDefs) => {
+                if (!fieldDefs.disabled && !notAvailableFieldsList.includes(field) && !notAvailableTypes.includes(fieldDefs.type) && !fieldDefs.importDisabled) {
+                    this.params.options.push(field);
+                    this.translatedOptions[field] = this.translate(field, 'fields', entity);
+                }
+
+                if (hasAttribute) {
+                    if (fieldDefs.attributeId) {
+                        this.params.groupOptions[0].options.push(field);
+                    } else {
+                        this.params.groupOptions[1].options.push(field);
+                    }
+                }
+            })
+
             this.params.options.sort((a, b) => {
                 return this.translatedOptions[a].localeCompare(this.translatedOptions[b])
             });
+        },
 
-            this.listenTo(this.model, `change:${this.name}`, function () {
-                this.model.set('createIfNotExist', false);
-            }, this);
+        actionSelectAttribute() {
+            const scope = 'Attribute';
+            const viewName = this.getMetadata().get(['clientDefs', scope, 'modalViews', 'select']) || 'views/modals/select-records';
 
-            Dep.prototype.setup.call(this);
+            let entity = this.model.get('entity');
+
+            this.notify('Loading...');
+            this.createView('dialog', viewName, {
+                scope: scope,
+                multiple: false,
+                createButton: false,
+                massRelateEnabled: false,
+                allowSelectAllResult: false,
+            }, dialog => {
+                dialog.render();
+                this.notify(false);
+                dialog.once('select', model => {
+                    this.wait(true);
+                    this.notify('Loading...');
+                    this.ajaxGetRequest('Attribute/action/attributesDefs', {
+                        entityName: entity,
+                        attributesIds: [model.id]
+                    }, {async: false}).success(res => {
+                        $.each(res, (field, fieldDefs) => {
+                            this.params.options.push(field);
+                            this.translatedOptions[field] = fieldDefs.label;
+
+                            this.getMetadata().data.entityDefs[entity].fields[field] = fieldDefs;
+                            this.getLanguage().data[entity].fields[field] = fieldDefs.label;
+
+                            this.params.groupOptions[0].options.push(field);
+
+                            if (this.model.get(this.name) === '_addAttribute') {
+                                this.model.set(this.name, field);
+                            }
+                        });
+
+                        this.model.set('entityAttributeId', model.id);
+                        this.model.set('entityAttributeName', model.get('name'));
+
+                        this.wait(false);
+                        this.notify(false);
+
+                        this.reRender();
+                    })
+                });
+            });
         },
 
         data() {
@@ -110,7 +213,7 @@ Espo.define('import:views/import-configurator-item/fields/name', 'views/fields/e
                 } else {
                     extraInfo += `<br><span class="text-muted small">${this.translate('attributeValue', 'fields', 'ImportConfiguratorItem')}: ${this.getLanguage().translateOption(this.model.get('attributeValue'), 'attributeValue', 'ImportConfiguratorItem')}</span>`;
                 }
-                if (this.model.get('channelName')){
+                if (this.model.get('channelName')) {
                     extraInfo += `<br><span class="text-muted small">${this.translate('Channel', 'scopeNames', 'Global')}: ${this.model.get('channelName')}</span>`;
                 }
             }
@@ -120,35 +223,6 @@ Espo.define('import:views/import-configurator-item/fields/name', 'views/fields/e
             }
 
             return extraInfo;
-        },
-
-        getEntityFields(entity) {
-            let result = {};
-            let notAvailableTypes = [
-                'address',
-                'attachmentMultiple',
-                'currencyConverted',
-                'linkParent',
-                'personName',
-                'autoincrement'
-            ];
-            let notAvailableFieldsList = [
-                'createdAt',
-                'modifiedAt'
-            ];
-            if (entity) {
-                let fields = this.getMetadata().get(['entityDefs', entity, 'fields']) || {};
-                result.id = {
-                    type: 'varchar'
-                };
-                Object.keys(fields).forEach(name => {
-                    let field = fields[name];
-                    if (!field.disabled && !notAvailableFieldsList.includes(name) && !notAvailableTypes.includes(field.type) && !field.importDisabled) {
-                        result[name] = field;
-                    }
-                });
-            }
-            return result;
         },
 
     })

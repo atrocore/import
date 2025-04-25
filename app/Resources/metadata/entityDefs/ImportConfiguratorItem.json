@@ -59,11 +59,27 @@
       "view": "import:views/import-configurator-item/fields/foreign-import-by",
       "tooltip": true
     },
+    "entityAttribute": {
+      "type": "link"
+    },
     "attribute": {
       "type": "link",
       "view": "import:views/import-configurator-item/fields/attribute"
     },
     "attributeData": {
+      "type": "jsonObject",
+      "notStorable": true,
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true,
+      "emHidden": true
+    },
+    "fieldDefs": {
       "type": "jsonObject",
       "notStorable": true,
       "layoutListDisabled": true,
@@ -186,6 +202,10 @@
       "foreign": "configuratorItems",
       "entity": "ImportFeed",
       "audited": false
+    },
+    "entityAttribute": {
+      "type": "belongsTo",
+      "entity": "Attribute"
     },
     "attribute": {
       "type": "belongsTo",
