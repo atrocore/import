@@ -29,7 +29,6 @@ Espo.define('import:views/fields/int-with-link-to-list',
         actionShowList() {
             const searchFilter = this.getSearchFilter();
             this.getStorage().set('listQueryBuilder', this.listScope, searchFilter);
-            // debugger
             window.open(`#${this.listScope}`, '_blank');
         },
 
