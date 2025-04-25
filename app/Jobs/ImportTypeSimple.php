@@ -63,6 +63,7 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
             "adapter"          => $feed->getFeedField('adapter'),
             "action"           => $feed->get('fileDataAction'),
             "attachmentId"     => $attachmentId,
+            "importFeedId"     => $feed->get('id'),
             "data"             => $feed->getConfiguratorData(),
             "repeatProcessing" => $feed->get("repeatProcessing"),
             "sheet"            => $feed->get("sheet"),
@@ -159,6 +160,13 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
 
     public function runNow(array $data, ?Job $job = null): void
     {
+        $importFeedId = $data['importFeedId'] ?? null;
+        $importJobId = $data['data']['importJobId'] ?? null;
+        $scope = $data['data']['entity'] ?? null;
+        if (empty($importFeedId) || empty($importJobId) || empty($scope)) {
+            throw new Error('importFeedId, importJobId or entity is empty');
+        }
+
         $executeAs = $data['executeAs'] ?? 'system';
         $currentUserId = $this->getContainer()->get('user')->get('id');
         $userChanged = false;
@@ -167,13 +175,8 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
             $userChanged = $this->auth('system');
         }
 
-        $importJobId = $data['data']['importJobId'];
-        $scope = $data['data']['entity'];
-
-        $importJob = $this->getEntityById('ImportJob', $importJobId);
-
-        if (!empty($scope) && $this->getMetadata()->get("scopes.$scope.hasAttribute")) {
-            $this->getService('ImportFeed')->putAttributesToMetadata($importJob->get('importFeedId'));
+        if ($this->getMetadata()->get("scopes.$scope.hasAttribute")) {
+            $this->getService('ImportFeed')->putAttributesToMetadata($importFeedId);
         }
 
         // prepare file row
@@ -181,6 +184,8 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
         $this->getMemoryStorage()->set('importRowNumber', $fileRow);
 
         $this->createConvertedFileForJob($importJobId, $data);
+
+        $importJob = $this->getEntityById('ImportJob', $importJobId);
 
         $this->getMemoryStorage()->set('importJobId', $importJob->get('id'));
         $this->getMemoryStorage()->set('skipAssignmentNotifications', true);
