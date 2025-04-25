@@ -45,7 +45,7 @@ Espo.define('import:views/import-job/fields/errors-count', 'import:views/fields/
                     ],
                     valid: true
                 },
-                queryBuilderApplied: 'apply'
+                queryBuilderApplied: true
             };
         }
 
