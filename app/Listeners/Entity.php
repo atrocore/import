@@ -29,17 +29,36 @@ class Entity extends AbstractListener
     {
         $entityType = $event->getArgument('entityType');
         $params = $event->getArgument('params');
-
-        if (!empty($params['where'])) {
+        if(!empty($params['where'])) {
             foreach ($params['where'] as $k => $item) {
-                if (is_array($item) && !empty($callback = $this->prepareImportJobFilterCallback($entityType, $item))) {
-                    $params['filterCallbacks'][] = $callback;
-                    unset($params['where'][$k]);
-                    $params['where'] = array_values($params['where']);
+                if(!empty($item['condition'])) {
+                    foreach ($item['rules'] as $rk => $rule) {
+                        if(empty($rule['id']) || empty($rule['type']) || empty($rule['value'])) {
+                            continue;
+                        }
+                        $itemRule = [
+                            "attribute" => $rule['id'],
+                            "type" => $rule['type'],
+                            "value" => $rule['value'],
+                        ];
+                        if (is_array($rule) && !empty($callback = $this->prepareImportJobFilterCallback($entityType, $itemRule))) {
+                            $params['filterCallbacks'][] = $callback;
+                            unset($params['where'][$k]['rules'][$rk]);
+                            $$params['where'][$k]['rules'] = array_values($params['where'][$k]['rules']);
+                        }
+                    }
+                }else{
+                    if (is_array($item) && !empty($callback = $this->prepareImportJobFilterCallback($entityType, $item))) {
+                        $params['filterCallbacks'][] = $callback;
+                        unset($params['where'][$k]);
+                        $params['where'] = array_values($params['where']);
+                    }
                 }
+
             }
-            $event->setArgument('params', $params);
         }
+
+        $event->setArgument('params', $params);
     }
 
     public function afterGetSelectParams(Event $event): void

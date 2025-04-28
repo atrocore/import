@@ -13,24 +13,39 @@ Espo.define('import:views/import-job/fields/errors-count', 'import:views/fields/
 
         listScope: 'ImportJobLog',
 
+        setup() {
+            Dep.prototype.setup.call(this);
+
+            this.filterName = 'importJobId';
+        },
+
         getSearchFilter() {
+            let nameHash = {};
+            nameHash[this.model.id] = this.model.get('name');
             return {
                 textFilter: '',
                 primary: null,
                 presetName: null,
                 bool: {},
-                advanced: {
-                    'importJob-1': {
-                        type: 'equals',
-                        field: 'importJobId',
-                        value: this.model.id,
-                        data: {
-                            type: 'is',
-                            idValue:  this.model.id,
-                            nameValue: this.model.get('name')
+                queryBuilder: {
+                    condition: 'AND',
+                    rules: [
+                        {
+                            id: 'importJobId',
+                            field: 'importJobId',
+                            type: 'string',
+                            operator: 'in',
+                            value: [this.model.id],
+                            data:{
+                                nameHash: {
+                                    [this.model.id]: this.model.get('name')
+                                }
+                            }
                         }
-                    }
-                }
+                    ],
+                    valid: true
+                },
+                queryBuilderApplied: true
             };
         }
 

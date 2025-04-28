@@ -23,18 +23,26 @@ Espo.define('import:views/import-job/fields/created-count', 'import:views/fields
                 primary: null,
                 presetName: null,
                 bool: {},
-                advanced: {
-                    'filterCreateImportJob-1': {
-                        type: 'in',
-                        value: [this.model.id],
-                        data: {
-                            type: 'anyOf',
-                            valueList: [this.model.id]
+                queryBuilder: {
+                    condition: 'AND',
+                    rules: [
+                        {
+                            id: 'filterCreateImportJob',
+                            field: 'filterCreateImportJob',
+                            type: 'string',
+                            operator: 'in',
+                            value: [this.model.id],
+                            data:{
+                                nameHash: {
+                                    [this.model.id]: this.model.get('name')
+                                }
+                            }
                         }
-                    }
-                }
+                    ],
+                    valid: true
+                },
+                queryBuilderApplied: true
             };
-        }
-
+        },
     })
 );
