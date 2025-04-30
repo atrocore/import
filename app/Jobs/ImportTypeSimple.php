@@ -307,6 +307,10 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
                             }
                         }
 
+                        if ($action === 'update' && in_array($item['name'], $data['data']['idField'])) {
+                            continue 1;
+                        }
+
                         $type = $this->prepareFieldType($item, $input, $entity ?? null);
 
                         if ($item['entity'] === 'ProductAttributeValue' && $item['name'] === 'valueMain') {
