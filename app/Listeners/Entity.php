@@ -31,7 +31,7 @@ class Entity extends AbstractListener
         $params = $event->getArgument('params');
         if(!empty($params['where'])) {
             foreach ($params['where'] as $k => $item) {
-                if(!empty($item['condition'])) {
+                if(!empty($item['condition']) && !empty($item['rules'])) {
                     foreach ($item['rules'] as $rk => $rule) {
                         if(empty($rule['id']) || empty($rule['type']) || empty($rule['value'])) {
                             continue;
