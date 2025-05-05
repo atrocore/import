@@ -177,6 +177,10 @@ Espo.define('import:views/import-configurator-item/fields/default-container', 'v
                 if (type === 'bool') {
                     this.params.notNull = this.getMetadata().get(`entityDefs.${this.model.get('entity')}.fields.${this.model.get('name')}.notNull`);
                 }
+
+                if (type === 'link' && this.getMetadata().get(`entityDefs.${this.model.get('entity')}.fields.${this.model.get('name')}.measureId`)) {
+                    type = 'measure';
+                }
             }
 
             if (this.model.get('type') === 'Attribute') {

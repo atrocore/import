@@ -56,12 +56,28 @@ class ImportConfiguratorItem extends Base
         return $res;
     }
 
+    public function prepareCollectionForOutput(EntityCollection $collection, array $selectParams = []): void
+    {
+        parent::prepareCollectionForOutput($collection, $selectParams);
+
+        if (!empty($collection[0])) {
+            $this->getImportFeedService()->putAttributesToMetadata($collection[0]->get('importFeedId'));
+            foreach ($collection as $entity) {
+                $entity->_withAttributesMetadata = true;
+            }
+        }
+    }
+
     public function prepareEntityForOutput(Entity $entity)
     {
         parent::prepareEntityForOutput($entity);
 
         if (empty($importFeed = $entity->get('importFeed'))) {
             return;
+        }
+
+        if (empty($entity->_withAttributesMetadata)) {
+            $this->getImportFeedService()->putAttributesToMetadata($importFeed->get('id'));
         }
 
         $entity->set('entity', $importFeed->getFeedField('entity'));
@@ -186,5 +202,10 @@ class ImportConfiguratorItem extends Base
         }
 
         return $this->attributes[$id];
+    }
+
+    protected function getImportFeedService(): ImportFeed
+    {
+        return $this->getServiceFactory()->create('ImportFeed');
     }
 }

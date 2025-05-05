@@ -47,15 +47,6 @@ class ImportFeed extends Base
         "High"   => 150
     ];
 
-    public function findLinkedEntities($id, $link, $params)
-    {
-        if ($link === 'configuratorItems') {
-            $this->putAttributesToMetadata($id);
-        }
-
-        return parent::findLinkedEntities($id, $link, $params);
-    }
-
     public function putAttributesToMetadata(string $importFeedId): void
     {
         $importFeed = $this->getEntityManager()->getEntity('ImportFeed', $importFeedId);
