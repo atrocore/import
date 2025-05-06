@@ -28,5 +28,5 @@
     "configuratorItemsIds"
   ],
   "hideFieldTypeFilters": true,
-  "disabledAttributes": true
+  "attributesDisabled": true
 }

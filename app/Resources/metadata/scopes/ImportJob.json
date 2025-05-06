@@ -25,5 +25,5 @@
   "autoDeleteAfterDays": 21,
   "clearDeletedAfterDays": 35,
   "disableActionHistory": true,
-  "disabledAttributes": true
+  "attributesDisabled": true
 }
