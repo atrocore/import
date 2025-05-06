@@ -17,5 +17,7 @@
   "hasOwner": false,
   "notificationDisabled": true,
   "hideFieldTypeFilters": true,
-  "disableActionHistory": true
+  "disableActionHistory": true,
+  "disabledAttributes": true,
+  "hideDisabledAttributes": true
 }
