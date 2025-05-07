@@ -24,6 +24,5 @@
   "hideFieldTypeFilters": true,
   "autoDeleteAfterDays": 21,
   "clearDeletedAfterDays": 35,
-  "disableActionHistory": true,
-  "attributesDisabled": true
+  "disableActionHistory": true
 }

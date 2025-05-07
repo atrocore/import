@@ -27,6 +27,5 @@
     "scheduledJobsIds",
     "configuratorItemsIds"
   ],
-  "hideFieldTypeFilters": true,
-  "attributesDisabled": true
+  "hideFieldTypeFilters": true
 }

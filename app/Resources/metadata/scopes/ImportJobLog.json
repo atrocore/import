@@ -18,6 +18,5 @@
   "notificationDisabled": true,
   "hideFieldTypeFilters": true,
   "disableActionHistory": true,
-  "attributesDisabled": true,
-  "hideAttributesDisabled": true
+  "attributesDisabled": true
 }
