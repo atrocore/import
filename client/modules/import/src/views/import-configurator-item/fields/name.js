@@ -117,16 +117,18 @@ Espo.define('import:views/import-configurator-item/fields/name', 'views/fields/e
                         attributesIds: [model.id]
                     }, {async: false}).success(res => {
                         $.each(res, (field, fieldDefs) => {
-                            this.params.options.push(field);
-                            this.translatedOptions[field] = fieldDefs.label;
+                            if (!fieldDefs.importDisabled) {
+                                this.params.options.push(field);
+                                this.translatedOptions[field] = fieldDefs.label;
 
-                            this.getMetadata().data.entityDefs[entity].fields[field] = fieldDefs;
-                            this.getLanguage().data[entity].fields[field] = fieldDefs.label;
+                                this.getMetadata().data.entityDefs[entity].fields[field] = fieldDefs;
+                                this.getLanguage().data[entity].fields[field] = fieldDefs.label;
 
-                            this.params.groupOptions[0].options.push(field);
+                                this.params.groupOptions[0].options.push(field);
 
-                            if (this.model.get(this.name) === '_addAttribute') {
-                                this.model.set(this.name, field);
+                                if (this.model.get(this.name) === '_addAttribute') {
+                                    this.model.set(this.name, field);
+                                }
                             }
                         });
 
