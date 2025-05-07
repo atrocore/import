@@ -101,6 +101,10 @@ Espo.define('import:views/import-configurator-item/fields/name', 'views/fields/e
                 multiple: false,
                 createButton: false,
                 massRelateEnabled: false,
+                boolFilterList: ['onlyForEntity'],
+                boolFilterData: {
+                    onlyForEntity: entity
+                },
                 allowSelectAllResult: false,
             }, dialog => {
                 dialog.render();
