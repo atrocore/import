@@ -9,8 +9,5 @@
   },
   "links": {
     "importJob": "Import Job"
-  },
-  "labels": {
-    "Create ImportJobLog": "Create Import Job Log"
   }
 }

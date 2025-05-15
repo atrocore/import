@@ -45,7 +45,6 @@
     "unit": "Jednostka",
     "Import Data Settings": "Ustawienia importu danych",
     "Feed Settings": "Ustawienia kanału",
-    "Create ImportFeed": "Utwórz kanał importu",
     "convertFile": "Ładowanie pliku, proszę czekać...",
     "convertSuccess": "Plik załadowany",
     "addEntityField": "Dodaj pole encji",

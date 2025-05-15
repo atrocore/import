@@ -20,7 +20,6 @@
     "importJobLogs": "Logi Błędów"
   },
   "labels": {
-    "Create ImportJob": "Utwórz Zadanie Importu",
     "Pending": "Oczekujące",
     "Success": "Sukces",
     "Running": "Trwa",

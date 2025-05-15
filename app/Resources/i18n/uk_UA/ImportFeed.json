@@ -46,7 +46,6 @@
     "unit": "Одиниця",
     "Import Data Settings": "Налаштування імпорту даних",
     "Feed Settings": "Налаштування фіду",
-    "Create ImportFeed": "Створити імпортний фід",
     "convertFile": "Завантаження файлу, зачекайте...",
     "convertSuccess": "Файл завантажено",
     "addEntityField": "Додати поле сутності",

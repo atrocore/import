@@ -20,7 +20,6 @@
     "importJobLogs": "Journaux d'erreurs"
   },
   "labels": {
-    "Create ImportJob": "Créer un job d'import",
     "Pending": "En attente",
     "Success": "Succès",
     "Running": "La course à pied",

@@ -9,8 +9,5 @@
   },
   "links": {
     "importJob": "Importauftrag"
-  },
-  "labels": {
-    "Create ImportJobLog": "Import-Auftragslog erstellen"
   }
 }

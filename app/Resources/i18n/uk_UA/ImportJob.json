@@ -20,7 +20,6 @@
     "importJobLogs": "Лог помилок"
   },
   "labels": {
-    "Create ImportJob": "Створити завдання імпорту",
     "Pending": "В очікуванні",
     "Success": "Успішно",
     "Running": "Виконується",
