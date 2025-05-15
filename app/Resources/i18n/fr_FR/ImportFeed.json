@@ -48,7 +48,6 @@
     "unit": "Unité",
     "Import Data Settings": "Paramètres d'importation des données",
     "Feed Settings": "paramètres d'alimentation",
-    "Create ImportFeed": "Créer un flux d'importation",
     "convertFile": "Chargement du fichier, veuillez patienter...",
     "convertSuccess": "Fichier chargé",
     "addEntityField": "Ajouter un champ d'entité",

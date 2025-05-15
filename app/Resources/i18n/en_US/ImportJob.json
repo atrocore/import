@@ -21,7 +21,6 @@
     "files": "Files"
   },
   "labels": {
-    "Create ImportJob": "Create Import Job",
     "Pending": "Pending",
     "Success": "Success",
     "Running": "Running",

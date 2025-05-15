@@ -9,8 +9,5 @@
   },
   "links": {
     "importJob": "Job d'import"
-  },
-  "labels": {
-    "Create ImportJobLog": "Créer un journal des travaux d'importation"
   }
 }

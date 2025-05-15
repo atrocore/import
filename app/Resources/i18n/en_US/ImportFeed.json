@@ -49,7 +49,6 @@
     "unit": "Unit",
     "Import Data Settings": "Import Data Settings",
     "Feed Settings": "Feed Settings",
-    "Create ImportFeed": "Create Import Feed",
     "convertFile": "Loading file, please wait...",
     "convertSuccess": "File loaded",
     "addEntityField": "Add entity field",

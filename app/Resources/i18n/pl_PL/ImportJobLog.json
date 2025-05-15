@@ -9,8 +9,5 @@
 	},
 	"links": {
 		"importJob": "Zadanie importu"
-	},
-	"labels": {
-		"Create ImportJobLog": "Utwórz dziennik zadania importu"
 	}
 }
