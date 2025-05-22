@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Import\FieldConverters;
 
-use Espo\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\BadRequest;
 
 class Date extends Varchar
 {
@@ -26,7 +26,6 @@ class Date extends Varchar
 
         if (isset($config['column'][0]) && isset($row[$config['column'][0]])) {
             $value = $row[$config['column'][0]];
-            $this->deletePAV($value, $config);
             if (strtolower((string)$value) === strtolower((string)$config['emptyValue']) || $value === '') {
                 $value = $default;
             }

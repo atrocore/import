@@ -34,21 +34,6 @@
       "default": false,
       "tooltip": true
     },
-    "type": {
-      "type": "enum",
-      "required": false,
-      "prohibitedEmptyValue": true,
-      "optionsIds": [
-        "Field",
-        "Attribute"
-      ],
-      "options": [
-        "Field",
-        "Attribute"
-      ],
-      "default": "Field",
-      "view": "import:views/import-configurator-item/fields/type"
-    },
     "foreignColumn": {
       "type": "multiEnum",
       "view": "import:views/import-configurator-item/fields/foreign-column",
@@ -61,10 +46,6 @@
     },
     "entityAttribute": {
       "type": "link"
-    },
-    "attribute": {
-      "type": "link",
-      "view": "import:views/import-configurator-item/fields/attribute"
     },
     "attributeData": {
       "type": "jsonObject",
@@ -91,9 +72,6 @@
       "exportDisabled": true,
       "importDisabled": true,
       "emHidden": true
-    },
-    "channel": {
-      "type": "link"
     },
     "locale": {
       "type": "enum",
@@ -174,26 +152,6 @@
     },
     "sortOrder": {
       "type": "int"
-    },
-    "attributeValue": {
-      "type": "enum",
-      "required": false,
-      "prohibitedEmptyValue": true,
-      "view": "import:views/import-configurator-item/fields/attribute-value",
-      "optionsIds": [
-        "value",
-        "valueFrom",
-        "valueTo",
-        "valueUnitId",
-        "valueMain"
-      ],
-      "options": [
-        "value",
-        "valueFrom",
-        "valueTo",
-        "valueUnitId",
-        "valueMain"
-      ]
     }
   },
   "links": {
@@ -206,16 +164,6 @@
     "entityAttribute": {
       "type": "belongsTo",
       "entity": "Attribute"
-    },
-    "attribute": {
-      "type": "belongsTo",
-      "entity": "Attribute",
-      "audited": false
-    },
-    "channel": {
-      "type": "belongsTo",
-      "entity": "Channel",
-      "audited": false
     }
   },
   "collection": {

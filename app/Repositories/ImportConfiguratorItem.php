@@ -89,19 +89,9 @@ class ImportConfiguratorItem extends Base
 
         $this->checkIfVirtualFieldIsIdentifier($entity, $importFeed);
 
-        if ($entity->get('type') === 'Field') {
-            $type = $this->getMetadata()->get(['entityDefs', $importFeed->getFeedField('entity'), 'fields', $entity->get('name'), 'type'], 'varchar');
-            if ($type === 'varchar' && !empty($this->getMetadata()->get(['entityDefs', $importFeed->getFeedField('entity'), 'fields', $entity->get('name'), 'unitField']))) {
-                $type = 'valueWithUnit';
-            }
-        } elseif ($entity->get('type') === 'Attribute') {
-            if (empty($attribute = $entity->get('attribute'))) {
-                throw new BadRequest('No such Attribute.');
-            }
-            $type = self::prepareConverterType($attribute->get('type'), $entity->get('attributeValue'));
-            if ($entity->get('attributeValue') == 'value' && !empty($attribute->get('measureId'))) {
-                $type = 'valueWithUnit';
-            }
+        $type = $this->getMetadata()->get(['entityDefs', $importFeed->getFeedField('entity'), 'fields', $entity->get('name'), 'type'], 'varchar');
+        if ($type === 'varchar' && !empty($this->getMetadata()->get(['entityDefs', $importFeed->getFeedField('entity'), 'fields', $entity->get('name'), 'unitField']))) {
+            $type = 'valueWithUnit';
         }
 
         $this->prepareDefaultField($type, $entity);

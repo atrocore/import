@@ -22,7 +22,7 @@ Espo.define('import:views/import-configurator-item/fields/foreign-import-by', ['
             }
 
             this.prepareOptions();
-            this.listenTo(this.model, 'change:name change:attributeData', () => {
+            this.listenTo(this.model, 'change:name', () => {
                 this.prepareOptions();
             });
 

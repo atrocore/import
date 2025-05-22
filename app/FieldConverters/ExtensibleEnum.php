@@ -17,7 +17,6 @@ use Atro\Core\Exceptions\NotUnique;
 use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\Exception\ConstraintViolationException;
 use Espo\ORM\Entity;
-use Espo\ORM\EntityManager;
 
 class ExtensibleEnum extends Link
 {
@@ -87,17 +86,7 @@ class ExtensibleEnum extends Link
 
     protected function getExtensibleEnumId(array $config): string
     {
-        $extensibleEnumId = 'no-such-extensible-enum';
-        if (!empty($config['attributeId'])) {
-            $attribute = $this->configuratorItem->getAttributeById($config['attributeId']);
-            if (!empty($attribute) && !empty($attribute->get('extensibleEnumId'))) {
-                $extensibleEnumId = $attribute->get('extensibleEnumId');
-            }
-        } else {
-            $extensibleEnumId = $this->getMetadata()->get(['entityDefs', $config['entity'], 'fields', $config['name'], 'extensibleEnumId']);
-        }
-
-        return $extensibleEnumId;
+        return $this->getMetadata()->get(['entityDefs', $config['entity'], 'fields', $config['name'], 'extensibleEnumId'], 'no-such-extensible-enum');
     }
 
     protected function prepareCollectionBeforeWhereKeysCreated($collection): \Espo\ORM\EntityCollection

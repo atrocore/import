@@ -27,7 +27,6 @@ use Atro\Services\AbstractService;
 use Doctrine\DBAL\ParameterType;
 use Espo\ORM\Entity;
 use Import\Entities\ImportFeed;
-use Import\Exceptions\DeleteProductAttributeValue;
 use Import\FieldConverters\Link;
 
 class ImportTypeSimple extends AbstractJob implements JobInterface
@@ -331,9 +330,6 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
                         try {
                             $this->getService('ImportConfiguratorItem')->getFieldConverter($type)->convert($input, $item, $row);
                             $this->getMemoryStorage()->set("import_job_{$importJob->get('id')}_input", $input);
-                        } catch (DeleteProductAttributeValue $e) {
-                            $action = 'delete_found';
-                            break;
                         } catch (BadRequest $e) {
                             $message = '';
                             if (array_key_exists('column', $item)) {
@@ -419,7 +415,6 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
         $this->getMemoryStorage()->set('importRowNumber', (int)(($data['rowNumberPart'] ?? 0) + ($data['offset'] ?? 1)));
 
         // create jobs for importing ProductAttributeValues
-        $this->createImportPavJobs($data);
 
         if (self::isDeleteAction($data['action'])) {
             $parentJobId = $importJob->get('parentId');
@@ -817,177 +812,6 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
             'fieldDelimiterForRelation',
             'skipValue'
         ];
-    }
-
-    protected function createImportPavJobs(array $productImportData): void
-    {
-        if (empty($productImportData['data']['entity']) || $productImportData['data']['entity'] !== 'Product') {
-            return;
-        }
-
-        /**
-         * Prepare Product configurator item
-         */
-        foreach ($productImportData['data']['configuration'] as $item) {
-            if ($item['type'] !== 'Attribute' && in_array($item['name'], $productImportData['data']['idField'])) {
-                $product['type'] = 'Field';
-                $product['name'] = 'product';
-                $product['default'] = null;
-                $product['entity'] = 'ProductAttributeValue';
-                $product['column'][] = $item['column'][0];
-                $product['importBy'][] = $item['name'];
-                foreach ($this->getCommonFieldsList() as $commonField) {
-                    $product[$commonField] = $item[$commonField];
-                }
-            }
-        }
-
-        if (empty($product)) {
-            return;
-        }
-
-        $importJob = $this->getEntityById('ImportJob', $productImportData['data']['importJobId']);
-        if (empty($importJob)) {
-            return;
-        }
-
-        $qmJob = $this->getEntityManager()->getRepository('ImportJob')->getQmJob($importJob);
-        if (empty($qmJob)) {
-            return;
-        }
-
-        /** @var \Import\Entities\ImportFeed $importFeed */
-        $importFeed = $this->getEntityById('ImportFeed', $importJob->get('importFeedId'));
-        if (empty($importFeed)) {
-            return;
-        }
-
-        /** @var \Import\Services\ImportFeed $importService */
-        $importService = $this->getService('ImportFeed');
-
-        $linkFields = $this->getLinkFields('Product', $productImportData['data']['idField']);
-
-        $this->getMemoryStorage()->set('creatingPavImportJobs', true);
-
-        foreach ($productImportData['data']['configuration'] as $item) {
-            if ($item['type'] === 'Attribute') {
-                $attribute = $this->getEntityById('Attribute', $item['attributeId']);
-                if (empty($attribute)) {
-                    continue;
-                }
-
-                $common = ['entity' => 'ProductAttributeValue'];
-                foreach ($this->getCommonFieldsList() as $commonField) {
-                    $common[$commonField] = $item[$commonField];
-                }
-
-                $configurator = [$product];
-                $configurator[] = array_merge($common, [
-                    'type'     => 'Field',
-                    'name'     => 'attribute',
-                    'column'   => [],
-                    'importBy' => [],
-                    'default'  => $attribute->get('id')
-                ]);
-                $configurator[] = array_merge($common, [
-                    'type'    => 'Field',
-                    'name'    => 'language',
-                    'column'  => [],
-                    'default' => $item['locale']
-                ]);
-
-                $configurator[] = array_merge($common, [
-                    'type'             => 'Field',
-                    'name'             => $item['attributeValue'] ?? 'value',
-                    'column'           => $item['column'],
-                    'default'          => $item['default'],
-                    'createIfNotExist' => $item['createIfNotExist'],
-                    'foreignColumn'    => $item['foreignColumn'],
-                    'foreignImportBy'  => $item['foreignImportBy'],
-                    'importBy'         => $item['importBy'],
-                    'attributeId'      => $attribute->get('id'),
-                    'attributeType'    => $attribute->get('type')
-                ]);
-
-                $configurator[] = array_merge($common, [
-                        'type'    => 'Field',
-                        'name'    => 'channelId',
-                        'column'  => [],
-                        'default' => $item['channelId']
-                    ]
-                );
-
-                $pavData = $productImportData;
-                $pavData['offset'] = $importFeed->isFileHeaderRow() ? 1 : 0;
-                $pavData['action'] = 'create_update';
-                $pavData['data']['entity'] = 'ProductAttributeValue';
-                $pavData['data']['idField'] = [
-                    "language",
-                    "channelId",
-                    "product",
-                    "attribute"
-                ];
-
-                if (isset($pavData['sourceFields'])) {
-                    unset($pavData['sourceFields']);
-                }
-
-                if (!empty($pavData['script']) || !empty($linkFields)) {
-                    $pavData['attachmentId'] = $importJob->get('convertedFileId');
-                    $pavData['fileFormat'] = 'CSV';
-                    $pavData['offset'] = 1;
-                    $pavData['isFileHeaderRow'] = true;
-
-                    if (!empty($pavData['script'])) {
-                        $pavData['script'] = null;
-                    }
-
-                    foreach ($configurator as $i => $confItem) {
-                        if ($confItem['name'] !== 'product') {
-                            continue;
-                        }
-
-                        $columns = [];
-                        $importBy = [];
-                        foreach ($confItem['importBy'] as $index => $value) {
-                            if (isset($linkFields[$value])) {
-                                $field = $linkFields[$value];
-                                $importBy[$index] = $field;
-                                $columns[$index] = "converted_$field";
-                            } else {
-                                $importBy[$index] = $value;
-                                $columns[$index] = $confItem['column'][$index];
-                            }
-                        }
-
-                        $configurator[$i]['importBy'] = $importBy;
-                        $configurator[$i]['column'] = $columns;
-                    }
-                }
-
-                $pavData['data']['configuration'] = $configurator;
-
-                $payload = new \stdClass();
-                if (!empty($importJob->get('parentId'))) {
-                    $payload->parentJobId = $importJob->get('parentId');
-                }
-                $payload->convertedFileId = $importJob->get('convertedFileId');
-                $pavJob = $importService
-                    ->createImportJob($importFeed, 'ProductAttributeValue', $pavData['attachmentId'], $payload);
-
-                $pavData['data']['importJobId'] = $pavJob->get('id');
-
-                $event = $this->getEventManager()
-                    ->dispatch(new Event(['importFeed' => $importFeed, 'pavData' => $pavData]), 'prepareImportPavJob');
-
-                $pavData = $event->getArgument('pavData');
-                $pavData['parentJobId'] = $qmJob->get('id');
-
-                $importService->push($importService->getName($importFeed), 'ImportTypeSimple', $pavData);
-            }
-        }
-
-        $this->getMemoryStorage()->set('creatingPavImportJobs', false);
     }
 
     public static function clearCache(): void

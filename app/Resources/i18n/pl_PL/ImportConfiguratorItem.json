@@ -9,8 +9,6 @@
     "importBy": "Powiązane pola encji",
     "createIfNotExist": "Utwórz rekord danych powiązanych",
     "locale": "Język",
-    "attribute": "Atrybut",
-    "channel": "Kanał",
     "sourceFields": "Pola źródłowe",
     "type": "Typ",
     "foreignColumn": "Pole źródłowe",

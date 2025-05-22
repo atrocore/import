@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Import\FieldConverters;
 
-use Espo\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\BadRequest;
 use Espo\Core\Utils\Json;
 use Espo\ORM\Entity;
 
@@ -34,7 +34,6 @@ class LinkMultiple extends Varchar
                 continue;
             }
 
-            $this->deletePAV($row[$column], $config);
             if ($row[$column] === $config['markForNoRelation']) {
                 $inputRow->$fieldName = [];
                 return;

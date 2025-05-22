@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Import\FieldConverters;
 
-use Espo\Core\Utils\Json;
 use Espo\ORM\Entity;
 
 class ExtensibleMultiEnum extends LinkMultiple

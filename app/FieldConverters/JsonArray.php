@@ -31,7 +31,6 @@ class JsonArray extends Varchar
 
         if (isset($config['column'][0]) && isset($row[$config['column'][0]])) {
             $value = $row[$config['column'][0]];
-            $this->deletePAV($value, $config);
             if (strtolower((string)$value) === strtolower((string)$config['emptyValue']) || $value === '') {
                 $value = empty($default) ? [] : $default;
             }

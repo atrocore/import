@@ -20,7 +20,7 @@ Espo.define('import:views/import-configurator-item/fields/import-by', 'views/fie
             }
 
             this.prepareImportByOptions();
-            this.listenTo(this.model, 'change:name change:type change:attributeData change:attributeValue', () => {
+            this.listenTo(this.model, 'change:name', () => {
                 this.model.set('importBy', null);
                 this.prepareImportByOptions(() => {
                     this.reRender();
@@ -33,11 +33,7 @@ Espo.define('import:views/import-configurator-item/fields/import-by', 'views/fie
 
         getForeignEntity() {
             let type = null;
-            let attribute = null;
-            if (this.model.get('type') === 'Attribute' && this.model.get('attributeData')) {
-                attribute = this.model.get('attributeData');
-                type = attribute.type;
-            } else if (this.model.get('entity') && this.model.get('name')) {
+            if (this.model.get('entity') && this.model.get('name')) {
                 type = this.getMetadata().get(`entityDefs.${this.model.get('entity')}.fields.${this.model.get('name')}.type`);
             }
 
@@ -50,15 +46,6 @@ Espo.define('import:views/import-configurator-item/fields/import-by', 'views/fie
                 foreignEntity = 'ExtensibleEnumOption';
             } else if (this.model.get('name') === 'mainImage' || ['Product', 'Category'].includes(this.model.get('entity')) && this.model.get('name') === 'image') {
                 foreignEntity = 'File';
-            } else if (attribute) {
-                foreignEntity = attribute.entityType;
-                if (attribute.measureId && this.model.get('attributeValue') === 'valueUnitId') {
-                    foreignEntity = 'Unit';
-                }
-            } else if (this.model.get('entity') === 'ProductAttributeValue' && this.model.get('name') === 'value') {
-                foreignEntity = 'ExtensibleEnumOption';
-            } else if (this.model.get('entity') === 'ProductAttributeValue' && this.model.get('name') === 'valueUnitId') {
-                foreignEntity = 'Unit';
             } else {
                 foreignEntity = this.getMetadata().get(`entityDefs.${this.model.get('entity')}.fields.${this.model.get('name')}.entity`) || this.getMetadata().get(`entityDefs.${this.model.get('entity')}.links.${this.model.get('name')}.entity`);
             }
@@ -111,12 +98,7 @@ Espo.define('import:views/import-configurator-item/fields/import-by', 'views/fie
                 this.hide();
             }
 
-            if (this.model.get('entity') === 'ProductAttributeValue' && this.model.get('name') === 'value') {
-                this.$el.append(`<span style="color: #999; font-size: 12px">${this.translate('importByForAttributeValue', 'labels', 'ImportConfiguratorItem')}</span>`)
-                this.$el.closest('.cell').find('.label-text').text(this.translate('importByForListAttribute', 'fields', 'ImportConfiguratorItem'))
-            } else {
-                this.$el.closest('.cell').find('.label-text').text(this.translate('importBy', 'fields', 'ImportConfiguratorItem'))
-            }
+            this.$el.closest('.cell').find('.label-text').text(this.translate('importBy', 'fields', 'ImportConfiguratorItem'))
         },
 
         validateColumns() {

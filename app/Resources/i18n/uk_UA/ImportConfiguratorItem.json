@@ -9,8 +9,6 @@
     "importBy": "Поле(я) пов'язаної сутності",
     "createIfNotExist": "Створити пов'язаний запис даних",
     "locale": "Мова",
-    "attribute": "Атрибут",
-    "channel": "Канал",
     "sourceFields": "Вихідні поля",
     "type": "Тип",
     "foreignColumn": "Вихідне поле(я)",
