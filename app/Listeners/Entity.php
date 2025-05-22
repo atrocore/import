@@ -44,7 +44,7 @@ class Entity extends AbstractListener
                         if (is_array($rule) && !empty($callback = $this->prepareImportJobFilterCallback($entityType, $itemRule))) {
                             $params['filterCallbacks'][] = $callback;
                             unset($params['where'][$k]['rules'][$rk]);
-                            $$params['where'][$k]['rules'] = array_values($params['where'][$k]['rules']);
+                            $params['where'][$k]['rules'] = array_values($params['where'][$k]['rules']);
                         }
                     }
                 }else{
