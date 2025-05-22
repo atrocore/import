@@ -41,7 +41,7 @@ class ExtensibleMultiEnum extends LinkMultiple
             ->getFieldConverter('extensibleEnum')
             ->convert($input, array_merge($config, $column, ['default' => null]), $row);
 
-        $key = $config['entity'] === 'ProductAttributeValue' && $config['name'] == 'value' ? 'referenceValue' : $config['name'];
+        $key = $config['name'];
         if (property_exists($input, $key) && $input->$key !== null) {
             return $input->$key;
         }

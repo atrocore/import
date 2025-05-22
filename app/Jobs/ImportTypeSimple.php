@@ -309,23 +309,11 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
                             }
                         }
 
-                        if ($item['entity'] === 'ProductAttributeValue' && in_array($item['name'], ['value', 'valueFrom', 'valueTo', 'valueMain', 'valueUnitId'])) {
-                            $item = json_decode(json_encode($item), true);
-                            // if there is attributeId in input data (We have to put it in configurator item)
-                            if (property_exists($input, 'attributeId')) {
-                                $item['attributeId'] = $input->attributeId;
-                            }
-                        }
-
                         if ($action === 'update' && in_array($item['name'], $data['data']['idField'])) {
                             continue 1;
                         }
 
                         $type = $this->prepareFieldType($item, $input, $entity ?? null);
-
-                        if ($item['entity'] === 'ProductAttributeValue' && $item['name'] === 'valueMain') {
-                            $item['name'] = 'value';
-                        }
 
                         try {
                             $this->getService('ImportConfiguratorItem')->getFieldConverter($type)->convert($input, $item, $row);
@@ -414,7 +402,6 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
 
         $this->getMemoryStorage()->set('importRowNumber', (int)(($data['rowNumberPart'] ?? 0) + ($data['offset'] ?? 1)));
 
-        // create jobs for importing ProductAttributeValues
 
         if (self::isDeleteAction($data['action'])) {
             $parentJobId = $importJob->get('parentId');
@@ -969,16 +956,6 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
             // set skip value
             $this->skipValue = array_key_exists('skipValue', $v) ? $v['skipValue'] : 'Skip';
         }
-
-        if ($data['data']['entity'] === 'ProductAttributeValue') {
-            // sort items by ASC
-            usort($data['data']['configuration'], function ($a, $b) {
-                if ($a['name'] == $b['name']) {
-                    return 0;
-                }
-                return ($a['name'] < $b['name']) ? -1 : 1;
-            });
-        }
     }
 
     protected function getService(string $name): AbstractService
@@ -1017,50 +994,6 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
         $fieldName = $item['name'];
         $type = $this->getMetadata()->get(['entityDefs', $item['entity'], 'fields', $fieldName, 'type'], 'varchar');
 
-        if ($item['entity'] === 'ProductAttributeValue') {
-            if (in_array($fieldName, ['value', 'valueMain', 'valueFrom', 'valueTo'])) {
-                if (isset($item['attributeType'])) {
-                    $type = $item['attributeType'];
-                } elseif (property_exists($input, 'attributeType')) {
-                    $type = $input->attributeType;
-                } else {
-                    $attributeId = null;
-                    if (!empty($entity) && !empty($entity->get('attributeId'))) {
-                        $attributeId = $entity->get('attributeId');
-                    } elseif (isset($item['attributeId'])) {
-                        $attributeId = $item['attributeId'];
-                    }
-
-                    if (!empty($attributeId)) {
-                        $attribute = $this->getEntityById('Attribute', $attributeId);
-                        $type = $attribute->get('type');
-                    }
-                }
-
-                if (in_array($fieldName, ['value', 'valueMain']) && in_array($type, ['int', 'float', 'rangeInt', 'rangeFloat', 'varchar'])) {
-                    if (!isset($attribute) && isset($item['attributeId'])) {
-                        $attribute = $this->getEntityById('Attribute', $item['attributeId']);
-                    }
-
-                    $type = !empty($attribute) && !empty($attribute->get('measureId')) && $fieldName != 'valueMain' ? 'valueWithUnit' : $type;
-                }
-
-                if (in_array($fieldName, ['valueFrom', 'valueTo'])) {
-                    if ($type === 'rangeInt') {
-                        $type = 'int';
-                    } elseif ($type === 'rangeFloat') {
-                        $type = 'float';
-                    } else {
-                        $type = 'varchar';
-                    }
-                }
-            }
-
-            if ($fieldName === 'valueUnitId') {
-                $type = 'unit';
-            }
-        }
-
         if ($type === "varchar" && !empty($this->getMetadata()->get(['entityDefs', $item['entity'], 'fields', $fieldName, 'unitField']))) {
             $type = 'valueWithUnit';
         }
@@ -1073,23 +1006,9 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
         if (empty($data['data']['entity'])) {
             return true;
         }
-        $entityName = $data['data']['entity'];
 
         if (empty($data['data']['configuration'][0])) {
             return true;
-        }
-        $configuration = $data['data']['configuration'];
-
-        if ($entityName === 'ProductAttributeValue') {
-            foreach ($configuration as $item) {
-                if (isset($item['column']) && is_array($item['column'])) {
-                    foreach ($item['column'] as $column) {
-                        if (array_key_exists($column, $row) && $row[$column] == $this->skipValue) {
-                            return true;
-                        }
-                    }
-                }
-            }
         }
 
         return false;
