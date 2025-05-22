@@ -9,8 +9,8 @@
  */
 
 Espo.define('import:views/fields/int-with-link-to-list',
-    ['import:views/import-job/fields/records-counter','import:views/fields/filter-import-job'],
-    (Dep,Filter) => Dep.extend({
+    ['import:views/import-job/fields/records-counter'],
+    (Dep) => Dep.extend({
 
         listTemplate: 'import:fields/int-with-link-to-list/detail',
 
@@ -34,11 +34,6 @@ Espo.define('import:views/fields/int-with-link-to-list',
 
         getSearchFilter() {
             return {};
-        },
-
-        createQueryBuilderFilter(type) {
-            Filter.prototype.call(this, type);
         }
-
     })
 );
