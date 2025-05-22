@@ -47,19 +47,6 @@
     "entityAttribute": {
       "type": "link"
     },
-    "attributeData": {
-      "type": "jsonObject",
-      "notStorable": true,
-      "layoutListDisabled": true,
-      "layoutListSmallDisabled": true,
-      "layoutDetailDisabled": true,
-      "layoutDetailSmallDisabled": true,
-      "massUpdateDisabled": true,
-      "filterDisabled": true,
-      "exportDisabled": true,
-      "importDisabled": true,
-      "emHidden": true
-    },
     "fieldDefs": {
       "type": "jsonObject",
       "notStorable": true,
