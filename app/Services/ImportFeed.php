@@ -59,9 +59,10 @@ class ImportFeed extends Base
         if ($this->getMetadata()->get("scopes.$entityName.hasAttribute")) {
             $conn = $this->getEntityManager()->getConnection();
             $attributes = $conn->createQueryBuilder()
-                ->select('a.*')
+                ->select('a.*, c.name as channel_name')
                 ->distinct()
                 ->from($conn->quoteIdentifier('attribute'), 'a')
+                ->leftJoin('a', $conn->quoteIdentifier('channel'), 'c', 'c.id=a.channel_id')
                 ->innerJoin('a', 'import_configurator_item', 'i', 'i.entity_attribute_id=a.id AND i.deleted=:false')
                 ->innerJoin('i', 'import_feed', 'e', 'i.import_feed_id=e.id AND e.deleted=:false')
                 ->where('a.deleted=:false')
@@ -73,7 +74,10 @@ class ImportFeed extends Base
             $importEntity = $this->getEntityManager()->getEntity($entityName);
 
             $attributesDefs = [];
-            foreach ($attributes as $row) {
+            foreach ($attributes as $k => $row) {
+                if (!empty($row['channel_name'])) {
+                    $row['name'] = $row['name'] . ' / ' . $row['channel_name'];
+                }
                 $this->getAttributeFieldConverter()->convert($importEntity, $row, $attributesDefs);
             }
 
@@ -447,13 +451,7 @@ class ImportFeed extends Base
 
     public function hasParentJob(ImportFeedEntity $importFeed): bool
     {
-        $hasParent = (int)$importFeed->get('maxPerJob') > 0 || ImportTypeSimple::isDeleteAction($importFeed->get('fileDataAction') ?? '');
-        if (!$hasParent && $importFeed->getFeedField('entity') === 'Product') {
-            $configuratorItemTypes = array_column($importFeed->get('configuratorItems')->toArray(), 'type');
-            $hasParent = in_array('Attribute', $configuratorItemTypes);
-        }
-
-        return $hasParent;
+        return  (int)$importFeed->get('maxPerJob') > 0 || ImportTypeSimple::isDeleteAction($importFeed->get('fileDataAction') ?? '');
     }
 
     public function pushJobs(ImportFeedEntity $importFeed, string $attachmentId, ?\stdClass $payload = null, ?string $priority = null): void
@@ -794,25 +792,8 @@ class ImportFeed extends Base
             $attachment->type = $configuratorItem->type;
             $attachment->scope = $configuratorItem->scope;
             $attachment->locale = $configuratorItem->language;
-            $attachment->attributeId = $configuratorItem->attributeId;
-            $attachment->channelId = $configuratorItem->channelId;
             $attachment->sortOrder = $configuratorItem->sortOrder;
             $attachment->importBy = $configuratorItem->exportBy;
-            if (!empty($configuratorItem->attributeValue)) {
-                $value = $configuratorItem->attributeValue;
-                if (!in_array($value, ['value', 'valueFrom', 'valueTo', 'valueUnit'])) {
-                    $value = 'value';
-                } else {
-                    if ($value === 'valueUnit') {
-                        $value = 'valueUnitId';
-                    }
-                }
-                $attachment->attributeValue = $value;
-            } else {
-                if ($configuratorItem->language != 'main') {
-                    $attachment->name .= ucfirst(Util::toCamelCase(strtolower($configuratorItem->language)));
-                }
-            }
 
             if ($configuratorItem->name === 'id') {
                 $attachment->entityIdentifier = true;

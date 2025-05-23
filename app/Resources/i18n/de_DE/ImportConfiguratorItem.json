@@ -9,8 +9,7 @@
     "createIfNotExist": "Zugehörigen Datensatz anlegen",
     "importBy": "Feld(er) der verknüpften Entität",
     "locale": "Sprache",
-    "attribute": "Attribut",
-    "channel": "Kanal",
+
     "sourceFields": "Quellfelder",
     "type": "Typ",
     "foreignColumn": "Quellfeld(er)",

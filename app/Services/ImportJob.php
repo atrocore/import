@@ -133,7 +133,7 @@ class ImportJob extends Base
         $importService = $this->getServiceFactory()->create('ImportFeed');
 
         $feed = $this->getEntityManager()->getEntity('ImportFeed', $job->get('importFeedId'));
-        // if job is pav or child job
+        // if job is  child job
         if (!empty($job->get('parentId'))) {
             $queueItem = $job->get('queueItem');
             if (!empty($queueItem)) {

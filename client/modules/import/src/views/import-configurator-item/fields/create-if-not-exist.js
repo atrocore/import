@@ -14,7 +14,7 @@ Espo.define('import:views/import-configurator-item/fields/create-if-not-exist', 
         setup() {
             Dep.prototype.setup.call(this);
 
-            this.listenTo(this.model, 'change:name change:attributeData change:entityIdentifier', () => {
+            this.listenTo(this.model, 'change:name change:entityIdentifier', () => {
                 if (this.model.get('entityIdentifier')){
                     this.model.set(this.name, false);
                 }
@@ -26,9 +26,7 @@ Espo.define('import:views/import-configurator-item/fields/create-if-not-exist', 
             Dep.prototype.afterRender.call(this);
 
             let type = null;
-            if (this.model.get('type') === 'Attribute' && this.model.get('attributeData')) {
-                type = this.model.get('attributeData').type;
-            } else if (this.model.get('entity') && this.model.get('name')) {
+            if (this.model.get('entity') && this.model.get('name')) {
                 type = this.getMetadata().get(`entityDefs.${this.model.get('entity')}.fields.${this.model.get('name')}.type`);
             }
 

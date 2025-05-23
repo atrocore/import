@@ -5,29 +5,11 @@
     "rows": [
       [
         {
-          "name": "type"
-        },
-        false
-      ],
-      [
-        {
           "name": "name"
         },
         {
           "name": "entityIdentifier"
         }
-      ],
-      [
-        {
-          "name": "attribute"
-        },
-        false
-      ],
-      [
-        {
-          "name": "attributeValue"
-        },
-        false
       ],
       [
         {
@@ -40,12 +22,6 @@
       [
         {
           "name": "defaultContainer"
-        },
-        false
-      ],
-      [
-        {
-          "name": "channel"
         },
         false
       ],

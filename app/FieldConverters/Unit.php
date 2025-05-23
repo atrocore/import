@@ -50,17 +50,6 @@ class Unit extends Link
 
     protected function getMeasureId(array $config): string
     {
-        $measureId = 'no-such-measure';
-
-        if (!empty($config['attributeId'])) {
-            $attribute = $this->configuratorItem->getAttributeById($config['attributeId']);
-            if (!empty($attribute) && !empty($attribute->get('measureId'))) {
-                $measureId = $attribute->get('measureId');
-            }
-        } else {
-            $measureId = $this->getMetadata()->get(['entityDefs', $config['entity'], 'fields', $config['name'], 'measureId']);
-        }
-
-        return $measureId;
+        return $this->getMetadata()->get(['entityDefs', $config['entity'], 'fields', $config['name'], 'measureId'], 'no-such-measure');
     }
 }

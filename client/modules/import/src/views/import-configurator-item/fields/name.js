@@ -18,7 +18,7 @@ Espo.define('import:views/import-configurator-item/fields/name', 'views/fields/e
 
             Dep.prototype.setup.call(this);
 
-            if (this.model.isNew() && !this.model.get(this.name) && this.model.get('type') === 'Field') {
+            if (this.model.isNew() && !this.model.get(this.name)) {
                 this.model.set(this.name, 'id');
             }
 
@@ -162,24 +162,16 @@ Espo.define('import:views/import-configurator-item/fields/name', 'views/fields/e
                 return name;
             }
 
-            if (this.model.get('type') === 'Field') {
-                name = this.translate(name, 'fields', this.model.get('entity'));
-            }
+            return this.translate(name, 'fields', this.model.get('entity'));
 
-            if (this.model.get('type') === 'Attribute' && this.model.get('attributeData') && this.model.get('attributeData').isMultilang && this.model.get('locale') !== 'main') {
-                name += ' / ' + this.model.get('locale');
-            }
-
-            return name;
         },
 
         getExtraInfo() {
             let extraInfo = null;
 
-            if (this.model.get('type') === 'Field') {
                 let type = this.getMetadata().get(['entityDefs', this.model.get('entity'), 'fields', this.model.get('name'), 'type']);
                 if (['file', 'link', 'linkMultiple', 'extensibleEnum', 'extensibleMultiEnum', 'measure'].includes(type)) {
-                    let entityName = this.getMetadata().get(['entityDefs', this.model.get('entity'), 'links', this.model.get('name'), 'entity']);
+                    let entityName =  this.getMetadata().get(['entityDefs', this.model.get('entity'), 'fields', this.model.get('name'), 'entity']) || this.getMetadata().get(['entityDefs', this.model.get('entity'), 'links', this.model.get('name'), 'entity']);
                     if (type === 'file') {
                         entityName = 'File'
                     }
@@ -199,30 +191,6 @@ Espo.define('import:views/import-configurator-item/fields/name', 'views/fields/e
                         extraInfo += `<br><span class="text-muted small">${this.translate('replaceArray', 'fields', 'ImportConfiguratorItem')}</span>`;
                     }
                 }
-            }
-
-            if (this.model.get('type') === 'Attribute') {
-                extraInfo = '';
-                let type = this.model.get('attributeData').type;
-                if (['extensibleEnum', 'extensibleMultiEnum'].includes(type)) {
-                    let translated = [];
-                    this.model.get('importBy').forEach(field => {
-                        translated.push(this.translate(field, 'fields', 'ExtensibleEnumOption'));
-                    });
-                    extraInfo = `<span class="text-muted small">${this.translate('importBy', 'fields', 'ImportConfiguratorItem')}: ${translated.join(', ')}</span><br>`;
-                }
-
-                extraInfo += `<span class="text-muted small">${this.translate('code', 'fields', 'Attribute')}: ${this.model.get('attributeData').code}</span>`;
-                if (['float', 'int', 'varchar'].includes(type) && this.model.get('attributeValue') === 'valueMain') {
-                    let translatedType = this.getLanguage().translate(type, 'fieldTypes', 'Admin');
-                    extraInfo += `<br><span class="text-muted small">${this.translate('attributeValue', 'fields', 'ImportConfiguratorItem')}: ${this.getLanguage().translateOption(this.model.get('attributeValue'), 'attributeValue', 'ImportConfiguratorItem').replace('%s', translatedType)}</span>`;
-                } else {
-                    extraInfo += `<br><span class="text-muted small">${this.translate('attributeValue', 'fields', 'ImportConfiguratorItem')}: ${this.getLanguage().translateOption(this.model.get('attributeValue'), 'attributeValue', 'ImportConfiguratorItem')}</span>`;
-                }
-                if (this.model.get('channelName')) {
-                    extraInfo += `<br><span class="text-muted small">${this.translate('Channel', 'scopeNames', 'Global')}: ${this.model.get('channelName')}</span>`;
-                }
-            }
 
             if (this.model.get('createIfNotExist')) {
                 extraInfo += `<br><span class="text-muted small">${this.translate('createIfNotExist', 'fields', 'ImportConfiguratorItem')}</span>`;

@@ -5,57 +5,6 @@
   },
   "dynamicLogic": {
     "fields": {
-      "name": {
-        "visible": {
-          "conditionGroup": [
-            {
-              "type": "equals",
-              "attribute": "type",
-              "value": "Field"
-            }
-          ]
-        },
-        "required": {
-          "conditionGroup": [
-            {
-              "type": "equals",
-              "attribute": "type",
-              "value": "Field"
-            }
-          ]
-        }
-      },
-      "attribute": {
-        "visible": {
-          "conditionGroup": [
-            {
-              "type": "equals",
-              "attribute": "type",
-              "value": "Attribute"
-            }
-          ]
-        },
-        "required": {
-          "conditionGroup": [
-            {
-              "type": "equals",
-              "attribute": "type",
-              "value": "Attribute"
-            }
-          ]
-        }
-      },
-      "channel": {
-        "visible": {
-          "conditionGroup": [
-            {
-              "type": "equals",
-              "attribute": "type",
-              "value": "Attribute"
-            }
-          ]
-        }
-      },
       "defaultContainer": {
         "visible": {
           "conditionGroup": [

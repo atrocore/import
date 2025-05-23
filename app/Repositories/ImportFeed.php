@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Import\Repositories;
 
 use Doctrine\DBAL\ParameterType;
-use Espo\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Templates\Repositories\Base;
 use Espo\Core\Utils\Json;
 use Espo\Core\Utils\Language;

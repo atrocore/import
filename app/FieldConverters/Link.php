@@ -15,7 +15,7 @@ namespace Import\FieldConverters;
 
 use Atro\Core\Exceptions\NotUnique;
 use Doctrine\DBAL\Exception\ConstraintViolationException;
-use Espo\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\BadRequest;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
 use Import\Jobs\ImportTypeSimple;
@@ -145,22 +145,7 @@ class Link extends Varchar
 
         $fieldName = $this->getFieldName($config);
 
-        /**
-         * Hack for product|classification attribute scoping
-         */
-        if ($fieldName === 'channelId' && in_array($config['entity'], ['ProductAttributeValue', 'ClassificationAttribute']) && $value === null) {
-            $value = '';
-        }
-
-        if ($config['entity'] === 'ProductAttributeValue' && $fieldName === 'value') {
-            $fieldName = 'referenceValue';
-        }
-
         $inputRow->$fieldName = $value;
-
-        if ($config['entity'] === 'ProductAttributeValue' && !empty($entity) && $entity->getEntityType() === 'Attribute') {
-            $inputRow->attributeType = $entity->get('type');
-        }
     }
 
     public function prepareValue(\stdClass $restore, Entity $entity, array $item): void
@@ -214,7 +199,6 @@ class Link extends Varchar
     protected function getSearchValue($column, array $config, array $row)
     {
         $value = $row[$column] ?? null;
-        $this->deletePAV($value, $config);
         if (strtolower((string)$value) === strtolower((string)$config['emptyValue'])) {
             $value = (string)$config['emptyValue'];
         }

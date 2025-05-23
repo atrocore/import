@@ -14,7 +14,7 @@ Espo.define('import:views/import-configurator-item/fields/entity-identifier', 'v
         setup() {
             Dep.prototype.setup.call(this);
 
-            this.listenTo(this.model, 'change:type change:name change:entityAttributeId', () => {
+            this.listenTo(this.model, 'change:name change:entityAttributeId', () => {
                 this.reRender();
             });
         },
@@ -24,7 +24,7 @@ Espo.define('import:views/import-configurator-item/fields/entity-identifier', 'v
 
             if (this.mode !== 'list') {
                 this.hide();
-                if (this.model.get('type') === 'Field' && this.model.get('name') && !this.model.get('entityAttributeId')) {
+                if ( this.model.get('name') && !this.model.get('entityAttributeId')) {
                     let type = this.getMetadata().get(`entityDefs.${this.model.get('entity')}.fields.${this.model.get('name')}.type`) || 'varchar';
                     if (!['file', 'linkMultiple', 'jsonObject'].includes(type)) {
                         this.show();

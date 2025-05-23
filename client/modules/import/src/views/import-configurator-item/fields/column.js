@@ -21,15 +21,12 @@ Espo.define('import:views/import-configurator-item/fields/column', 'views/fields
                 this.model.set('column', null);
             });
 
-            this.listenTo(this.model, 'change:column change:attributeData', (model, data, additional) => {
+            this.listenTo(this.model, 'change:column', (model, data, additional) => {
                 if (additional.skipColumnListener) {
                     return;
                 }
 
                 let type = this.getMetadata().get(`entityDefs.${this.model.get('entity')}.fields.${this.model.get('name')}.type`) || 'varchar';
-                if (this.model.get('type') === 'Attribute' && this.model.get('attributeData')) {
-                    type = this.model.get('attributeData').type;
-                }
 
                 const types = {linkMultiple: 999, link: 999, currency: 2, unit: 2};
                 const maxLength = types[type] ? types[type] : 1;
@@ -52,7 +49,6 @@ Espo.define('import:views/import-configurator-item/fields/column', 'views/fields
                     });
                 }
             });
-
             this.listenTo(this.model, 'change:default change:defaultId change:defaultIds', () => {
                 this.reRender();
             });

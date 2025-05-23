@@ -134,8 +134,6 @@ class ImportFeed extends Base
                 'default'                   => $item->get('default'),
                 'importBy'                  => $item->get('importBy'),
                 'type'                      => $item->get('type'),
-                'attributeId'               => $item->get('attributeId'),
-                'channelId'                 => $item->get('channelId'),
                 'locale'                    => $item->get('locale'),
                 'entity'                    => $result['entity'],
                 'delimiter'                 => $result['delimiter'],
@@ -147,7 +145,6 @@ class ImportFeed extends Base
                 'thousandSeparator'         => $this->getFeedField('thousandSeparator'),
                 'markForNoRelation'         => $this->getFeedField('markForNoRelation'),
                 'fieldDelimiterForRelation' => $this->getFeedField('fieldDelimiterForRelation'),
-                'attributeValue'            => $item->get('attributeValue')
             ];
         }
 

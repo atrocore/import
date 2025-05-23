@@ -21,21 +21,12 @@ Espo.define('import:views/import-configurator-item/fields/locale', 'views/fields
             });
 
             Dep.prototype.setup.call(this);
-
-            this.listenTo(this.model, 'change:attributeData', () => {
-                this.reRender();
-            });
         },
 
         afterRender() {
             Dep.prototype.afterRender.call(this);
 
             this.hide();
-            if (this.model.get('type') === 'Attribute' && this.model.get('attributeData')) {
-                if (this.model.get('attributeData').isMultilang) {
-                    this.show();
-                }
-            }
         },
 
     })

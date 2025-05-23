@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Import\FieldConverters;
 
-use Espo\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\BadRequest;
 use Espo\Core\Utils\Json;
 use Espo\ORM\Entity;
 
@@ -37,7 +37,6 @@ class Currency extends FloatValue
         if ($isSingleColumn) {
             if (!empty($config['column'][0]) && isset($row[$config['column'][0]])) {
                 $cell = trim((string)$row[$config['column'][0]]);
-                $this->deletePAV($cell, $config);
 
                 if (strtolower($cell) === strtolower((string)$config['emptyValue']) || $cell === '' || strtolower($cell) === strtolower((string)$config['nullValue'])) {
                     $value = null;
@@ -63,7 +62,6 @@ class Currency extends FloatValue
         } else {
             if (!empty($config['column'][0]) && isset($row[$config['column'][0]])) {
                 $cellValue = trim((string)$row[$config['column'][0]]);
-                $this->deletePAV($cellValue, $config);
 
                 if (strtolower((string)$cellValue) === strtolower((string)$config['emptyValue']) || $cellValue === ''
                     || strtolower((string)$cellValue) === strtolower(
@@ -83,7 +81,6 @@ class Currency extends FloatValue
 
             if (!empty($config['column'][1]) && isset($row[$config['column'][1]])) {
                 $cellCurrency = trim((string)$row[$config['column'][1]]);
-                $this->deletePAV($cellCurrency, $config);
 
                 if (strtolower((string)$cellCurrency) === strtolower((string)$config['emptyValue']) || $cellCurrency === ''
                     || strtolower((string)$cellCurrency) === strtolower(
@@ -98,13 +95,7 @@ class Currency extends FloatValue
         }
 
         if ($value !== null && !in_array($currency, $this->getConfig()->get('currencyList', []))) {
-            if (isset($config['attributeId'])) {
-                $attribute = $this->configuratorItem->getAttributeById($config['attributeId']);
-                $fieldValue = empty($attribute) ? '-' : $attribute->get('name');
-                $message = sprintf($this->translate('incorrectAttributeCurrency', 'exceptions', 'ImportFeed'), $currency, $fieldValue);
-            } else {
-                $message = sprintf($this->translate('incorrectCurrency', 'exceptions', 'ImportFeed'), $currency, $config['name']);
-            }
+            $message = sprintf($this->translate('incorrectCurrency', 'exceptions', 'ImportFeed'), $currency, $config['name']);
             throw new BadRequest($message);
         }
 

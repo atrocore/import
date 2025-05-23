@@ -22,7 +22,6 @@ use Espo\Core\Container;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Metadata;
 use Espo\ORM\EntityManager;
-use Import\Exceptions\DeleteProductAttributeValue;
 use Import\Jobs\ImportTypeSimple;
 use Import\Services\ImportConfiguratorItem;
 
@@ -45,7 +44,6 @@ class Wysiwyg
 
         if (isset($config['column'][0]) && isset($row[$config['column'][0]])) {
             $value = $row[$config['column'][0]];
-            $this->deletePAV($value, $config);
             if (strtolower((string)$value) === strtolower($emptyValue) || $value === '') {
                 $value = $default;
             }
@@ -138,16 +136,5 @@ class Wysiwyg
     protected function getMemoryStorage(): StorageInterface
     {
         return $this->container->get('memoryStorage');
-    }
-
-    protected function deletePAV($value, array $config): void
-    {
-        if (!isset($config['attributeType'])) {
-            return;
-        }
-
-        if ($value === $config['markForNoRelation']) {
-            throw new DeleteProductAttributeValue();
-        }
     }
 }

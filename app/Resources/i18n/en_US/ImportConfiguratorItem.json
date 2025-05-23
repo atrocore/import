@@ -10,8 +10,6 @@
     "createIfNotExist": "Create related data record",
     "locale": "Language",
     "entityAttribute": "Attribute",
-    "attribute": "Attribute",
-    "channel": "Channel",
     "sourceFields": "Source Fields",
     "type": "Type",
     "foreignColumn": "Source Field(s)",
@@ -35,10 +33,6 @@
       "fields": "Fields",
       "attributes": "Attributes"
     }
-  },
-  "links": {
-    "importFeed": "Import Feed",
-    "channel": "Channel"
   },
   "labels": {
     "main": "Main",

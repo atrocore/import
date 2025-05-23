@@ -49,8 +49,6 @@ class ImportJobLog extends Base
             return;
         }
 
-        $input = $this->getMemoryStorage()->get("import_job_{$importJob->get('id')}_input");
-
         $rowNumberPart = $this->getMemoryStorage()->get("import_job_{$importJob->get('id')}_rowNumberPart") ?? 0;
         $rowNumber = $rowNumberPart + $entity->get('rowNumber');
 
@@ -68,37 +66,6 @@ class ImportJobLog extends Base
                 $this->getEntityManager()->saveEntity($parentLog, ['skipParentLog' => true]);
             } catch (\Throwable $e) {
                 // ignore
-            }
-        } else {
-            if ($entity->get('entityName') === 'ProductAttributeValue') {
-                $type = $entity->get('type');
-                switch ($type) {
-                    case 'create':
-                    case 'delete':
-                        $type = 'update';
-                        break;
-                    case 'skip':
-                        return;
-                }
-
-                if (!property_exists($input, 'productId')) {
-                    return;
-                }
-
-                $parentLog = $this->getEntityManager()->getEntity('ImportJobLog');
-                $parentLog->set('entityName', 'Product');
-                $parentLog->set('entityId', $input->productId);
-                $parentLog->set('importJobId', $importJob->get('parentId'));
-                $parentLog->set('type', $type);
-                $parentLog->set('skippedByScript', $entity->get('skippedByScript'));
-                $parentLog->set('rowNumber', $rowNumber);
-                $parentLog->set('row', $entity->get('row'));
-                $parentLog->set('message', $entity->get('message'));
-                try {
-                    $this->getEntityManager()->saveEntity($parentLog, ['skipParentLog' => true]);
-                } catch (\Throwable $e) {
-                    // ignore
-                }
             }
         }
     }

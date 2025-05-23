@@ -55,19 +55,10 @@ class ValueWithUnit extends Varchar
             }
 
 
-            if (!empty($config['attributeId'])) {
-                $attribute = $this->configuratorItem->getAttributeById($config['attributeId']);
+            $mainField = $this->getMetadata()->get(['entityDefs', $config['entity'], 'fields', $name, 'mainField']);
+            $mainFieldType = $this->getMetadata()->get(['entityDefs', $config['entity'], 'fields', $mainField, 'type']);
+            $measureId = $this->getMetadata()->get(['entityDefs', $config['entity'], 'fields', $mainField, 'measureId']);
 
-                if (!empty($attribute)) {
-                    $mainField = 'value';
-                    $mainFieldType = $attribute->get('type');
-                    $measureId = $attribute->get('measureId');
-                }
-            } else {
-                $mainField = $this->getMetadata()->get(['entityDefs', $config['entity'], 'fields', $name, 'mainField']);
-                $mainFieldType = $this->getMetadata()->get(['entityDefs', $config['entity'], 'fields', $mainField, 'type']);
-                $measureId = $this->getMetadata()->get(['entityDefs', $config['entity'], 'fields', $mainField, 'measureId']);
-            }
 
             $this->getService('ImportConfiguratorItem')->getFieldConverter($mainFieldType)
                 ->convert($inputRow, array_merge($config, ['name' => $mainField, 'column' => [$mainField]]), array_merge($row, [$mainField => $floatPart]));
