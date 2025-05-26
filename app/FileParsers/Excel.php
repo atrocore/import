@@ -16,6 +16,7 @@ namespace Import\FileParsers;
 use Atro\Core\EventManager\Event;
 use Espo\Core\Exceptions\BadRequest;
 use Atro\Entities\File;
+use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 
@@ -24,10 +25,6 @@ class Excel extends Csv
     public function getFileColumns(File $attachment): array
     {
         $data = $this->data['fileData'] ?? null;
-
-        if ($data === null) {
-            $data = $this->getFileData($attachment, 0, 2);
-        }
 
         return parent::getFileColumns($attachment);
     }

@@ -174,7 +174,7 @@ class ImportFeed extends Base
 
         $maxSize = 1024 * 1024 * 2; // 2 MB
 
-        if ($attachment->get('size') > $maxSize) {
+        if ($attachment->get('fileSize') > $maxSize) {
             $name = str_replace("{{fileName}}", $attachment->get('name'), $this->translate('parseFile'));
 
             $jobEntity = $this->getEntityManager()->getEntity('Job');
