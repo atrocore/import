@@ -21,17 +21,6 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 
 class Excel extends Csv
 {
-    public function getFileColumns(File $attachment): array
-    {
-        $data = $this->data['fileData'] ?? null;
-
-        if ($data === null) {
-            $data = $this->getFileData($attachment, 0, 2);
-        }
-
-        return parent::getFileColumns($attachment);
-    }
-
     public function getFileSheetsNames(File $attachment)
     {
         $path = $this->getLocalFilePath($attachment);
