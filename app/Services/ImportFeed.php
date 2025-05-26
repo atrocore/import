@@ -789,11 +789,12 @@ class ImportFeed extends Base
             if (!empty($configuratorItem->column)) {
                 $attachment->column = [$configuratorItem->column];
             }
-            $attachment->type = $configuratorItem->type;
             $attachment->scope = $configuratorItem->scope;
             $attachment->locale = $configuratorItem->language;
             $attachment->sortOrder = $configuratorItem->sortOrder;
             $attachment->importBy = $configuratorItem->exportBy;
+            $attachment->entityAttributeId = $configuratorItem->entityAttributeId;
+
 
             if ($configuratorItem->name === 'id') {
                 $attachment->entityIdentifier = true;
