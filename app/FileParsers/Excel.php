@@ -16,7 +16,6 @@ namespace Import\FileParsers;
 use Atro\Core\EventManager\Event;
 use Espo\Core\Exceptions\BadRequest;
 use Atro\Entities\File;
-use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 
