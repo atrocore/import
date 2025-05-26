@@ -138,6 +138,8 @@ Espo.define('import:views/import-configurator-item/fields/name', 'views/fields/e
                         this.wait(false);
                         this.notify(false);
 
+                        this.clearView('dialog');
+
                         this.reRender();
                     })
                 });
