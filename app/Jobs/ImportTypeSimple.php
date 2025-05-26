@@ -1071,7 +1071,6 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
 
     public function shouldUnlinkAttribute(array $item, array $row): bool
     {
-        // skip import item if needed
         if (isset($item['column']) && is_array($item['column'])) {
             foreach ($item['column'] as $column) {
                 if (array_key_exists($column, $row) && $row[$column] == $this->markForUnlinkedAttribute) {
