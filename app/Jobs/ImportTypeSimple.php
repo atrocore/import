@@ -318,7 +318,7 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
 
                         try {
                             if (!empty($item['entityAttributeId']) && $this->shouldUnlinkAttribute($item, $row)) {
-                                $input->{$item['entityAttributeId'] . "Deleted"} = true;
+                                $input->{$item['name'] . "Deleted"} = true;
                             } else {
                                 $this->getService('ImportConfiguratorItem')->getFieldConverter($type)->convert($input, $item, $row);
                             }
