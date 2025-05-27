@@ -122,14 +122,8 @@
           "name": "delimiter"
         },
         {
-          "name": "markForNoRelation"
-        }
-      ],
-      [
-        {
           "name": "fieldDelimiterForRelation"
-        },
-        false
+        }
       ],
       [
         {
@@ -145,6 +139,14 @@
         },
         {
           "name": "nullValue"
+        }
+      ],
+      [
+        {
+          "name": "markForNoRelation"
+        },
+        {
+          "name": "markForUnlinkedAttribute"
         }
       ],
       [

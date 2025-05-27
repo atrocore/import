@@ -37,6 +37,7 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
     public const MEMORY_WHERE_KEYS = 'loaded_exists_entities_by_where_keys';
     private bool $lastIteration = false;
     private ?string $skipValue = null;
+    private ?string $markForUnlinkedAttribute = null;
 
     public function prepareJobData(ImportFeed $feed, string $attachmentId): array
     {
@@ -311,7 +312,14 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
                         $type = $this->prepareFieldType($item, $input, $entity ?? null);
 
                         try {
-                            $this->getService('ImportConfiguratorItem')->getFieldConverter($type)->convert($input, $item, $row);
+                            if (!empty($item['entityAttributeId']) && $this->shouldUnlinkAttribute($item, $row)) {
+                                if (!property_exists($input, '__attributesToRemove')) {
+                                    $input->__attributesToRemove = [];
+                                }
+                                $input->__attributesToRemove[] = $item['entityAttributeId'];
+                            } else {
+                                $this->getService('ImportConfiguratorItem')->getFieldConverter($type)->convert($input, $item, $row);
+                            }
                             $this->getMemoryStorage()->set("import_job_{$importJob->get('id')}_input", $input);
                         } catch (BadRequest $e) {
                             $message = '';
@@ -791,6 +799,7 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
             'decimalMark',
             'thousandSeparator',
             'markForNoRelation',
+            'markForUnlinkedAttribute',
             'fieldDelimiterForRelation',
             'skipValue'
         ];
@@ -950,6 +959,7 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
 
             // set skip value
             $this->skipValue = array_key_exists('skipValue', $v) ? $v['skipValue'] : 'Skip';
+            $this->markForUnlinkedAttribute = array_key_exists('markForUnlinkedAttribute', $v) ? $v['markForUnlinkedAttribute'] : 'N/A';
         }
     }
 
@@ -1055,5 +1065,17 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
             return;
         }
 
+    }
+
+    public function shouldUnlinkAttribute(array $item, array $row): bool
+    {
+        if (isset($item['column']) && is_array($item['column'])) {
+            foreach ($item['column'] as $column) {
+                if (array_key_exists($column, $row) && $row[$column] == $this->markForUnlinkedAttribute) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }
