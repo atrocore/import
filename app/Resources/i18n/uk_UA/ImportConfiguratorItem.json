@@ -14,18 +14,8 @@
     "foreignColumn": "Вихідне поле(я)",
     "foreignImportBy": "Поле(я) пов'язаної сутності",
     "replaceArray": "Замінювати",
-    "attributeValue": "Значення атрибуту",
     "importByForListAttribute": "Пов’язані поля сутності для списків",
     "urlHeaders": "Заголовки запиту"
-  },
-  "options": {
-    "attributeValue": {
-      "value": "Значення",
-      "valueFrom": "Значення від",
-      "valueTo": "Значення до",
-      "valueUnitId": "Значення міра",
-      "valueMain": "Значення %s"
-    }
   },
   "links": {
     "importFeed": "Імпортний фід"

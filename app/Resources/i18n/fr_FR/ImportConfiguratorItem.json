@@ -14,18 +14,8 @@
     "foreignColumn": "Champ(s) source(s)",
     "foreignImportBy": "Champ(s) d'entité(s) connexe(s)",
     "replaceArray": "Remplacer",
-    "attributeValue": "Valeur de l'attribut",
     "importByForListAttribute": "Champs d'entité connexes pour les listes",
     "urlHeaders": "En-têtes de la demande"
-  },
-  "options": {
-    "attributeValue": {
-      "value": "Valeur",
-      "valueFrom": "Valeur de",
-      "valueTo": "Valeur à",
-      "valueUnitId": "Unité de valeur",
-      "valueMain": "Valeur %s"
-    }
   },
   "links": {
     "importFeed": "Flux d'import",

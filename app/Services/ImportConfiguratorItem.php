@@ -129,7 +129,7 @@ class ImportConfiguratorItem extends Base
 
     protected function prepareDefaultField(string $type, Entity $entity): void
     {
-        $converter = $this->getFieldConverter(ImportConfiguratorItemRepository::prepareConverterType($type, $entity->get('attributeValue')));
+        $converter = $this->getFieldConverter(ImportConfiguratorItemRepository::prepareConverterType($type));
         if (!empty($converter)) {
             $converter->prepareForOutputConfiguratorDefaultField($entity);
         }

@@ -15,18 +15,8 @@
     "foreignColumn": "Source Field(s)",
     "foreignImportBy": "Related entity field(s)",
     "replaceArray": "Replace",
-    "attributeValue": "Attribute Value",
     "importByForListAttribute": "Related Entity Fields for Lists",
     "urlHeaders": "Request Headers"
-  },
-  "options": {
-    "attributeValue": {
-      "value": "Value",
-      "valueFrom": "Value From",
-      "valueTo": "Value To",
-      "valueUnitId": "Value Unit",
-      "valueMain": "Value %s"
-    }
   },
   "groupOptions": {
     "name": {

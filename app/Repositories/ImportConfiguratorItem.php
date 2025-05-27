@@ -20,16 +20,8 @@ use Espo\ORM\Entity;
 
 class ImportConfiguratorItem extends Base
 {
-    public static function prepareConverterType(string $type, ?string $attributeValue): string
+    public static function prepareConverterType(string $type): string
     {
-        if ($attributeValue === null) {
-            $attributeValue = 'value';
-        }
-
-        if ($attributeValue === 'valueUnitId') {
-            return 'unit';
-        }
-
         if ($type === 'rangeInt') {
             return 'int';
         }

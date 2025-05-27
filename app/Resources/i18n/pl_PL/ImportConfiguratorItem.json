@@ -14,17 +14,7 @@
     "foreignColumn": "Pole źródłowe",
     "foreignImportBy": "Powiązane pola encji",
     "replaceArray": "Zastąp",
-    "attributeValue": "Wartość atrybutu",
     "importByForListAttribute": "Powiązane pola encji dla list"
-  },
-  "options": {
-    "attributeValue": {
-      "value": "Wartość",
-      "valueFrom": "Wartość od",
-      "valueTo": "Wartość do",
-      "valueUnitId": "Jednostka wartości",
-      "valueMain": "Wartość %s"
-    }
   },
   "links": {
     "importFeed": "Importuj źródło",
