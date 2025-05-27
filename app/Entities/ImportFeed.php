@@ -126,6 +126,7 @@ class ImportFeed extends Base
 
             $result['configuration'][] = [
                 'name'                      => $item->get('name'),
+                'entityAttributeId'         => $item->get('entityAttributeId'),
                 'column'                    => $item->get('column'),
                 'createIfNotExist'          => !empty($item->get('createIfNotExist')),
                 'replaceArray'              => !empty($item->get('replaceArray')),
@@ -144,6 +145,7 @@ class ImportFeed extends Base
                 'decimalMark'               => $this->getFeedField('format') === 'CSV' ? $this->getFeedField('decimalMark') : ".",
                 'thousandSeparator'         => $this->getFeedField('thousandSeparator'),
                 'markForNoRelation'         => $this->getFeedField('markForNoRelation'),
+                'markForUnlinkedAttribute'  => $this->getFeedField('markForUnlinkedAttribute'),
                 'fieldDelimiterForRelation' => $this->getFeedField('fieldDelimiterForRelation'),
             ];
         }

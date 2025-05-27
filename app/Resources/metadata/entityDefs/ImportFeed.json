@@ -347,6 +347,15 @@
       "default": "Null",
       "tooltip": true
     },
+    "markForUnlinkedAttribute": {
+      "type": "varchar",
+      "notStorable": true,
+      "dataField": true,
+      "filterDisabled": true,
+      "required": false,
+      "default": "N/A",
+      "tooltip": true
+    },
     "skipValue": {
       "type": "varchar",
       "notStorable": true,
