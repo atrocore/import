@@ -17,6 +17,7 @@ use Atro\Core\EventManager\Event;
 use Espo\Core\Exceptions\BadRequest;
 use Atro\Entities\File;
 use PhpOffice\PhpSpreadsheet\IOFactory;
+use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 
 class Excel extends Csv
@@ -24,11 +25,12 @@ class Excel extends Csv
     public function getFileSheetsNames(File $attachment)
     {
         $path = $this->getLocalFilePath($attachment);
-        $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReaderForFile($path);
+
+        $reader = new Xlsx();
         $reader->setReadDataOnly(true);
 
         try {
-            $data = $reader->load($path)->getSheetNames();
+            $data = $reader->listWorksheetNames($path);
         } catch (\Throwable $e) {
             $data = [];
         }
