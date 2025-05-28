@@ -78,7 +78,7 @@ class ImportFeed extends Base
                 if (!empty($row['channel_name'])) {
                     $row['name'] = $row['name'] . ' / ' . $row['channel_name'];
                 }
-                $this->getAttributeFieldConverter()->convert($importEntity, $row, $attributesDefs);
+                $this->getAttributeFieldConverter()->convert($importEntity, $row, $attributesDefs, true);
             }
 
             foreach ($attributesDefs as $name => $attributeDefs) {
@@ -740,7 +740,10 @@ class ImportFeed extends Base
     {
         $exportFeed = $this->getEntityManager()->getEntity('ExportFeed', $exportFeedId);
 
-        $language = $exportFeed->get('language');
+        $locale = null;
+        if(!empty($exportFeed->get('localeId'))) {
+            $locale = $this->getEntityManager()->getEntity('Locale', $exportFeed->get('localeId'));
+        }
 
         if (empty($exportFeed)) {
             throw new NotFound();
@@ -750,9 +753,17 @@ class ImportFeed extends Base
         foreach ($exportFeed->configuratorItems as $configuratorItem) {
             $this->getRecordService("ExportConfiguratorItem")->prepareEntityForOutput($configuratorItem);
 
-            if ($configuratorItem->type === 'Fixed value') {
+            if ($configuratorItem->type === 'Fixed value' || $configuratorItem->type === 'script') {
                 continue;
             }
+
+            if(!empty($configuratorItem->entityAttributeId)) {
+                $attribute  = $this->getEntityManager()->getEntity('Attribute', $configuratorItem->entityAttributeId);
+                if(empty($attribute) || $attribute->get('type') === 'script') {
+                    continue;
+                }
+            }
+
             if (!empty($configuratorItem->column)) {
                 $sourceFields[] = $configuratorItem->column;
             }
@@ -772,15 +783,22 @@ class ImportFeed extends Base
         $attachment->format = $format;
         $attachment->sourceFields = $sourceFields;
         $attachment->entity = $exportFeed->getFeedField('entity');
+        if(!empty($locale)) {
+            $attachment->thousandSeparator = $locale->get('thousandSeparator');
+            $attachment->decimalMark = $locale->get('decimalMark');
+        }
         $importFeed = $this->createEntity($attachment);
 
         foreach ($exportFeed->configuratorItems as $configuratorItem) {
-            if ($configuratorItem->type === 'Fixed value') {
+            if ($configuratorItem->type === 'Fixed value' || $configuratorItem->type === 'script') {
                 continue;
             }
 
-            if (!empty($language) && $configuratorItem->language != $language) {
-                continue;
+            if(!empty($configuratorItem->entityAttributeId)) {
+                $attribute  = $this->getEntityManager()->getEntity('Attribute', $configuratorItem->entityAttributeId);
+                if(empty($attribute) || $attribute->get('type') === 'script') {
+                    continue;
+                }
             }
 
             $attachment = new \stdClass();
@@ -794,7 +812,6 @@ class ImportFeed extends Base
             $attachment->sortOrder = $configuratorItem->sortOrder;
             $attachment->importBy = $configuratorItem->exportBy;
             $attachment->entityAttributeId = $configuratorItem->entityAttributeId;
-
 
             if ($configuratorItem->name === 'id') {
                 $attachment->entityIdentifier = true;

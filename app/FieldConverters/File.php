@@ -21,10 +21,6 @@ class File extends Link
     {
         $config['relEntityName'] = 'File';
 
-        if (isset($config['attributeId'])) {
-            $config['importBy'] = ['url'];
-        }
-
         if ($config['importBy'] === ['url']) {
             $config['createIfNotExist'] = true;
         }

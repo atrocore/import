@@ -296,11 +296,6 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
                     $this->getMemoryStorage()->set("import_job_{$importJob->get('id')}_rowNumberPart", $data['rowNumberPart'] ?? 0);
 
                     foreach ($data['data']['configuration'] as $item) {
-                        // skip if for attribute
-                        if ($item['type'] === 'Attribute') {
-                            continue 1;
-                        }
-
                         // skip import item if needed
                         if (isset($item['column']) && is_array($item['column'])) {
                             foreach ($item['column'] as $column) {

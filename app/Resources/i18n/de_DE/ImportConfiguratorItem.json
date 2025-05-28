@@ -9,24 +9,13 @@
     "createIfNotExist": "Zugehörigen Datensatz anlegen",
     "importBy": "Feld(er) der verknüpften Entität",
     "locale": "Sprache",
-
     "sourceFields": "Quellfelder",
     "type": "Typ",
     "foreignColumn": "Quellfeld(er)",
     "foreignImportBy": "Feld(er) der verknüpften Entität",
     "replaceArray": "Ersetzen",
-    "attributeValue": "Attributwert",
     "importByForListAttribute": "Verwandte Entitätsfelder für Listen",
     "urlHeaders": "Kopfzeilen anfordern"
-  },
-  "options": {
-    "attributeValue": {
-      "value": "Wert",
-      "valueFrom": "Wert von",
-      "valueTo": "Wert bis",
-      "valueUnitId": "Wert Einheit",
-      "valueMain": "Wert %s"
-    }
   },
   "links": {
     "importFeed": "Import Feed"

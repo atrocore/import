@@ -118,10 +118,6 @@ class Link extends Varchar
                         throw new $className($message);
                     }
 
-                    // for attribute
-                    if (isset($config['attributeId']) && !empty($config['relEntityName']) && !empty($entity)) {
-                        $entity = $entity->get('file');
-                    }
                 }
 
                 if (!empty($entity)) {
@@ -212,10 +208,6 @@ class Link extends Varchar
 
     protected function getForeignEntityName(array $config): string
     {
-        if (isset($config['attributeId'])) {
-            return $this->getEntityById('Attribute', $config['attributeId'])->get('entityType');
-        }
-
         if (!empty($config['relEntityName'])) {
             return $config['relEntityName'];
         }

@@ -214,9 +214,6 @@ class LinkMultiple extends Varchar
 
     protected function getForeignEntityName(array $config): string
     {
-        if (isset($config['attributeId'])) {
-            return $this->getEntityById('Attribute', $config['attributeId'])->get('entityType');
-        }
         return $this->getMetadata()->get(['entityDefs', $config['entity'], 'links', $config['name'], 'entity']);
     }
 }
