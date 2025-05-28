@@ -756,6 +756,14 @@ class ImportFeed extends Base
             if ($configuratorItem->type === 'Fixed value' || $configuratorItem->type === 'script') {
                 continue;
             }
+
+            if(!empty($configuratorItem->entityAttributeId)) {
+                $attribute  = $this->getEntityManager()->getEntity('Attribute', $configuratorItem->entityAttributeId);
+                if(empty($attribute) || $attribute->get('type') === 'script') {
+                    continue;
+                }
+            }
+
             if (!empty($configuratorItem->column)) {
                 $sourceFields[] = $configuratorItem->column;
             }
@@ -784,6 +792,13 @@ class ImportFeed extends Base
         foreach ($exportFeed->configuratorItems as $configuratorItem) {
             if ($configuratorItem->type === 'Fixed value' || $configuratorItem->type === 'script') {
                 continue;
+            }
+
+            if(!empty($configuratorItem->entityAttributeId)) {
+                $attribute  = $this->getEntityManager()->getEntity('Attribute', $configuratorItem->entityAttributeId);
+                if(empty($attribute) || $attribute->get('type') === 'script') {
+                    continue;
+                }
             }
 
             $attachment = new \stdClass();
