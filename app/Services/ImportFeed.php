@@ -78,7 +78,7 @@ class ImportFeed extends Base
                 if (!empty($row['channel_name'])) {
                     $row['name'] = $row['name'] . ' / ' . $row['channel_name'];
                 }
-                $this->getAttributeFieldConverter()->convert($importEntity, $row, $attributesDefs);
+                $this->getAttributeFieldConverter()->convert($importEntity, $row, $attributesDefs, true);
             }
 
             foreach ($attributesDefs as $name => $attributeDefs) {
