@@ -451,7 +451,7 @@ class ImportFeed extends Base
 
     public function hasParentJob(ImportFeedEntity $importFeed): bool
     {
-        return  (int)$importFeed->get('maxPerJob') > 0 || ImportTypeSimple::isDeleteAction($importFeed->get('fileDataAction') ?? '');
+        return (int)$importFeed->get('maxPerJob') > 0 || ImportTypeSimple::isDeleteAction($importFeed->get('fileDataAction') ?? '');
     }
 
     public function pushJobs(ImportFeedEntity $importFeed, string $attachmentId, ?\stdClass $payload = null, ?string $priority = null): void
@@ -485,8 +485,8 @@ class ImportFeed extends Base
             } else {
                 $jobEntity = $this->getEntityManager()->getEntity('Job');
                 $jobEntity->set([
-                    'name' => $name,
-                    'type' => 'ImportJobCreator',
+                    'name'    => $name,
+                    'type'    => 'ImportJobCreator',
                     'payload' => $qmJobData
                 ]);
                 $this->getEntityManager()->saveEntity($jobEntity);
@@ -741,7 +741,7 @@ class ImportFeed extends Base
         $exportFeed = $this->getEntityManager()->getEntity('ExportFeed', $exportFeedId);
 
         $locale = null;
-        if(!empty($exportFeed->get('localeId'))) {
+        if (!empty($exportFeed->get('localeId'))) {
             $locale = $this->getEntityManager()->getEntity('Locale', $exportFeed->get('localeId'));
         }
 
@@ -757,9 +757,9 @@ class ImportFeed extends Base
                 continue;
             }
 
-            if(!empty($configuratorItem->entityAttributeId)) {
-                $attribute  = $this->getEntityManager()->getEntity('Attribute', $configuratorItem->entityAttributeId);
-                if(empty($attribute) || $attribute->get('type') === 'script') {
+            if (!empty($configuratorItem->entityAttributeId)) {
+                $attribute = $this->getEntityManager()->getEntity('Attribute', $configuratorItem->entityAttributeId);
+                if (empty($attribute) || $attribute->get('type') === 'script') {
                     continue;
                 }
             }
@@ -783,7 +783,11 @@ class ImportFeed extends Base
         $attachment->format = $format;
         $attachment->sourceFields = $sourceFields;
         $attachment->entity = $exportFeed->getFeedField('entity');
-        if(!empty($locale)) {
+        $attachment->emptyValue = $exportFeed->getFeedField('emptyValue');
+        $attachment->nullValue = $exportFeed->getFeedField('nullValue');
+        $attachment->markForNoRelation = $exportFeed->getFeedField('markForNoRelation');
+        $attachment->markForUnlinkedAttribute = $exportFeed->getFeedField('markForUnlinkedAttribute');
+        if (!empty($locale)) {
             $attachment->thousandSeparator = $locale->get('thousandSeparator');
             $attachment->decimalMark = $locale->get('decimalMark');
         }
@@ -794,9 +798,9 @@ class ImportFeed extends Base
                 continue;
             }
 
-            if(!empty($configuratorItem->entityAttributeId)) {
-                $attribute  = $this->getEntityManager()->getEntity('Attribute', $configuratorItem->entityAttributeId);
-                if(empty($attribute) || $attribute->get('type') === 'script') {
+            if (!empty($configuratorItem->entityAttributeId)) {
+                $attribute = $this->getEntityManager()->getEntity('Attribute', $configuratorItem->entityAttributeId);
+                if (empty($attribute) || $attribute->get('type') === 'script') {
                     continue;
                 }
             }
