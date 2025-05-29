@@ -316,7 +316,7 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
                                 if (!property_exists($input, '__attributesToRemove')) {
                                     $input->__attributesToRemove = [];
                                 }
-                                $input->__attributesToRemove[] = $item['entityAttributeId'];
+                                $input->__attributesToRemove[] = $item['name'];
                             } else {
                                 $this->getService('ImportConfiguratorItem')->getFieldConverter($type)->convert($input, $item, $row);
                             }
