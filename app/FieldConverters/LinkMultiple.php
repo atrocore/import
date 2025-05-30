@@ -35,7 +35,7 @@ class LinkMultiple extends Varchar
             }
 
             if ($row[$column] === $config['markForNoRelation']) {
-                $inputRow->$fieldName = [];
+                $inputRow->$fieldName = null;
                 return;
             }
         }
@@ -78,10 +78,12 @@ class LinkMultiple extends Varchar
         if (empty($config['replaceArray'])) {
             if (property_exists($inputRow, $fieldName) && empty($inputRow->$fieldName)) {
                 unset($inputRow->$fieldName);
-            } elseif (property_exists($inputRow, $config['name']) && empty($inputRow->{$config['name']})) {
-                unset($inputRow->{$config['name']});
             } else {
                 $inputRow->{$config['name'] . 'AddOnlyMode'} = 1;
+            }
+        } else {
+            if (empty($inputRow->$fieldName)) {
+                $inputRow->$fieldName = null;
             }
         }
     }
