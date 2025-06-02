@@ -24,11 +24,14 @@ class V1Dot9Dot1 extends Base
 
     public function up(): void
     {
-        $this->getConnection()->createQueryBuilder()
-            ->update('import_configurator_item')
-            ->set('entity_attribute_id', 'attribute_id')
-            ->where('entity_attribute_id IS NULL AND attribute_id IS NOT NULL')
-            ->executeStatement();
+        try {
+            $this->getConnection()->createQueryBuilder()
+                ->update('import_configurator_item')
+                ->set('entity_attribute_id', 'attribute_id')
+                ->where('entity_attribute_id IS NULL AND attribute_id IS NOT NULL')
+                ->executeStatement();
+        } catch (\Throwable $e) {
+        }
 
         $this->exec("ALTER TABLE import_configurator_item DROP type");
         $this->exec("ALTER TABLE import_configurator_item DROP attribute_value");
