@@ -69,6 +69,19 @@ class ImportConfiguratorItem extends Base
         $entity->set('entity', $importFeed->getFeedField('entity'));
         $entity->set('sourceFields', $importFeed->get('sourceFields'));
 
+        if ($this->getMetadata()->get("scopes.{$entity->get('entity')}.hasAttribute")) {
+            $name = $entity->get('name');
+            if (!empty($entity->get('entityAttributeId')) &&
+                (empty($name) || empty($this->getMetadata()->get("entityDefs.{$entity->get('entity')}.fields.{$name}")))) {
+                foreach ($this->getMetadata()->get("entityDefs.{$entity->get('entity')}.fields") ?? [] as $field => $def) {
+                    if (!empty($def['attributeId']) && $def['attributeId'] === $entity->get('entityAttributeId')) {
+                        $entity->set('name', $field);
+                        break;
+                    }
+                }
+            }
+        }
+
         // prepare field defs
         $entity->set('fieldDefs', $this->getMetadata()->get("entityDefs.{$entity->get('entity')}.fields.{$entity->get('name')}"));
 
@@ -117,7 +130,7 @@ class ImportConfiguratorItem extends Base
             $auth->useNoAuth();
 
             $importJobId = $this->getMemoryStorage()->get('importJobId');
-            if(!empty($importJobId)) {
+            if (!empty($importJobId)) {
                 /** @var StorageInterface $memoryStorage */
                 $memoryStorage = $this->container2->get('memoryStorage');
                 $memoryStorage->set('importJobId', $importJobId);
