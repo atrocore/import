@@ -953,9 +953,24 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
             return;
         }
 
+        $scope = $data['data']['entity'];
+        $fieldDefs = $this->getMetadata()->get(['entityDefs', $scope, 'fields']) ?? [];
+
         foreach ($data['data']['configuration'] as $k => $v) {
             // set position
             $data['data']['configuration'][$k]['pos'] = $k;
+
+            // update name for attributes fields
+            if ($this->getMetadata()->get("scopes.$scope.hasAttribute")) {
+                if (!empty($v['entityAttributeId']) && (empty($v['name']) || !array_key_exists($v['name'], $fieldDefs))) {
+                    foreach ($fieldDefs as $field => $def) {
+                        if (!empty($def['attributeId']) && $def['attributeId'] === $v['entityAttributeId']) {
+                            $data['data']['configuration'][$k]['name'] = $field;
+                            break;
+                        }
+                    }
+                }
+            }
 
             // set skip value
             $this->skipValue = array_key_exists('skipValue', $v) ? $v['skipValue'] : 'Skip';
