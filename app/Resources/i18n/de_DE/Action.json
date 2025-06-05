@@ -1,7 +1,8 @@
 {
   "fields": {
     "importFeed": "Importfeed",
-    "payload": "Nutzlast"
+    "payload": "Nutzlast",
+    "uploadAndImport": "Hochladen & Importieren"
   },
   "options": {
     "type": {

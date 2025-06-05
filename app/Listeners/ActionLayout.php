@@ -23,7 +23,7 @@ class ActionLayout extends AbstractLayoutListener
         $result = $event->getArgument('result');
 
         if (strpos(json_encode($result[0]['rows']), '"name":"importFeed"') === false) {
-            $result[0]['rows'][] = [['name' => 'importFeed'], false];
+            $result[0]['rows'][] = [['name' => 'importFeed'], ['name' => 'uploadAndImport']];
         }
 
         if (strpos(json_encode($result[0]['rows']), '"name":"payload"') !== false) {

@@ -87,13 +87,19 @@ class Metadata extends AbstractListener
                     ]
                 ];
 
-                if ($action['usage'] === 'record' && !empty($action['source_entity']) && !empty($action['target_entity'])) {
+                if ($action['usage'] === 'record' && !empty($action['source_entity'])) {
                     $data['clientDefs'][$action['source_entity']]['dynamicRecordActions'][] = array_merge($params, [
                         'massAction' => !empty($action['mass_action']),
                     ]);
                 }
 
-                if ($action['usage'] === 'entity' && !empty($action['source_entity']) && !empty($action['target_entity'])) {
+                if ($action['usage'] === 'entity' && !empty($action['source_entity'])) {
+                    $actionData = @json_decode($action['data'], true);
+                    if (!empty($actionData['field']['uploadAndImport'])) {
+                        $params['type'] = 'uploadAndImport';
+                        $params['importFeedId'] = $actionData['field']['importFeedId'] ?? null;
+                    }
+
                     $data['clientDefs'][$action['source_entity']]['dynamicEntityActions'][] = $params;
                 }
 

@@ -1,7 +1,8 @@
 {
   "fields": {
     "importFeed": "Імпортний фід",
-    "payload": "Корисне навантаження"
+    "payload": "Параметри",
+    "uploadAndImport": "Завантажити файл та імпортувати"
   },
   "options": {
     "type": {

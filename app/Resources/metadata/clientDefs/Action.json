@@ -20,6 +20,26 @@
             }
           ]
         }
+      },
+      "uploadAndImport": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "usage",
+              "value": "entity"
+            },
+            {
+              "type": "equals",
+              "attribute": "type",
+              "value": "import"
+            },
+            {
+              "type": "isNotEmpty",
+              "attribute": "importFeedId"
+            }
+          ]
+        }
       }
     }
   }
