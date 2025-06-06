@@ -1,0 +1,6 @@
+{
+  "views/record/list": [
+    "__APPEND__",
+    "import"
+  ]
+}

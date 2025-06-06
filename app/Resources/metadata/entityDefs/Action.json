@@ -46,6 +46,15 @@
       "exportDisabled": true,
       "importDisabled": true,
       "emHidden": true
+    },
+    "uploadAndImport": {
+      "type": "bool",
+      "notStorable": true,
+      "virtualField": true,
+      "filterDisabled": true,
+      "massUpdateDisabled": true,
+      "importDisabled": true,
+      "default": false
     }
   }
 }
