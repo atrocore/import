@@ -43,6 +43,15 @@ class Import extends AbstractAction
     {
         $payload = empty($action->get('payload')) ? '' : (string)$action->get('payload');
         $templateData = [];
+        $attachmentId = '';
+
+        if ($action->get('uploadAndImport')) {
+            if (empty($input->attachmentId)) {
+                return false;
+            }
+
+            $attachmentId = $input->attachmentId;
+        }
 
         if (!empty($action->get('sourceEntity'))) {
             $service = $this->getServiceFactory()->create($action->get('sourceEntity'));
@@ -109,7 +118,7 @@ class Import extends AbstractAction
             }
         }
 
-        $service->runImport($importFeed->get('id'), '', empty($payload) ? null : json_decode(json_encode($payload)));
+        $service->runImport($importFeed->get('id'), $attachmentId, empty($payload) ? null : json_decode(json_encode($payload)));
 
         return true;
     }

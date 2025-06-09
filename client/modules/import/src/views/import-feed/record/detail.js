@@ -77,7 +77,25 @@ Espo.define('import:views/import-feed/record/detail', 'views/record/detail',
 
             this.createView('dialog', 'import:views/import-feed/modals/run-import-options', {
                 model: this.model
-            }, view => view.render());
+            }, view => {
+                view.on('runImport', payload => {
+                    const data = {
+                        importFeedId: payload.importFeedId || null,
+                        attachmentId: payload.attachmentId || null,
+                    };
+
+                    this.notify(this.translate('creatingImportJobs', 'labels', 'ImportFeed'));
+                    this.ajaxPostRequest('ImportFeed/action/runImport', data).then(response => {
+                        if (response) {
+                            this.notify('Created', 'success');
+                            view.dialog.close();
+                            this.model.trigger('importRun');
+                        }
+                    });
+                });
+
+                view.render();
+            });
         },
 
     })
