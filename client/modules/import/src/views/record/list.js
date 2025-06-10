@@ -30,7 +30,18 @@ Espo.define('import:views/record/list', 'class-replace!import:views/record/list'
                     this.notify(false);
                     this.createView('dialog', 'import:views/import-feed/modals/run-import-options', {
                         model: model
-                    }, view => view.render());
+                    }, view => {
+                        view.on('runImport', payload => {
+                            this.executeActionRequest({
+                                actionId: data.id,
+                                attachmentId: payload.attachmentId || null,
+                            }, () => {
+                                view.dialog.close();
+                            });
+                        });
+
+                        view.render();
+                    });
                 });
             });
         }

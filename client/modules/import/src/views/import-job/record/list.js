@@ -40,11 +40,26 @@ Espo.define('import:views/import-job/record/list', 'views/record/list',
                     importFileId: importJobModel.get('attachmentId'),
                     importFileName: importJobModel.get('attachmentName')
                 });
-                this.getParentView().getParentView().createView('dialog', 'import:views/import-job/modals/recreate', {
+                this.getParentView().getParentView().createView('dialog', 'import:views/import-feed/modals/run-import-options', {
                     scope: this.options.scope,
                     el: '[data-view="dialog"]',
                     model: model,
-                }, view => view.render());
+                }, view => {
+                    view.on('runImport', payload => {
+                        this.notify(this.translate('creatingImportJobs', 'labels', 'ImportFeed'));
+                        this.ajaxPostRequest('ImportJob/action/reCreate', {
+                            id: model.get('id'),
+                            attachmentId: model.get('importFileId')
+                        }).then(response => {
+                            if (response) {
+                                this.notify('Created', 'success');
+                                view.dialog.close();
+                                this.collection.fetch();
+                            }
+                        });
+                    })
+                    view.render();
+                });
             })
         },
 
