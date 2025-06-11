@@ -1,7 +1,8 @@
 {
   "fields": {
     "importFeed": "Import Feed",
-    "payload": "Payload"
+    "payload": "Payload",
+    "uploadAndImport": "Upload & Import"
   },
   "options": {
     "type": {

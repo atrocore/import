@@ -1,7 +1,8 @@
 {
 	"fields": {
 		"importFeed": "Importuj Źródło",
-		"payload": "Ładunek"
+		"payload": "Ładunek",
+		"uploadAndImport": "Wgraj i importuj"
 	},
 	"options": {
 		"type": {

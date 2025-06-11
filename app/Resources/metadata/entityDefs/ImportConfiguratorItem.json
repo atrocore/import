@@ -44,9 +44,6 @@
       "view": "import:views/import-configurator-item/fields/foreign-import-by",
       "tooltip": true
     },
-    "entityAttribute": {
-      "type": "link"
-    },
     "fieldDefs": {
       "type": "jsonObject",
       "notStorable": true,
@@ -147,10 +144,6 @@
       "foreign": "configuratorItems",
       "entity": "ImportFeed",
       "audited": false
-    },
-    "entityAttribute": {
-      "type": "belongsTo",
-      "entity": "Attribute"
     }
   },
   "collection": {

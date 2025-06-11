@@ -30,5 +30,9 @@ class ActionService extends AbstractListener
                 $entity->set('importFeedName', $importFeed->get('name'));
             }
         }
+
+        if (!is_bool($entity->get('uploadAndImport'))) {
+            $entity->set('uploadAndImport', false);
+        }
     }
 }
