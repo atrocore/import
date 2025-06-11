@@ -86,9 +86,9 @@ class Metadata extends AbstractListener
 
                 $defsKey = "dynamic" . ucfirst($action['usage']) . "Actions";
 
-                foreach ($data['clientDefs'][$action['source_entity']][$defsKey] ?? [] as &$recordAction) {
+                foreach ($data['clientDefs'][$action['source_entity']][$defsKey] ?? [] as $key => $recordAction) {
                     if ($recordAction['id'] === $action['id']) {
-                        $recordAction = array_merge($recordAction, $params);
+                        $data['clientDefs'][$action['source_entity']][$defsKey][$key] = array_merge($recordAction, $params);
                         break;
                     }
                 }
