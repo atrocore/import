@@ -23,6 +23,16 @@ class Metadata extends AbstractListener
     {
         $data = $event->getArgument('data');
 
+        if (!empty($data['scopes']['Attribute'])) {
+            $data['entityDefs']['ImportConfiguratorItem']['fields']['entityAttribute'] = [
+                'type' => 'link'
+            ];
+            $data['entityDefs']['ImportConfiguratorItem']['links']['entityAttribute'] = [
+                'type'   => 'belongsTo',
+                'entity' => 'Attribute'
+            ];
+        }
+
         foreach ($data['entityDefs'] as $scope => $scopeData) {
             if (empty($scopeData['fields'])) {
                 continue;
