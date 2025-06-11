@@ -66,49 +66,34 @@ class Metadata extends AbstractListener
         }
 
         $data['entityDefs']['ImportFeed']['fields']['lastStatus'] = [
-            'type' => 'enum',
-            'notStorable' => true,
+            'type'           => 'enum',
+            'notStorable'    => true,
             'filterDisabled' => true,
-            'readOnly' => true,
-            'optionsIds' => $data['entityDefs']['ImportJob']['fields']['state']['optionsIds'],
-            'options' => $data['entityDefs']['ImportJob']['fields']['state']['options'],
-            'optionColors' => $data['entityDefs']['ImportJob']['fields']['state']['optionColors']
+            'readOnly'       => true,
+            'optionsIds'     => $data['entityDefs']['ImportJob']['fields']['state']['optionsIds'],
+            'options'        => $data['entityDefs']['ImportJob']['fields']['state']['options'],
+            'optionColors'   => $data['entityDefs']['ImportJob']['fields']['state']['optionColors']
         ];
 
         foreach ($this->getMemoryStorage()->get('dynamic_action') ?? [] as $action) {
-            if ($action['type'] === 'import') {
+            if ($action['type'] === 'import' && !empty($action['source_entity']) && !empty($action['usage'])) {
                 $params = [
-                    'id'      => $action['id'],
-                    'name'    => $action['name'],
-                    'display' => $action['display'],
-                    'acl'     => [
+                    'acl' => [
                         'scope'  => 'ImportFeed',
                         'action' => 'read',
                     ]
                 ];
 
-                if ($action['usage'] === 'record' && !empty($action['source_entity']) && !empty($action['target_entity'])) {
-                    $data['clientDefs'][$action['source_entity']]['dynamicRecordActions'][] = array_merge($params, [
-                        'massAction' => !empty($action['mass_action']),
-                    ]);
-                }
+                $defsKey = "dynamic" . ucfirst($action['usage']) . "Actions";
 
-                if ($action['usage'] === 'entity' && !empty($action['source_entity']) && !empty($action['target_entity'])) {
-                    $data['clientDefs'][$action['source_entity']]['dynamicEntityActions'][] = $params;
-                }
-
-                if ($action['usage'] === 'field' && !empty($action['source_entity']) && !empty($action['display_field'])) {
-                    $data['clientDefs'][$action['source_entity']]['dynamicFieldActions'][] = array_merge($params, [
-                        'displayField' => $action['display_field'],
-                        'massAction'   => !empty($action['mass_action']),
-                    ]);
+                foreach ($data['clientDefs'][$action['source_entity']][$defsKey] ?? [] as &$recordAction) {
+                    if ($recordAction['id'] === $action['id']) {
+                        $recordAction = array_merge($recordAction, $params);
+                        break;
+                    }
                 }
             }
         }
-
-        $data['clientDefs']['Action']['dynamicLogic']['fields']['sourceEntity']['visible']['conditionGroup'][0]['type'] = 'in';
-        $data['clientDefs']['Action']['dynamicLogic']['fields']['sourceEntity']['visible']['conditionGroup'][0]['attribute'] = 'type';
-        $data['clientDefs']['Action']['dynamicLogic']['fields']['sourceEntity']['visible']['conditionGroup'][0]['value'][] = 'import';
 
         $data['clientDefs']['Action']['dynamicLogic']['fields']['payload']['visible']['conditionGroup'][0]['type'] = 'in';
         $data['clientDefs']['Action']['dynamicLogic']['fields']['payload']['visible']['conditionGroup'][0]['attribute'] = 'type';
@@ -121,9 +106,9 @@ class Metadata extends AbstractListener
 
         if (empty($data['clientDefs']['ScheduledJob']['dynamicLogic']['fields']['maximumHoursToLookBack']['visible']['conditionGroup'][0])) {
             $data['clientDefs']['ScheduledJob']['dynamicLogic']['fields']['maximumHoursToLookBack']['visible']['conditionGroup'][0] = [
-                'type' => 'in',
+                'type'      => 'in',
                 'attribute' => 'type',
-                'value' => ['ImportFeed']
+                'value'     => ['ImportFeed']
             ];
         } else {
             $data['clientDefs']['ScheduledJob']['dynamicLogic']['fields']['maximumHoursToLookBack']['visible']['conditionGroup'][0]['value'][] = 'ImportFeed';
@@ -131,9 +116,9 @@ class Metadata extends AbstractListener
 
         if (empty($data['clientDefs']['ScheduledJob']['dynamicLogic']['fields']['maximumDaysForJobExist']['visible'])) {
             $data['clientDefs']['ScheduledJob']['dynamicLogic']['fields']['maximumDaysForJobExist']['visible']['conditionGroup'][0] = [
-                'type' => 'in',
+                'type'      => 'in',
                 'attribute' => 'type',
-                'value' => ['ImportJobRemove']
+                'value'     => ['ImportJobRemove']
             ];
         } else {
             $data['clientDefs']['ScheduledJob']['dynamicLogic']['fields']['maximumDaysForJobExist']['visible']['conditionGroup'][0]['value'][] = 'ImportJobRemove';
