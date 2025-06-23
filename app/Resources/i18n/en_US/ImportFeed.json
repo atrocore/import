@@ -44,6 +44,7 @@
     "configuratorItems": "Configurator"
   },
   "labels": {
+    "excelFormatWarning": "Excel file is loaded into memory and processed in its entirety. Importing complex files depends on your server resources. Therefore, for large files, we recommend using CSV, as this is processed row by row.",
     "parseFile": "File Parsing: {{fileName}}",
     "creatingImportJobs": "Creating Import Jobs...",
     "currency": "Currency",

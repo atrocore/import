@@ -136,6 +136,7 @@
     },
     "format": {
       "type": "enum",
+      "view": "import:views/import-feed/fields/format",
       "required": false,
       "notStorable": true,
       "dataField": true,
