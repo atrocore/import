@@ -26,7 +26,7 @@ class Xml extends Json
             return [];
         }
 
-        $json = json_encode(simplexml_load_string($contents));
+        $json = json_encode(simplexml_load_string($contents, 'SimpleXMLElement', LIBXML_NOCDATA));
 
         $data = \Import\Core\Utils\JsonToVerticalArray::mutate($json, $this->data);
 
