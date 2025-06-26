@@ -1,0 +1,68 @@
+<?php
+/**
+ * AtroCore Software
+ *
+ * This source file is available under GNU General Public License version 3 (GPLv3).
+ * Full copyright and license information is available in LICENSE.txt, located in the root directory.
+ *
+ * @copyright  Copyright (c) AtroCore GmbH (https://www.atrocore.com)
+ * @license    GPLv3 (https://www.gnu.org/licenses/)
+ */
+
+declare(strict_types=1);
+
+namespace Import\Console;
+
+use Atro\Console\AbstractConsole;
+use Atro\Core\Utils\Util;
+
+class CreateImportProcessingType extends AbstractConsole
+{
+    public static function getDescription(): string
+    {
+        return 'The system creates custom import processing type class. You can find the class in data/custom-code/ImportProcessingTypes/ folder and modify the code.';
+    }
+
+    public function run(array $data): void
+    {
+        $className = $data['className'] ?? null;
+
+        $fileName = "data/custom-code/ImportProcessingTypes/{$className}.php";
+
+        if (file_exists($fileName)){
+            self::show('Such ImportProcessingType class already exists.', self::ERROR, true);
+        }
+
+        if (!preg_match('/^[A-Z][A-Za-z0-9_]*$/', $className)) {
+            self::show('Class name must start with an uppercase letter and contain only letters, numbers, and underscores.', self::ERROR, true);
+        }
+
+        $content = <<<'EOD'
+<?php
+
+namespace ImportProcessingTypes;
+
+use Import\ProcessingTypes\AbstractProcessingType;
+use Espo\ORM\Entity;
+
+class {{name}} extends AbstractProcessingType
+{
+    public static function getTypeLabel(): ?string
+    {
+        return '{{name}}';
+    }
+
+    public static function getDescription(): ?string
+    {
+        return 'Describe {{name}}';
+    }
+}
+
+EOD;
+
+        Util::createDir('data/custom-code/ImportProcessingTypes');
+        file_put_contents($fileName, str_replace('{{name}}', $className, $content));
+
+        self::show("Import Processing Type class 'data/custom-code/ImportProcessingTypes/{$className}.php' has been created successfully.", self::SUCCESS);
+    }
+}
