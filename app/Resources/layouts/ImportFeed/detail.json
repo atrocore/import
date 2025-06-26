@@ -5,26 +5,32 @@
     "rows": [
       [
         {
-          "name": "isActive"
-        },
-        {
-          "name": "type"
-        }
-      ],
-      [
-        {
           "name": "name"
         },
         {
-          "name": "fileDataAction"
+          "name": "isActive"
         }
       ],
       [
         {
-          "name": "description"
+          "name": "type"
+        },
+        {
+          "name": "processingType"
+        }
+      ],
+      [
+        {
+          "name": "fileDataAction"
         },
         {
           "name": "code"
+        }
+      ],
+      [
+        {
+          "name": "description",
+          "fullWidth": true
         }
       ],
       [

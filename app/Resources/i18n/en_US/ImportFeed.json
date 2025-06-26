@@ -1,5 +1,6 @@
 {
   "fields": {
+    "processingType": "Processing Type",
     "code": "Code",
     "maxPerJob": "Maximum Number of Records per Job",
     "rootNode": "Root Node",
@@ -130,6 +131,9 @@
     "executeAs": {
       "system": "System",
       "sameUser": "Same User"
+    },
+    "processingType": {
+      "configurator": "Configurator"
     }
   },
   "tooltips": {

@@ -70,6 +70,15 @@
       ],
       "default": "simple"
     },
+    "processingType": {
+      "type": "enum",
+      "required": true,
+      "prohibitedEmptyValue": true,
+      "options": [
+        "configurator"
+      ],
+      "default": "configurator"
+    },
     "data": {
       "type": "jsonObject",
       "filterDisabled": true,

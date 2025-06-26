@@ -1,5 +1,6 @@
 {
   "fields": {
+    "processingType": "Verarbeitungsart",
     "code": "Code",
     "maxPerJob": "Maximale Anzahl von Datensätzen pro Job",
     "excludedNodes": "Ausgeschlossene Knoten",
