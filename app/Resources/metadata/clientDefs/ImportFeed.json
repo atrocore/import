@@ -100,6 +100,105 @@
           ]
         }
       },
+      "delimiter": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "processingType",
+              "attribute": "equals",
+              "value": "configurator"
+            }
+          ]
+        }
+      },
+      "fieldDelimiterForRelation": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "processingType",
+              "attribute": "equals",
+              "value": "configurator"
+            }
+          ]
+        }
+      },
+      "thousandSeparator": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "processingType",
+              "attribute": "equals",
+              "value": "configurator"
+            }
+          ]
+        }
+      },
+      "emptyValue": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "processingType",
+              "attribute": "equals",
+              "value": "configurator"
+            }
+          ]
+        }
+      },
+      "nullValue": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "processingType",
+              "attribute": "equals",
+              "value": "configurator"
+            }
+          ]
+        }
+      },
+      "markForNoRelation": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "processingType",
+              "attribute": "equals",
+              "value": "configurator"
+            }
+          ]
+        }
+      },
+      "markForUnlinkedAttribute": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "processingType",
+              "attribute": "equals",
+              "value": "configurator"
+            }
+          ]
+        }
+      },
+      "skipValue": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "processingType",
+              "attribute": "equals",
+              "value": "configurator"
+            }
+          ]
+        }
+      },
+      "repeatProcessing": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "processingType",
+              "attribute": "equals",
+              "value": "configurator"
+            }
+          ]
+        }
+      },
       "rootNode": {
         "visible": {
           "conditionGroup": [
