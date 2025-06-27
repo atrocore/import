@@ -110,6 +110,11 @@
                 "JSON",
                 "XML"
               ]
+            },
+            {
+              "type": "processingType",
+              "attribute": "equals",
+              "value": "configurator"
             }
           ]
         }
@@ -124,6 +129,11 @@
                 "JSON",
                 "XML"
               ]
+            },
+            {
+              "type": "processingType",
+              "attribute": "equals",
+              "value": "configurator"
             }
           ]
         }
@@ -138,6 +148,11 @@
                 "JSON",
                 "XML"
               ]
+            },
+            {
+              "type": "processingType",
+              "attribute": "equals",
+              "value": "configurator"
             }
           ]
         }
@@ -149,6 +164,11 @@
               "type": "equals",
               "attribute": "format",
               "value": "CSV"
+            },
+            {
+              "type": "processingType",
+              "attribute": "equals",
+              "value": "configurator"
             }
           ]
         },
@@ -169,6 +189,11 @@
               "type": "equals",
               "attribute": "format",
               "value": "CSV"
+            },
+            {
+              "type": "processingType",
+              "attribute": "equals",
+              "value": "configurator"
             }
           ]
         },
@@ -189,6 +214,11 @@
               "type": "equals",
               "attribute": "format",
               "value": "CSV"
+            },
+            {
+              "type": "processingType",
+              "attribute": "equals",
+              "value": "configurator"
             }
           ]
         },
