@@ -71,12 +71,9 @@
       "default": "simple"
     },
     "processingType": {
-      "type": "enum",
+      "type": "varchar",
+      "view": "import:views/import-feed/fields/processing-type",
       "required": true,
-      "prohibitedEmptyValue": true,
-      "options": [
-        "configurator"
-      ],
       "default": "configurator"
     },
     "data": {

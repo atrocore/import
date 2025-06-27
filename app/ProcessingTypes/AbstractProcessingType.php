@@ -13,4 +13,9 @@ namespace Import\ProcessingTypes;
 
 abstract class AbstractProcessingType
 {
+    abstract public static function getTypeLabel(): ?string;
+
+    abstract public static function getDescription(): ?string;
+
+    abstract public static function getEntityName(): string;
 }
