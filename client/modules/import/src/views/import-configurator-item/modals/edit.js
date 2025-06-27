@@ -12,8 +12,8 @@ Espo.define('import:views/import-configurator-item/modals/edit', 'views/modals/e
     Dep => {
         return Dep.extend({
 
-            fullFormDisabled: true
-
+            fullFormDisabled: true,
+            hasRightSideView: false,
         });
 
     });
