@@ -18,6 +18,7 @@ Espo.define('import:views/import-feed/fields/processing-type', 'views/fields/enu
 
             this.listenTo(this.model, 'change:entity', () => {
                 this.prepareListOptions();
+                this.model.set(this.name, 'configurator');
                 this.reRender();
             });
         },
