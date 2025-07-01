@@ -21,7 +21,7 @@ interface FileParserInterface
 
     public function getFileColumns(File $attachment): array;
 
-    public function getFileData(File $attachment, int $offset = 0, ?int $limit = null): array;
+    public function getFileData(File $attachment, int $offset = 0, ?int $limit = null): ?array;
 
     public function createFileContent(array $data): string;
 }

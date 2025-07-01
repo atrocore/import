@@ -68,7 +68,7 @@ class Csv extends Injectable implements FileParserInterface
         return $result;
     }
 
-    public function getFileData(File $attachment, int $offset = 0, ?int $limit = null): array
+    public function getFileData(File $attachment, int $offset = 0, ?int $limit = null): ?array
     {
         $delimiter = $this->data['delimiter'] ?? ';';
         $enclosure = $this->data['enclosure'] ?? '"';
@@ -97,6 +97,10 @@ class Csv extends Injectable implements FileParserInterface
             $row++;
         }
         fclose($file);
+
+        if (empty($data)) {
+            return null;
+        }
 
         return $this->getInjection('eventManager')
             ->dispatch('ImportFileParser', 'afterGetFileData', new Event(['data' => $data, 'attachment' => $attachment, 'type' => 'csv']))
