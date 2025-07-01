@@ -133,6 +133,28 @@
           ]
         }
       },
+      "fileDataAction": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "processingType",
+              "value": "configurator"
+            }
+          ]
+        }
+      },
+      "mergeResponses": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "processingType",
+              "value": "configurator"
+            }
+          ]
+        }
+      },
       "emptyValue": {
         "visible": {
           "conditionGroup": [
