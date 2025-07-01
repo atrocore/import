@@ -105,6 +105,10 @@ class ImportFeed extends Base
     {
         $result = [];
 
+        if ($this->get('processingType') !== 'configurator') {
+            return $result;
+        }
+
         if (empty($configuratorItems = $this->get('configuratorItems')) || count($configuratorItems) === 0) {
             $language = $this->getEntityManager()->getRepository('ImportFeed')->getLanguage();
             throw new BadRequest($language->translate('configuratorEmpty', 'exceptions', 'ImportFeed'));

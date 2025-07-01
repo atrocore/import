@@ -64,6 +64,7 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
             "action"           => $feed->get('fileDataAction'),
             "attachmentId"     => $attachmentId,
             "importFeedId"     => $feed->get('id'),
+            "processingType"   => $feed->get('processingType'),
             "data"             => $feed->getConfiguratorData(),
             "repeatProcessing" => $feed->get("repeatProcessing"),
             "sheet"            => $feed->get("sheet"),
@@ -160,6 +161,8 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
 
     public function runNow(array $data, ?Job $job = null): void
     {
+        return;
+
         $importFeedId = $data['importFeedId'] ?? null;
         $importJobId = $data['data']['importJobId'] ?? null;
         $scope = $data['data']['entity'] ?? null;

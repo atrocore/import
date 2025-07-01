@@ -17,6 +17,12 @@ Espo.define('import:views/import-job/fields/generated-file', 'views/fields/file'
             if (this.mode === 'detail' && this.model.get(this.idName) === null) {
                 this.$el.html(`<a href="javascript:" data-action="generateFile" data-name="${this.name}">${this.translate('generate', 'labels', 'ImportJob')}</a>`);
             }
+
+            if (this.model.get('processingType') !== 'configurator') {
+                this.$el.parent().hide();
+            } else {
+                this.$el.parent().show();
+            }
         },
 
     })

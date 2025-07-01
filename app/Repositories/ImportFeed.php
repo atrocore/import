@@ -63,6 +63,10 @@ class ImportFeed extends Base
 
     public function validateFeed(Entity $entity, bool $checkEntityIdentifier = false): void
     {
+        if ($entity->get('processingType') !== 'configurator') {
+            return;
+        }
+
         $delimiters = [
             $entity->getFeedField('delimiter'),
             $entity->getFeedField('decimalMark'),
