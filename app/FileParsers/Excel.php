@@ -38,7 +38,7 @@ class Excel extends Csv
         return $data;
     }
 
-    public function getFileData(File $attachment, int $offset = 0, ?int $limit = null): array
+    public function getFileData(File $attachment, int $offset = 0, ?int $limit = null): ?array
     {
         $sheet = $this->data['sheet'] ?? 0;
 
@@ -81,6 +81,10 @@ class Excel extends Csv
                 }
             }
             $rowNumber++;
+        }
+
+        if (empty($data)) {
+            return null;
         }
 
         return $this->getInjection('eventManager')
