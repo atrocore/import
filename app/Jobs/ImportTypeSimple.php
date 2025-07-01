@@ -28,6 +28,7 @@ use Doctrine\DBAL\ParameterType;
 use Espo\ORM\Entity;
 use Import\Entities\ImportFeed;
 use Import\FieldConverters\Link;
+use Import\ProcessingTypes\AbstractProcessingType;
 
 class ImportTypeSimple extends AbstractJob implements JobInterface
 {
@@ -161,7 +162,13 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
 
     public function runNow(array $data, ?Job $job = null): void
     {
-        return;
+        if ($data['processingType'] !== 'configurator') {
+            $className = $this->getMetadata()->get("app.processingTypes.{$data['processingType']}.className");
+            if (!empty($className) && is_a($className, AbstractProcessingType::class, true)) {
+                $this->getContainer()->get($className)->runNow($data, $job);
+                return;
+            }
+        }
 
         $importFeedId = $data['importFeedId'] ?? null;
         $importJobId = $data['data']['importJobId'] ?? null;

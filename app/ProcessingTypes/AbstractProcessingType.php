@@ -11,6 +11,8 @@
 
 namespace Import\ProcessingTypes;
 
+use Atro\Entities\Job;
+
 abstract class AbstractProcessingType
 {
     abstract public static function getTypeLabel(): ?string;
@@ -18,4 +20,6 @@ abstract class AbstractProcessingType
     abstract public static function getDescription(): ?string;
 
     abstract public static function getEntityName(): string;
+
+    abstract public function runNow(array $data, ?Job $job = null): void;
 }

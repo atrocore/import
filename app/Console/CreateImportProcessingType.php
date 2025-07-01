@@ -15,6 +15,7 @@ namespace Import\Console;
 
 use Atro\Console\AbstractConsole;
 use Atro\Core\Utils\Util;
+use Atro\Entities\Job;
 
 class CreateImportProcessingType extends AbstractConsole
 {
@@ -42,8 +43,8 @@ class CreateImportProcessingType extends AbstractConsole
 
 namespace ImportProcessingTypes;
 
+use Atro\Entities\Job;
 use Import\ProcessingTypes\AbstractProcessingType;
-use Espo\ORM\Entity;
 
 class {{name}} extends AbstractProcessingType
 {
@@ -55,6 +56,10 @@ class {{name}} extends AbstractProcessingType
     public static function getDescription(): ?string
     {
         return 'Describe {{name}}';
+    }
+    
+    public function runNow(array $data, ?Job $job = null): void
+    {
     }
 }
 
