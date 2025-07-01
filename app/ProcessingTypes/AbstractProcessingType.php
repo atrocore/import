@@ -12,6 +12,7 @@
 namespace Import\ProcessingTypes;
 
 use Atro\Core\Container;
+use Atro\Core\Utils\Language;
 use Atro\Entities\Job;
 use Atro\Services\Record;
 use Espo\ORM\EntityManager;
@@ -78,6 +79,24 @@ abstract class AbstractProcessingType
         }
 
         return $fileData;
+    }
+
+    protected function getCodeMessage(int $code): string
+    {
+        if ($code == 304) {
+            return $this->getLanguage()->translate('nothingToUpdate', 'exceptions', 'ImportFeed');
+        }
+
+        if ($code == 403) {
+            return $this->getLanguage()->translate('permissionDenied', 'exceptions', 'ImportFeed');
+        }
+
+        return 'HTTP Code: ' . $code;
+    }
+
+    protected function getLanguage(): Language
+    {
+        return $this->container->get('language');
     }
 
     protected function getEntityManager(): EntityManager
