@@ -13,6 +13,7 @@ namespace Import\ProcessingTypes;
 
 use Atro\Core\Container;
 use Atro\Entities\Job;
+use Atro\Services\Record;
 use Espo\ORM\EntityManager;
 use Import\Entities\ImportFeed;
 use Import\FileParsers\FileParserInterface;
@@ -87,5 +88,10 @@ abstract class AbstractProcessingType
     protected function getFileParser(string $format): FileParserInterface
     {
         return $this->container->get(ImportFeed::getFileParserClass($format));
+    }
+
+    protected function getService(string $scope): Record
+    {
+        return $this->container->get('serviceFactory')->create($scope);
     }
 }
