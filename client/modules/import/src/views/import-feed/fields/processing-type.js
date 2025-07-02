@@ -65,7 +65,7 @@ Espo.define('import:views/import-feed/fields/processing-type', 'views/fields/enu
 
             $link.on('click', () => {
                 this.notify('Loading...');
-                this.createView('dialog', 'import:views/import-feed/modals/show-code', {model: this.model}, dialog => {
+                this.createView('dialog', 'views/modals/php-code', {model: this.model}, dialog => {
                     dialog.render();
                     this.notify(false);
                 });

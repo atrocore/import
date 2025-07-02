@@ -238,7 +238,7 @@
       "filterDisabled": true,
       "view": "import:views/import-feed/fields/adapter"
     },
-    "processingTypeCode": {
+    "phpCode": {
       "type": "wysiwyg",
       "readOnly": true,
       "notStorable": true,
