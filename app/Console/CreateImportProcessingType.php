@@ -58,6 +58,11 @@ class {{name}} extends AbstractProcessingType
         return 'Describe {{name}}';
     }
     
+    public static function getEntityName(): string
+    {
+        return 'Product';
+    }
+    
     public function runNow(array $data, ?Job $job = null): void
     {
     }
