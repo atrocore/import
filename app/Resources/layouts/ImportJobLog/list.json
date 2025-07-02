@@ -4,6 +4,9 @@
     "link": true
   },
   {
+    "name": "importJob"
+  },
+  {
     "name": "type"
   },
   {
@@ -11,9 +14,6 @@
   },
   {
     "name": "message"
-  },
-  {
-    "name": "importJob"
   },
   {
     "name": "createdAt"

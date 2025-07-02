@@ -100,18 +100,18 @@
     "deletedCount": {
       "type": "int",
       "readOnly": true,
-      "view": "import:views/import-job/fields/records-counter"
+      "view": "import:views/import-job/fields/records-counter-with-link"
     },
     "skippedCount": {
       "type": "int",
       "readOnly": true,
-      "view": "import:views/import-job/fields/records-counter",
+      "view": "import:views/import-job/fields/records-counter-with-link",
       "disableFormatting": true
     },
     "errorsCount": {
       "type": "int",
       "readOnly": true,
-      "view": "import:views/import-job/fields/errors-count",
+      "view": "import:views/import-job/fields/records-counter-with-link",
       "disableFormatting": true
     },
     "attachment": {
