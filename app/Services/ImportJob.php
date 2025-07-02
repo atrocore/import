@@ -17,6 +17,7 @@ use Atro\Core\Exceptions\NotFound;
 use Doctrine\DBAL\ParameterType;
 use Atro\Core\Templates\Services\Base;
 use Espo\Core\Utils\Util;
+use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
 
 class ImportJob extends Base
@@ -30,6 +31,16 @@ class ImportJob extends Base
         'errorsAttachmentId',
         'errorsAttachmentName'
     ];
+
+    public function prepareEntityForOutput(Entity $entity)
+    {
+        parent::prepareEntityForOutput($entity);
+
+        $importFeed = $entity->get('importFeed');
+        if (!empty($importFeed)) {
+            $entity->set('processingType', $importFeed->get('processingType'));
+        }
+    }
 
     public function deleteOld(int $days = 14): bool
     {

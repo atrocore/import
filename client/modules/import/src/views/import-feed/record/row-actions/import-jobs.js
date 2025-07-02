@@ -7,7 +7,7 @@
  * @copyright  Copyright (c) AtroCore GmbH (https://www.atrocore.com)
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
-Espo.define('import:views/import-job/record/row-actions/relationship', 'views/record/row-actions/relationship', Dep => {
+Espo.define('import:views/import-feed/record/row-actions/import-jobs', 'views/record/row-actions/relationship', Dep => {
 
     return Dep.extend({
 
@@ -78,7 +78,7 @@ Espo.define('import:views/import-job/record/row-actions/relationship', 'views/re
                 });
             }
 
-            if (['Failed', 'Canceled', 'Success'].includes(this.model.get('state'))) {
+            if (['Failed', 'Canceled', 'Success'].includes(this.model.get('state')) && this.model.get('processingType') === 'configurator') {
                 list.push({
                     action: 'generateFileForJob',
                     label: this.translate('generateFileCreated', 'labels', 'ImportJob'),

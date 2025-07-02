@@ -15,7 +15,10 @@ namespace Import\Listeners;
 
 use Atro\Core\EventManager\Event;
 use Atro\Core\KeyValueStorages\StorageInterface;
+use Atro\Core\Utils\Util;
 use Atro\Listeners\AbstractListener;
+use Import\Console\CreateImportProcessingType;
+use Import\ProcessingTypes\AbstractProcessingType;
 
 class Metadata extends AbstractListener
 {
@@ -156,6 +159,20 @@ class Metadata extends AbstractListener
             'textFilterDisabled'        => true,
             'emHidden'                  => true,
         ];
+
+        foreach (Util::scanDir(CreateImportProcessingType::DIR) as $fileName) {
+            $type = str_replace('.php', '', $fileName);
+
+            $className = "\\ImportProcessingTypes\\$type";
+            if (is_a($className, AbstractProcessingType::class, true)) {
+                $data['app']['processingTypes'][$type] = [
+                    'label'       => $className::getTypeLabel(),
+                    'description' => $className::getDescription(),
+                    'entityName'  => $className::getEntityName(),
+                    'className'   => $className,
+                ];
+            }
+        }
 
         $event->setArgument('data', $data);
     }

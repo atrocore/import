@@ -30,6 +30,7 @@ use Doctrine\DBAL\ParameterType;
 use Espo\Core\Utils\Util;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
+use Import\Console\CreateImportProcessingType;
 use Import\Entities\ImportFeed as ImportFeedEntity;
 use Import\Entities\ImportJob;
 use Import\Jobs\ImportJobCreator;
@@ -119,6 +120,13 @@ class ImportFeed extends Base
             if (isset($latestJobsData[$entity->get('id')])) {
                 $entity->set('lastStatus', $latestJobsData[$entity->get('id')]['state']);
                 $entity->set('lastTime', $latestJobsData[$entity->get('id')]['start']);
+            }
+        }
+
+        if ($entity->get('processingType') !== 'configurator') {
+            $fileName = CreateImportProcessingType::DIR . '/' . $entity->get('processingType') . '.php';
+            if (file_exists($fileName)) {
+                $entity->set('processingTypeCode', file_get_contents($fileName));
             }
         }
     }
@@ -236,13 +244,19 @@ class ImportFeed extends Base
 
         $parser = $this->getFileParser($payload->format);
         $parser->setData([
-            'delimiter'       => (property_exists($payload, 'delimiter') && !empty($payload->delimiter)) ? $payload->delimiter : ';',
-            'enclosure'       => (property_exists($payload, 'enclosure') && $payload->enclosure == 'singleQuote') ? "'" : '"',
-            'isFileHeaderRow' => (property_exists($payload, 'isHeaderRow') && is_null($payload->isHeaderRow)) ? true : !empty($payload->isHeaderRow),
+            'delimiter'       => (property_exists($payload,
+                    'delimiter') && !empty($payload->delimiter)) ? $payload->delimiter : ';',
+            'enclosure'       => (property_exists($payload,
+                    'enclosure') && $payload->enclosure == 'singleQuote') ? "'" : '"',
+            'isFileHeaderRow' => (property_exists($payload,
+                    'isHeaderRow') && is_null($payload->isHeaderRow)) ? true : !empty($payload->isHeaderRow),
             'sheet'           => property_exists($payload, 'sheet') ? (int)$payload->sheet : 0,
-            'rootNode'        => (property_exists($payload, 'rootNode') && !empty($payload->rootNode)) ? $payload->rootNode : null,
-            'excludedNodes'   => (property_exists($payload, 'excludedNodes') && !empty($payload->excludedNodes)) ? $payload->excludedNodes : [],
-            'keptStringNodes' => (property_exists($payload, 'keptStringNodes') && !empty($payload->keptStringNodes)) ? $payload->keptStringNodes : [],
+            'rootNode'        => (property_exists($payload,
+                    'rootNode') && !empty($payload->rootNode)) ? $payload->rootNode : null,
+            'excludedNodes'   => (property_exists($payload,
+                    'excludedNodes') && !empty($payload->excludedNodes)) ? $payload->excludedNodes : [],
+            'keptStringNodes' => (property_exists($payload,
+                    'keptStringNodes') && !empty($payload->keptStringNodes)) ? $payload->keptStringNodes : [],
         ]);
 
         return $parser->getFileColumns($attachment);
@@ -279,7 +293,8 @@ class ImportFeed extends Base
         }
 
         if (empty($data)) {
-            throw new BadRequest($this->getInjection('language')->translate('jsonExpected', 'exceptions', 'ImportFeed'));
+            throw new BadRequest($this->getInjection('language')->translate('jsonExpected', 'exceptions',
+                'ImportFeed'));
         }
     }
 
@@ -310,7 +325,8 @@ class ImportFeed extends Base
 
         $contents = $attachment->getContents();
         if (is_string($contents) && !preg_match('//u', $contents)) {
-            throw new BadRequest($this->getInjection('language')->translate('utf8Expected', 'exceptions', 'ImportFeed'));
+            throw new BadRequest($this->getInjection('language')->translate('utf8Expected', 'exceptions',
+                'ImportFeed'));
         }
     }
 
@@ -328,15 +344,21 @@ class ImportFeed extends Base
         ];
 
         if (!in_array($attachment->get('mimeType'), $excelTypes)) {
-            throw new BadRequest($this->getInjection('language')->translate('excelExpected', 'exceptions', 'ImportFeed'));
+            throw new BadRequest($this->getInjection('language')->translate('excelExpected', 'exceptions',
+                'ImportFeed'));
         }
     }
 
-    public function runImport(string $importFeedId, string $attachmentId, \stdClass $payload = null, ?string $priority = null): bool
-    {
+    public function runImport(
+        string $importFeedId,
+        string $attachmentId,
+        \stdClass $payload = null,
+        ?string $priority = null
+    ): bool {
         $event = $this
             ->getInjection('eventManager')
-            ->dispatch('ImportFeedService', 'beforeRunImport', new Event(['importFeedId' => $importFeedId, 'attachmentId' => $attachmentId, 'payload' => $payload]));
+            ->dispatch('ImportFeedService', 'beforeRunImport',
+                new Event(['importFeedId' => $importFeedId, 'attachmentId' => $attachmentId, 'payload' => $payload]));
 
         $importFeedId = $event->getArgument('importFeedId');
         $attachmentId = $event->getArgument('attachmentId');
@@ -356,7 +378,8 @@ class ImportFeed extends Base
         if (empty($attachmentId)) {
             $attachmentId = $feed->get('fileId');
             if (empty($attachmentId)) {
-                throw new BadRequest($this->getInjection('language')->translate('fileIdIsEmpty', 'exceptions', 'ImportFeed'));
+                throw new BadRequest($this->getInjection('language')->translate('fileIdIsEmpty', 'exceptions',
+                    'ImportFeed'));
             }
         }
 
@@ -454,12 +477,17 @@ class ImportFeed extends Base
         return (int)$importFeed->get('maxPerJob') > 0 || ImportTypeSimple::isDeleteAction($importFeed->get('fileDataAction') ?? '');
     }
 
-    public function pushJobs(ImportFeedEntity $importFeed, string $attachmentId, ?\stdClass $payload = null, ?string $priority = null): void
-    {
+    public function pushJobs(
+        ImportFeedEntity $importFeed,
+        string $attachmentId,
+        ?\stdClass $payload = null,
+        ?string $priority = null
+    ): void {
         $hasParent = $this->hasParentJob($importFeed);
 
         if ($hasParent) {
-            $parentJob = $this->createImportJob($importFeed, $importFeed->getFeedField('entity'), $attachmentId, new \stdClass());
+            $parentJob = $this->createImportJob($importFeed, $importFeed->getFeedField('entity'), $attachmentId,
+                new \stdClass());
             if ($payload === null) {
                 $payload = new \stdClass();
             }
@@ -505,7 +533,8 @@ class ImportFeed extends Base
             if (!empty($priority)) {
                 $data['data']['priority'] = $priority;
             }
-            $data['data']['importJobId'] = $this->createImportJob($importFeed, $importFeed->getFeedField('entity'), $attachmentId, $payload)->get('id');
+            $data['data']['importJobId'] = $this->createImportJob($importFeed, $importFeed->getFeedField('entity'),
+                $attachmentId, $payload)->get('id');
             $this->push($this->getName($importFeed), 'ImportType' . ucfirst($importFeed->get('type')), $data);
         }
     }
@@ -674,7 +703,12 @@ class ImportFeed extends Base
 
     public function getImportTypeService(ImportFeedEntity $feed): JobInterface
     {
-        $className = $this->getMetadata()->get(['app', 'jobTypes', 'ImportType' . ucfirst($feed->get('type')), 'handler']);
+        $className = $this->getMetadata()->get([
+            'app',
+            'jobTypes',
+            'ImportType' . ucfirst($feed->get('type')),
+            'handler'
+        ]);
 
         return $this->getInjection('container')->get($className);
     }
@@ -689,8 +723,12 @@ class ImportFeed extends Base
         return $this->getInjection('container')->get('language');
     }
 
-    public function createImportJob(ImportFeedEntity $feed, string $entityType, string $attachmentId, \stdClass $payload = null): ImportJob
-    {
+    public function createImportJob(
+        ImportFeedEntity $feed,
+        string $entityType,
+        string $attachmentId,
+        \stdClass $payload = null
+    ): ImportJob {
         $entityLabel = $this->getInjection('language')->translate($entityType, 'scopeNames');
 
         $entity = $this->getEntityManager()->getEntity('ImportJob');

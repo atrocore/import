@@ -22,6 +22,20 @@ Espo.define('import:views/import-feed/record/panels/configurator-items', 'views/
                     }
                 })
             });
+
+            this.listenTo(this.model, 'change:processingType', () => {
+                this.reRender();
+            });
+        },
+
+        afterRender() {
+            Dep.prototype.afterRender.call(this);
+
+            if (this.model.get('processingType') !== 'configurator') {
+                this.$el.parent().hide();
+            } else {
+                this.$el.parent().show();
+            }
         },
 
     })

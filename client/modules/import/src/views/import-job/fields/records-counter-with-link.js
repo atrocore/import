@@ -8,7 +8,7 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('import:views/import-job/fields/errors-count', 'import:views/fields/int-with-link-to-list',
+Espo.define('import:views/import-job/fields/records-counter-with-link', 'import:views/fields/int-with-link-to-list',
     Dep => Dep.extend({
 
         listScope: 'ImportJobLog',
@@ -20,6 +20,13 @@ Espo.define('import:views/import-job/fields/errors-count', 'import:views/fields/
         },
 
         getSearchFilter() {
+            let type = 'error';
+            if (this.name === 'skippedCount') {
+                type = 'skip';
+            } else if (this.name === 'deletedCount') {
+                type = 'delete';
+            }
+
             let nameHash = {};
             nameHash[this.model.id] = this.model.get('name');
             return {
@@ -41,6 +48,13 @@ Espo.define('import:views/import-job/fields/errors-count', 'import:views/fields/
                                     [this.model.id]: this.model.get('name')
                                 }
                             }
+                        },
+                        {
+                            id: 'type',
+                            field: 'type',
+                            type: 'string',
+                            operator: 'equals',
+                            value: type
                         }
                     ],
                     valid: true

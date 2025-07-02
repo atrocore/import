@@ -5,26 +5,38 @@
     "rows": [
       [
         {
-          "name": "isActive"
-        },
-        {
-          "name": "type"
-        }
-      ],
-      [
-        {
           "name": "name"
         },
         {
-          "name": "fileDataAction"
+          "name": "isActive"
         }
       ],
       [
         {
-          "name": "description"
+          "name": "entity"
         },
         {
           "name": "code"
+        }
+      ],
+      [
+        {
+          "name": "type"
+        },
+        {
+          "name": "processingType"
+        }
+      ],
+      [
+        {
+          "name": "fileDataAction"
+        },
+        false
+      ],
+      [
+        {
+          "name": "description",
+          "fullWidth": true
         }
       ],
       [
@@ -39,12 +51,14 @@
         {
           "name": "executeAs"
         },
-        false
+        {
+          "name": "maxPerJob"
+        }
       ]
     ]
   },
   {
-    "label": "Import Data Settings",
+    "label": "Data Sourcing",
     "style": "default",
     "rows": [
       [
@@ -54,12 +68,6 @@
         {
           "name": "file"
         }
-      ],
-      [
-        {
-          "name": "maxPerJob"
-        },
-        false
       ],
       [
         {
@@ -106,16 +114,14 @@
     ]
   },
   {
-    "label": "Feed Settings",
+    "label": "Data Processing",
     "style": "default",
     "rows": [
       [
         {
-          "name": "entity"
-        },
-        {
           "name": "sourceFields"
-        }
+        },
+        false
       ],
       [
         {

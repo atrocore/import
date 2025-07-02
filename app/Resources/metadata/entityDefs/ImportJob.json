@@ -27,9 +27,7 @@
       "type": "varchar",
       "readOnly": true,
       "layoutDetailDisabled": true,
-      "layoutDetailSmallDisabled": true,
       "layoutListDisabled": true,
-      "layoutListSmallDisabled": true,
       "filterDisabled": true
     },
     "state": {
@@ -65,10 +63,19 @@
       "type": "text",
       "readOnly": true,
       "layoutDetailDisabled": false,
-      "layoutDetailSmallDisabled": false,
       "layoutListDisabled": false,
-      "layoutListSmallDisabled": false,
       "filterDisabled": false
+    },
+    "processingType": {
+      "type": "varchar",
+      "readOnly": true,
+      "notStorable": true,
+      "layoutDetailDisabled": true,
+      "layoutListDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "importDisabled": true,
+      "textFilterDisabled": true
     },
     "start": {
       "notNull": false,
@@ -93,18 +100,18 @@
     "deletedCount": {
       "type": "int",
       "readOnly": true,
-      "view": "import:views/import-job/fields/records-counter"
+      "view": "import:views/import-job/fields/records-counter-with-link"
     },
     "skippedCount": {
       "type": "int",
       "readOnly": true,
-      "view": "import:views/import-job/fields/records-counter",
+      "view": "import:views/import-job/fields/records-counter-with-link",
       "disableFormatting": true
     },
     "errorsCount": {
       "type": "int",
       "readOnly": true,
-      "view": "import:views/import-job/fields/errors-count",
+      "view": "import:views/import-job/fields/records-counter-with-link",
       "disableFormatting": true
     },
     "attachment": {
@@ -119,7 +126,7 @@
     "importJobLogs": {
       "type": "linkMultiple",
       "layoutDetailDisabled": true,
-      "layoutMassUpdateDisabled": true,
+      "massUpdateDisabled": true,
       "noLoad": true,
       "importDisabled": true
     },
@@ -134,10 +141,8 @@
       "type": "jsonObject",
       "notStorable": true,
       "layoutDetailDisabled": true,
-      "layoutDetailSmallDisabled": true,
       "layoutListDisabled": true,
-      "layoutListSmallDisabled": true,
-      "layoutMassUpdateDisabled": true,
+      "massUpdateDisabled": true,
       "filterDisabled": true,
       "exportDisabled": true,
       "importDisabled": true,

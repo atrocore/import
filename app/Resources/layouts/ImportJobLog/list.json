@@ -7,6 +7,15 @@
     "name": "importJob"
   },
   {
+    "name": "type"
+  },
+  {
+    "name": "row"
+  },
+  {
     "name": "message"
+  },
+  {
+    "name": "createdAt"
   }
 ]

@@ -5,21 +5,33 @@
     "rows": [
       [
         {
+          "name": "rowNumber"
+        },
+        {
           "name": "importJob"
+        }
+      ],
+      [
+        {
+          "name": "type"
         },
         false
       ],
       [
         {
-          "name": "name"
+          "name": "row"
         },
-        false
-      ],
-      [
         {
           "name": "message"
+        }
+      ],
+      [
+        {
+          "name": "entityName"
         },
-        false
+        {
+          "name": "entityId"
+        }
       ]
     ]
   }

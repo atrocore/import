@@ -87,8 +87,8 @@
     }
   },
   "collection": {
-    "sortBy": "rowNumber",
-    "asc": true,
+    "sortBy": "createdAt",
+    "asc": false,
     "fullTextSearch": false
   },
   "indexes": {

@@ -22,6 +22,10 @@ Espo.define('import:views/import-feed/fields/source-fields', 'views/fields/multi
                     }
                 });
             });
+
+            this.listenTo(this.model, 'change:processingType', () => {
+                this.reRender();
+            });
         },
 
         afterRender() {
@@ -49,6 +53,12 @@ Espo.define('import:views/import-feed/fields/source-fields', 'views/fields/multi
 
                 this.$el.html(items.join(', '));
             }
+
+            if (this.model.get('processingType') !== 'configurator') {
+                this.$el.parent().parent().parent().parent().hide();
+            } else {
+                this.$el.parent().parent().parent().parent().show();
+            }
         },
 
         readSourceFieldsFromJob(jobId) {
@@ -74,6 +84,10 @@ Espo.define('import:views/import-feed/fields/source-fields', 'views/fields/multi
         loadFileColumns(action) {
             let fileId = this.model.get('fileId');
             if (!fileId) {
+                return;
+            }
+
+            if (this.model.get('processingType') !== 'configurator') {
                 return;
             }
 

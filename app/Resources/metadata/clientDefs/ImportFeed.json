@@ -36,7 +36,7 @@
           "attribute": "parentId"
         }
       ],
-      "rowActionsView": "import:views/import-job/record/row-actions/relationship",
+      "rowActionsView": "import:views/import-feed/record/row-actions/import-jobs",
       "view": "import:views/import-feed/record/panels/import-jobs"
     }
   },
@@ -100,6 +100,116 @@
           ]
         }
       },
+      "delimiter": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "processingType",
+              "value": "configurator"
+            }
+          ]
+        }
+      },
+      "fieldDelimiterForRelation": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "processingType",
+              "value": "configurator"
+            }
+          ]
+        }
+      },
+      "thousandSeparator": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "processingType",
+              "value": "configurator"
+            }
+          ]
+        }
+      },
+      "fileDataAction": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "processingType",
+              "value": "configurator"
+            }
+          ]
+        }
+      },
+      "emptyValue": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "processingType",
+              "value": "configurator"
+            }
+          ]
+        }
+      },
+      "nullValue": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "processingType",
+              "value": "configurator"
+            }
+          ]
+        }
+      },
+      "markForNoRelation": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "processingType",
+              "value": "configurator"
+            }
+          ]
+        }
+      },
+      "markForUnlinkedAttribute": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "processingType",
+              "value": "configurator"
+            }
+          ]
+        }
+      },
+      "skipValue": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "processingType",
+              "value": "configurator"
+            }
+          ]
+        }
+      },
+      "repeatProcessing": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "processingType",
+              "value": "configurator"
+            }
+          ]
+        }
+      },
       "rootNode": {
         "visible": {
           "conditionGroup": [
@@ -110,6 +220,11 @@
                 "JSON",
                 "XML"
               ]
+            },
+            {
+              "type": "equals",
+              "attribute": "processingType",
+              "value": "configurator"
             }
           ]
         }
@@ -124,6 +239,11 @@
                 "JSON",
                 "XML"
               ]
+            },
+            {
+              "type": "equals",
+              "attribute": "processingType",
+              "value": "configurator"
             }
           ]
         }
@@ -138,6 +258,11 @@
                 "JSON",
                 "XML"
               ]
+            },
+            {
+              "type": "equals",
+              "attribute": "processingType",
+              "value": "configurator"
             }
           ]
         }
@@ -149,6 +274,11 @@
               "type": "equals",
               "attribute": "format",
               "value": "CSV"
+            },
+            {
+              "type": "equals",
+              "attribute": "processingType",
+              "value": "configurator"
             }
           ]
         },
@@ -169,6 +299,11 @@
               "type": "equals",
               "attribute": "format",
               "value": "CSV"
+            },
+            {
+              "type": "equals",
+              "attribute": "processingType",
+              "value": "configurator"
             }
           ]
         },
@@ -189,6 +324,11 @@
               "type": "equals",
               "attribute": "format",
               "value": "CSV"
+            },
+            {
+              "type": "equals",
+              "attribute": "processingType",
+              "value": "configurator"
             }
           ]
         },

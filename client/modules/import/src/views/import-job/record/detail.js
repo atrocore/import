@@ -42,7 +42,7 @@ Espo.define('import:views/import-job/record/detail', 'views/record/detail',
                 });
             }
 
-            if (['Failed', 'Canceled', 'Success'].includes(this.model.get('state'))) {
+            if (['Failed', 'Canceled', 'Success'].includes(this.model.get('state')) && this.model.get('processingType') === 'configurator') {
                 this.dropdownItemList.push({
                     name: 'generateFileCreated',
                     action: 'generateFileCreated',

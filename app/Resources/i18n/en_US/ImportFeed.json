@@ -1,5 +1,6 @@
 {
   "fields": {
+    "processingType": "Processing Type",
     "code": "Code",
     "maxPerJob": "Maximum Number of Records per Job",
     "rootNode": "Root Node",
@@ -10,14 +11,14 @@
     "connection": "Connection",
     "format": "Format",
     "sheet": "Sheet",
-    "entity": "Entity",
+    "entity": "Target Entity",
     "delimiter": "List Value Separator",
     "sourceFields": "Source Fields",
     "file": "File",
     "isActive": "Active",
     "lastStatus": "Last status",
     "lastTime": "Last Run",
-    "type": "Type",
+    "type": "Sourcing Type",
     "fileFieldDelimiter": "Field Delimiter",
     "fileTextQualifier": "Text Qualifier",
     "isFileHeaderRow": "Header Row",
@@ -49,8 +50,8 @@
     "creatingImportJobs": "Creating Import Jobs...",
     "currency": "Currency",
     "unit": "Unit",
-    "Import Data Settings": "Import Data Settings",
-    "Feed Settings": "Feed Settings",
+    "Data Sourcing": "Data Sourcing",
+    "Data Processing": "Data Processing",
     "convertFile": "Loading file, please wait...",
     "convertSuccess": "File loaded",
     "addEntityField": "Add entity field",
@@ -130,6 +131,9 @@
     "executeAs": {
       "system": "System",
       "sameUser": "Same User"
+    },
+    "processingType": {
+      "configurator": "Configurator"
     }
   },
   "tooltips": {
