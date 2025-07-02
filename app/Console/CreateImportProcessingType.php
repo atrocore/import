@@ -15,10 +15,11 @@ namespace Import\Console;
 
 use Atro\Console\AbstractConsole;
 use Atro\Core\Utils\Util;
-use Atro\Entities\Job;
 
 class CreateImportProcessingType extends AbstractConsole
 {
+    public const DIR = 'data/custom-code/ImportProcessingTypes';
+
     public static function getDescription(): string
     {
         return 'The system creates custom import processing type class. You can find the class in data/custom-code/ImportProcessingTypes/ folder and modify the code.';
@@ -70,9 +71,9 @@ class {{name}} extends AbstractProcessingType
 
 EOD;
 
-        Util::createDir('data/custom-code/ImportProcessingTypes');
+        Util::createDir(self::DIR);
         file_put_contents($fileName, str_replace('{{name}}', $className, $content));
 
-        self::show("Import Processing Type class 'data/custom-code/ImportProcessingTypes/{$className}.php' has been created successfully.", self::SUCCESS);
+        self::show("Import Processing Type class '" . self::DIR . "/{$className}.php' has been created successfully.", self::SUCCESS);
     }
 }
