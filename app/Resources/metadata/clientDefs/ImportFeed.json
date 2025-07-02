@@ -36,7 +36,7 @@
           "attribute": "parentId"
         }
       ],
-      "rowActionsView": "import:views/import-job/record/row-actions/relationship",
+      "rowActionsView": "import:views/import-feed/record/row-actions/import-jobs",
       "view": "import:views/import-feed/record/panels/import-jobs"
     }
   },
