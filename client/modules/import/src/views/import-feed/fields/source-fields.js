@@ -55,9 +55,9 @@ Espo.define('import:views/import-feed/fields/source-fields', 'views/fields/multi
             }
 
             if (this.model.get('processingType') !== 'configurator') {
-                this.$el.parent().hide();
+                this.$el.parent().parent().parent().parent().hide();
             } else {
-                this.$el.parent().show();
+                this.$el.parent().parent().parent().parent().show();
             }
         },
 
