@@ -55,7 +55,7 @@ Espo.define('import:views/import-feed/fields/processing-type', 'views/fields/enu
 
             $cell.find('.show-code').parent().remove();
 
-            const $link = $(`<a href="javascript:" class="code-link hidden" title="${this.translate('Code')}"><i class="ph ph-code show-code"></i></a>`);
+            const $link = $(`<a href="javascript:" class="code-link hidden" title="${this.translate('phpCode')}"><i class="ph ph-code show-code"></i></a>`);
 
             if (inlineActions.size()) {
                 inlineActions.prepend($link);
