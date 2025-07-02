@@ -17,6 +17,7 @@ use Atro\Core\EventManager\Event;
 use Atro\Core\KeyValueStorages\StorageInterface;
 use Atro\Core\Utils\Util;
 use Atro\Listeners\AbstractListener;
+use Import\Console\CreateImportProcessingType;
 use Import\ProcessingTypes\AbstractProcessingType;
 
 class Metadata extends AbstractListener
@@ -159,7 +160,7 @@ class Metadata extends AbstractListener
             'emHidden'                  => true,
         ];
 
-        foreach (Util::scanDir('data/custom-code/ImportProcessingTypes') as $fileName) {
+        foreach (Util::scanDir(CreateImportProcessingType::DIR) as $fileName) {
             $type = str_replace('.php', '', $fileName);
 
             $className = "\\ImportProcessingTypes\\$type";
