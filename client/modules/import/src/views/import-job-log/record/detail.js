@@ -11,7 +11,9 @@
 Espo.define('import:views/import-job-log/record/detail', 'views/record/detail',
     Dep => Dep.extend({
 
-        buttonsDisabled: true
+        readOnly: true,
+
+        duplicateAction: false,
 
     })
 );

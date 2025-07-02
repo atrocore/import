@@ -1,6 +1,7 @@
 {
   "fields": {
-    "rowNumber": "Row",
+    "rowNumber": "Row Number",
+    "row": "Row Data",
     "importJob": "Import Job",
     "type": "Type",
     "entityName": "Entity",
@@ -9,5 +10,14 @@
   },
   "links": {
     "importJob": "Import Job"
+  },
+  "options": {
+    "type": {
+      "create": "Create",
+      "update": "Update",
+      "delete": "Delete",
+      "skip": "Skip",
+      "error": "Error"
+    }
   }
 }
