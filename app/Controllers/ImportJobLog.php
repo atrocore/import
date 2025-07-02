@@ -13,109 +13,43 @@ declare(strict_types=1);
 
 namespace Import\Controllers;
 
-use Espo\Core\Exceptions\NotFound;
+use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Templates\Controllers\Base;
 
 class ImportJobLog extends Base
 {
-    /**
-     * @inheritDoc
-     */
-    public function actionList($params, $data, $request)
-    {
-        // prepare request
-        $where = $request->get('where');
-        $where[] = [
-            'type'      => 'in',
-            'attribute' => 'type',
-            'value'     => ['error']
-        ];
-        $request->setQuery('where', $where);
-
-        return parent::actionList($params, $data, $request);
-    }
-
-    /**
-     * @param array  $params
-     * @param array  $data
-     * @param object $request
-     *
-     * @throws NotFound
-     */
     public function actionCreate($params, $data, $request)
     {
-        throw new NotFound();
+        throw new Forbidden();
     }
 
-    /**
-     * @param array  $params
-     * @param array  $data
-     * @param object $request
-     *
-     * @throws NotFound
-     */
     public function actionUpdate($params, $data, $request)
     {
-        throw new NotFound();
+        throw new Forbidden();
     }
 
-    /**
-     * @param array  $params
-     * @param array  $data
-     * @param object $request
-     *
-     * @throws NotFound
-     */
     public function actionDelete($params, $data, $request)
     {
-        throw new NotFound();
+        throw new Forbidden();
     }
 
-    /**
-     * @param array  $params
-     * @param array  $data
-     * @param object $request
-     *
-     * @throws NotFound
-     */
     public function actionMassUpdate($params, $data, $request)
     {
-        throw new NotFound();
+        throw new Forbidden();
     }
 
-    /**
-     * @param array  $params
-     * @param array  $data
-     * @param object $request
-     *
-     * @throws NotFound
-     */
     public function actionMassDelete($params, $data, $request)
     {
-        throw new NotFound();
+        throw new Forbidden();
     }
 
-    /**
-     * @param array  $params
-     * @param array  $data
-     * @param object $request
-     *
-     * @throws NotFound
-     */
     public function actionCreateLink($params, $data, $request)
     {
-        throw new NotFound();
+        throw new Forbidden();
     }
 
-    /**
-     * @param array  $params
-     * @param array  $data
-     * @param object $request
-     *
-     * @throws NotFound
-     */
     public function actionRemoveLink($params, $data, $request)
     {
-        throw new NotFound();
+        throw new Forbidden();
     }
 }
