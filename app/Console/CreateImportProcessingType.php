@@ -65,7 +65,64 @@ class {{name}} extends AbstractProcessingType
     }
     
     public function runNow(array $data, ?Job $job = null): void
-    {
+    {    
+        /**
+         * Usage Example
+         */
+//        $entityName = self::getEntityName();
+//        $service = $this->getService(self::getEntityName());
+//
+//        $importJobId = $data['data']['importJobId'] ?? null;
+//
+//        $rowNumber = 0;
+//        while (!empty($inputData = $this->getInputData($data))) {
+//            foreach ($inputData['list'] ?? [] as $item) {
+//                if (empty($item['name'])) {
+//                    continue;
+//                }
+//
+//                $log = $this->getEntityManager()->getEntity('ImportJobLog');
+//                $log->set([
+//                    'type'        => 'skip',
+//                    'entityName'  => $entityName,
+//                    'importJobId' => $importJobId,
+//                    'rowNumber'   => $rowNumber
+//                ]);
+//
+//                $product = $this->getEntityManager()->getRepository('Product')
+//                    ->where([
+//                        'name' => $item['name']
+//                    ])
+//                    ->findOne();
+//
+//                $input = new \stdClass();
+//                $input->name = $item['name'];
+//
+//                try {
+//                    if (empty($product)) {
+//                        $product = $service->createEntity($input);
+//                        $log->set('type', 'create');
+//                        $log->set('entityId', $product->get('id'));
+//                    } else {
+//                        $service->updateEntity($product->get('id'), $input);
+//                        $log->set('type', 'update');
+//                        $log->set('entityId', $product->get('id'));
+//                    }
+//                } catch (\Throwable $e) {
+//                    if (!$e instanceof NotModified) {
+//                        $message = empty($e->getMessage()) ? $this->getCodeMessage($e->getCode()) : $e->getMessage();
+//                        $log->set('type', 'error');
+//                        $log->set('message', $message);
+//                    }
+//                }
+//
+//                $log->set('row', $input);
+//
+//                $this->getEntityManager()->saveEntity($log);
+//
+//                $rowNumber++;
+//            }
+//        }
     }
 }
 
