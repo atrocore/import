@@ -13,6 +13,14 @@
       ],
       [
         {
+          "name": "entity"
+        },
+        {
+          "name": "code"
+        }
+      ],
+      [
+        {
           "name": "type"
         },
         {
@@ -23,9 +31,7 @@
         {
           "name": "fileDataAction"
         },
-        {
-          "name": "code"
-        }
+        false
       ],
       [
         {
@@ -113,11 +119,9 @@
     "rows": [
       [
         {
-          "name": "entity"
-        },
-        {
           "name": "sourceFields"
-        }
+        },
+        false
       ],
       [
         {

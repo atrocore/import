@@ -1,7 +1,7 @@
 {
   "fields": {
     "rowNumber": "Row Number",
-    "row": "Row Data",
+    "row": "Input Data",
     "importJob": "Import Job",
     "type": "Type",
     "entityName": "Entity",

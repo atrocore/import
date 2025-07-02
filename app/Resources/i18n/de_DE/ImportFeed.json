@@ -10,7 +10,7 @@
     "connection": "Verbindung",
     "format": "Format",
     "sheet": "Sheet",
-    "entity": "Entität",
+    "entity": "Zielentität",
     "delimiter": "Listenwerttrennzeichen",
     "file": "Datei",
     "isActive": "Aktiv",

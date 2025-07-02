@@ -11,7 +11,7 @@
     "connection": "Connection",
     "format": "Format",
     "sheet": "Sheet",
-    "entity": "Entity",
+    "entity": "Target Entity",
     "delimiter": "List Value Separator",
     "sourceFields": "Source Fields",
     "file": "File",

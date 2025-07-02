@@ -1,6 +1,7 @@
 {
   "fields": {
     "rowNumber": "Reihennummer",
+    "row": "Eingabedaten",
     "importJob": "Importauftrag",
     "type": "Typ",
     "entityName": "Entität",
