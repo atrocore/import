@@ -114,7 +114,11 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
 
         $rows = [];
         $this->lastIteration = false;
-        while (!empty($inputData = $this->getInputData($jobData))) {
+        while (($inputData = $this->getInputData($jobData)) !== null) {
+            if (empty($inputData)) {
+                continue;
+            }
+
             $this->getMemoryStorage()->set('importRowsPart', $inputData);
             // add column converted_{field} to the row
             foreach ($inputData as $i => $row) {
@@ -629,10 +633,10 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
         return $newFileData;
     }
 
-    public function getInputData(array &$data): array
+    public function getInputData(array &$data): ?array
     {
         if ($this->lastIteration) {
-            return [];
+            return null;
         }
 
         /** @var \Atro\Entities\File $attachment */
@@ -654,6 +658,10 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
             case 'Excel':
                 $fileData = $fileParser->getFileData($attachment, $data['offset'], $data['limit']);
                 $data['offset'] = $data['offset'] + $data['limit'];
+                if ($fileData === null) {
+                    $this->lastIteration = true;
+                }
+
                 break;
             case 'JSON':
             case 'XML':
