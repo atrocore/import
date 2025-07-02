@@ -165,9 +165,10 @@ class Metadata extends AbstractListener
             $className = "\\ImportProcessingTypes\\$type";
             if (is_a($className, AbstractProcessingType::class, true)) {
                 $data['app']['processingTypes'][$type] = [
-                    'label'      => $className::getTypeLabel(),
-                    'entityName' => $className::getEntityName(),
-                    'className'  => $className,
+                    'label'       => $className::getTypeLabel(),
+                    'description' => $className::getDescription(),
+                    'entityName'  => $className::getEntityName(),
+                    'className'   => $className,
                 ];
             }
         }

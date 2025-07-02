@@ -21,6 +21,12 @@ Espo.define('import:views/import-feed/fields/processing-type', 'views/fields/enu
                 this.model.set(this.name, 'configurator');
                 this.reRender();
             });
+
+            this.listenTo(this.model, `change:${this.name}`, () => {
+                if (!this.model.get('description') && this.model.isNew()) {
+                    this.model.set('description', this.getMetadata().get(`app.processingTypes.${this.model.get(this.name)}.description`));
+                }
+            })
         },
 
         prepareListOptions() {
