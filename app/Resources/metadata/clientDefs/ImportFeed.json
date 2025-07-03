@@ -299,11 +299,6 @@
               "type": "equals",
               "attribute": "format",
               "value": "CSV"
-            },
-            {
-              "type": "equals",
-              "attribute": "processingType",
-              "value": "configurator"
             }
           ]
         },
@@ -324,11 +319,6 @@
               "type": "equals",
               "attribute": "format",
               "value": "CSV"
-            },
-            {
-              "type": "equals",
-              "attribute": "processingType",
-              "value": "configurator"
             }
           ]
         },

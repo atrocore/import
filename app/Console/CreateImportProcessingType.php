@@ -132,5 +132,8 @@ EOD;
         file_put_contents($fileName, str_replace('{{name}}', $className, $content));
 
         self::show("Import Processing Type class '" . self::DIR . "/{$className}.php' has been created successfully.", self::SUCCESS);
+
+        // clear cache
+        exec('php console.php clear cache');
     }
 }
