@@ -11,6 +11,7 @@
 
 namespace Import\ProcessingTypes;
 
+use Atro\Core\AttributeFieldConverter;
 use Atro\Core\Container;
 use Atro\Core\Utils\Language;
 use Atro\Entities\Job;
@@ -123,5 +124,15 @@ abstract class AbstractProcessingType
     protected function getService(string $scope): Record
     {
         return $this->container->get('serviceFactory')->create($scope);
+    }
+
+    protected function getAttributeFieldConverter(): AttributeFieldConverter
+    {
+        return $this->container->get(AttributeFieldConverter::class);
+    }
+
+    protected function getAttributeService(): \Pim\Services\Attribute
+    {
+        return $this->container->get('serviceFactory')->create('Attribute');
     }
 }
