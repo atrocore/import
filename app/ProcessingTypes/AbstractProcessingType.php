@@ -58,7 +58,12 @@ abstract class AbstractProcessingType
         switch ($data['fileFormat']) {
             case 'CSV':
             case 'Excel':
-                $fileData = $fileParser->getFileData($attachment, $data['offset'], $data['limit']);
+                $columns = $fileParser->getFileColumns($attachment);
+                foreach ($fileParser->getFileData($attachment, $data['offset'], $data['limit']) as $line => $fileLine) {
+                    foreach ($fileLine as $k => $v) {
+                        $fileData[$line][$columns[$k]] = $v;
+                    }
+                }
                 $data['offset'] = $data['offset'] + $data['limit'];
                 break;
             case 'JSON':

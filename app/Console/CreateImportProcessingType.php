@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Import\Console;
 
+use Atro\Core\Exceptions\NotModified;
 use Atro\Console\AbstractConsole;
 use Atro\Core\Utils\Util;
 
