@@ -59,7 +59,13 @@ abstract class AbstractProcessingType
             case 'CSV':
             case 'Excel':
                 $columns = $fileParser->getFileColumns($attachment);
-                foreach ($fileParser->getFileData($attachment, $data['offset'], $data['limit']) as $line => $fileLine) {
+
+                $fileOriginalData = $fileParser->getFileData($attachment, $data['offset'], $data['limit']);
+                if ($includedHeaderRow) {
+                    array_shift($fileOriginalData);
+                }
+
+                foreach ($fileOriginalData as $line => $fileLine) {
                     foreach ($fileLine as $k => $v) {
                         $fileData[$line][$columns[$k]] = $v;
                     }
