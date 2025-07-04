@@ -123,6 +123,7 @@ class ImportFeed extends Base
             }
         }
 
+        $entity->set('phpCode', null);
         if ($entity->get('processingType') !== 'configurator') {
             $fileName = CreateImportProcessingType::DIR . '/' . $entity->get('processingType') . '.php';
             if (file_exists($fileName)) {
