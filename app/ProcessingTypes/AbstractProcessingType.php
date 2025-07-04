@@ -24,7 +24,7 @@ abstract class AbstractProcessingType
 {
     protected Container $container;
 
-    abstract public static function getTypeLabel(): ?string;
+    abstract public static function getTypeLabel(): string;
 
     abstract public static function getDescription(): ?string;
 

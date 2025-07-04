@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Import\Console;
 
-use Atro\Core\Exceptions\NotModified;
 use Atro\Console\AbstractConsole;
 use Atro\Core\Utils\Util;
 
@@ -45,12 +44,13 @@ class CreateImportProcessingType extends AbstractConsole
 
 namespace ImportProcessingTypes;
 
+use Atro\Core\Exceptions\NotModified;
 use Atro\Entities\Job;
 use Import\ProcessingTypes\AbstractProcessingType;
 
 class {{name}} extends AbstractProcessingType
 {
-    public static function getTypeLabel(): ?string
+    public static function getTypeLabel(): string
     {
         return '{{name}}';
     }
