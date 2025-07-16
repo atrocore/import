@@ -53,8 +53,8 @@ Espo.define('import:views/import-job/fields/records-counter-with-link', 'import:
                             id: 'type',
                             field: 'type',
                             type: 'string',
-                            operator: 'equals',
-                            value: type
+                            operator: 'in',
+                            value: [type]
                         }
                     ],
                     valid: true
