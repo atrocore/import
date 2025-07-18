@@ -122,9 +122,6 @@ class Metadata extends AbstractListener
 
         $data['clientDefs']['Action']['dynamicLogic']['fields']['inBackground']['visible']['conditionGroup'][0]['value'][] = 'import';
 
-        $data['clientDefs']['Action']['dynamicLogic']['fields']['executeAs']['visible']['conditionGroup'][0]['value'][] = 'import';
-        $data['clientDefs']['Action']['dynamicLogic']['fields']['executeAs']['required']['conditionGroup'][0]['value'][] = 'import';
-
         if (empty($data['clientDefs']['ScheduledJob']['dynamicLogic']['fields']['maximumHoursToLookBack']['visible']['conditionGroup'][0])) {
             $data['clientDefs']['ScheduledJob']['dynamicLogic']['fields']['maximumHoursToLookBack']['visible']['conditionGroup'][0] = [
                 'type'      => 'in',
