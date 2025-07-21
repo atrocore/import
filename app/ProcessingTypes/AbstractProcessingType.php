@@ -131,7 +131,10 @@ abstract class AbstractProcessingType
         return $this->container->get(AttributeFieldConverter::class);
     }
 
-    protected function getAttributeService(): \Pim\Services\Attribute
+    /**
+     * @return \Atro\Services\Attribute
+     */
+    protected function getAttributeService()
     {
         return $this->container->get('serviceFactory')->create('Attribute');
     }
