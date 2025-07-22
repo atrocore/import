@@ -6,12 +6,5 @@
   },
   "links": {
     "importFeed": "Flux d'import"
-  },
-  "options": {
-    "job": {
-      "ImportFeed": "Flux d'import",
-      "TrialImport": "Échec de la nouvelle tentative d'importation",
-      "ImportJobRemove": "Suppression des travaux d'importation"
-    }
   }
 }

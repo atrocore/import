@@ -6,12 +6,5 @@
   },
   "links": {
     "importFeed": "Import Feed"
-  },
-  "options": {
-    "job": {
-      "ImportFeed": "Import Feed",
-      "TrialImport": "Wiederholung von fehlgeschlagenen Import Jobs",
-      "ImportJobRemove": "Entfernung von Import Jobs"
-    }
   }
 }
