@@ -12,7 +12,6 @@
     "errorsCount": "Fehler",
     "attachment": "Importierte Datei",
     "convertedFile": "Konvertierte File",
-    "errorsAttachment": "Fehlerdatei",
     "importJobLogs": "Fehlerlogs"
   },
   "links": {
@@ -20,7 +19,6 @@
     "importJobLogs": "Fehlerlogs"
   },
   "labels": {
-    "Create ImportJob": "Importauftrag erstellen",
     "Pending": "Steht aus",
     "Success": "Erfolg",
     "Running": "In Arbeit",

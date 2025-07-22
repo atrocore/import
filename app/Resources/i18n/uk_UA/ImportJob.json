@@ -12,7 +12,6 @@
     "errorsCount": "Помилка",
     "attachment": "Файл імпорту",
     "convertedFile": "Конвертований файл імпорту",
-    "errorsAttachment": "Файл помилок",
     "importJobLogs": "Лог помилок"
   },
   "links": {
