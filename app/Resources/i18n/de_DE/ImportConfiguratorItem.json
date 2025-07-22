@@ -17,9 +17,6 @@
     "importByForListAttribute": "Verwandte Entitätsfelder für Listen",
     "urlHeaders": "Kopfzeilen anfordern"
   },
-  "links": {
-    "importFeed": "Import Feed"
-  },
   "labels": {
     "main": "Hauptsprache",
     "mapping": "Feldzuordnung fürs Erstellen",

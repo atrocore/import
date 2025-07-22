@@ -16,10 +16,6 @@
     "replaceArray": "Zastąp",
     "importByForListAttribute": "Powiązane pola encji dla list"
   },
-  "links": {
-    "importFeed": "Importuj źródło",
-    "channel": "Kanał"
-  },
   "labels": {
     "main": "Główne",
     "mapping": "Mapowanie pola do wstawienia",

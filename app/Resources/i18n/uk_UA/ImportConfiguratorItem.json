@@ -17,9 +17,6 @@
     "importByForListAttribute": "Пов’язані поля сутності для списків",
     "urlHeaders": "Заголовки запиту"
   },
-  "links": {
-    "importFeed": "Імпортний фід"
-  },
   "labels": {
     "main": "Основна",
     "mapping": "Зіставлення полів для вставки",

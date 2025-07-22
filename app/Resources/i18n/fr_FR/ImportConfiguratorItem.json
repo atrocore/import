@@ -17,10 +17,6 @@
     "importByForListAttribute": "Champs d'entité connexes pour les listes",
     "urlHeaders": "En-têtes de la demande"
   },
-  "links": {
-    "importFeed": "Flux d'import",
-    "channel": "Canal"
-  },
   "labels": {
     "main": "Principal",
     "mapping": "Correspondance des champs pour l'insertion",
