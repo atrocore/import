@@ -37,8 +37,7 @@
   "links": {
     "connection": "Connexion",
     "importJobs": "Job d'import",
-    "configuratorItems": "Configurateur",
-    "scheduleJobs": "Jobs programmés"
+    "configuratorItems": "Configurateur"
   },
   "labels": {
     "parseFile": "Analyse des fichiers : {{fileName}}",
