@@ -133,6 +133,16 @@ class ImportFeed extends Base
             $fileName = CreateImportProcessingType::DIR . '/' . $entity->get('processingType') . '.php';
             if (file_exists($fileName)) {
                 $entity->set('phpCode', file_get_contents($fileName));
+            } else {
+                $className = $this->getMetadata()->get(['app', 'processingTypes', $entity->get('processingType'), 'className']) ?? '';
+                if (class_exists($className)) {
+                    try {
+                        $reflection = new \ReflectionClass($className);
+                        $fileName = $reflection->getFileName();
+                        $entity->set('phpCode', file_get_contents($fileName));
+                    } catch (\Throwable $e) {
+                    }
+                }
             }
         }
     }
@@ -356,11 +366,12 @@ class ImportFeed extends Base
     }
 
     public function runImport(
-        string $importFeedId,
-        string $attachmentId,
+        string    $importFeedId,
+        string    $attachmentId,
         \stdClass $payload = null,
-        ?string $priority = null
-    ): bool {
+        ?string   $priority = null
+    ): bool
+    {
         $event = $this
             ->getInjection('eventManager')
             ->dispatch('ImportFeedService', 'beforeRunImport',
@@ -485,10 +496,11 @@ class ImportFeed extends Base
 
     public function pushJobs(
         ImportFeedEntity $importFeed,
-        string $attachmentId,
-        ?\stdClass $payload = null,
-        ?string $priority = null
-    ): void {
+        string           $attachmentId,
+        ?\stdClass       $payload = null,
+        ?string          $priority = null
+    ): void
+    {
         $hasParent = $this->hasParentJob($importFeed);
 
         if ($hasParent) {
@@ -731,10 +743,11 @@ class ImportFeed extends Base
 
     public function createImportJob(
         ImportFeedEntity $feed,
-        string $entityType,
-        string $attachmentId,
-        \stdClass $payload = null
-    ): ImportJob {
+        string           $entityType,
+        string           $attachmentId,
+        \stdClass        $payload = null
+    ): ImportJob
+    {
         $entityLabel = $this->getInjection('language')->translate($entityType, 'scopeNames');
 
         $entity = $this->getEntityManager()->getEntity('ImportJob');
