@@ -59,18 +59,23 @@ class ImportFeed extends Base
 
         if ($this->getMetadata()->get("scopes.$entityName.hasAttribute")) {
             $conn = $this->getEntityManager()->getConnection();
-            $attributes = $conn->createQueryBuilder()
-                ->select('a.*, c.name as channel_name')
+            $qb = $conn->createQueryBuilder()
+                ->select('a.*')
                 ->distinct()
                 ->from($conn->quoteIdentifier('attribute'), 'a')
-                ->leftJoin('a', $conn->quoteIdentifier('channel'), 'c', 'c.id=a.channel_id')
                 ->innerJoin('a', 'import_configurator_item', 'i', 'i.entity_attribute_id=a.id AND i.deleted=:false')
                 ->innerJoin('i', 'import_feed', 'e', 'i.import_feed_id=e.id AND e.deleted=:false')
                 ->where('a.deleted=:false')
                 ->andWhere('e.id=:importFeedId')
                 ->setParameter('false', false, ParameterType::BOOLEAN)
-                ->setParameter('importFeedId', $importFeed->get('id'))
-                ->fetchAllAssociative();
+                ->setParameter('importFeedId', $importFeed->get('id'));
+
+            if (class_exists("\\Pim\\Module")){
+                $qb->addSelect("c.name as channel_name");
+                $qb->leftJoin('a', $conn->quoteIdentifier('channel'), 'c', 'c.id=a.channel_id');
+            }
+
+            $attributes = $qb->fetchAllAssociative();
 
             $importEntity = $this->getEntityManager()->getEntity($entityName);
 
