@@ -15,6 +15,7 @@ namespace Import;
 
 use Atro\Core\ModuleManager\AbstractModule;
 use Espo\Core\Utils\Util;
+use Import\Console\CreateImportProcessingType;
 
 /**
  * Class Module
@@ -33,5 +34,12 @@ class Module extends AbstractModule
     {
         \Import\Jobs\ImportTypeSimple::clearCache();
         Util::removeDir(\Import\Services\ImportFeed::TMP_DIR);
+    }
+
+    public function getConsoleCommands(): array
+    {
+        return [
+            "create import processing type <className>" => CreateImportProcessingType::class
+        ];
     }
 }
