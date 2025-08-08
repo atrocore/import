@@ -45,11 +45,11 @@ class V1Dot9Dot17 extends Base
                     ->update('import_configurator_item', 'ici')
                     ->set('name', ':newName')
                     ->where('name = :oldName')
-                    ->andWhere('import_feed_id IN (:import_feed_ids)')
+                    ->andWhere('import_feed_id IN (:importFeedIds)')
                     ->andWhere('deleted = :false')
                     ->setParameter('newName', 'number')
                     ->setParameter('oldName', 'sku')
-                    ->setParameter('import_feed_ids', $importFeedIds, Mapper::getParameterType($importFeedIds))
+                    ->setParameter('importFeedIds', $importFeedIds, Mapper::getParameterType($importFeedIds))
                     ->setParameter('false', false, ParameterType::BOOLEAN)
                     ->executeStatement();
             }
