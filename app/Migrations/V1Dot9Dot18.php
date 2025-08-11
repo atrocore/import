@@ -17,7 +17,7 @@ use Atro\Core\Migration\Base;
 use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\ParameterType;
 
-class V1Dot9Dot17 extends Base
+class V1Dot9Dot18 extends Base
 {
     public function getMigrationDateTime(): ?\DateTime
     {
@@ -25,6 +25,12 @@ class V1Dot9Dot17 extends Base
     }
 
     public function up(): void
+    {
+        $this->updateConfiguratorItems();
+        $this->updateData();
+    }
+
+    protected function updateConfiguratorItems(): void
     {
         try {
             $connection = $this->getConnection();
@@ -55,6 +61,41 @@ class V1Dot9Dot17 extends Base
             }
         } catch (\Throwable $e) {
 
+        }
+    }
+
+    protected function updateData(): void
+    {
+        $actions = $this
+            ->getConnection()
+            ->createQueryBuilder()
+            ->select('id', 'data')
+            ->from('import_feed')
+            ->where('data IS NOT NULL')
+            ->andWhere('deleted = :false')
+            ->setParameter('false', false, ParameterType::BOOLEAN)
+            ->fetchAllAssociative();
+
+        foreach ($actions as $action) {
+            if (strpos($action['data'], 'sku') !== false) {
+                $action['data'] = str_replace('.sku', '.number', $action['data']);
+                $action['data'] = str_replace('"sku"', '"number"', $action['data']);
+                $action['data'] = str_replace("'sku'", "'number'", $action['data']);
+
+                try {
+                    $this
+                        ->getConnection()
+                        ->createQueryBuilder()
+                        ->update('import_feed')
+                        ->set('data', ':data')
+                        ->where('id = :id')
+                        ->setParameter('id', $action['id'])
+                        ->setParameter('data', $action['data'])
+                        ->executeStatement();
+                } catch (\Throwable $e) {
+
+                }
+            }
         }
     }
 }
