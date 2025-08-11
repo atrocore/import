@@ -396,6 +396,13 @@
       "readOnly": true,
       "notStorable": true,
       "filterDisabled": true
+    },
+    "feedPayload": {
+      "type": "text",
+      "view": "views/fields/script",
+      "language": "json",
+      "notStorable": true,
+      "dataField": true
     }
   },
   "links": {

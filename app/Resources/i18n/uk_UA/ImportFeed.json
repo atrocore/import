@@ -32,7 +32,8 @@
     "markForUnlinkedAttribute": "Маркер для неприлінкованого атрибуту",
     "skipValue": "Маркер для пропущеного значення",
     "fieldDelimiterForRelation": "Роздільник полів для зв'язку",
-    "scheduledJobs": "Заплановані роботи"
+    "scheduledJobs": "Заплановані роботи",
+    "feedPayload": "корисне навантаження"
   },
   "links": {
     "connection": "З'єднання",

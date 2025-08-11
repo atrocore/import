@@ -37,7 +37,8 @@
     "skipValue": "Marker for Skipped Value ",
     "fieldDelimiterForRelation": "Field Delimiter for Relation",
     "scheduledJobs": "Scheduled Jobs",
-    "executeAs": "Execute As"
+    "executeAs": "Execute As",
+    "feedPayload": "Payload"
   },
   "links": {
     "connection": "Connection",

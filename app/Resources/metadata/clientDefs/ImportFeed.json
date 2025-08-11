@@ -331,6 +331,17 @@
             }
           ]
         }
+      },
+      "feedPayload": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "notEquals",
+              "attribute": "processingType",
+              "value": "configurator"
+            }
+          ]
+        }
       }
     }
   }

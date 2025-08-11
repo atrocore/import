@@ -54,6 +54,12 @@
         {
           "name": "maxPerJob"
         }
+      ],
+      [
+        {
+          "name": "feedPayload",
+          "fullWidth": true
+        }
       ]
     ]
   },

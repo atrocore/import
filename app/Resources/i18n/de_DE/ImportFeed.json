@@ -31,7 +31,8 @@
     "markForUnlinkedAttribute": "Markierung für nicht verknüpftes Attribut",
     "skipValue": "Markierung für übersprungenen Wert",
     "fieldDelimiterForRelation": "Feldtrennzeichen für Relation",
-    "scheduledJobs": "Geplante Aufträge"
+    "scheduledJobs": "Geplante Aufträge",
+    "feedPayload": "Nutzlast"
   },
   "links": {
     "connection": "Verbindung",
