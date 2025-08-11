@@ -70,6 +70,7 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
             "repeatProcessing" => $feed->get("repeatProcessing"),
             "sheet"            => $feed->get("sheet"),
             "executeAs"        => $feed->get("executeAs"),
+            "feedPayload"      => $feed->getFeedField("feedPayload"),
         ];
 
         return $this
