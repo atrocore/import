@@ -151,6 +151,7 @@ class ImportFeed extends Base
                 'markForNoRelation'         => $this->getFeedField('markForNoRelation'),
                 'markForUnlinkedAttribute'  => $this->getFeedField('markForUnlinkedAttribute'),
                 'fieldDelimiterForRelation' => $this->getFeedField('fieldDelimiterForRelation'),
+                'valueExtractor'            => $item->get('valueExtractor'),
             ];
         }
 
