@@ -29,7 +29,9 @@
         {
           "name": "locale"
         },
-        false
+        {
+          "name": "valueExtractor"
+        }
       ]
     ]
   },

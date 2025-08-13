@@ -43,7 +43,7 @@ class Wysiwyg
         $nullValue = empty($config['nullValue']) ? 'Null' : (string)$config['nullValue'];
 
         if (isset($config['column'][0]) && isset($row[$config['column'][0]])) {
-            $value = $row[$config['column'][0]];
+            $value = $this->extractValue($config, $row[$config['column'][0]], $emptyValue, $nullValue);
             if (strtolower((string)$value) === strtolower($emptyValue) || $value === '') {
                 $value = $default;
             }
@@ -55,6 +55,16 @@ class Wysiwyg
         }
 
         $inputRow->{$config['name']} = $value != null ? (string)$value : $value;
+    }
+
+    public function extractValue(array $config, $value, string $emptyValue, string $nullValue)
+    {
+        if (empty($value) || in_array(strtolower((string)$value), [strtolower($emptyValue), strtolower($nullValue)]) || empty($config['valueExtractor'])) {
+            return $value;
+        }
+
+        preg_match($config['valueExtractor'], $value, $matches);
+        return $matches[0] ?? $emptyValue;
     }
 
     public function prepareValue(\stdClass $restore, Entity $entity, array $item): void
@@ -90,7 +100,7 @@ class Wysiwyg
 
     protected function getEntityManager(bool $alternativeContainer = false): EntityManager
     {
-        if ($alternativeContainer){
+        if ($alternativeContainer) {
             return $this->configuratorItem->getContainer2()->get('entityManager');
         }
 

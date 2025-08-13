@@ -136,6 +136,11 @@
     },
     "sortOrder": {
       "type": "int"
+    },
+    "valueExtractor": {
+      "type": "varchar",
+      "tooltip": true,
+      "view": "import:views/import-configurator-item/fields/value-extractor"
     }
   },
   "links": {
