@@ -26,7 +26,7 @@ Espo.define('import:views/import-feed/record/detail', 'views/record/detail',
                 "label": this.translate('uploadAndImport', 'labels', 'ImportFeed')
             })
 
-            this.listenTo(this.model, 'after:save', () => {
+            this.listenTo(this.model, 'after:save after:inlineEditSave', () => {
                 this.handleButtonsDisability();
             });
         },
@@ -42,16 +42,15 @@ Espo.define('import:views/import-feed/record/detail', 'views/record/detail',
         },
 
         handleButtonsDisability() {
-            const $buttons = $('.additional-button');
             if (this.isButtonsDisabled()) {
-                $buttons.addClass('disabled');
+                this.additionalButtons.map(button => button.disabled = true);
             } else {
-                $buttons.removeClass('disabled');
+                this.additionalButtons.map(button => button.disabled = false);
             }
         },
 
         actionRunImport() {
-            if ($('.action[data-action=runImport]').hasClass('disabled')) {
+            if ($('.action[data-action=runImport]').prop('disabled')) {
                 return;
             }
 
