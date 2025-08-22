@@ -51,7 +51,7 @@ Espo.define('import:views/import-feed/fields/source-fields', 'views/fields/multi
                     }
                 });
 
-                this.$el.html(items.join(', '));
+                this.$el.html(`<div class="value-container">${items.join(', ')}</div>`);
             }
 
             if (this.model.get('processingType') !== 'configurator') {
