@@ -261,7 +261,6 @@
       "view": "import:views/import-feed/fields/entity",
       "required": true,
       "prohibitedEmptyValue": true,
-      "options": [],
       "default": "Product"
     },
     "rootNode": {
