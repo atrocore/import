@@ -34,13 +34,6 @@
       "type": "enum",
       "required": true,
       "fontSize": 1,
-      "optionsIds": [
-        "Pending",
-        "Running",
-        "Success",
-        "Failed",
-        "Canceled"
-      ],
       "options": [
         "Pending",
         "Running",

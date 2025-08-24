@@ -7,13 +7,6 @@
     "type": {
       "type": "enum",
       "len": 10,
-      "optionsIds": [
-        "create",
-        "update",
-        "delete",
-        "skip",
-        "error"
-      ],
       "options": [
         "create",
         "update",
