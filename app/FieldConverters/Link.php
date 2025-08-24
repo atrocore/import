@@ -68,7 +68,7 @@ class Link extends Varchar
                     $this
                         ->getService('ImportConfiguratorItem')
                         ->getFieldConverter($fieldData['type'])
-                        ->convert($input, ['name' => $field, 'column' => [0], 'default' => null], [$values[$k]]);
+                        ->convert($input, ['name' => $field, 'column' => [0], 'default' => null, 'valueExtractor' => $config['valueExtractor'] ?? null], [$values[$k]]);
 
                     if (empty($fieldData['notStorable']) && isset($values[$k]) && $values[$k] !== '' && $values[$k] !== (string)$config['emptyValue']) {
                         $where[$field] = $values[$k];
@@ -194,7 +194,8 @@ class Link extends Varchar
 
     protected function getSearchValue($column, array $config, array $row)
     {
-        $value = $row[$column] ?? null;
+        $value = $this->extractValue($config, $row[$column] ?? null, (string)$config['emptyValue'], (string)$config['nullValue']);
+
         if (strtolower((string)$value) === strtolower((string)$config['emptyValue'])) {
             $value = (string)$config['emptyValue'];
         }
@@ -305,7 +306,7 @@ class Link extends Varchar
 
                 $values = explode($configuration['delimiter'], (string)$row[$columnName]);
                 foreach ($values as $value) {
-                    $res[$field][] = $value;
+                    $res[$field][] = $this->extractValue($configuration, $value, (string)$configuration['emptyValue'], (string)$configuration['nullValue']);
                 }
             }
             $res[$field] = array_values(array_unique($res[$field]));

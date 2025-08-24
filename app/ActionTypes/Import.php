@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace Import\ActionTypes;
 
 use Atro\ActionTypes\AbstractAction;
-use Atro\Core\EventManager\Event;
 use Espo\ORM\Entity;
 
 class Import extends AbstractAction
@@ -22,21 +21,6 @@ class Import extends AbstractAction
     public function useMassActions(Entity $action, \stdClass $input): bool
     {
         return false;
-    }
-
-    public function executeViaWorkflow(array $workflowData, Event $event): bool
-    {
-        $action = $this->getActionById($workflowData['id']);
-        $action->set('sourceEntity', $event->getArgument('entity')->getEntityType());
-
-        $input = new \stdClass();
-        $input->entityId = $event->getArgument('entity')->get('id');
-
-        if (!empty($workflow['_relationData'])) {
-            $input->_relationData = $workflow['_relationData'];
-        }
-
-        return $this->getActionManager()->executeNow($action, $input);
     }
 
     public function executeNow(Entity $action, \stdClass $input): bool
