@@ -75,17 +75,6 @@
           ]
         }
       },
-      "sheet": {
-        "visible": {
-          "conditionGroup": [
-            {
-              "type": "equals",
-              "attribute": "format",
-              "value": "Excel"
-            }
-          ]
-        }
-      },
       "isFileHeaderRow": {
         "visible": {
           "conditionGroup": [
@@ -123,17 +112,6 @@
         }
       },
       "thousandSeparator": {
-        "visible": {
-          "conditionGroup": [
-            {
-              "type": "equals",
-              "attribute": "processingType",
-              "value": "configurator"
-            }
-          ]
-        }
-      },
-      "fileDataAction": {
         "visible": {
           "conditionGroup": [
             {
@@ -189,17 +167,6 @@
         }
       },
       "skipValue": {
-        "visible": {
-          "conditionGroup": [
-            {
-              "type": "equals",
-              "attribute": "processingType",
-              "value": "configurator"
-            }
-          ]
-        }
-      },
-      "repeatProcessing": {
         "visible": {
           "conditionGroup": [
             {
