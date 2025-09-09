@@ -103,9 +103,6 @@ Espo.define('import:views/import-configurator-item/fields/default-container', 'v
                     this.params.translatedOptions[option.toString()] = label;
                 });
 
-                if (type === 'language') {
-                    this.model.defs.fields["default"]['prohibitedEmptyValue'] = true;
-                }
             } else if (type === 'unit') {
                 this.params.measureId = this.getMetadata().get(`entityDefs.${this.model.get('entity')}.fields.${this.model.get('name')}.measureId`);
                 this.model.defs.fields["default"]['extensibleEnumId'] = this.params.measureId;

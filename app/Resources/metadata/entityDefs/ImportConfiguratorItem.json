@@ -2,7 +2,7 @@
   "fields": {
     "name": {
       "type": "varchar",
-      "prohibitedEmptyValue": true,
+      "required": true,
       "view": "import:views/import-configurator-item/fields/name"
     },
     "entityIdentifier": {
@@ -61,7 +61,6 @@
       "type": "enum",
       "view": "import:views/import-configurator-item/fields/locale",
       "required": false,
-      "prohibitedEmptyValue": true,
       "options": [
         "main"
       ],

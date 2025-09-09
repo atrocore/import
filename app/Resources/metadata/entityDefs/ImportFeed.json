@@ -19,9 +19,8 @@
     },
     "executeAs": {
       "type": "enum",
-      "prohibitedEmptyValue": true,
+      "require": true,
       "default": "system",
-
       "options": [
         "system",
         "sameUser"
@@ -41,19 +40,37 @@
     "repeatProcessing": {
       "type": "enum",
       "required": true,
-      "prohibitedEmptyValue": true,
       "options": [
         "mistake",
         "repeat",
         "skip"
       ],
       "default": "mistake",
-      "tooltip": true
+      "tooltip": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "processingType",
+              "value": "configurator"
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "processingType",
+              "value": "configurator"
+            }
+          ]
+        }
+      }
     },
     "type": {
       "type": "enum",
       "required": true,
-      "prohibitedEmptyValue": true,
       "options": [
         "simple"
       ],
@@ -93,8 +110,27 @@
       "type": "int",
       "view": "import:views/import-feed/fields/sheet",
       "required": false,
-      "prohibitedEmptyValue": true,
-      "default": 0
+      "default": 0,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "format",
+              "value": "Excel"
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "format",
+              "value": "Excel"
+            }
+          ]
+        }
+      }
     },
     "sheetOptions": {
       "type": "array",
@@ -116,7 +152,6 @@
       "dataField": true,
       "filterDisabled": true,
       "required": false,
-      "prohibitedEmptyValue": true,
       "options": [
         ",",
         ";",
@@ -131,7 +166,6 @@
       "notStorable": true,
       "dataField": true,
       "filterDisabled": true,
-      "prohibitedEmptyValue": true,
       "options": [
         "CSV",
         "Excel",
@@ -146,7 +180,6 @@
       "dataField": true,
       "filterDisabled": true,
       "required": false,
-      "prohibitedEmptyValue": true,
       "options": [
         "doubleQuote",
         "singleQuote"
@@ -156,7 +189,6 @@
     "fileDataAction": {
       "type": "enum",
       "required": false,
-      "prohibitedEmptyValue": true,
       "options": [
         "create",
         "update",
@@ -167,7 +199,27 @@
         "update_delete",
         "create_update_delete"
       ],
-      "default": "create"
+      "default": "create",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "processingType",
+              "value": "configurator"
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "processingType",
+              "value": "configurator"
+            }
+          ]
+        }
+      }
     },
     "isFileHeaderRow": {
       "type": "bool",
@@ -198,7 +250,6 @@
       ],
       "notStorable": true,
       "dataField": true,
-      "prohibitedEmptyValue": false,
       "filterDisabled": true,
       "view": "import:views/import-feed/fields/adapter"
     },
@@ -260,7 +311,6 @@
       "filterDisabled": true,
       "view": "import:views/import-feed/fields/entity",
       "required": true,
-      "prohibitedEmptyValue": true,
       "default": "Product"
     },
     "rootNode": {
