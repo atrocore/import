@@ -31,6 +31,8 @@ Espo.define('import:views/import-configurator-item/fields/url-headers', 'views/f
         },
 
         setup() {
+            Dep.prototype.setup.call(this);
+
             this.items = [];
             for (const [key, value] of Object.entries(this.model.get('urlHeaders') ?? {})) {
                 this.items.push({key: key, value: value});
@@ -44,6 +46,8 @@ Espo.define('import:views/import-configurator-item/fields/url-headers', 'views/f
         },
 
         afterRender() {
+            Dep.prototype.afterRender.call(this);
+
             for (let i = 0; i < this.items.length; i++) {
                 this.getModelFactory().create(null, model => {
                     const item = this.items[i] ?? null;
