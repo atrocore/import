@@ -115,30 +115,30 @@ class Metadata extends AbstractListener
             }
         }
 
-        $data['clientDefs']['Action']['dynamicLogic']['fields']['payload']['visible']['conditionGroup'][0]['type'] = 'in';
-        $data['clientDefs']['Action']['dynamicLogic']['fields']['payload']['visible']['conditionGroup'][0]['attribute'] = 'type';
-        $data['clientDefs']['Action']['dynamicLogic']['fields']['payload']['visible']['conditionGroup'][0]['value'][] = 'import';
+        $data['entityDefs']['Action']['fields']['payload']['conditionalProperties']['visible']['conditionGroup'][0]['type'] = 'in';
+        $data['entityDefs']['Action']['fields']['payload']['conditionalProperties']['visible']['conditionGroup'][0]['attribute'] = 'type';
+        $data['entityDefs']['Action']['fields']['payload']['conditionalProperties']['visible']['conditionGroup'][0]['value'][] = 'import';
 
-        $data['clientDefs']['Action']['dynamicLogic']['fields']['inBackground']['visible']['conditionGroup'][0]['value'][] = 'import';
+        $data['entityDefs']['Action']['fields']['inBackground']['conditionalProperties']['visible']['conditionGroup'][0]['value'][] = 'import';
 
-        if (empty($data['clientDefs']['ScheduledJob']['dynamicLogic']['fields']['maximumHoursToLookBack']['visible']['conditionGroup'][0])) {
-            $data['clientDefs']['ScheduledJob']['dynamicLogic']['fields']['maximumHoursToLookBack']['visible']['conditionGroup'][0] = [
+        if (empty($data['entityDefs']['ScheduledJob']['fields']['maximumHoursToLookBack']['conditionalProperties']['visible']['conditionGroup'][0])) {
+            $data['entityDefs']['ScheduledJob']['fields']['maximumHoursToLookBack']['conditionalProperties']['visible']['conditionGroup'][0] = [
                 'type'      => 'in',
                 'attribute' => 'type',
                 'value'     => ['ImportFeed']
             ];
         } else {
-            $data['clientDefs']['ScheduledJob']['dynamicLogic']['fields']['maximumHoursToLookBack']['visible']['conditionGroup'][0]['value'][] = 'ImportFeed';
+            $data['entityDefs']['ScheduledJob']['fields']['maximumHoursToLookBack']['conditionalProperties']['visible']['conditionGroup'][0]['value'][] = 'ImportFeed';
         }
 
-        if (empty($data['clientDefs']['ScheduledJob']['dynamicLogic']['fields']['maximumDaysForJobExist']['visible'])) {
-            $data['clientDefs']['ScheduledJob']['dynamicLogic']['fields']['maximumDaysForJobExist']['visible']['conditionGroup'][0] = [
+        if (empty($data['entityDefs']['ScheduledJob']['fields']['maximumDaysForJobExist']['conditionalProperties']['visible'])) {
+            $data['entityDefs']['ScheduledJob']['fields']['maximumDaysForJobExist']['conditionalProperties']['visible']['conditionGroup'][0] = [
                 'type'      => 'in',
                 'attribute' => 'type',
                 'value'     => ['ImportJobRemove']
             ];
         } else {
-            $data['clientDefs']['ScheduledJob']['dynamicLogic']['fields']['maximumDaysForJobExist']['visible']['conditionGroup'][0]['value'][] = 'ImportJobRemove';
+            $data['entityDefs']['ScheduledJob']['fields']['maximumDaysForJobExist']['conditionalProperties']['visible']['conditionGroup'][0]['value'][] = 'ImportJobRemove';
         }
 
 
