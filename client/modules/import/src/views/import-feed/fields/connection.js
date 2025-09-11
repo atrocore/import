@@ -25,9 +25,9 @@ Espo.define('import:views/import-feed/fields/connection', 'views/fields/link',
             if (['edit', 'detail'].includes(this.mode)) {
                 let typesWithConnection = this.getMetadata().get('import.connection.types') || [];
                 if (typesWithConnection.includes(this.model.get('type'))) {
-                    this.show();
+                    this.$el.parent().show();
                 } else {
-                    this.hide();
+                    this.$el.parent().hide();
                 }
             }
         },

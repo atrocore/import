@@ -14,9 +14,9 @@ Espo.define('import:views/import-feed/fields/adapter', 'views/fields/enum',
         afterRender() {
             Dep.prototype.afterRender.call(this);
 
-            this.hide();
+            this.$el.parent().hide();
             if (this.params.options.length > 1 && ['detail', 'edit'].includes(this.mode)) {
-                this.show();
+                this.$el.parent().show();
             }
         },
 
