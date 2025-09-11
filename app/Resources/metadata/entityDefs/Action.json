@@ -18,7 +18,27 @@
       "entity": "ImportFeed",
       "filterDisabled": true,
       "massUpdateDisabled": true,
-      "importDisabled": true
+      "importDisabled": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "type",
+              "value": "import"
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "type",
+              "value": "import"
+            }
+          ]
+        }
+      }
     },
     "importFeedId": {
       "type": "varchar",
@@ -54,7 +74,27 @@
       "filterDisabled": true,
       "massUpdateDisabled": true,
       "importDisabled": true,
-      "default": false
+      "default": false,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "usage",
+              "value": "entity"
+            },
+            {
+              "type": "equals",
+              "attribute": "type",
+              "value": "import"
+            },
+            {
+              "type": "isNotEmpty",
+              "attribute": "importFeedId"
+            }
+          ]
+        }
+      }
     }
   }
 }

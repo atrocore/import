@@ -37,12 +37,48 @@
     "foreignColumn": {
       "type": "multiEnum",
       "view": "import:views/import-configurator-item/fields/foreign-column",
-      "tooltip": true
+      "tooltip": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "createIfNotExist"
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "createIfNotExist"
+            }
+          ]
+        }
+      }
     },
     "foreignImportBy": {
       "type": "multiEnum",
       "view": "import:views/import-configurator-item/fields/foreign-import-by",
-      "tooltip": true
+      "tooltip": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "createIfNotExist"
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "createIfNotExist"
+            }
+          ]
+        }
+      }
     },
     "fieldDefs": {
       "type": "jsonObject",
@@ -69,7 +105,17 @@
     "defaultContainer": {
       "type": "text",
       "notStorable": true,
-      "view": "import:views/import-configurator-item/fields/default-container"
+      "view": "import:views/import-configurator-item/fields/default-container",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "createIfNotExist"
+            }
+          ]
+        }
+      }
     },
     "default": {
       "type": "text"
@@ -124,7 +170,23 @@
       "type": "jsonObject",
       "massUpdateDisabled": true,
       "filterDisabled": true,
-      "view": "import:views/import-configurator-item/fields/url-headers"
+      "view": "import:views/import-configurator-item/fields/url-headers",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "name",
+              "value": "url"
+            },
+            {
+              "type": "equals",
+              "attribute": "entity",
+              "value": "File"
+            }
+          ]
+        }
+      }
     },
     "createdAt": {
       "type": "datetime",

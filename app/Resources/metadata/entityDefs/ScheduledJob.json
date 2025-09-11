@@ -3,7 +3,27 @@
     "importFeed": {
       "type": "link",
       "view": "import:views/scheduled-job/fields/import-feed",
-      "tooltip": true
+      "tooltip": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": ["ImportFeed"]
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": ["ImportFeed"]
+            }
+          ]
+        }
+      }
     },
     "maximumHoursToLookBack": {
       "type": "float",
