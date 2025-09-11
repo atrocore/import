@@ -15,7 +15,30 @@
     "maxPerJob": {
       "type": "int",
       "required": false,
-      "min": 0
+      "min": 0,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "or",
+              "value": [
+                {
+                  "type": "in",
+                  "attribute": "format",
+                  "value": [
+                    "CSV",
+                    "Excel"
+                  ]
+                },
+                {
+                  "type": "isTrue",
+                  "attribute": "mergeResponses"
+                }
+              ]
+            }
+          ]
+        }
+      }
     },
     "executeAs": {
       "type": "enum",
@@ -74,7 +97,17 @@
       "options": [
         "simple"
       ],
-      "default": "simple"
+      "default": "simple",
+      "conditionalProperties": {
+        "protected": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        }
+      }
     },
     "processingType": {
       "type": "varchar",
@@ -157,7 +190,27 @@
         ";",
         "\\t"
       ],
-      "default": ";"
+      "default": ";",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "format",
+              "value": "CSV"
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "format",
+              "value": "CSV"
+            }
+          ]
+        }
+      }
     },
     "format": {
       "type": "enum",
@@ -184,7 +237,27 @@
         "doubleQuote",
         "singleQuote"
       ],
-      "default": "doubleQuote"
+      "default": "doubleQuote",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "format",
+              "value": "CSV"
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "format",
+              "value": "CSV"
+            }
+          ]
+        }
+      }
     },
     "fileDataAction": {
       "type": "enum",
@@ -226,7 +299,21 @@
       "notStorable": true,
       "dataField": true,
       "filterDisabled": true,
-      "default": true
+      "default": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "format",
+              "value": [
+                "CSV",
+                "Excel"
+              ]
+            }
+          ]
+        }
+      }
     },
     "decimalMark": {
       "type": "varchar",
@@ -234,14 +321,50 @@
       "dataField": true,
       "filterDisabled": true,
       "required": true,
-      "default": ","
+      "default": ",",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "format",
+              "value": "CSV"
+            },
+            {
+              "type": "equals",
+              "attribute": "processingType",
+              "value": "configurator"
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "format",
+              "value": "CSV"
+            }
+          ]
+        }
+      }
     },
     "thousandSeparator": {
       "type": "varchar",
       "notStorable": true,
       "dataField": true,
       "filterDisabled": true,
-      "required": false
+      "required": false,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "processingType",
+              "value": "configurator"
+            }
+          ]
+        }
+      }
     },
     "adapter": {
       "type": "enum",
@@ -315,14 +438,52 @@
       "required": false,
       "notStorable": true,
       "dataField": true,
-      "filterDisabled": true
+      "filterDisabled": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "format",
+              "value": [
+                "JSON",
+                "XML"
+              ]
+            },
+            {
+              "type": "equals",
+              "attribute": "processingType",
+              "value": "configurator"
+            }
+          ]
+        }
+      }
     },
     "excludedNodes": {
       "type": "array",
       "required": false,
       "notStorable": true,
       "dataField": true,
-      "filterDisabled": true
+      "filterDisabled": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "format",
+              "value": [
+                "JSON",
+                "XML"
+              ]
+            },
+            {
+              "type": "equals",
+              "attribute": "processingType",
+              "value": "configurator"
+            }
+          ]
+        }
+      }
     },
     "keptStringNodes": {
       "type": "array",
@@ -330,7 +491,26 @@
       "notStorable": true,
       "dataField": true,
       "filterDisabled": true,
-      "tooltip": true
+      "tooltip": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "format",
+              "value": [
+                "JSON",
+                "XML"
+              ]
+            },
+            {
+              "type": "equals",
+              "attribute": "processingType",
+              "value": "configurator"
+            }
+          ]
+        }
+      }
     },
     "delimiter": {
       "type": "varchar",
@@ -338,7 +518,18 @@
       "dataField": true,
       "filterDisabled": true,
       "required": true,
-      "default": "~"
+      "default": "~",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "processingType",
+              "value": "configurator"
+            }
+          ]
+        }
+      }
     },
     "fieldDelimiterForRelation": {
       "type": "varchar",
@@ -346,7 +537,18 @@
       "dataField": true,
       "filterDisabled": true,
       "required": true,
-      "default": "|"
+      "default": "|",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "processingType",
+              "value": "configurator"
+            }
+          ]
+        }
+      }
     },
     "emptyValue": {
       "type": "varchar",
@@ -355,7 +557,18 @@
       "filterDisabled": true,
       "required": false,
       "default": "",
-      "tooltip": true
+      "tooltip": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "processingType",
+              "value": "configurator"
+            }
+          ]
+        }
+      }
     },
     "nullValue": {
       "type": "varchar",
@@ -364,7 +577,18 @@
       "filterDisabled": true,
       "required": false,
       "default": "Null",
-      "tooltip": true
+      "tooltip": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "processingType",
+              "value": "configurator"
+            }
+          ]
+        }
+      }
     },
     "markForNoRelation": {
       "type": "varchar",
@@ -373,7 +597,18 @@
       "filterDisabled": true,
       "required": false,
       "default": "Null",
-      "tooltip": true
+      "tooltip": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "processingType",
+              "value": "configurator"
+            }
+          ]
+        }
+      }
     },
     "markForUnlinkedAttribute": {
       "type": "varchar",
@@ -382,7 +617,18 @@
       "filterDisabled": true,
       "required": false,
       "default": "N/A",
-      "tooltip": true
+      "tooltip": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "processingType",
+              "value": "configurator"
+            }
+          ]
+        }
+      }
     },
     "skipValue": {
       "type": "varchar",
@@ -391,7 +637,18 @@
       "filterDisabled": true,
       "required": false,
       "default": "Skip",
-      "tooltip": true
+      "tooltip": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "processingType",
+              "value": "configurator"
+            }
+          ]
+        }
+      }
     },
     "sourceFields": {
       "type": "array",
@@ -412,7 +669,18 @@
       "view": "views/fields/script",
       "language": "json",
       "notStorable": true,
-      "dataField": true
+      "dataField": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "notEquals",
+              "attribute": "processingType",
+              "value": "configurator"
+            }
+          ]
+        }
+      }
     }
   },
   "links": {
