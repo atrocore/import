@@ -245,9 +245,6 @@
     },
     "adapter": {
       "type": "enum",
-      "options": [
-        ""
-      ],
       "notStorable": true,
       "dataField": true,
       "filterDisabled": true,
