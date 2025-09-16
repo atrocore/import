@@ -125,7 +125,7 @@ Espo.define('import:views/import-configurator-item/fields/name', 'views/fields/e
                                 this.getLanguage().data[entity].fields[field] = fieldDefs.label;
 
                                 this.params.groupOptions[0].options.push(field);
-
+                                this.originalOptionList =  this.params.options;
                                 if (this.model.get(this.name) === '_addAttribute') {
                                     this.model.set(this.name, field);
                                 }
