@@ -335,11 +335,13 @@ class ImportJob extends Base
     {
         $res = parent::deleteFromDb($id);
 
-        $this->getConnection()->createQueryBuilder()
-            ->delete('import_job_log')
-            ->where('import_job_id = :id')
-            ->setParameter('id', $id)
-            ->executeStatement();
+        if ($res) {
+            $this->getConnection()->createQueryBuilder()
+                ->delete('import_job_log')
+                ->where('import_job_id = :id')
+                ->setParameter('id', $id)
+                ->executeStatement();
+        }
 
         return $res;
     }
