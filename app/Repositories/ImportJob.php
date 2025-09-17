@@ -321,6 +321,31 @@ class ImportJob extends Base
         }
     }
 
+    public function clearDeletedRecords(): void
+    {
+        parent::clearDeletedRecords();
+
+        $this->getConnection()->createQueryBuilder()
+            ->delete('import_job_log')
+            ->where('import_job_id not in (select id from import_job)')
+            ->executeStatement();
+    }
+
+    public function deleteFromDb(string $id): bool
+    {
+        $res = parent::deleteFromDb($id);
+
+        if ($res) {
+            $this->getConnection()->createQueryBuilder()
+                ->delete('import_job_log')
+                ->where('import_job_id = :id')
+                ->setParameter('id', $id)
+                ->executeStatement();
+        }
+
+        return $res;
+    }
+
     protected function getImportService(): \Import\Services\ImportFeed
     {
         return $this->getInjection('serviceFactory')->create('ImportFeed');
