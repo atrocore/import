@@ -402,8 +402,7 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
                         $this->getEntityManager()->saveEntity($log);
                     }
 
-                    $this->afterRowProceed($entityService->getEntityType(), $where, $id);
-
+                    $this->afterRowProceed($entityService->getEntityType(), $where, $id, $row, $fileRow);
                     continue;
                 }
 
@@ -413,7 +412,7 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
 
                 $this->getEntityManager()->saveEntity($log);
 
-                $this->afterRowProceed($entityService->getEntityType(), $where, $id);
+                $this->afterRowProceed($entityService->getEntityType(), $where, $id, $row, $fileRow);
             }
             $this->clearMemoryOfLoadedEntities();
         }
@@ -471,7 +470,7 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
         return true;
     }
 
-    public function afterRowProceed(string $entityType, array $where, ?string $id): void
+    public function afterRowProceed(string $entityType, array $where, ?string $id, ?array $row, ?int $rowNumber): void
     {
         if (!empty($id)) {
             $keys = $this->getMemoryStorage()->get(self::MEMORY_KEYS) ?? [];
@@ -486,6 +485,15 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
             }
             $this->getMemoryStorage()->set(self::MEMORY_WHERE_KEYS, $whereKeys);
         }
+
+        $this->getEventManager()->dispatch(new Event([
+            'importJobId' => $this->getMemoryStorage()->get('importJobId'),
+            'entityId' => $id,
+            'entityType' => $entityType,
+            'row' => $row,
+            'rowNumber' => $rowNumber,
+
+        ]), 'afterProceedImportRow');
     }
 
     public function loadExistsEntities(string $entityType, array $configuration, array $where): void
