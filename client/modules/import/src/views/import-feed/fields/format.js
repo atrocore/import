@@ -15,7 +15,8 @@ Espo.define('import:views/import-feed/fields/format', 'views/fields/enum',
             Dep.prototype.afterRender.call(this);
 
             if (this.mode === 'detail' && this.model.get(this.name) === 'Excel') {
-                this.$el.parent().append(`<span class="text-alert" style="font-size: 12px">${this.translate('excelFormatWarning', 'labels', 'ImportFeed')}</span>`);
+                this.$el.parent().find('.excel-alert').remove();
+                this.$el.parent().append(`<span class="text-alert excel-alert" style="font-size: 12px">${this.translate('excelFormatWarning', 'labels', 'ImportFeed')}</span>`);
             }
         },
 
