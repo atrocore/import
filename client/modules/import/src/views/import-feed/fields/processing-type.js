@@ -44,7 +44,7 @@ Espo.define('import:views/import-feed/fields/processing-type', 'views/fields/enu
         initInlineEdit() {
             Dep.prototype.initInlineEdit.call(this);
 
-            if (this.model.get(this.name) !== 'configurator') {
+            if (this.mode !== 'list' && this.model.get(this.name) !== 'configurator') {
                 this.initShowCodeModal();
             }
         },
