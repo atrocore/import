@@ -22,9 +22,13 @@ Espo.define('import:views/import-feed/fields/sheet', 'views/fields/enum',
             this.translatedOptions = {};
 
             (this.model.get('sheetOptions') || []).forEach((value, key)=> {
-                this.translatedOptions[key] = value;
-                this.params.options.push(key);
+                let k = key.toString();
+
+                this.translatedOptions[k] = value;
+                this.params.options.push(k);
             })
+
+            this.originalOptionList = this.params.options;
 
             Dep.prototype.setup.call(this);
         },
@@ -45,9 +49,13 @@ Espo.define('import:views/import-feed/fields/sheet', 'views/fields/enum',
                 this.params.options = [];
                 this.translatedOptions = {};
                 (response || []).forEach((value, key)=> {
-                    this.translatedOptions[key] = value;
-                    this.params.options.push(key);
+                    let k = key.toString();
+
+                    this.translatedOptions[k] = value;
+                    this.params.options.push(k);
                 })
+
+                this.originalOptionList = this.params.options;
 
                 this.reRender();
             });
