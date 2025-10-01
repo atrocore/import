@@ -13,12 +13,14 @@ declare(strict_types=1);
 
 namespace Import\Controllers;
 
-use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Exceptions\Forbidden;
+use Atro\Core\Templates\Controllers\Base;
+use Atro\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\Forbidden;
+use Slim\Http\Request;
 
-class ImportFeed extends \Atro\Core\Templates\Controllers\Base
+class ImportFeed extends Base
 {
-    public function actionParseFileColumns($params, $data, $request): array
+    public function actionParseFileColumns($params, $data, Request $request): array
     {
         if (!$request->isPost()) {
             throw new BadRequest();
@@ -31,7 +33,7 @@ class ImportFeed extends \Atro\Core\Templates\Controllers\Base
         return $this->getRecordService()->parseFileColumns($data);
     }
 
-    public function actionGetFileSheets($params, $data, $request): array
+    public function actionGetFileSheets($params, $data, Request $request): array
     {
         if (!$request->isPost()) {
             throw new BadRequest();
@@ -43,7 +45,7 @@ class ImportFeed extends \Atro\Core\Templates\Controllers\Base
         return $this->getRecordService()->getFileSheets($data);
     }
 
-    public function actionRunImport($params, $data, $request): bool
+    public function actionRunImport($params, $data, Request $request): bool
     {
         // checking request
         if (!$request->isPost() || !property_exists($data, 'importFeedId')) {
@@ -64,7 +66,7 @@ class ImportFeed extends \Atro\Core\Templates\Controllers\Base
         return $this->getRecordService()->runImport((string)$data->importFeedId, $attachmentId);
     }
 
-    public function actionCreateFromExport($params, $data, $request)
+    public function actionCreateFromExport($params, $data, Request $request)
     {
         if (!$this->getMetadata()->isModuleInstalled('Export')) {
             throw new Forbidden();
@@ -83,22 +85,34 @@ class ImportFeed extends \Atro\Core\Templates\Controllers\Base
         return ["id" => $importFeed->id];
     }
 
-    public function actionEasyCatalogVerifyCode($params, $data, $request)
+    public function actionVerifyFeedByCode($params, $data, Request $request)
     {
         if (!$request->isGet() || empty($request->get("code"))) {
             throw new BadRequest();
         }
-        return $this->getRecordService()->verifyCodeEasyCatalog($request->get('code'));
+        return ['message' => $this->getRecordService()->verifyFeedByCode($request->get('code'))];
     }
 
-    public function actionEasyCatalog($params, $data, $request)
+    public function actionImportData($params, $data, Request $request)
     {
         if (!$request->isPost() || !property_exists($data, 'code') || !property_exists($data, 'json')) {
             throw new BadRequest();
         }
 
-        $this->getRecordService()->importFromEasyCatalog($data);
+        $this->getRecordService()->importData($data);
         return true;
+    }
+
+    /* For backward compatibility */
+    public function actionEasyCatalogVerifyCode($params, $data, Request $request)
+    {
+        return $this->actionVerifyFeedByCode($params, $data, $request);
+    }
+
+    /* For backward compatibility */
+    public function actionEasyCatalog($params, $data, Request $request)
+    {
+        return $this->actionImportData($params, $data, $request);
     }
 
 
