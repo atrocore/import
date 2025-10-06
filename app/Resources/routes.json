@@ -6,7 +6,9 @@
       "controller": "ImportFeed",
       "action": "runImport"
     },
-    "tags": ["ImportFeed"],
+    "tags": [
+      "ImportFeed"
+    ],
     "summary": "Run import",
     "description": "Run import",
     "operationId": "runImport",
@@ -90,6 +92,80 @@
           "example": 3
         }
       }
+    }
+  },
+  {
+    "route": "/ImportFeed/action/verifyFeedByCode",
+    "method": "get",
+    "params": {
+      "controller": "ImportFeed",
+      "action": "verifyFeedByCode"
+    },
+    "operationId": "verifyFeedByCode",
+    "tags": [
+      "ImportFeed"
+    ],
+    "summary": "Verify that import feed is correctly configured and contains ID column",
+    "description": "Verify that import feed is correctly configured and contains ID column",
+    "security": [
+      {
+        "Authorization-Token": []
+      }
+    ],
+    "requestParameters": [
+      {
+        "name": "code",
+        "in": "query",
+        "schema": {
+          "type": "string"
+        }
+      }
+    ],
+    "response": {
+      "type": "object"
+    }
+  },
+  {
+    "route": "/ImportFeed/action/importData",
+    "method": "post",
+    "params": {
+      "controller": "ImportFeed",
+      "action": "importData"
+    },
+    "operationId": "importData",
+    "tags": [
+      "ImportFeed"
+    ],
+    "summary": "Import Data",
+    "description": "Import Data",
+    "security": [
+      {
+        "Authorization-Token": []
+      }
+    ],
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string"
+              },
+              "json": {
+                "type": "array",
+                "items": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "response": {
+      "type": "boolean"
     }
   }
 ]

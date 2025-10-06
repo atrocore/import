@@ -884,7 +884,7 @@ class ImportFeed extends Base
         return $importFeed;
     }
 
-    public function verifyCodeEasyCatalog(string $code)
+    public function verifyFeedByCode(string $code)
     {
         $importFeed = $this->getRepository()->where(['code' => $code])->findOne();
         if (empty($importFeed)) {
@@ -906,7 +906,7 @@ class ImportFeed extends Base
         return 'Import feed is correctly configured';
     }
 
-    public function importFromEasyCatalog(\stdClass $data)
+    public function importData(\stdClass $data)
     {
         $importFeed = $this->getRepository()->where(['code' => $data->code])->findOne();
         if (empty($importFeed)) {
