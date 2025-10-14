@@ -449,11 +449,6 @@
                 "JSON",
                 "XML"
               ]
-            },
-            {
-              "type": "equals",
-              "attribute": "processingType",
-              "value": "configurator"
             }
           ]
         }
