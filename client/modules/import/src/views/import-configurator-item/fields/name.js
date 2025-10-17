@@ -35,7 +35,7 @@ Espo.define('import:views/import-configurator-item/fields/name', 'views/fields/e
 
         prepareListOptions() {
             this.params.options = ['id'];
-            this.translatedOptions = {'id': this.translate('id', 'fields', 'Global')};
+            this.translatedOptions = { 'id': this.translate('id', 'fields', 'Global') };
 
             let entity = this.model.get('entity');
             let hasAttribute = this.getMetadata().get(`scopes.${entity}.hasAttribute`);
@@ -73,13 +73,13 @@ Espo.define('import:views/import-configurator-item/fields/name', 'views/fields/e
                 if (!fieldDefs.disabled && !notAvailableFieldsList.includes(field) && !notAvailableTypes.includes(fieldDefs.type) && !fieldDefs.importDisabled) {
                     this.params.options.push(field);
                     this.translatedOptions[field] = this.translate(field, 'fields', entity);
-                }
 
-                if (hasAttribute) {
-                    if (fieldDefs.attributeId) {
-                        this.params.groupOptions[0].options.push(field);
-                    } else {
-                        this.params.groupOptions[1].options.push(field);
+                    if (hasAttribute) {
+                        if (fieldDefs.attributeId) {
+                            this.params.groupOptions[0].options.push(field);
+                        } else {
+                            this.params.groupOptions[1].options.push(field);
+                        }
                     }
                 }
             })
@@ -115,7 +115,7 @@ Espo.define('import:views/import-configurator-item/fields/name', 'views/fields/e
                     this.ajaxGetRequest('Attribute/action/attributesDefs', {
                         entityName: entity,
                         attributesIds: [model.id]
-                    }, {async: false}).success(res => {
+                    }, { async: false }).success(res => {
                         $.each(res, (field, fieldDefs) => {
                             if (!fieldDefs.importDisabled) {
                                 this.params.options.push(field);
@@ -125,7 +125,7 @@ Espo.define('import:views/import-configurator-item/fields/name', 'views/fields/e
                                 this.getLanguage().data[entity].fields[field] = fieldDefs.label;
 
                                 this.params.groupOptions[0].options.push(field);
-                                this.originalOptionList =  this.params.options;
+                                this.originalOptionList = this.params.options;
                                 if (this.model.get(this.name) === '_addAttribute') {
                                     this.model.set(this.name, field);
                                 }
@@ -171,28 +171,28 @@ Espo.define('import:views/import-configurator-item/fields/name', 'views/fields/e
         getExtraInfo() {
             let extraInfo = null;
 
-                let type = this.getMetadata().get(['entityDefs', this.model.get('entity'), 'fields', this.model.get('name'), 'type']);
-                if (['file', 'link', 'linkMultiple', 'extensibleEnum', 'extensibleMultiEnum', 'measure'].includes(type)) {
-                    let entityName =  this.getMetadata().get(['entityDefs', this.model.get('entity'), 'fields', this.model.get('name'), 'entity']) || this.getMetadata().get(['entityDefs', this.model.get('entity'), 'links', this.model.get('name'), 'entity']);
-                    if (type === 'file') {
-                        entityName = 'File'
-                    }
-                    if (type === 'measure') {
-                        entityName = 'Unit'
-                    }
-                    let translated = [];
-                    this.model.get('importBy').forEach(field => {
-                        if (field.endsWith('Id')) {
-                            translated.push(this.translate(field.slice(0, -2), 'fields', entityName) + ` (${this.translate('id', 'fields', 'Global')})`);
-                        } else {
-                            translated.push(this.translate(field, 'fields', entityName));
-                        }
-                    });
-                    extraInfo = `<span class="text-muted small">${this.translate('importBy', 'fields', 'ImportConfiguratorItem')}: ${translated.join(', ')}</span>`;
-                    if ((type === 'extensibleMultiEnum' || type === 'linkMultiple' || type === 'array' || type === 'multiEnum') && this.model.get('replaceArray')) {
-                        extraInfo += `<br><span class="text-muted small">${this.translate('replaceArray', 'fields', 'ImportConfiguratorItem')}</span>`;
-                    }
+            let type = this.getMetadata().get(['entityDefs', this.model.get('entity'), 'fields', this.model.get('name'), 'type']);
+            if (['file', 'link', 'linkMultiple', 'extensibleEnum', 'extensibleMultiEnum', 'measure'].includes(type)) {
+                let entityName = this.getMetadata().get(['entityDefs', this.model.get('entity'), 'fields', this.model.get('name'), 'entity']) || this.getMetadata().get(['entityDefs', this.model.get('entity'), 'links', this.model.get('name'), 'entity']);
+                if (type === 'file') {
+                    entityName = 'File'
                 }
+                if (type === 'measure') {
+                    entityName = 'Unit'
+                }
+                let translated = [];
+                this.model.get('importBy').forEach(field => {
+                    if (field.endsWith('Id')) {
+                        translated.push(this.translate(field.slice(0, -2), 'fields', entityName) + ` (${this.translate('id', 'fields', 'Global')})`);
+                    } else {
+                        translated.push(this.translate(field, 'fields', entityName));
+                    }
+                });
+                extraInfo = `<span class="text-muted small">${this.translate('importBy', 'fields', 'ImportConfiguratorItem')}: ${translated.join(', ')}</span>`;
+                if ((type === 'extensibleMultiEnum' || type === 'linkMultiple' || type === 'array' || type === 'multiEnum') && this.model.get('replaceArray')) {
+                    extraInfo += `<br><span class="text-muted small">${this.translate('replaceArray', 'fields', 'ImportConfiguratorItem')}</span>`;
+                }
+            }
 
             if (this.model.get('createIfNotExist')) {
                 extraInfo += `<br><span class="text-muted small">${this.translate('createIfNotExist', 'fields', 'ImportConfiguratorItem')}</span>`;
