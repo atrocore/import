@@ -9,7 +9,7 @@
   "stream": false,
   "streamDisabled": true,
   "disabled": false,
-  "type": "Base",
+  "type": "Archive",
   "module": "Import",
   "object": true,
   "hasAssignedUser": false,
