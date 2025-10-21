@@ -13,9 +13,9 @@ declare(strict_types=1);
 
 namespace Import\Services;
 
-use Atro\Core\Templates\Services\Base;
+use Atro\Core\Templates\Services\Archive;
 
-class ImportJobLog extends Base
+class ImportJobLog extends Archive
 {
     protected $mandatorySelectAttributeList = ['type', 'message', 'importJobId'];
 }

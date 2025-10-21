@@ -13,10 +13,10 @@ declare(strict_types=1);
 
 namespace Import\Repositories;
 
-use Atro\Core\Templates\Repositories\Base;
+use Atro\Core\Templates\Repositories\Archive;
 use Espo\ORM\Entity;
 
-class ImportJobLog extends Base
+class ImportJobLog extends Archive
 {
     protected bool $cacheable = false;
 
