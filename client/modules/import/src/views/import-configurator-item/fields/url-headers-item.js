@@ -33,7 +33,7 @@ Espo.define('import:views/import-configurator-item/fields/url-headers-item', 'vi
                 name: 'key',
                 label: null,
                 mode: 'edit',
-                el: this.options.el + ' .key-container',
+                el: this.options.el + ' td[data-name=key] .field',
                 defs: {
                     params: {
                         required: true
@@ -48,7 +48,7 @@ Espo.define('import:views/import-configurator-item/fields/url-headers-item', 'vi
                 name: 'value',
                 label: null,
                 mode: 'edit',
-                el: this.options.el + ' .value-container',
+                el: this.options.el + ' td[data-name=value] .field',
                 defs: {
                     params: {
                         required: true
