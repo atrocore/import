@@ -1,5 +1,9 @@
-<td class="col-xs-4 col-sm-5 key-container"></td>
-<td class="col-xs-6 value-container"></td>
-<td class="col-xs-2 col-sm-1 remove-button">
-    <button class="btn" data-action="remove-header">Remove</button>
+<td class="cell" data-name="key">
+    <div class="field"></div>
+</td>
+<td class="cell" data-name="value">
+    <div class="field"></div>
+</td>
+<td class="cell" data-name="remove">
+    <button data-action="remove-header" style="padding-top: 5px;padding-bottom: 5px;">Remove</button>
 </td>

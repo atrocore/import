@@ -2,8 +2,8 @@
     <thead>
         <tr>
             <td class="col-xs-4 col-sm-5">Key</td>
-            <td class="col-xs-6">Value</td>
-            <td class="col-xs-2 col-sm-1"></td>
+            <td class="col-xs-7">Value</td>
+            <td></td>
         </tr>
     </thead>
     <tbody>
