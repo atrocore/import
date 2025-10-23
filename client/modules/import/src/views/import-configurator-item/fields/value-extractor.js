@@ -15,16 +15,35 @@ Espo.define('import:views/import-configurator-item/fields/value-extractor', 'vie
             Dep.prototype.setup.call(this);
 
             this.listenTo(this.model, 'change:name', () => {
+                this.setDefaultValue()
                 this.reRender()
             })
         },
 
+        setDefaultValue() {
+            if (this.isVisible()) {
+                const type = this.getMetadata().get(`entityDefs.${this.model.get('entity')}.fields.${this.model.get('name')}.type`)
+                if (type === 'link') {
+                    this.model.set('valueExtractor', '(\\S+)$')
+                } else if (['int', 'float'].includes(type)) {
+                    this.model.set('valueExtractor', '[\\d\\s.,]+(?=\\s\\S+|$)')
+                }
+            } else {
+                this.model.set('valueExtractor', null)
+            }
+        },
+
+        isVisible() {
+            let measureId = this.getMetadata().get(`entityDefs.${this.model.get('entity')}.fields.${this.model.get('name')}.measureId`);
+
+            return !!(measureId &&
+                (!this.getMetadata().get(`entityDefs.${this.model.get('entity')}.fields.${this.model.get('name')}.unitField`) || this.getMetadata().get(`entityDefs.${this.model.get('entity')}.fields.${this.model.get('name')}.attributeId`)));
+        },
+
         afterRender() {
             Dep.prototype.afterRender.call(this);
-            const measureId = this.getMetadata().get(`entityDefs.${this.model.get('entity')}.fields.${this.model.get('name')}.measureId`);
 
-            if (measureId &&
-                (!this.getMetadata().get(`entityDefs.${this.model.get('entity')}.fields.${this.model.get('name')}.unitField`) || this.getMetadata().get(`entityDefs.${this.model.get('entity')}.fields.${this.model.get('name')}.attributeId`))) {
+            if (this.isVisible()) {
                 this.show();
             } else {
                 this.hide();
