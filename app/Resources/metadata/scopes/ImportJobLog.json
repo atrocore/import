@@ -15,6 +15,7 @@
   "hasAssignedUser": false,
   "hasTeam": false,
   "hasOwner": false,
+  "bookmarkDisabled": true,
   "notificationDisabled": true,
   "hideFieldTypeFilters": true,
   "disableActionHistory": true,
