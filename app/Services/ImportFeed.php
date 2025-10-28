@@ -810,7 +810,7 @@ class ImportFeed extends Base
         foreach ($exportFeed->configuratorItems as $configuratorItem) {
             $this->getRecordService("ExportConfiguratorItem")->prepareEntityForOutput($configuratorItem);
 
-            if ($configuratorItem->type === 'Fixed value' || $configuratorItem->type === 'script') {
+            if ($configuratorItem->type === 'Fixed value' || $configuratorItem->type === 'script' || $configuratorItem->type === 'allAttributes') {
                 continue;
             }
 
