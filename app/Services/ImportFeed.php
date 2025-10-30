@@ -796,23 +796,26 @@ class ImportFeed extends Base
     public function createFromExportFeed($exportFeedId)
     {
         $exportFeed = $this->getEntityManager()->getEntity('ExportFeed', $exportFeedId);
+        if (empty($exportFeed)) {
+            throw new NotFound();
+        }
+
+        if ($exportFeed->get('type') !== 'simple') {
+            throw new BadRequest($this->translate('wrongTypeForCreatingFromExportFeed'));
+        }
 
         $locale = null;
         if (!empty($exportFeed->get('localeId'))) {
             $locale = $this->getEntityManager()->getEntity('Locale', $exportFeed->get('localeId'));
         }
 
-        if (empty($exportFeed)) {
-            throw new NotFound();
-        }
-
         $sourceFields = [];
         foreach ($exportFeed->configuratorItems as $configuratorItem) {
-            $this->getRecordService("ExportConfiguratorItem")->prepareEntityForOutput($configuratorItem);
-
             if ($configuratorItem->type === 'Fixed value' || $configuratorItem->type === 'script' || $configuratorItem->type === 'allAttributes') {
                 continue;
             }
+
+            $this->getRecordService("ExportConfiguratorItem")->prepareEntityForOutput($configuratorItem);
 
             if (!empty($configuratorItem->entityAttributeId)) {
                 $attribute = $this->getEntityManager()->getEntity('Attribute', $configuratorItem->entityAttributeId);
@@ -851,7 +854,7 @@ class ImportFeed extends Base
         $importFeed = $this->createEntity($attachment);
 
         foreach ($exportFeed->configuratorItems as $configuratorItem) {
-            if ($configuratorItem->type === 'Fixed value' || $configuratorItem->type === 'script') {
+            if ($configuratorItem->type === 'Fixed value' || $configuratorItem->type === 'script' || $configuratorItem->type === 'allAttributes') {
                 continue;
             }
 
