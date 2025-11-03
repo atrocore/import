@@ -154,25 +154,25 @@ class ImportFeed extends Base
 
         $root = $folderRepo->where(['code' => 'import_feeds'])->findOne();
         if (empty($root)) {
-            $root = $folderRepo->get();
-            $root->set([
-                'name'   => 'Import Feeds',
-                'hidden' => true,
-                'code'   => 'import_feeds'
-            ]);
-            $this->getEntityManager()->saveEntity($root);
+            $post = new \stdClass();
+            $post->name = '.import_feeds';
+            $post->code = 'import_feeds';
+
+            $this->getServiceFactory()->create('Folder')->createEntity($post);
+
+            $root = $folderRepo->where(['code' => 'import_feeds'])->findOne();
         }
 
         $folder = $folderRepo->where(['code' => $importFeed->get('id')])->findOne();
         if (empty($folder)) {
-            $folder = $folderRepo->get();
-            $folder->set([
-                'name'   => $importFeed->get('name'),
-                'hidden' => true,
-                'code'   => $importFeed->get('id')
-            ]);
-            $this->getEntityManager()->saveEntity($folder);
-            $folderRepo->relate($folder, 'parents', $root);
+            $post = new \stdClass();
+            $post->name = $importFeed->get('id');
+            $post->code = $importFeed->get('id');
+            $post->parentId = $root->get('id');
+
+            $this->getServiceFactory()->create('Folder')->createEntity($post);
+
+            $folder = $folderRepo->where(['code' => $importFeed->get('id')])->findOne();
         }
 
         return $folder;
