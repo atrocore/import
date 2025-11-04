@@ -1,5 +1,6 @@
 {
   "fields": {
+    "folder": "Folder",
     "files": "Files",
     "processingType": "Processing Type",
     "code": "Code",

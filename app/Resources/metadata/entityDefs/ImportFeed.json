@@ -659,6 +659,10 @@
       "type": "link",
       "view": "import:views/import-feed/fields/connection"
     },
+    "folder": {
+      "type": "link",
+      "required": true
+    },
     "lastTime": {
       "type": "datetime",
       "readOnly": true,
@@ -690,6 +694,10 @@
       "foreign": "importFeed",
       "entity": "ImportConfiguratorItem",
       "audited": false
+    },
+    "folder": {
+      "type": "belongsTo",
+      "entity": "Folder"
     },
     "createdBy": {
       "type": "belongsTo",

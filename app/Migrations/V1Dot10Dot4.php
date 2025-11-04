@@ -30,6 +30,9 @@ class V1Dot10Dot4 extends Base
         $this->exec("ALTER TABLE file ADD import_feed_id VARCHAR(36) DEFAULT NULL");
         $this->exec("CREATE INDEX IDX_FILE_IMPORT_FEED_ID ON file (import_feed_id, deleted)");
 
+        $this->exec("ALTER TABLE import_feed ADD folder_id VARCHAR(36) DEFAULT NULL");
+        $this->exec("CREATE INDEX IDX_IMPORT_FEED_FOLDER_ID ON import_feed (folder_id, deleted)");
+
         $offset = 0;
         $limit = 10000;
 
