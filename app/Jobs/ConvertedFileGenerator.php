@@ -161,7 +161,8 @@ class ConvertedFileGenerator extends AbstractJob implements JobInterface
         ]);
 
         $inputData = new \stdClass();
-        $inputData->hidden = false;
+        $inputData->importFeedId = $feed->get('id');
+        $inputData->importJobId = $importJob->get('id');
         $inputData->folderId = $this->getImportFeedService()->createImportFileFolder($feed)->get('id');
         $inputData->name = str_replace('_', '-', Util::toUnderScore($type))
             . '-'
@@ -170,13 +171,6 @@ class ConvertedFileGenerator extends AbstractJob implements JobInterface
         $fileParser->setData(['isFileHeaderRow' => true]);
         $fileArr = $this->getFileService()
             ->createFileViaContents($inputData, $fileParser->createFileContent($preparedRows));
-
-        $entity = $this->getEntityManager()->getEntity('ImportJobFile');
-        $entity->set([
-            'importJobId' => $importJob->get('id'),
-            'fileId'      => $fileArr['id']
-        ]);
-        $this->getEntityManager()->saveEntity($entity);
 
         $this->currentJob->get('payload')->fileName = $fileArr['name'];
         $this->currentJob->get('payload')->downloadUrl = $fileArr['downloadUrl'];

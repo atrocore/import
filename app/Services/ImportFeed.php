@@ -918,7 +918,7 @@ class ImportFeed extends Base
 
         $input = new \stdClass();
         $input->name = 'easy-catalog.json';
-        $input->hidden = true;
+        $input->importFeedId = $importFeed->get('id');
 
         $file = $this->getFileService()->createFileViaContents($input, json_encode($data->json));
 
@@ -949,7 +949,6 @@ class ImportFeed extends Base
 
         $input = new \stdClass();
         $input->name = $file->get('name');
-        $input->hidden = true;
         if ($folderId !== null) {
             $input->folderId = $folderId;
         }
