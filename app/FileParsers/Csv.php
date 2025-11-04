@@ -184,7 +184,7 @@ class Csv extends Injectable implements FileParserInterface
 
     public function getLocalFilePath(File $attachment): string
     {
-        $tmpFileName = "data/.tmp-import/{$attachment->id}/{$attachment->get('name')}";
+        $tmpFileName = \Import\Services\ImportFeed::TMP_DIR."/{$attachment->id}/{$attachment->get('name')}";
 
         if (!file_exists($tmpFileName)) {
             Util::createDir(dirname($tmpFileName));

@@ -55,7 +55,7 @@ class ImportFeed extends Base
 
     public function hasDeletedRecordsToClear(): bool
     {
-        Util::removeDir('data/.tmp-import');
+        Util::removeDir(\Import\Services\ImportFeed::TMP_DIR);
 
         return parent::hasDeletedRecordsToClear();
     }

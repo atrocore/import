@@ -27,7 +27,7 @@ use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Templates\Services\Base;
 use Doctrine\DBAL\ParameterType;
-use Espo\Core\Utils\Util;
+use Atro\Core\Utils\Util;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
 use Import\Console\CreateImportProcessingType;
@@ -38,7 +38,7 @@ use Import\Jobs\ImportTypeSimple;
 
 class ImportFeed extends Base
 {
-    public const TMP_DIR = 'data/import-tmp';
+    public const TMP_DIR = 'data/.tmp-import';
 
     protected $mandatorySelectAttributeList = ['sourceFields', 'sheet', 'data'];
 
@@ -942,10 +942,9 @@ class ImportFeed extends Base
         /** @var FileStorageInterface $storage */
         $storage = $this->getInjection('container')->get($file->getStorage()->get('type') . 'Storage');
 
-        $tmpDir = self::TMP_DIR . DIRECTORY_SEPARATOR . Util::generateId();
-        @mkdir($tmpDir, 0777, true);
+        $path = self::TMP_DIR.DIRECTORY_SEPARATOR.Util::generateId().DIRECTORY_SEPARATOR.$file->get('name');
 
-        $path = $tmpDir . DIRECTORY_SEPARATOR . $file->get('name');
+        Util::createDir(dirname($path));
 
         $stream = $storage->getStream($file);
 
@@ -967,7 +966,7 @@ class ImportFeed extends Base
 
         $fileData = $this->getFileService()->moveLocalFileToFileEntity($input, $path);
 
-        @rmdir($tmpDir);
+        Util::removeDir(dirname($path));
 
         if (empty($fileData['id'])) {
             throw new Error('File duplicate was not created!');
