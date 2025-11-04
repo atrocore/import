@@ -1,16 +1,22 @@
 {
   "fields": {
-    "importJobs": {
-      "type": "linkMultiple",
-      "layoutDetailDisabled": true,
-      "layoutMassUpdateDisabled": true,
-      "noLoad": true
+    "importFeed": {
+      "type": "link",
+      "readOnly": true
+    },
+    "importJob": {
+      "type": "link",
+      "readOnly": true
     }
   },
   "links": {
-    "importJobs": {
-      "type": "hasMany",
-      "relationName": "importJobFile",
+    "importFeed": {
+      "type": "belongsTo",
+      "foreign": "files",
+      "entity": "ImportFeed"
+    },
+    "importJob": {
+      "type": "belongsTo",
       "foreign": "files",
       "entity": "ImportJob"
     }
