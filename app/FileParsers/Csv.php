@@ -99,8 +99,6 @@ class Csv extends Injectable implements FileParserInterface
         }
         fclose($file);
 
-        Util::removeDir(dirname($path));
-
         if (empty($data)) {
             return null;
         }
@@ -189,7 +187,7 @@ class Csv extends Injectable implements FileParserInterface
         $tmpFileName = "data/.tmp-import/{$attachment->id}/{$attachment->get('name')}";
 
         if (!file_exists($tmpFileName)) {
-            Util::createDir(dirname($tmpFileName));;
+            Util::createDir(dirname($tmpFileName));
             file_put_contents($tmpFileName, $attachment->getContents());
         }
 

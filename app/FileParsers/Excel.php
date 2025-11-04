@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace Import\FileParsers;
 
 use Atro\Core\EventManager\Event;
-use Atro\Core\Utils\Util;
 use Espo\Core\Exceptions\BadRequest;
 use Atro\Entities\File;
 use PhpOffice\PhpSpreadsheet\IOFactory;
@@ -35,8 +34,6 @@ class Excel extends Csv
         } catch (\Throwable $e) {
             $data = [];
         }
-
-        Util::removeDir(dirname($path));
 
         return $data;
     }
@@ -85,8 +82,6 @@ class Excel extends Csv
             }
             $rowNumber++;
         }
-
-        Util::removeDir(dirname($path));
 
         if (empty($data)) {
             return null;
