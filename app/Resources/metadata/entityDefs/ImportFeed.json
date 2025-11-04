@@ -91,6 +91,12 @@
         }
       }
     },
+    "files": {
+      "type": "linkMultiple",
+      "layoutDetailDisabled": true,
+      "massUpdateDisabled": true,
+      "noLoad": true
+    },
     "type": {
       "type": "enum",
       "required": true,
@@ -653,6 +659,10 @@
       "type": "link",
       "view": "import:views/import-feed/fields/connection"
     },
+    "folder": {
+      "type": "link",
+      "required": true
+    },
     "lastTime": {
       "type": "datetime",
       "readOnly": true,
@@ -685,6 +695,10 @@
       "entity": "ImportConfiguratorItem",
       "audited": false
     },
+    "folder": {
+      "type": "belongsTo",
+      "entity": "Folder"
+    },
     "createdBy": {
       "type": "belongsTo",
       "entity": "User"
@@ -711,6 +725,11 @@
       "type": "hasMany",
       "foreign": "importFeed",
       "entity": "ImportJob"
+    },
+    "files": {
+      "type": "hasMany",
+      "foreign": "importFeed",
+      "entity": "File"
     },
     "connection": {
       "type": "belongsTo",

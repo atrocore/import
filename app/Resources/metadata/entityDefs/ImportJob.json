@@ -194,8 +194,7 @@
     },
     "files": {
       "type": "hasMany",
-      "relationName": "importJobFile",
-      "foreign": "importJobs",
+      "foreign": "importJob",
       "entity": "File"
     },
     "createdBy": {

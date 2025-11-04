@@ -144,7 +144,7 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
 
         $inputData = new \stdClass();
         $inputData->name = 'converted-' . str_replace(' ', '-', strtolower($importFeed->get('name'))) . '.csv';
-        $inputData->hidden = true;
+        $inputData->importFeedId = $importFeed->get('id');
         $inputData->folderId = $this->getService('ImportFeed')->createImportFileFolder($importFeed)->get('id');
         $fileParser = $this->getFileParser('CSV');
         $fileParser->setData($jobData);
@@ -879,7 +879,7 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
             $input = new \stdClass();
             $input->name = $fileName;
             $input->mimeType = 'text/csv';
-            $input->hidden = true;
+            $input->importFeedId = $importFeed->get('id');
             $input->folderId = $folder->get('id');
             $fileData = $this->getService('File')->moveLocalFileToFileEntity($input, self::CACHE_DIR . "/$fileName");
             $result[] = $fileData;

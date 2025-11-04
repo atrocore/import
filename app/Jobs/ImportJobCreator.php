@@ -91,7 +91,10 @@ class ImportJobCreator extends AbstractJob implements JobInterface
 
             $input = new \stdClass();
             $input->name = date('Y-m-d H:i:s') . ' (' . $partNumber . ')' . '.' . $fileExt;
-            $input->hidden = true;
+            $input->importFeedId = $importFeed->get('id');
+            if (!empty($job)) {
+                $input->importJobId = $job->get('id');
+            }
             $input->folderId = $importFeedService->createImportFileFolder($importFeed)->get('id');
 
             $jobAttachment = $fileService->createFileViaContents($input, $fileParser->createFileContent($part));

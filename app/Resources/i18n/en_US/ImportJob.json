@@ -1,5 +1,6 @@
 {
   "fields": {
+    "files": "Files",
     "importFeed": "Import Feed",
     "state": "State",
     "message": "Message",

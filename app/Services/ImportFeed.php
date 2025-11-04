@@ -149,6 +149,11 @@ class ImportFeed extends Base
 
     public function createImportFileFolder(ImportFeedEntity $importFeed): Folder
     {
+        $folder = $importFeed->get('folder');
+        if (!empty($folder)) {
+            return $folder;
+        }
+
         /** @var \Atro\Repositories\Folder $folderRepo */
         $folderRepo = $this->getEntityManager()->getRepository('Folder');
 
@@ -174,6 +179,9 @@ class ImportFeed extends Base
 
             $folder = $folderRepo->where(['code' => $importFeed->get('id')])->findOne();
         }
+
+        $importFeed->set('folderId', $folder->id);
+        $this->getEntityManager()->saveEntity($importFeed);
 
         return $folder;
     }
@@ -918,7 +926,7 @@ class ImportFeed extends Base
 
         $input = new \stdClass();
         $input->name = 'easy-catalog.json';
-        $input->hidden = true;
+        $input->importFeedId = $importFeed->get('id');
 
         $file = $this->getFileService()->createFileViaContents($input, json_encode($data->json));
 
@@ -949,7 +957,6 @@ class ImportFeed extends Base
 
         $input = new \stdClass();
         $input->name = $file->get('name');
-        $input->hidden = true;
         if ($folderId !== null) {
             $input->folderId = $folderId;
         }

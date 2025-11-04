@@ -1,5 +1,6 @@
 {
   "fields": {
+    "folder": "Ordner",
     "processingType": "Verarbeitungsart",
     "code": "Code",
     "maxPerJob": "Maximale Anzahl von Datensätzen pro Job",
