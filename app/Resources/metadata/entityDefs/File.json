@@ -2,11 +2,11 @@
   "fields": {
     "importFeed": {
       "type": "link",
-      "readOnly": true
+      "protected": true
     },
     "importJob": {
       "type": "link",
-      "readOnly": true
+      "protected": true
     }
   },
   "links": {
