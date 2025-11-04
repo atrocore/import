@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Import\Repositories;
 
+use Atro\Core\Utils\Util;
 use Doctrine\DBAL\ParameterType;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Templates\Repositories\Base;
@@ -50,6 +51,13 @@ class ImportFeed extends Base
         }
 
         return $res;
+    }
+
+    public function hasDeletedRecordsToClear(): bool
+    {
+        Util::removeDir('data/.tmp-import');
+
+        return parent::hasDeletedRecordsToClear();
     }
 
     protected function beforeSave(Entity $entity, array $options = [])
