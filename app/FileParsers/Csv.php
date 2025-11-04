@@ -15,6 +15,7 @@ namespace Import\FileParsers;
 
 use Atro\Core\EventManager\Event;
 use Atro\Core\Exceptions\BadRequest;
+use Atro\Core\Utils\Util;
 use Espo\Core\Injectable;
 use Atro\Entities\File;
 
@@ -97,6 +98,8 @@ class Csv extends Injectable implements FileParserInterface
             $row++;
         }
         fclose($file);
+
+        Util::removeDir(dirname($path));
 
         if (empty($data)) {
             return null;
@@ -183,7 +186,14 @@ class Csv extends Injectable implements FileParserInterface
 
     public function getLocalFilePath(File $attachment): string
     {
-        return $attachment->getFilePath();
+        $tmpFileName = "data/.tmp-import/{$attachment->id}/{$attachment->get('name')}";
+
+        if (!file_exists($tmpFileName)) {
+            Util::createDir(dirname($tmpFileName));;
+            file_put_contents($tmpFileName, $attachment->getContents());
+        }
+
+        return $tmpFileName;
     }
 
     /**
