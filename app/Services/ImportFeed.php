@@ -178,6 +178,10 @@ class ImportFeed extends Base
             $this->getServiceFactory()->create('Folder')->createEntity($post);
 
             $folder = $folderRepo->where(['code' => $importFeed->get('id')])->findOne();
+        } else {
+            $post = new \stdClass();
+            $post->parentId = $root->get('id');
+            $this->getServiceFactory()->create('Folder')->updateEntity($folder->id, $post);
         }
 
         $importFeed->set('folderId', $folder->id);
