@@ -15,6 +15,7 @@
   },
   "relationshipPanels": {
     "configuratorItems": {
+      "checkboxes": false,
       "select": false,
       "hideShowFullList": true,
       "canClose": false,
