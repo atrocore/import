@@ -174,6 +174,7 @@ class ImportFeed extends Base
             $post->name = $importFeed->get('id');
             $post->code = $importFeed->get('id');
             $post->parentId = $root->get('id');
+            $post->parentsIds = [$root->get('id')];
 
             $this->getServiceFactory()->create('Folder')->createEntity($post);
 
