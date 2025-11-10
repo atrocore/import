@@ -157,19 +157,19 @@ class ImportFeed extends Base
         /** @var \Atro\Repositories\Folder $folderRepo */
         $folderRepo = $this->getEntityManager()->getRepository('Folder');
 
-        $root = $folderRepo->where(['code' => 'import_feeds'])->findOne();
-        if (empty($root)) {
-            $post = new \stdClass();
-            $post->name = '.import_feeds';
-            $post->code = 'import_feeds';
-
-            $this->getServiceFactory()->create('Folder')->createEntity($post);
-
-            $root = $folderRepo->where(['code' => 'import_feeds'])->findOne();
-        }
-
         $folder = $folderRepo->where(['code' => $importFeed->get('id')])->findOne();
         if (empty($folder)) {
+            $root = $folderRepo->where(['code' => 'import_feeds'])->findOne();
+            if (empty($root)) {
+                $post = new \stdClass();
+                $post->name = '.import_feeds';
+                $post->code = 'import_feeds';
+
+                $this->getServiceFactory()->create('Folder')->createEntity($post);
+
+                $root = $folderRepo->where(['code' => 'import_feeds'])->findOne();
+            }
+
             $post = new \stdClass();
             $post->name = $importFeed->get('id');
             $post->code = $importFeed->get('id');
@@ -178,10 +178,6 @@ class ImportFeed extends Base
             $this->getServiceFactory()->create('Folder')->createEntity($post);
 
             $folder = $folderRepo->where(['code' => $importFeed->get('id')])->findOne();
-        } else {
-            $post = new \stdClass();
-            $post->parentId = $root->get('id');
-            $this->getServiceFactory()->create('Folder')->updateEntity($folder->id, $post);
         }
 
         $importFeed->set('folderId', $folder->id);
