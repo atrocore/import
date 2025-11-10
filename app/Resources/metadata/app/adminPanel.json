@@ -5,7 +5,9 @@
       {
         "url": "#ImportFeed",
         "label": "importFeed",
-        "description": "importFeed"
+        "description": "importFeed",
+        "icon": "ph ph-download-simple",
+        "docsUrl": "https://help.atrocore.com/data-exchange/import-feeds"
       }
     ]
   }
