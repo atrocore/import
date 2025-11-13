@@ -37,7 +37,10 @@
     "rootNode": "Wurzelknoten",
     "importFile": "Daten-Datei",
     "importCronJobs": "Cron-Aufträge importieren",
-    "importFeedTypeSimples": "Importieren Sie Futtermittel Typ Einfach"
+    "importFeedTypeSimples": "Importieren Sie Futtermittel Typ Einfach",
+    "executeAs": "Ausführen als",
+    "files": "Dateien",
+    "sourceFields": "Quellfelder"
   },
   "links": {
     "connection": "Verbindung",
@@ -128,6 +131,13 @@
       "mistake": "Fehler bei wiederholten Datensatzverarbeitung erzeugen",
       "repeat": "Wiederholte Datensatzverarbeitung zulassen",
       "skip": "Wiederholte Datensätze überspringen"
+    },
+    "executeAs": {
+      "system": "System",
+      "sameUser": "Gleicher Benutzer"
+    },
+    "processingType": {
+      "configurator": "Konfigurator"
     }
   },
   "tooltips": {
