@@ -16,7 +16,8 @@
     "replaceArray": "Zastąp",
     "importByForListAttribute": "Powiązane pola encji dla list",
     "urlHeaders": "Nagłówki żądań",
-    "valueExtractor": "Ekstraktor wartości"
+    "valueExtractor": "Ekstraktor wartości",
+    "entityAttribute": "Atrybut"
   },
   "labels": {
     "main": "Główne",
@@ -43,7 +44,8 @@
   },
   "groupOptions": {
     "name": {
-      "attributes": "Atrybuty"
+      "attributes": "Atrybuty",
+      "fields": "Pola"
     }
   }
 }
