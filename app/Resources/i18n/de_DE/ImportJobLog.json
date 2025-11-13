@@ -1,6 +1,6 @@
 {
   "fields": {
-    "rowNumber": "Reihennummer",
+    "rowNumber": "Zeile Nummer",
     "row": "Eingabedaten",
     "importJob": "Importauftrag",
     "type": "Typ",
