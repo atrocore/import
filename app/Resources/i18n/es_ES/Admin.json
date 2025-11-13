@@ -1,8 +1,8 @@
 {
   "labels": {
-    "importFeed": ""
+    "importFeed": "Importar feeds"
   },
   "descriptions": {
-    "importFeed": ""
+    "importFeed": "Configuración de las plantillas de importación que se utilizarán para importar datos a las entidades"
   }
 }
