@@ -15,7 +15,8 @@
     "foreignImportBy": "Feld(er) der verknüpften Entität",
     "replaceArray": "Ersetzen",
     "importByForListAttribute": "Verwandte Entitätsfelder für Listen",
-    "urlHeaders": "Kopfzeilen anfordern"
+    "urlHeaders": "Kopfzeilen anfordern",
+    "valueExtractor": "Wert-Extraktor"
   },
   "labels": {
     "main": "Hauptsprache",
@@ -23,7 +24,8 @@
     "search": "Feldzuordnung für Suche",
     "additionalInformation": "Zusatzinformationen",
     "importByForAttributeValue": "Dies gilt nur für Attribute vom Typ Liste oder Mehrwertliste",
-    "urlHeaders": "Kopfzeilen anfordern"
+    "urlHeaders": "Kopfzeilen anfordern",
+    "_addAttribute": "[Attribut hinzufügen]"
   },
   "exceptions": {
     "wrongFieldsNumber": "Für die Suche sollte die Anzahl der Quellfelder gleich der Anzahl der Relationsfelder sein.",
@@ -36,6 +38,7 @@
     "createIfNotExist": "Wenn anhand der bereitgestellten Daten nichts gefunden wird, wird ein neuer Datensatz für die verknüpfte Entität erstellt.",
     "foreignColumn": "Diese(r) Feldwert(e) werden (wird) verwendet, um zugehörige Datensätze zu Erstellen.",
     "foreignImportBy": "Wählen Sie Feld(er) der verknüpfter Entität in Ihrem System aus, das (die) fürs Einfügen basierend auf den in der Auswahlliste \"Quellfeld(er)\" bereitgestellten Daten verwendet wird (werden). Wenn nur ein Datenfeld bereitgestellt wird, kann \"Feldtrennzeichen für Relation\" angewendet werden. In anderen Fällen sollte die Anzahl der bereitgestellten Datenfelder und \"Feld(er) der verknüpften Entität\" gleich sein.",
-    "replaceArray": "Standardmäßig werden die bereitgestellten Aufzeichnungen zu den vorhandenen hinzugefügt. Setzen Sie dieses Kontrollkästchen, wenn letztere ersetzt werden sollten."
+    "replaceArray": "Standardmäßig werden die bereitgestellten Aufzeichnungen zu den vorhandenen hinzugefügt. Setzen Sie dieses Kontrollkästchen, wenn letztere ersetzt werden sollten.",
+    "valueExtractor": "Dieser reguläre Ausdruck wird verwendet, um den Wert aus dem/den Quellfeld(ern) zu extrahieren."
   }
 }
