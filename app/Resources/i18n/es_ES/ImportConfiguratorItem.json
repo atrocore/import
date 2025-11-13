@@ -1,7 +1,7 @@
 {
   "fields": {
     "entityIdentifier": "Identificador",
-    "name": "",
+    "name": "Campo",
     "column": "Campo(s) de origen",
     "defaultContainer": "Valor por defecto",
     "default": "Valor por defecto",
@@ -9,9 +9,9 @@
     "importBy": "Campo(s) de entidad relacionado(s)",
     "createIfNotExist": "Crear registro de datos relacionados",
     "locale": "Idioma",
-    "entityAttribute": "",
+    "entityAttribute": "Atributo",
     "sourceFields": "Campos fuente",
-    "type": "",
+    "type": "Type",
     "foreignColumn": "Campo(s) de origen",
     "foreignImportBy": "Campo(s) de entidad relacionado(s)",
     "replaceArray": "Sustituya",
