@@ -1,1 +1,6 @@
-{}
+{
+  "fields": {
+    "importFeed": "Importfeed",
+    "importJob": "Importauftrag"
+  }
+}
