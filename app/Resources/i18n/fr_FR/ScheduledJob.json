@@ -6,5 +6,10 @@
   },
   "links": {
     "importFeed": "Flux d'import"
+  },
+  "options": {
+    "type": {
+      "ImportFeed": "Importation de flux"
+    }
   }
 }
