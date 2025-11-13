@@ -10,5 +10,14 @@
   },
   "links": {
     "importJob": "Zadanie importu"
+  },
+  "options": {
+    "type": {
+      "create": "Utwórz",
+      "update": "Aktualizuj",
+      "delete": "Usuń",
+      "skip": "Pomiń",
+      "error": "Błąd"
+    }
   }
 }
