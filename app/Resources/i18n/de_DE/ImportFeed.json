@@ -33,7 +33,11 @@
     "skipValue": "Markierung für übersprungenen Wert",
     "fieldDelimiterForRelation": "Feldtrennzeichen für Relation",
     "scheduledJobs": "Geplante Aufträge",
-    "feedPayload": "Nutzlast"
+    "feedPayload": "Nutzlast",
+    "rootNode": "Wurzelknoten",
+    "importFile": "Daten-Datei",
+    "importCronJobs": "Cron-Aufträge importieren",
+    "importFeedTypeSimples": "Importieren Sie Futtermittel Typ Einfach"
   },
   "links": {
     "connection": "Verbindung",
@@ -72,7 +76,9 @@
     "Success": "Erfolg",
     "Running": "In Arbeit",
     "Failed": "Fehlgeschlagen",
-    "Canceled": "Abgebrochen"
+    "Canceled": "Abgebrochen",
+    "wrongTypeForCreatingFromExportFeed": "Sie ist jetzt nur noch für den Export-Feed-Typ 'Datei' verfügbar.",
+    "createImportJobs": "Importaufträge für %s erstellen"
   },
   "messages": {
     "importNow": "Möchten Sie wirklich die Daten aus der ausgewählten Quelle importieren?"
@@ -114,7 +120,8 @@
     "importFeedIsInactive": "Import Feed ist inaktiv",
     "missingSourceFieldAsIdentifiers": "Als Kennung markiertes Quellfeld '%s' fehlt.",
     "noEntityFound": "Kein Datensatz für die zugehörige Entität '%s' gefunden.",
-    "listSeparatorNotAllowed": "Die Verwendung des Trennzeichens für Listenwerte im Wert für das Feld '%s' ist nicht erlaubt."
+    "listSeparatorNotAllowed": "Die Verwendung des Trennzeichens für Listenwerte im Wert für das Feld '%s' ist nicht erlaubt.",
+    "noEntityIdentifier": "Bitte wählen Sie die Spalte Identifier für den Konfigurator."
   },
   "options": {
     "repeatProcessing": {
@@ -130,7 +137,8 @@
     "markForNoRelation": "Markiert Beziehungen, die nicht mit der jeweiligen Entität verknüpft werden sollen.",
     "nullValue": "Der Wert wird als \"NULL\"-Wert interpretiert.",
     "emptyValue": "Der Wert wird als \"leerer\" Wert zusätzlich zur leeren Zelle interpretiert.",
-    "skipValue": "Wird als zu übergehender Wert interpretiert."
+    "skipValue": "Wird als zu übergehender Wert interpretiert.",
+    "executeAs": "Geben Sie an, welchen Benutzer das System für den Import verwenden soll"
   },
   "boolFilters": {
     "onlyImportFailed24Hours": "Nur Import Feeds, die in den letzten 24 Stunden fehlgeschlagen sind",
