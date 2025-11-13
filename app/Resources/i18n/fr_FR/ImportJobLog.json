@@ -1,11 +1,12 @@
 {
   "fields": {
-    "rowNumber": "Rangée",
+    "rowNumber": "Numéro de ligne",
     "importJob": "Job d'import",
     "type": "Type",
     "entityName": "Entité",
     "entityId": "Identifiant de l'entité",
-    "message": "Message d'erreur"
+    "message": "Message d'erreur",
+    "row": "Données d'entrée"
   },
   "links": {
     "importJob": "Job d'import"
