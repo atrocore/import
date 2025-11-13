@@ -3,7 +3,7 @@
     "rowNumber": "Número de fila",
     "row": "Datos de entrada",
     "importJob": "Trabajo de importación",
-    "type": "",
+    "type": "Type",
     "entityName": "Entidad",
     "entityId": "Id de entidad",
     "message": "Mensaje de error"
@@ -13,11 +13,11 @@
   },
   "options": {
     "type": {
-      "create": "",
-      "update": "",
-      "delete": "",
-      "skip": "",
-      "error": ""
+      "create": "Crear",
+      "update": "Guardar",
+      "delete": "Borrar",
+      "skip": "Omitir",
+      "error": "Error"
     }
   }
 }
