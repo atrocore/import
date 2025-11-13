@@ -9,7 +9,7 @@
     "connection": "Connexion",
     "format": "Format",
     "sheet": "Feuille",
-    "entity": "Entité",
+    "entity": "Entité cible",
     "delimiter": "Séparateur de valeur de liste",
     "sourceFields": "Champs Source",
     "file": "Fichier",
@@ -37,7 +37,10 @@
     "processingType": "Type de traitement",
     "rootNode": "Nœud racine",
     "executeAs": "Exécuter en tant que",
-    "markForUnlinkedAttribute": "Marqueur pour l'attribut non lié"
+    "markForUnlinkedAttribute": "Marqueur pour l'attribut non lié",
+    "feedPayload": "Charge utile",
+    "folder": "Dossier",
+    "files": "Fichiers"
   },
   "links": {
     "connection": "Connexion",
@@ -130,7 +133,11 @@
       "skip": "Sauter les enregistrements de données répétés"
     },
     "executeAs": {
-      "sameUser": "Même utilisateur"
+      "sameUser": "Même utilisateur",
+      "system": "Système"
+    },
+    "processingType": {
+      "configurator": "Configurateur"
     }
   },
   "tooltips": {
