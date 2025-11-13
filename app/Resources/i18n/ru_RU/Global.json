@@ -7,12 +7,15 @@
   },
   "scopeNames": {
     "ImportJob": "Импортная работа",
-    "ImportJobLog": "Импорт журнала заданий"
+    "ImportJobLog": "Импорт журнала заданий",
+    "ImportFeed": "Импортный фид",
+    "ImportConfiguratorItem": "Конфигуратор"
   },
   "scopeNamesPlural": {
     "ImportFeed": "Импорт фидов",
     "ImportJob": "Импортные работы",
-    "ImportJobLog": "Импорт журналов заданий"
+    "ImportJobLog": "Импорт журналов заданий",
+    "ImportConfiguratorItem": "Конфигуратор"
   },
   "labels": {
     "importErrorDuring24Hours": "Ошибка импорта Feeds/Jobs в течение 24 часов",
