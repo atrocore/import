@@ -10,11 +10,13 @@
     "errorsCount": "Erreurs",
     "attachment": "Fichier importé",
     "convertedFile": "Fichier converti",
-    "importJobLogs": "Journaux d'erreurs"
+    "importJobLogs": "Journaux d'erreurs",
+    "files": "Fichiers"
   },
   "links": {
     "importFeed": "Flux d'import",
-    "importJobLogs": "Journaux d'erreurs"
+    "importJobLogs": "Journaux d'erreurs",
+    "files": "Fichiers"
   },
   "labels": {
     "Pending": "En attente",
