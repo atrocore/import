@@ -36,7 +36,11 @@
     "processingType": "Typ przetwarzania",
     "rootNode": "Węzeł główny",
     "markForUnlinkedAttribute": "Marker dla niepowiązanego atrybutu",
-    "executeAs": "Wykonać jako"
+    "executeAs": "Wykonać jako",
+    "feedPayload": "Dane wejściowe",
+    "scheduledJobs": "Zaplanowane zadania",
+    "files": "Pliki",
+    "folder": "Folder"
   },
   "links": {
     "connection": "Połączenie",
@@ -129,7 +133,11 @@
       "skip": "Pomiń powtarzające się rekordy danych"
     },
     "executeAs": {
-      "sameUser": "Ten sam użytkownik"
+      "sameUser": "Ten sam użytkownik",
+      "system": "System"
+    },
+    "processingType": {
+      "configurator": "Konfigurator"
     }
   },
   "tooltips": {
@@ -139,7 +147,8 @@
     "skipValue": "Zostanie zinterpretowana jako wartość do pominięcia.",
     "markForNoRelation": "Oznacza relację, która nie powinna być powiązana z daną jednostką.",
     "emptyValue": "Wartość zostanie zinterpretowana jako \"pusta\" wartość.",
-    "executeAs": "Proszę określić użytkownika, którego system użyje do wykonania importu."
+    "executeAs": "Proszę określić użytkownika, którego system użyje do wykonania importu.",
+    "nullValue": "Wartość zostanie zinterpretowana jako wartość \"NULL\"."
   },
   "boolFilters": {
     "onlyImportFailed24Hours": "Tylko kanały importu, które nie powiodły się w ciągu ostatnich 24 godzin",
