@@ -15,7 +15,8 @@
     "foreignImportBy": "Champ(s) d'entité(s) connexe(s)",
     "replaceArray": "Remplacer",
     "importByForListAttribute": "Champs d'entité connexes pour les listes",
-    "urlHeaders": "En-têtes de la demande"
+    "urlHeaders": "En-têtes de la demande",
+    "valueExtractor": "Extracteur de valeur"
   },
   "labels": {
     "main": "Principal",
@@ -23,7 +24,8 @@
     "search": "Cartographie des champs pour la recherche",
     "additionalInformation": "Informations complémentaires",
     "importByForAttributeValue": "Ceci n'est valable que pour les attributs de type liste ou liste multi-valeurs",
-    "urlHeaders": "En-têtes de la demande"
+    "urlHeaders": "En-têtes de la demande",
+    "_addAttribute": "[Ajouter un attribut]"
   },
   "exceptions": {
     "wrongFieldsNumber": "Pour la recherche, le nombre de champs sources doit être le même que le nombre de champs d'entités liées.",
@@ -36,6 +38,7 @@
     "createIfNotExist": "Un nouvel enregistrement de données pour l'entité concernée sera créé si rien n'est trouvé sur la base des données fournies.",
     "foreignColumn": "Cette (ces) valeur(s) de champ sera (seront) utilisée(s) pour créer des enregistrements de données connexes.",
     "foreignImportBy": "Choisissez le(s) champ(s) d'entité lié(s) dans votre système, qui doit/doivent être utilisé(s) pour l'insertion sur la base des données fournies dans le champ de sélection \"Champ(s) source(s)\". Si un seul champ de données est fourni, le \"délimiteur de champ pour la relation\" peut s'appliquer. Dans les autres cas, le nombre de champs de données fournis et le nombre de \"champs d'entité(s) liée(s)\" doivent être identiques.",
-    "replaceArray": "Par défaut, les enregistrements fournis sont ajoutés aux enregistrements existants. Cochez cette case si ces derniers doivent être remplacés."
+    "replaceArray": "Par défaut, les enregistrements fournis sont ajoutés aux enregistrements existants. Cochez cette case si ces derniers doivent être remplacés.",
+    "valueExtractor": "Cette expression régulière sera utilisée pour extraire la valeur du (des) champ(s) source(s)."
   }
 }
