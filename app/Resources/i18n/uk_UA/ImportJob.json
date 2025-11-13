@@ -12,11 +12,13 @@
     "errorsCount": "Помилка",
     "attachment": "Файл імпорту",
     "convertedFile": "Конвертований файл імпорту",
-    "importJobLogs": "Лог помилок"
+    "importJobLogs": "Лог помилок",
+    "files": "Файли"
   },
   "links": {
     "importFeed": "Імпортний фід",
-    "importJobLogs": "Лог помилок"
+    "importJobLogs": "Лог помилок",
+    "files": "Файли"
   },
   "labels": {
     "Pending": "В очікуванні",
