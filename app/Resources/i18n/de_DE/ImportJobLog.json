@@ -10,5 +10,14 @@
   },
   "links": {
     "importJob": "Importauftrag"
+  },
+  "options": {
+    "type": {
+      "create": "Erstellen",
+      "update": "Aktualisieren",
+      "delete": "löschen",
+      "skip": "Überspringen",
+      "error": "Fehler"
+    }
   }
 }
