@@ -4,9 +4,20 @@
     "row": "Vstupní data",
     "importJob": "Import práce",
     "entityId": "Id subjektu",
-    "message": "Chybová zpráva"
+    "message": "Chybová zpráva",
+    "type": "Typ",
+    "entityName": "Subjekt"
   },
   "links": {
     "importJob": "Import práce"
+  },
+  "options": {
+    "type": {
+      "create": "Vytvořit",
+      "update": "Aktualizace",
+      "delete": "Odstranit",
+      "skip": "Přeskočit",
+      "error": "Chyba"
+    }
   }
 }
