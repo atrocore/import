@@ -16,7 +16,8 @@
     "replaceArray": "Ersetzen",
     "importByForListAttribute": "Verwandte Entitätsfelder für Listen",
     "urlHeaders": "Kopfzeilen anfordern",
-    "valueExtractor": "Wert-Extraktor"
+    "valueExtractor": "Wert-Extraktor",
+    "entityAttribute": "Attribut"
   },
   "labels": {
     "main": "Hauptsprache",
@@ -40,5 +41,11 @@
     "foreignImportBy": "Wählen Sie Feld(er) der verknüpfter Entität in Ihrem System aus, das (die) fürs Einfügen basierend auf den in der Auswahlliste \"Quellfeld(er)\" bereitgestellten Daten verwendet wird (werden). Wenn nur ein Datenfeld bereitgestellt wird, kann \"Feldtrennzeichen für Relation\" angewendet werden. In anderen Fällen sollte die Anzahl der bereitgestellten Datenfelder und \"Feld(er) der verknüpften Entität\" gleich sein.",
     "replaceArray": "Standardmäßig werden die bereitgestellten Aufzeichnungen zu den vorhandenen hinzugefügt. Setzen Sie dieses Kontrollkästchen, wenn letztere ersetzt werden sollten.",
     "valueExtractor": "Dieser reguläre Ausdruck wird verwendet, um den Wert aus dem/den Quellfeld(ern) zu extrahieren."
+  },
+  "groupOptions": {
+    "name": {
+      "fields": "Felder",
+      "attributes": "Attribute"
+    }
   }
 }
