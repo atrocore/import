@@ -1,1 +1,44 @@
-{}
+{
+  "labels": {
+    "seeRelevantRecords": "Kliknutím sem zobrazíte příslušné záznamy.",
+    "Running": "Běh",
+    "Failed": "Neúspěšný",
+    "generate": "Generovat",
+    "generating": "Generování",
+    "tryAgain": "Znovu importovat",
+    "reCreate": "Znovu vytvořit",
+    "generateFileConverted": "Vytvořit soubor: Převedeno",
+    "generateFileCreated": "Generovat soubor: Created",
+    "generateFileUpdated": "Generovat soubor: Aktualizováno",
+    "generateFileDeleted": "Generovat soubor: Odstraněno",
+    "generateFileSkippedBySystem": "Generování souboru: Přeskočeno systémem",
+    "generateFileSkippedByScript": "Generovat soubor: Přeskočeno skriptem",
+    "generateFileErrors": "Generování souboru: Chyby",
+    "loadCounters": "Kliknutím na ikonu obnovení se hodnota vypočítá."
+  },
+  "tooltips": {
+    "errorsAttachment": "Řádky z \"Importovaného souboru\", které nebyly importovány."
+  },
+  "exceptions": {
+    "cacheWriteFailed": "Nelze zapsat data do mezipaměti importu."
+  },
+  "boolFilters": {
+    "onlyImportFailed24Hours": "Importovat pouze úlohy, které selhaly během posledních 24 hodin",
+    "onlyImportFailed28Days": "Importovat pouze úlohy, které selhaly během posledních 28 dnů",
+    "onlyImportFailed7Days": "Pouze import úloh, které selhaly během posledních 7 dní"
+  },
+  "fields": {
+    "importFeed": "Importní krmivo",
+    "message": "Zpráva",
+    "updatedCount": "Aktualizováno",
+    "skippedCount": "Vynechaný",
+    "errorsCount": "Chyby",
+    "attachment": "Importovaný soubor",
+    "convertedFile": "Převedený soubor",
+    "importJobLogs": "Protokoly o chybách"
+  },
+  "links": {
+    "importFeed": "Importní krmivo",
+    "importJobLogs": "Protokoly o chybách"
+  }
+}
