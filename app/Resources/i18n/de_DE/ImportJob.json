@@ -12,11 +12,13 @@
     "errorsCount": "Fehler",
     "attachment": "Importierte Datei",
     "convertedFile": "Konvertierte File",
-    "importJobLogs": "Fehlerlogs"
+    "importJobLogs": "Fehlerlogs",
+    "files": "Dateien"
   },
   "links": {
     "importFeed": "Import Feed",
-    "importJobLogs": "Fehlerlogs"
+    "importJobLogs": "Fehlerlogs",
+    "files": "Dateien"
   },
   "labels": {
     "Pending": "Steht aus",
