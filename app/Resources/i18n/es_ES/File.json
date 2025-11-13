@@ -1,6 +1,6 @@
 {
   "fields": {
-    "importFeed": "",
-    "importJob": ""
+    "importFeed": "Importación",
+    "importJob": "Trabajo de importación"
   }
 }
