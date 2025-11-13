@@ -2,7 +2,7 @@
   "fields": {
     "importFeed": "Импортный фид",
     "payload": "Параметры",
-    "uploadAndImport": ""
+    "uploadAndImport": "Загрузка и импорт"
   },
   "options": {
     "type": {
