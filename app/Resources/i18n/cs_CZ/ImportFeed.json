@@ -28,7 +28,12 @@
     "uploadAndImport": "Nahrávání a import",
     "Running": "Běh",
     "Failed": "Neúspěšný",
-    "createImportJobs": "Vytvoření importních úloh pro %s"
+    "createImportJobs": "Vytvoření importních úloh pro %s",
+    "unit": "Jednotka",
+    "simple": "Soubor",
+    "Pending": "Čekající",
+    "Success": "Úspěch",
+    "Canceled": "Zrušeno"
   },
   "fields": {
     "processingType": "Typ zpracování",
@@ -62,7 +67,16 @@
     "markForNoRelation": "Značka pro No Relation",
     "markForUnlinkedAttribute": "Značka pro nepropojený atribut",
     "skipValue": "Značka pro vynechanou hodnotu ",
-    "fieldDelimiterForRelation": "Oddělovač polí pro relaci"
+    "fieldDelimiterForRelation": "Oddělovač polí pro relaci",
+    "folder": "Složka",
+    "files": "Soubory",
+    "code": "Kód",
+    "feedPayload": "Payload (užitečná data)",
+    "connection": "Připojení",
+    "file": "Soubor",
+    "isActive": "Aktivní",
+    "fileDataAction": "Akce",
+    "scheduledJobs": "Naplánované úlohy"
   },
   "boolFilters": {
     "onlyImportFailed7Days": "Pouze importovat kanály, které selhaly během posledních 7 dní",
@@ -71,7 +85,8 @@
   },
   "links": {
     "importJobs": "Import pracovních míst",
-    "configuratorItems": "Konfigurátor"
+    "configuratorItems": "Konfigurátor",
+    "connection": "Připojení"
   },
   "messages": {
     "importNow": "Jste si jisti, že chcete importovat data z vybraného zdroje?"
