@@ -1,0 +1,12 @@
+{
+  "fields": {
+    "importFeed": "",
+    "payload": "",
+    "uploadAndImport": ""
+  },
+  "options": {
+    "type": {
+      "import": ""
+    }
+  }
+}
