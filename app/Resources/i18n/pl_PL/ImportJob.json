@@ -10,11 +10,13 @@
     "errorsCount": "Błędy",
     "attachment": "Zaimportowany Plik",
     "convertedFile": "Plik Skonwertowany",
-    "importJobLogs": "Logi Błędów"
+    "importJobLogs": "Logi Błędów",
+    "files": "Pliki"
   },
   "links": {
     "importFeed": "Importuj Źródło",
-    "importJobLogs": "Logi Błędów"
+    "importJobLogs": "Logi Błędów",
+    "files": "Pliki"
   },
   "labels": {
     "Pending": "Oczekujące",
