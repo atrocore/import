@@ -48,6 +48,20 @@ class ImportFeed extends Base
         "High"   => 150
     ];
 
+    /**
+     * Create unique file name
+     *
+     * @param string $name
+     * @return string
+     */
+    public static function generateFileName(string $name): string
+    {
+        $parts = explode('.', $name);
+        $ext = array_pop($parts);
+
+        return implode('.', $parts).'_'.date('YmdHis').'.'.$ext;
+    }
+
     public function putAttributesToMetadata(string $importFeedId): void
     {
         $importFeed = $this->getEntityManager()->getEntity('ImportFeed', $importFeedId);
@@ -956,7 +970,7 @@ class ImportFeed extends Base
         fclose($tmpFile);
 
         $input = new \stdClass();
-        $input->name = $file->get('name');
+        $input->name = self::generateFileName($file->get('name'));
         if ($folderId !== null) {
             $input->folderId = $folderId;
         }

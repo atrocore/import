@@ -27,6 +27,7 @@ use Atro\Services\AbstractService;
 use Doctrine\DBAL\ParameterType;
 use Espo\ORM\Entity;
 use Import\Entities\ImportFeed;
+use Import\Services\ImportFeed as ImportFeedService;
 use Import\FieldConverters\Link;
 use Import\ProcessingTypes\AbstractProcessingType;
 
@@ -143,7 +144,7 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
         }
 
         $inputData = new \stdClass();
-        $inputData->name = 'converted-' . str_replace(' ', '-', strtolower($importFeed->get('name'))) . '.csv';
+        $inputData->name = ImportFeedService::generateFileName('converted-' . str_replace(' ', '-', strtolower($importFeed->get('name'))) . '.csv');
         $inputData->importFeedId = $importFeed->get('id');
         $inputData->folderId = $this->getService('ImportFeed')->createImportFileFolder($importFeed)->get('id');
         $fileParser = $this->getFileParser('CSV');
@@ -877,7 +878,7 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
         $folder = $this->getService('ImportFeed')->createImportFileFolder($importFeed);
         foreach ($this->createFilesToDeleteFromStatement($importFeed, $stmt, $cacheFileName) as $fileName) {
             $input = new \stdClass();
-            $input->name = $fileName;
+            $input->name = ImportFeedService::generateFileName($fileName);
             $input->mimeType = 'text/csv';
             $input->importFeedId = $importFeed->get('id');
             $input->folderId = $folder->get('id');

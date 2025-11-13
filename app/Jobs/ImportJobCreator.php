@@ -90,7 +90,7 @@ class ImportJobCreator extends AbstractJob implements JobInterface
             $fileExt = $format === 'CSV' ? 'csv' : 'xlsx';
 
             $input = new \stdClass();
-            $input->name = date('Y-m-d H:i:s') . ' (' . $partNumber . ')' . '.' . $fileExt;
+            $input->name = ImportFeed::generateFileName(date('Y-m-d H:i:s') . ' (' . $partNumber . ')' . '.' . $fileExt);
             $input->importFeedId = $importFeed->get('id');
             if (!empty($job)) {
                 $input->importJobId = $job->get('id');
