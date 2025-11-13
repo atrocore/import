@@ -6,5 +6,10 @@
   },
   "links": {
     "importFeed": "Імпортний фід"
+  },
+  "options": {
+    "type": {
+      "ImportFeed": "Імпортний фід"
+    }
   }
 }
