@@ -14,7 +14,10 @@
     "generateFileSkippedBySystem": "Generování souboru: Přeskočeno systémem",
     "generateFileSkippedByScript": "Generovat soubor: Přeskočeno skriptem",
     "generateFileErrors": "Generování souboru: Chyby",
-    "loadCounters": "Kliknutím na ikonu obnovení se hodnota vypočítá."
+    "loadCounters": "Kliknutím na ikonu obnovení se hodnota vypočítá.",
+    "Pending": "Čekající",
+    "Success": "Úspěch",
+    "Canceled": "Zrušeno"
   },
   "tooltips": {
     "errorsAttachment": "Řádky z \"Importovaného souboru\", které nebyly importovány."
@@ -35,10 +38,17 @@
     "errorsCount": "Chyby",
     "attachment": "Importovaný soubor",
     "convertedFile": "Převedený soubor",
-    "importJobLogs": "Protokoly o chybách"
+    "importJobLogs": "Protokoly o chybách",
+    "files": "Soubory",
+    "state": "Stát",
+    "start": "Start",
+    "end": "Konec",
+    "createdCount": "Vytvořeno",
+    "deletedCount": "Odstraněno"
   },
   "links": {
     "importFeed": "Importní krmivo",
-    "importJobLogs": "Protokoly o chybách"
+    "importJobLogs": "Protokoly o chybách",
+    "files": "Soubory"
   }
 }
