@@ -1,54 +1,54 @@
 {
   "fields": {
-    "files": "",
-    "importFeed": "",
+    "files": "Archivos",
+    "importFeed": "Importación",
     "state": "",
-    "message": "",
-    "start": "",
-    "end": "",
+    "message": "Mensaje",
+    "start": "Inicie",
+    "end": "Fin",
     "createdCount": "",
-    "updatedCount": "",
+    "updatedCount": "Actualizado",
     "deletedCount": "",
-    "skippedCount": "",
-    "errorsCount": "",
-    "attachment": "",
-    "convertedFile": "",
-    "importJobLogs": ""
+    "skippedCount": "Se ha saltado",
+    "errorsCount": "Errores",
+    "attachment": "Archivo importado",
+    "convertedFile": "Archivo convertido",
+    "importJobLogs": "Registros de errores"
   },
   "links": {
-    "importFeed": "",
-    "importJobLogs": "",
-    "files": ""
+    "importFeed": "Importación",
+    "importJobLogs": "Registros de errores",
+    "files": "Archivos"
   },
   "labels": {
-    "Pending": "",
+    "Pending": "Pendiente",
     "Success": "",
-    "Running": "",
-    "Failed": "",
+    "Running": "Correr",
+    "Failed": "Fallida",
     "Canceled": "",
     "generate": "",
-    "generating": "",
-    "tryAgain": "",
-    "reCreate": "",
-    "generateFileConverted": "",
-    "generateFileCreated": "",
-    "generateFileUpdated": "",
-    "generateFileDeleted": "",
-    "generateFileSkippedBySystem": "",
-    "generateFileSkippedByScript": "",
-    "generateFileErrors": "",
-    "loadCounters": "",
-    "seeRelevantRecords": ""
+    "generating": "Generando",
+    "tryAgain": "Importar de nuevo",
+    "reCreate": "Recree",
+    "generateFileConverted": "Generar archivo: Convertido",
+    "generateFileCreated": "Generar archivo: Creado",
+    "generateFileUpdated": "Generar archivo: Actualizado",
+    "generateFileDeleted": "Generar archivo: Eliminado",
+    "generateFileSkippedBySystem": "Generar archivo: Omitido por el sistema",
+    "generateFileSkippedByScript": "Generar archivo: omitido por el script",
+    "generateFileErrors": "Generar archivo: Errores",
+    "loadCounters": "Pulse el icono de actualización para calcular el valor.",
+    "seeRelevantRecords": "Haga clic aquí para ver los registros correspondientes."
   },
   "tooltips": {
-    "errorsAttachment": ""
+    "errorsAttachment": "Filas del 'Fichero importado' que no se han importado."
   },
   "exceptions": {
-    "cacheWriteFailed": ""
+    "cacheWriteFailed": "No se pueden escribir datos en la caché de importación."
   },
   "boolFilters": {
-    "onlyImportFailed24Hours": "",
-    "onlyImportFailed7Days": "",
-    "onlyImportFailed28Days": ""
+    "onlyImportFailed24Hours": "Sólo importar trabajos que fallaron durante las últimas 24 horas",
+    "onlyImportFailed7Days": "Sólo Importar trabajos que fallaron durante los últimos 7 días",
+    "onlyImportFailed28Days": "Sólo importar trabajos que fallaron durante los últimos 28 días"
   }
 }
