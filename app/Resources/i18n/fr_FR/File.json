@@ -1,1 +1,6 @@
-{}
+{
+  "fields": {
+    "importFeed": "Importation de flux",
+    "importJob": "Job d'import"
+  }
+}
