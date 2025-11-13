@@ -27,7 +27,16 @@
     "generate": "Générer",
     "generating": "Générer",
     "tryAgain": "Importer à nouveau",
-    "reCreate": "Recréer"
+    "reCreate": "Recréer",
+    "generateFileConverted": "Générer un fichier : converti",
+    "generateFileCreated": "Générer un fichier : Créé",
+    "generateFileUpdated": "Générer un fichier : Mis à jour",
+    "generateFileDeleted": "Générer un fichier : supprimé",
+    "generateFileErrors": "Générer un fichier : erreurs",
+    "loadCounters": "Cliquez sur l'icône d'actualisation pour calculer la valeur.",
+    "seeRelevantRecords": "Cliquez ici pour consulter les dossiers pertinents.",
+    "generateFileSkippedBySystem": "Générer un fichier : ignoré par le système",
+    "generateFileSkippedByScript": "Générer un fichier : ignoré par le script"
   },
   "tooltips": {
     "errorsAttachment": "Lignes du \"Fichier importé\" qui n'ont pas été importées."
