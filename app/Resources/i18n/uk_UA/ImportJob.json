@@ -29,7 +29,14 @@
     "tryAgain": "Спробувати імпорт ще раз",
     "reCreate": "Відтворити",
     "loadCounters": "Натисніть на іконку оновлення, щоб розрахувати значення",
-    "seeRelevantRecords": "Натисніть тут, щоб переглянути відповідні записи"
+    "seeRelevantRecords": "Натисніть тут, щоб переглянути відповідні записи",
+    "generateFileConverted": "Створити файл: Перетворено",
+    "generateFileCreated": "Згенерувати файл: Створено",
+    "generateFileUpdated": "Згенерувати файл: оновлено",
+    "generateFileDeleted": "Створити файл: Видалено",
+    "generateFileErrors": "Згенерувати файл: помилки",
+    "generateFileSkippedBySystem": "Згенерувати файл: Пропущено системою",
+    "generateFileSkippedByScript": "Згенерувати файл: Пропущено скриптом"
   },
   "tooltips": {
     "errorsAttachment": "Рядки з 'Imported file', які не були проімпортовані."
