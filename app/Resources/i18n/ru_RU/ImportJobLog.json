@@ -1,0 +1,23 @@
+{
+  "fields": {
+    "rowNumber": "",
+    "row": "",
+    "importJob": "",
+    "type": "",
+    "entityName": "",
+    "entityId": "",
+    "message": ""
+  },
+  "links": {
+    "importJob": ""
+  },
+  "options": {
+    "type": {
+      "create": "",
+      "update": "",
+      "delete": "",
+      "skip": "",
+      "error": ""
+    }
+  }
+}
