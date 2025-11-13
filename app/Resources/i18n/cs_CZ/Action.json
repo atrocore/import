@@ -1,7 +1,7 @@
 {
   "fields": {
     "importFeed": "Importní krmivo",
-    "payload": "",
+    "payload": "Payload (užitečná data)",
     "uploadAndImport": "Nahrávání a import"
   },
   "options": {
