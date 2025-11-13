@@ -27,12 +27,17 @@
     "decimalMark": "Séparateur décimal",
     "importFile": "Fichier de données",
     "configuratorItems": "Configurateur",
-    "emptyValue": "Valeur vide",
-    "nullValue": "Valeur nulle",
-    "skipValue": "Valeur de saut",
-    "markForNoRelation": "Marquage d'absence de relation",
+    "emptyValue": "Marqueur de valeur vide",
+    "nullValue": "Marqueur de valeur nulle",
+    "skipValue": "Marqueur pour la valeur sautée ",
+    "markForNoRelation": "Marqueur d'absence de lien de parenté",
     "fieldDelimiterForRelation": "Délimiteur de champ pour la relation",
-    "scheduledJobs": "Jobs programmés"
+    "scheduledJobs": "Jobs programmés",
+    "type": "Type d'approvisionnement",
+    "processingType": "Type de traitement",
+    "rootNode": "Nœud racine",
+    "executeAs": "Exécuter en tant que",
+    "markForUnlinkedAttribute": "Marqueur pour l'attribut non lié"
   },
   "links": {
     "connection": "Connexion",
@@ -69,7 +74,11 @@
     "Running": "La course à pied",
     "Failed": "Échec",
     "Canceled": "Annulé",
-    "createImportJobs": "Créer des tâches d'importation pour %s"
+    "createImportJobs": "Créer des tâches d'importation pour %s",
+    "wrongTypeForCreatingFromExportFeed": "Il n'est désormais disponible que pour le type de flux d'exportation \"Fichier\".",
+    "excelFormatWarning": "Le fichier Excel est chargé en mémoire et traité dans son intégralité. L'importation de fichiers complexes dépend des ressources de votre serveur. Par conséquent, pour les fichiers volumineux, nous vous recommandons d'utiliser le format CSV, qui est traité ligne par ligne.",
+    "Data Sourcing": "Recherche de données",
+    "Data Processing": "Traitement des données"
   },
   "messages": {
     "importNow": "Êtes-vous sûr de vouloir importer des données de la source sélectionnée ?"
@@ -111,13 +120,17 @@
     "importFeedIsInactive": "Le flux d'importation est inactif",
     "missingSourceFieldAsIdentifiers": "Le champ source '%s' marqué comme identifiant est manquant.",
     "noEntityFound": "Aucun enregistrement de données n'a été trouvé pour l'entité liée \"%s\".",
-    "listSeparatorNotAllowed": "L'utilisation du séparateur de valeur de liste dans la valeur du champ \"%s\" n'est pas autorisée."
+    "listSeparatorNotAllowed": "L'utilisation du séparateur de valeur de liste dans la valeur du champ \"%s\" n'est pas autorisée.",
+    "noEntityIdentifier": "Veuillez choisir la colonne Identifiant pour le configurateur."
   },
   "options": {
     "repeatProcessing": {
       "mistake": "Générer des erreurs pour les enregistrements répétés",
       "repeat": "Permettre le traitement répété d'enregistrements de données",
       "skip": "Sauter les enregistrements de données répétés"
+    },
+    "executeAs": {
+      "sameUser": "Même utilisateur"
     }
   },
   "tooltips": {
@@ -127,7 +140,8 @@
     "markForNoRelation": "Marque la relation qui ne doit pas être liée à l'entité concernée.",
     "nullValue": "La valeur sera interprétée comme une valeur \"NULL\".",
     "emptyValue": "La valeur sera interprétée comme une valeur \"vide\".",
-    "skipValue": "Sera interprété comme une valeur à ignorer."
+    "skipValue": "Sera interprété comme une valeur à ignorer.",
+    "executeAs": "Indiquez l'utilisateur que le système utilisera pour effectuer l'importation."
   },
   "boolFilters": {
     "onlyImportFailed24Hours": "Importer uniquement les flux qui ont échoué au cours des dernières 24 heures",
