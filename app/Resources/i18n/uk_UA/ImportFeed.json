@@ -8,7 +8,7 @@
     "repeatProcessing": "Повторна обробка запису даних",
     "connection": "З'єднання",
     "format": "Формат",
-    "entity": "Сутність",
+    "entity": "Цільова сутність",
     "delimiter": "Роздільник значень списку",
     "sourceFields": "Вихідні поля",
     "file": "Файл",
@@ -37,7 +37,10 @@
     "type": "Тип джерела постачання",
     "executeAs": "Виконати як",
     "processingType": "Тип обробки",
-    "rootNode": "Кореневий вузол"
+    "rootNode": "Кореневий вузол",
+    "folder": "Папка",
+    "files": "Файли",
+    "sheet": "Лист"
   },
   "links": {
     "connection": "З'єднання",
@@ -130,7 +133,11 @@
       "skip": "Пропускати повторювані записи даних"
     },
     "executeAs": {
-      "sameUser": "Той самий користувач"
+      "sameUser": "Той самий користувач",
+      "system": "Система"
+    },
+    "processingType": {
+      "configurator": "Конфігуратор"
     }
   },
   "tooltips": {
