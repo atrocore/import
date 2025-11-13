@@ -1,1 +1,8 @@
-{}
+{
+  "labels": {
+    "importFeed": "Importní kanály"
+  },
+  "descriptions": {
+    "importFeed": "Konfigurace šablon importu, které se mají použít pro import dat do entit."
+  }
+}
