@@ -16,7 +16,8 @@
     "replaceArray": "Remplacer",
     "importByForListAttribute": "Champs d'entité connexes pour les listes",
     "urlHeaders": "En-têtes de la demande",
-    "valueExtractor": "Extracteur de valeur"
+    "valueExtractor": "Extracteur de valeur",
+    "entityAttribute": "Attribut"
   },
   "labels": {
     "main": "Principal",
@@ -40,5 +41,11 @@
     "foreignImportBy": "Choisissez le(s) champ(s) d'entité lié(s) dans votre système, qui doit/doivent être utilisé(s) pour l'insertion sur la base des données fournies dans le champ de sélection \"Champ(s) source(s)\". Si un seul champ de données est fourni, le \"délimiteur de champ pour la relation\" peut s'appliquer. Dans les autres cas, le nombre de champs de données fournis et le nombre de \"champs d'entité(s) liée(s)\" doivent être identiques.",
     "replaceArray": "Par défaut, les enregistrements fournis sont ajoutés aux enregistrements existants. Cochez cette case si ces derniers doivent être remplacés.",
     "valueExtractor": "Cette expression régulière sera utilisée pour extraire la valeur du (des) champ(s) source(s)."
+  },
+  "groupOptions": {
+    "name": {
+      "fields": "Domaines",
+      "attributes": "Attributs"
+    }
   }
 }
