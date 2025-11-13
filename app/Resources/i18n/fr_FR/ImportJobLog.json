@@ -10,5 +10,14 @@
   },
   "links": {
     "importJob": "Job d'import"
+  },
+  "options": {
+    "type": {
+      "create": "Créer",
+      "update": "Mise à jour",
+      "delete": "Supprimer",
+      "skip": "Sauter",
+      "error": "Erreur"
+    }
   }
 }
