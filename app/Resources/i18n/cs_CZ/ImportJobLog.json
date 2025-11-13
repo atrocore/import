@@ -1,1 +1,12 @@
-{}
+{
+  "fields": {
+    "rowNumber": "Číslo řádku",
+    "row": "Vstupní data",
+    "importJob": "Import práce",
+    "entityId": "Id subjektu",
+    "message": "Chybová zpráva"
+  },
+  "links": {
+    "importJob": "Import práce"
+  }
+}
