@@ -77,20 +77,26 @@ class Entity extends AbstractListener
     {
         $alias = $mapper->getQueryConverter()->getMainTableAlias();
 
-        $importJobPart = '';
+        if($this->getEntityManager()->getRepository('ImportJobLog')->hasClickHouse()) {
+            $entityIds = $this->getEntityManager()->getRepository('ImportJobLog')->getEntityIds($this->filterData['scope'], $this->filterData['action'], $this->filterData['value']);
+            $qb->andWhere("$alias.id IN (:entityIds)")
+            ->setParameter("entityIds", $entityIds, Mapper::getParameterType($entityIds));
+        }else{
+            $importJobPart = '';
 
-        if (isset($this->filterData['value'])) {
-            $importJobPart = ' AND ijl.import_job_id=:importJobId';
-            $qb->setParameter('importJobId', $this->filterData['value'], Mapper::getParameterType($this->filterData['value']));
+            if (isset($this->filterData['value'])) {
+                $importJobPart = ' AND ijl.import_job_id IN (:importJobIds)';
+                $qb->setParameter('importJobIds', $this->filterData['value'], Mapper::getParameterType($this->filterData['value']));
+            }
+
+            $qb->andWhere(
+                "$alias.id {$this->filterData['type']} (SELECT ijl.entity_id FROM import_job_log ijl WHERE ijl.deleted=:false AND ijl.type=:filterAction AND ijl.entity_name=:filterScope $importJobPart)"
+            );
+
+            $qb->setParameter('false', false, ParameterType::BOOLEAN);
+            $qb->setParameter('filterAction', $this->filterData['action']);
+            $qb->setParameter('filterScope', $this->filterData['scope']);
         }
-
-        $qb->andWhere(
-            "$alias.id {$this->filterData['type']} (SELECT ijl.entity_id FROM import_job_log ijl WHERE ijl.deleted=:false AND ijl.type=:filterAction AND ijl.entity_name=:filterScope $importJobPart)"
-        );
-
-        $qb->setParameter('false', false, ParameterType::BOOLEAN);
-        $qb->setParameter('filterAction', $this->filterData['action']);
-        $qb->setParameter('filterScope', $this->filterData['scope']);
     }
 
     public function applyFilterByEntityName(QueryBuilder $qb, IEntity $relEntity, array $params, Mapper $mapper): void

@@ -17,6 +17,13 @@ Espo.define('import:views/import-job/fields/created-count', 'import:views/fields
             this.listScope = this.model.get('entityName');
         },
 
+        data() {
+            let data = Dep.prototype.data.call(this);
+            data.removeAction = this.getConfig().get('clickhouse')?.active && this.model.get('createdCount') > 65000;
+
+            return data;
+        },
+
         getSearchFilter() {
             return {
                 textFilter: '',

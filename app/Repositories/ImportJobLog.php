@@ -14,6 +14,9 @@ declare(strict_types=1);
 namespace Import\Repositories;
 
 use Atro\Core\Templates\Repositories\Archive;
+use Atro\ORM\DB\RDB\Mapper;
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\ParameterType;
 use Espo\ORM\Entity;
 
 class ImportJobLog extends Archive
@@ -77,5 +80,36 @@ class ImportJobLog extends Archive
         }
 
         return $this->cachedImportJobs[$importJobId];
+    }
+
+    public function getEntityIds(string $entityName, string $type, ?array $importJobIds, $limit = 65000): array
+    {
+        $importJobPart = '';
+
+        if (!empty($importJobIds)) {
+            $inList = "'" . implode("','", $importJobIds) . "'";
+            $importJobPart = " AND ijl.import_job_id IN ($inList)";
+        }
+
+        $con =$this->hasClickHouse() ? $this->getClickHouseConnection() : $this->getConnection();
+
+        $result =  $con->createQueryBuilder()
+            ->select('ijl.entity_id')
+            ->from('import_job_log', 'ijl')
+            ->where('ijl.deleted=:false AND ijl.type=:type')
+            ->andWhere("ijl.entity_name=:entityName $importJobPart")
+            ->setMaxResults($limit)
+            ->setParameter('false', false, ParameterType::BOOLEAN)
+            ->setParameter('entityName', $entityName)
+            ->setParameter('type', $type)
+            ->fetchAllAssociative();
+
+        return array_column($result, 'entity_id');
+    }
+
+
+    protected function getClickHouseConnection(): Connection
+    {
+        return $this->getInjection('container')->get('clickhouseConnection');
     }
 }
