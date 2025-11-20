@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace Import\Repositories;
 
 use Atro\Core\Templates\Repositories\Archive;
-use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
 use Espo\ORM\Entity;
@@ -84,14 +83,15 @@ class ImportJobLog extends Archive
 
     public function getEntityIds(string $entityName, string $type, ?array $importJobIds, $limit = 65000): array
     {
+        $con = $this->hasClickHouse() ? $this->getClickHouseConnection() : $this->getConnection();
+
         $importJobPart = '';
 
         if (!empty($importJobIds)) {
+            //clickhouse does not support Connection::PARAM_STR_ARRAY
             $inList = "'" . implode("','", $importJobIds) . "'";
             $importJobPart = " AND ijl.import_job_id IN ($inList)";
         }
-
-        $con =$this->hasClickHouse() ? $this->getClickHouseConnection() : $this->getConnection();
 
         $result =  $con->createQueryBuilder()
             ->select('ijl.entity_id')
