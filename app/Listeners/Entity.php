@@ -16,6 +16,7 @@ namespace Import\Listeners;
 use Atro\Core\EventManager\Event;
 use Atro\Listeners\AbstractListener;
 use Atro\ORM\DB\RDB\Mapper;
+use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Espo\ORM\IEntity;
@@ -77,16 +78,18 @@ class Entity extends AbstractListener
     {
         $alias = $mapper->getQueryConverter()->getMainTableAlias();
 
-        if($this->getEntityManager()->getRepository('ImportJobLog')->hasClickHouse()) {
-            $entityIds = $this->getEntityManager()->getRepository('ImportJobLog')->getEntityIds($this->filterData['scope'], $this->filterData['action'], $this->filterData['value']);
-            $qb->andWhere("$alias.id IN (:entityIds)")
-            ->setParameter("entityIds", $entityIds, Mapper::getParameterType($entityIds));
-        }else{
+        if ($this->getEntityManager()->getRepository('ImportJobLog')->hasClickHouse()) {
+            $entityIds = $this->getEntityManager()->getRepository('ImportJobLog')
+                ->getEntityIds($this->filterData['scope'], $this->filterData['action'], $this->filterData['value']);
+            $qb
+                ->andWhere("$alias.id IN (:entityIds)")
+                ->setParameter("entityIds", $entityIds, Connection::PARAM_STR_ARRAY);
+        } else {
             $importJobPart = '';
 
             if (isset($this->filterData['value'])) {
                 $importJobPart = ' AND ijl.import_job_id IN (:importJobIds)';
-                $qb->setParameter('importJobIds', $this->filterData['value'], Mapper::getParameterType($this->filterData['value']));
+                $qb->setParameter('importJobIds', $this->filterData['value'], Connection::PARAM_STR_ARRAY);
             }
 
             $qb->andWhere(
