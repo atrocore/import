@@ -22,6 +22,7 @@ Espo.define('import:views/fields/int-with-link-to-list',
             'click [data-action="showList"]': function (e) {
                 e.preventDefault();
                 e.stopPropagation();
+
                 this.actionShowList();
             }
         }, Dep.prototype.events),
