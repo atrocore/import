@@ -1,1 +1,24 @@
-{}
+{
+  "labels": {
+    "Pending": "На рассмотрении",
+    "Running": "Выполняется",
+    "Failed": "Не выполнено",
+    "generate": "Сгенерировать",
+    "Canceled": "Отменено",
+    "Success": "Успешно"
+  },
+  "fields": {
+    "deletedCount": "Удалено",
+    "createdCount": "Создано",
+    "message": "Сообщение",
+    "importFeed": "Импортный фид",
+    "end": "Завершение",
+    "files": "Файлы",
+    "state": "Регион",
+    "start": "Старт"
+  },
+  "links": {
+    "importFeed": "Импортный фид",
+    "files": "Файлы"
+  }
+}
