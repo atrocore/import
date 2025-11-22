@@ -11,7 +11,7 @@
     "locale": "Idioma",
     "entityAttribute": "Atributo",
     "sourceFields": "Campos fuente",
-    "type": "Type",
+    "type": "Tipo",
     "foreignColumn": "Campo(s) de origen",
     "foreignImportBy": "Campo(s) de entidad relacionado(s)",
     "replaceArray": "Sustituya",
