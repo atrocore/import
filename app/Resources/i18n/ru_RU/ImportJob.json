@@ -5,7 +5,19 @@
     "Failed": "Не выполнено",
     "generate": "Сгенерировать",
     "Canceled": "Отменено",
-    "Success": "Успешно"
+    "Success": "Успешно",
+    "generateFileCreated": "Создать файл: Создан",
+    "generateFileUpdated": "Создать файл: Обновлено",
+    "generateFileDeleted": "Создать файл: удален",
+    "generating": "Генерация",
+    "reCreate": "Воссоздайте",
+    "loadCounters": "Нажмите на значок обновления, чтобы рассчитать значение.",
+    "generateFileConverted": "Создать файл: Преобразован",
+    "seeRelevantRecords": "Нажмите здесь, чтобы посмотреть соответствующие записи.",
+    "generateFileErrors": "Создать файл: Ошибки",
+    "generateFileSkippedBySystem": "Создать файл: пропущен системой",
+    "tryAgain": "Импортируйте снова",
+    "generateFileSkippedByScript": "Создать файл: пропущен сценарием"
   },
   "fields": {
     "deletedCount": "Удалено",
@@ -15,10 +27,28 @@
     "end": "Завершение",
     "files": "Файлы",
     "state": "Регион",
-    "start": "Старт"
+    "start": "Старт",
+    "importJobLogs": "Журналы ошибок",
+    "errorsCount": "Ошибки",
+    "updatedCount": "Обновленный",
+    "attachment": "Импортированный файл",
+    "convertedFile": "Преобразованный файл",
+    "skippedCount": "Пропущено"
   },
   "links": {
     "importFeed": "Импортный фид",
-    "files": "Файлы"
+    "files": "Файлы",
+    "importJobLogs": "Журналы ошибок"
+  },
+  "boolFilters": {
+    "onlyImportFailed28Days": "Импортируйте только те задания, которые не были выполнены в течение последних 28 дней",
+    "onlyImportFailed24Hours": "Импортируйте только те задания, которые не были выполнены в течение последних 24 часов",
+    "onlyImportFailed7Days": "Импортируйте только те задания, которые не были выполнены в течение последних 7 дней"
+  },
+  "exceptions": {
+    "cacheWriteFailed": "Невозможно записать данные в кэш импорта."
+  },
+  "tooltips": {
+    "errorsAttachment": "Строки из \"Импортированного файла\", которые не были импортированы."
   }
 }
