@@ -1,1 +1,15 @@
-{}
+{
+  "fields": {
+    "importFeed": "Импортный фид",
+    "maximumHoursToLookBack": "Максимум часов, чтобы оглянуться назад",
+    "maximumDaysForJobExist": "Максимальный период хранения в днях"
+  },
+  "links": {
+    "importFeed": "Импортный фид"
+  },
+  "options": {
+    "type": {
+      "ImportFeed": "Импортный фид"
+    }
+  }
+}
