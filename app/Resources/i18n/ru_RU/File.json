@@ -1,5 +1,6 @@
 {
   "fields": {
-    "importFeed": "Импортный фид"
+    "importFeed": "Импортный фид",
+    "importJob": "Импортная работа"
   }
 }
