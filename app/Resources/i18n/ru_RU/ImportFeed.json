@@ -1,1 +1,49 @@
-{}
+{
+  "fields": {
+    "files": "Файлы",
+    "folder": "Папка",
+    "fileFieldDelimiter": "Разделитель полей",
+    "format": "Формат",
+    "connection": "Соединение",
+    "decimalMark": "Десятичный разделитель",
+    "isFileHeaderRow": "Строка заголовка",
+    "isActive": "Активный",
+    "scheduledJobs": "Задания планировщика",
+    "configuratorItems": "Конфигуратор",
+    "delimiter": "Разделитель значений списка",
+    "feedPayload": "Параметры",
+    "code": "Код",
+    "fieldDelimiterForRelation": "Разделитель полей для связи",
+    "file": "Файл",
+    "fileTextQualifier": "Классификатор текста",
+    "fileDataAction": "Действие",
+    "thousandSeparator": "Тысячный разделитель"
+  },
+  "labels": {
+    "Running": "Выполняется",
+    "Pending": "На рассмотрении",
+    "currency": "Валюты",
+    "doubleQuote": "Двойные кавычки",
+    "simple": "Файл",
+    "Failed": "Не выполнено",
+    "unit": "Единица измерения",
+    "singleQuote": "Одинарная кавычка",
+    "Canceled": "Отменено",
+    "Success": "Успешно"
+  },
+  "links": {
+    "configuratorItems": "Конфигуратор",
+    "connection": "Соединение"
+  },
+  "exceptions": {
+    "delimitersMustBeDifferent": "Все параметры фида должны иметь уникальные значения."
+  },
+  "options": {
+    "executeAs": {
+      "system": "Система"
+    },
+    "processingType": {
+      "configurator": "Конфигуратор"
+    }
+  }
+}
