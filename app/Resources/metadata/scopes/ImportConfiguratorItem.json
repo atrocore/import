@@ -18,5 +18,6 @@
   "deleteWithoutConfirmation": true,
   "notificationDisabled": true,
   "hideFieldTypeFilters": true,
-  "emHidden": true
+  "emHidden": true,
+  "selectionDisabled": true
 }
