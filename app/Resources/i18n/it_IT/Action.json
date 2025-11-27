@@ -1,12 +1,12 @@
 {
   "fields": {
-    "importFeed": "",
-    "payload": "",
-    "uploadAndImport": ""
+    "importFeed": "Importazione Feed",
+    "payload": "Carico utile",
+    "uploadAndImport": "Caricare e importare"
   },
   "options": {
     "type": {
-      "import": ""
+      "import": "Importazione Feed"
     }
   }
 }
