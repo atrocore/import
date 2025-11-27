@@ -6,7 +6,7 @@
     "entityId": "Id subjektu",
     "message": "Chybová zpráva",
     "type": "Typ",
-    "entityName": "Subjekt"
+    "entityName": "Entita"
   },
   "links": {
     "importJob": "Import práce"
