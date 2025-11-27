@@ -11,7 +11,7 @@
     "locale": "Idioma",
     "entityAttribute": "Atributo",
     "sourceFields": "Campos fuente",
-    "type": "Tipo",
+    "type": "Type",
     "foreignColumn": "Campo(s) de origen",
     "foreignImportBy": "Campo(s) de entidad relacionado(s)",
     "replaceArray": "Sustituya",
@@ -26,7 +26,7 @@
     }
   },
   "labels": {
-    "main": "Principal",
+    "main": "Mayor",
     "mapping": "Asignación de campos para la inserción",
     "search": "Mapeo de campos para la búsqueda",
     "additionalInformation": "Información adicional",
