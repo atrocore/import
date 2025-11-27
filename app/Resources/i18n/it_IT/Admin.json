@@ -1,8 +1,8 @@
 {
   "labels": {
-    "importFeed": ""
+    "importFeed": "Importazione di feed"
   },
   "descriptions": {
-    "importFeed": ""
+    "importFeed": "Configurazione dei modelli di importazione da utilizzare per importare i dati nelle entità."
   }
 }
