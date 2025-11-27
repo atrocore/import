@@ -1,54 +1,54 @@
 {
   "fields": {
-    "files": "",
-    "importFeed": "",
-    "state": "",
-    "message": "",
-    "start": "",
-    "end": "",
-    "createdCount": "",
-    "updatedCount": "",
-    "deletedCount": "",
-    "skippedCount": "",
-    "errorsCount": "",
-    "attachment": "",
-    "convertedFile": "",
-    "importJobLogs": ""
+    "files": "File",
+    "importFeed": "Importazione Feed",
+    "state": "Stato",
+    "message": "Messaggio",
+    "start": "Inizio",
+    "end": "Fine",
+    "createdCount": "Creato",
+    "updatedCount": "Aggiornato",
+    "deletedCount": "Eliminato",
+    "skippedCount": "Saltato",
+    "errorsCount": "Errori",
+    "attachment": "File importato",
+    "convertedFile": "File convertito",
+    "importJobLogs": "Registri degli errori"
   },
   "links": {
-    "importFeed": "",
-    "importJobLogs": "",
-    "files": ""
+    "importFeed": "Importazione Feed",
+    "importJobLogs": "Registri degli errori",
+    "files": "File"
   },
   "labels": {
-    "Pending": "",
-    "Success": "",
-    "Running": "",
-    "Failed": "",
-    "Canceled": "",
-    "generate": "",
-    "generating": "",
-    "tryAgain": "",
-    "reCreate": "",
-    "generateFileConverted": "",
-    "generateFileCreated": "",
-    "generateFileUpdated": "",
-    "generateFileDeleted": "",
-    "generateFileSkippedBySystem": "",
-    "generateFileSkippedByScript": "",
-    "generateFileErrors": "",
-    "loadCounters": "",
-    "seeRelevantRecords": ""
+    "Pending": "In attesa",
+    "Success": "Il successo",
+    "Running": "In esecuzione",
+    "Failed": "Fallito",
+    "Canceled": "Annullato",
+    "generate": "Generare",
+    "generating": "Generazione",
+    "tryAgain": "Importare di nuovo",
+    "reCreate": "Ricreare",
+    "generateFileConverted": "Genera file: convertito",
+    "generateFileCreated": "Genera file: creato",
+    "generateFileUpdated": "Genera file: aggiornato",
+    "generateFileDeleted": "Genera file: cancellato",
+    "generateFileSkippedBySystem": "Generare il file: saltato dal sistema",
+    "generateFileSkippedByScript": "Genera file: saltato dallo script",
+    "generateFileErrors": "Genera file: errori",
+    "loadCounters": "Clicchi sull'icona di aggiornamento per calcolare il valore.",
+    "seeRelevantRecords": "Clicchi qui per vedere i documenti pertinenti."
   },
   "tooltips": {
-    "errorsAttachment": ""
+    "errorsAttachment": "Righe da 'File importato' che non sono state importate."
   },
   "exceptions": {
-    "cacheWriteFailed": ""
+    "cacheWriteFailed": "Impossibile scrivere i dati nella cache di importazione."
   },
   "boolFilters": {
-    "onlyImportFailed24Hours": "",
-    "onlyImportFailed7Days": "",
-    "onlyImportFailed28Days": ""
+    "onlyImportFailed24Hours": "Importa solo i lavori falliti nelle ultime 24 ore",
+    "onlyImportFailed7Days": "Importa solo i lavori falliti negli ultimi 7 giorni",
+    "onlyImportFailed28Days": "Importa solo i lavori falliti negli ultimi 28 giorni"
   }
 }
