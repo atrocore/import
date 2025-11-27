@@ -1,15 +1,15 @@
 {
   "fields": {
-    "importFeed": "",
-    "maximumHoursToLookBack": "",
-    "maximumDaysForJobExist": ""
+    "importFeed": "Importazione Feed",
+    "maximumHoursToLookBack": "Ore massime per guardare indietro",
+    "maximumDaysForJobExist": "Periodo massimo di conservazione in giorni"
   },
   "links": {
-    "importFeed": ""
+    "importFeed": "Importazione Feed"
   },
   "options": {
     "type": {
-      "ImportFeed": ""
+      "ImportFeed": "Importazione Feed"
     }
   }
 }
