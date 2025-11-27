@@ -1,1 +1,28 @@
-{}
+{
+  "fields": {
+    "filterCreateImportJob": "Creato da Import Job",
+    "filterUpdateImportJob": "Aggiornato da Importazione lavoro",
+    "createdByImport": "Creato dall'importazione",
+    "updatedByImport": "Aggiornato dall'importazione"
+  },
+  "scopeNames": {
+    "ImportFeed": "Importazione Feed",
+    "ImportConfiguratorItem": "Configuratore",
+    "ImportJob": "Importazione di lavoro",
+    "ImportJobLog": "Importazione del registro lavori"
+  },
+  "scopeNamesPlural": {
+    "ImportConfiguratorItem": "Configuratore",
+    "ImportFeed": "Importazione di feed",
+    "ImportJob": "Importazione di lavori",
+    "ImportJobLog": "Importazione dei registri dei lavori"
+  },
+  "labels": {
+    "importErrorDuring24Hours": "Errore nell'importazione dei feed/lavori durante le 24 ore",
+    "importErrorDuring7Days": "Importazione di feed/lavori Errore durante 7 giorni",
+    "importErrorDuring28Days": "Importazione di feed/lavori Errore durante 28 giorni"
+  },
+  "dashlets": {
+    "DataSyncErrorsImport": "Errori di sincronizzazione dei dati per l'importazione"
+  }
+}
