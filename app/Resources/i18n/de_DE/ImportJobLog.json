@@ -14,7 +14,7 @@
   "options": {
     "type": {
       "create": "Erstellen",
-      "update": "Aktualisieren",
+      "update": "Aktualisierung",
       "delete": "Löschen",
       "skip": "Überspringen",
       "error": "Fehler"
