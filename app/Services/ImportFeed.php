@@ -576,6 +576,15 @@ class ImportFeed extends Base
             }
             $data['data']['importJobId'] = $this->createImportJob($importFeed, $importFeed->getFeedField('entity'),
                 $attachmentId, $payload)->get('id');
+
+            $this->getEntityManager()->getConnection()->createQueryBuilder()
+                ->update('file')
+                ->set('import_job_id', ':importJobId')
+                ->where('id = :id')
+                ->setParameter('importJobId', $data['data']['importJobId'])
+                ->setParameter('id', $attachmentId)
+                ->executeQuery();
+
             $this->push($this->getName($importFeed), 'ImportType' . ucfirst($importFeed->get('type')), $data);
         }
     }
