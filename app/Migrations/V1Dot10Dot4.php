@@ -63,7 +63,7 @@ class V1Dot10Dot4 extends Base
                         ->set('import_feed_id', ':importFeedId')
                         ->where('id=:fileId')
                         ->setParameter('importJobId', $row['id'])
-                        ->setParameter('importFeedId', $row['id'])
+                        ->setParameter('importFeedId', $row['import_feed_id'])
                         ->setParameter('fileId', $row[$column])
                         ->executeQuery();
                 }
