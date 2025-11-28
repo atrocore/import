@@ -580,8 +580,10 @@ class ImportFeed extends Base
             $this->getEntityManager()->getConnection()->createQueryBuilder()
                 ->update('file')
                 ->set('import_job_id', ':importJobId')
+                ->set('import_feed_id', ':importFeedId')
                 ->where('id = :id')
                 ->setParameter('importJobId', $data['data']['importJobId'])
+                ->setParameter('importFeedId', $importFeed->id)
                 ->setParameter('id', $attachmentId)
                 ->executeQuery();
 
