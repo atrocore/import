@@ -189,5 +189,9 @@ Espo.define('import:views/import-configurator-item/fields/default-container', 'v
                 }
             });
         },
+
+        listInlineEditModeEnabled() {
+            return false;
+        }
     })
 );

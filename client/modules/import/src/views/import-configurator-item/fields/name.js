@@ -201,5 +201,9 @@ Espo.define('import:views/import-configurator-item/fields/name', 'views/fields/e
             return extraInfo;
         },
 
+        listInlineEditModeEnabled() {
+            return false;
+        }
+
     })
 );
