@@ -44,6 +44,10 @@ Espo.define('import:views/import-configurator-item/fields/default-container', 'v
             }
         },
 
+        getRecordView() {
+            return this.getParentView()?.getParentView();
+        },
+
         clearDefaultField() {
             this.model.set('default', null);
 
@@ -189,5 +193,9 @@ Espo.define('import:views/import-configurator-item/fields/default-container', 'v
                 }
             });
         },
+
+        listInlineEditModeEnabled() {
+            return false;
+        }
     })
 );

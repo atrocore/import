@@ -25,7 +25,8 @@
         "sortField": "sortOrder"
       },
       "rowActionsView": "views/record/row-actions/edit-and-remove",
-      "view": "import:views/import-feed/record/panels/configurator-items"
+      "view": "import:views/import-feed/record/panels/configurator-items",
+      "listInlineEditModeEnabled": true
     },
     "importJobs": {
       "create": false,

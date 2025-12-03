@@ -55,8 +55,6 @@ Espo.define('import:views/import-configurator-item/fields/column', 'views/fields
         },
 
         afterRender() {
-            Dep.prototype.afterRender.call(this);
-
             if (this.mode === 'list') {
                 let originalValue = this.model.get(this.name) || [];
 
@@ -76,6 +74,9 @@ Espo.define('import:views/import-configurator-item/fields/column', 'views/fields
 
                 this.$el.html('<span ' + style + ' title="' + originalValue.join(', ') + '">' + items.join(', ') + '</span>');
             }
+
+            Dep.prototype.afterRender.call(this);
+
         }
     })
 );
