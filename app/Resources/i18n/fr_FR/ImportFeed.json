@@ -38,7 +38,7 @@
     "rootNode": "Nœud racine",
     "executeAs": "Exécuter en tant que",
     "markForUnlinkedAttribute": "Marqueur pour l'attribut non lié",
-    "feedPayload": "Charge utile",
+    "feedPayload": "Payload",
     "folder": "Dossier",
     "files": "Fichiers"
   },
