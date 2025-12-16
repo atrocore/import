@@ -1,11 +1,10 @@
 {
   "fields": {
-    "files": "Files",
     "importFeed": "Import Feed",
     "state": "State",
     "message": "Message",
-    "start": "Start",
-    "end": "End",
+    "start": "Started At",
+    "end": "Finished At",
     "createdCount": "Created",
     "updatedCount": "Updated",
     "deletedCount": "Deleted",

@@ -3,8 +3,6 @@
     "importFeed": "Importation de flux",
     "state": "État",
     "message": "Message",
-    "start": "Démarrer",
-    "end": "Fin",
     "createdCount": "Créé",
     "updatedCount": "Mise à jour",
     "deletedCount": "Supprimé",

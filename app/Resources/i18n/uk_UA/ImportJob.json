@@ -2,9 +2,9 @@
   "fields": {
     "importFeed": "Імпортний фід",
     "state": "Статус",
-    "start": "Початок",
     "message": "Повідомлення",
-    "end": "Закінчення",
+    "start": "Розпочато об",
+    "end": "Завершено об",
     "createdCount": "Створено",
     "updatedCount": "Оновлено",
     "deletedCount": "Видалено",
