@@ -68,7 +68,16 @@ class Link extends Varchar
                     $this
                         ->getService('ImportConfiguratorItem')
                         ->getFieldConverter($fieldData['type'])
-                        ->convert($input, ['name' => $field, 'column' => [0], 'default' => null, 'valueExtractor' => $config['valueExtractor'] ?? null], [$values[$k]]);
+                        ->convert($input,
+                            [
+                                'name'              => $field,
+                                'column'            => [0],
+                                'default'           => null,
+                                'decimalMark'       => $config['decimalMark'] ?? null,
+                                'thousandSeparator' => $config['thousandSeparator'] ?? null,
+                                'valueExtractor'    => $config['valueExtractor'] ?? null
+                            ],
+                            [$values[$k]]);
 
                     if (empty($fieldData['notStorable']) && isset($values[$k]) && $values[$k] !== '' && $values[$k] !== (string)$config['emptyValue']) {
                         $where[$field] = $values[$k];
@@ -293,8 +302,8 @@ class Link extends Varchar
     {
         $res = [];
         foreach ($configuration['importBy'] as $k => $field) {
-            $column = count($configuration['column']) === 1 ?  $configuration['column'][0] : $configuration['column'][$k];
-            $columnName = empty($configuration['mainConfig']['column']) ? $column: $configuration['mainConfig']['column'][$k];
+            $column = count($configuration['column']) === 1 ? $configuration['column'][0] : $configuration['column'][$k];
+            $columnName = empty($configuration['mainConfig']['column']) ? $column : $configuration['mainConfig']['column'][$k];
             foreach ($rows as $row) {
                 if ($row[$columnName] === $configuration['nullValue']) {
                     $res[$field][] = null;
