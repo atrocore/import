@@ -11,7 +11,9 @@
     "attachment": "Zaimportowany Plik",
     "convertedFile": "Plik Skonwertowany",
     "importJobLogs": "Logi Błędów",
-    "files": "Pliki"
+    "files": "Pliki",
+    "start": "Rozpoczęto od",
+    "end": "Zakończono w"
   },
   "links": {
     "importFeed": "Importuj Źródło",
