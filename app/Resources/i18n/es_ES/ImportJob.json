@@ -1,11 +1,11 @@
 {
   "fields": {
     "files": "Archivos",
-    "importFeed": "Importación",
+    "importFeed": "Importar alimentación",
     "state": "Estado",
     "message": "Mensaje",
-    "start": "Inicie",
-    "end": "Fin",
+    "start": "Comenzó en",
+    "end": "Terminado en",
     "createdCount": "Creado",
     "updatedCount": "Actualizado",
     "deletedCount": "Eliminado",
@@ -16,7 +16,7 @@
     "importJobLogs": "Registros de errores"
   },
   "links": {
-    "importFeed": "Importación",
+    "importFeed": "Importar alimentación",
     "importJobLogs": "Registros de errores",
     "files": "Archivos"
   },
