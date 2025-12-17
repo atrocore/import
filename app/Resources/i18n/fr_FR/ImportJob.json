@@ -12,7 +12,8 @@
     "convertedFile": "Fichier converti",
     "importJobLogs": "Journaux d'erreurs",
     "files": "Fichiers",
-    "end": "Terminé à"
+    "end": "Terminé à",
+    "start": "Commencé à"
   },
   "links": {
     "importFeed": "Flux d'import",
