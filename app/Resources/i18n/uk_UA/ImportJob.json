@@ -35,7 +35,7 @@
     "generateFileConverted": "Створити файл: Перетворено",
     "generateFileCreated": "Згенерувати файл: Створено",
     "generateFileUpdated": "Згенерувати файл: оновлено",
-    "generateFileDeleted": "Створити файл: Видалено",
+    "generateFileDeleted": "Згенерувати файл: Видалено",
     "generateFileErrors": "Згенерувати файл: помилки",
     "generateFileSkippedBySystem": "Згенерувати файл: Пропущено системою",
     "generateFileSkippedByScript": "Згенерувати файл: Пропущено скриптом"
