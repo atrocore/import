@@ -6,7 +6,7 @@
     "updatedByImport": "Actualizado por importación"
   },
   "scopeNames": {
-    "ImportFeed": "Importación",
+    "ImportFeed": "Importar alimentación",
     "ImportConfiguratorItem": "Configurador",
     "ImportJob": "Trabajo de importación",
     "ImportJobLog": "Importar registro de trabajos"
