@@ -13,8 +13,6 @@ Espo.define('import:views/fields/filter-import-job', 'views/fields/link',
 
         foreignScope: 'ImportJob',
 
-        searchTypeList: ['isOneOf', 'isNotOneOf'],
-
         searchScope: null,
 
         setup() {
@@ -39,7 +37,11 @@ Espo.define('import:views/fields/filter-import-job', 'views/fields/link',
 
         getFilterName(type = null) {
             return this.filterName ?? this.name;
-        }
+        },
+
+        getQueryBuilderOperators() {
+            return ['in', 'not_in'];
+        },
 
     })
 );
