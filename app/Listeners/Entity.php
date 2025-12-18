@@ -82,7 +82,7 @@ class Entity extends AbstractListener
             $entityIds = $this->getEntityManager()->getRepository('ImportJobLog')
                 ->getEntityIds($this->filterData['scope'], $this->filterData['action'], $this->filterData['value']);
             $qb
-                ->andWhere("$alias.id IN (:entityIds)")
+                ->andWhere("$alias.id {$this->filterData['type']} (:entityIds)")
                 ->setParameter("entityIds", $entityIds, Connection::PARAM_STR_ARRAY);
         } else {
             $importJobPart = '';
