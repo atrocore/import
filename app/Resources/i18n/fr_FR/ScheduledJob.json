@@ -1,6 +1,6 @@
 {
   "fields": {
-    "importFeed": "Importation de flux",
+    "importFeed": "Flux d'import",
     "maximumHoursToLookBack": "Un maximum d'heures pour regarder en arrière",
     "maximumDaysForJobExist": "Durée maximale de conservation en jours"
   },
@@ -9,7 +9,7 @@
   },
   "options": {
     "type": {
-      "ImportFeed": "Importation de flux"
+      "ImportFeed": "Flux d'import"
     }
   }
 }
