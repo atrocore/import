@@ -1,6 +1,6 @@
 {
   "labels": {
-    "importFeed": "Importer des flux"
+    "importFeed": "Flux d'import"
   },
   "descriptions": {
     "importFeed": "Configuration des modèles d'importation à utiliser pour importer des données dans les entités"
