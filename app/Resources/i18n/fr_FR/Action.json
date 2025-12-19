@@ -2,7 +2,7 @@
   "fields": {
     "importFeed": "Flux d'import",
     "payload": "Charge utile",
-    "uploadAndImport": "Télécharger & Importer"
+    "uploadAndImport": "Charger et importer"
   },
   "options": {
     "type": {
