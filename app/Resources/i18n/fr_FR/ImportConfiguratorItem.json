@@ -5,7 +5,7 @@
     "column": "Champ(s) source(s)",
     "defaultContainer": "Valeur par défaut",
     "default": "Valeur par défaut",
-    "importFeed": "Importation de flux",
+    "importFeed": "Flux d'import",
     "importBy": "Champ(s) d'entité(s) connexe(s)",
     "createIfNotExist": "Créer un enregistrement de données connexes",
     "locale": "Langue",
@@ -44,7 +44,7 @@
   },
   "groupOptions": {
     "name": {
-      "fields": "Domaines",
+      "fields": "Champs",
       "attributes": "Attributs"
     }
   }
