@@ -19,7 +19,7 @@
     "fileFieldDelimiter": "Délimiteur de champ",
     "fileTextQualifier": "Qualificatif de texte",
     "isFileHeaderRow": "Ligne d'en-tête",
-    "importJobs": "Job d'import",
+    "importJobs": "Tâches d'import",
     "importCronJobs": "Importer des job Cron",
     "importFeedTypeSimples": "Importation Type de flux Simple",
     "fileDataAction": "Action",
@@ -29,22 +29,22 @@
     "configuratorItems": "Configurateur",
     "emptyValue": "Marqueur de valeur vide",
     "nullValue": "Marqueur de valeur nulle",
-    "skipValue": "Marqueur pour la valeur sautée ",
-    "markForNoRelation": "Marqueur d'absence de lien de parenté",
+    "skipValue": "Marqueur pour valeur à ignorer ",
+    "markForNoRelation": "Marqueur pour \"pas de relation\"",
     "fieldDelimiterForRelation": "Délimiteur de champ pour la relation",
     "scheduledJobs": "Jobs programmés",
-    "type": "Type d'approvisionnement",
+    "type": "Type de source",
     "processingType": "Type de traitement",
     "rootNode": "Nœud racine",
     "executeAs": "Exécuter en tant que",
-    "markForUnlinkedAttribute": "Marqueur pour l'attribut non lié",
-    "feedPayload": "Payload",
+    "markForUnlinkedAttribute": "Marqueur pour \"attribut non lié\"",
+    "feedPayload": "Charge utile",
     "folder": "Dossier",
     "files": "Fichiers"
   },
   "links": {
     "connection": "Connexion",
-    "importJobs": "Job d'import",
+    "importJobs": "Tâches d'import",
     "configuratorItems": "Configurateur"
   },
   "labels": {
@@ -80,7 +80,7 @@
     "createImportJobs": "Créer des tâches d'importation pour %s",
     "wrongTypeForCreatingFromExportFeed": "Il n'est désormais disponible que pour le type de flux d'exportation \"Fichier\".",
     "excelFormatWarning": "Le fichier Excel est chargé en mémoire et traité dans son intégralité. L'importation de fichiers complexes dépend des ressources de votre serveur. Par conséquent, pour les fichiers volumineux, nous vous recommandons d'utiliser le format CSV, qui est traité ligne par ligne.",
-    "Data Sourcing": "Recherche de données",
+    "Data Sourcing": "Informations sur la source",
     "Data Processing": "Traitement des données"
   },
   "messages": {
@@ -101,8 +101,8 @@
     "moreThanOneFound": "Plus d'un enregistrement de données avec l'identifiant '%s' a été trouvé.",
     "wrongImportByValuesCount": "Le montant des valeurs reçues pour l'entité apparentée \"%s\" ne doit pas être inférieur au montant des champs de l'entité apparentée.",
     "nullNoneSame": "La valeur nulle et l'absence de valeur ne peuvent pas être identiques.",
-    "skipNoneSameEmpty": "La valeur vide et la valeur de saut ne peuvent pas être identiques.",
-    "skipNoneSameNull": "La valeur nulle et la valeur de saut ne peuvent pas être identiques.",
+    "skipNoneSameEmpty": "La valeur vide et la valeur à ignorer ne peuvent pas être identiques.",
+    "skipNoneSameNull": "La valeur nulle et la valeur à ignorer ne peuvent pas être identiques.",
     "unexpectedFieldType": "La valeur \"%s\" n'est pas un \"%s\" valide.",
     "incorrectCurrencyValue": "Le format de la valeur monétaire n'est pas valide. Une valeur comme \"12 EUR\" est attendue.",
     "incorrectCurrency": "La devise \"%s\" pour le champ \"%s\" est incorrecte.",
@@ -120,7 +120,7 @@
     "csvExpected": "Le fichier téléchargé n'est pas valide. Un fichier CSV est attendu.",
     "excelExpected": "Le fichier téléchargé n'est pas valide. Un fichier Excel est attendu.",
     "noSuchFile": "Aucun fichier de ce type",
-    "importFeedIsInactive": "Le flux d'importation est inactif",
+    "importFeedIsInactive": "Le flux d'import est inactif",
     "missingSourceFieldAsIdentifiers": "Le champ source '%s' marqué comme identifiant est manquant.",
     "noEntityFound": "Aucun enregistrement de données n'a été trouvé pour l'entité liée \"%s\".",
     "listSeparatorNotAllowed": "L'utilisation du séparateur de valeur de liste dans la valeur du champ \"%s\" n'est pas autorisée.",
@@ -148,11 +148,11 @@
     "nullValue": "La valeur sera interprétée comme une valeur \"NULL\".",
     "emptyValue": "La valeur sera interprétée comme une valeur \"vide\".",
     "skipValue": "Sera interprété comme une valeur à ignorer.",
-    "executeAs": "Indiquez l'utilisateur que le système utilisera pour effectuer l'importation."
+    "executeAs": "Indiquez l'utilisateur que le système utilisera pour effectuer l'importation"
   },
   "boolFilters": {
-    "onlyImportFailed24Hours": "Importer uniquement les flux qui ont échoué au cours des dernières 24 heures",
-    "onlyImportFailed7Days": "Importer uniquement les flux qui ont échoué au cours des 7 derniers jours",
-    "onlyImportFailed28Days": "Importer uniquement les flux qui ont échoué au cours des 28 derniers jours"
+    "onlyImportFailed24Hours": "Uniquement les échecs au cours des dernières 24 heures",
+    "onlyImportFailed7Days": "Uniquement les échecs au cours des 7 derniers jours",
+    "onlyImportFailed28Days": "Uniquement les échecs au cours des 28 derniers jours"
   }
 }
