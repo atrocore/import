@@ -9,7 +9,7 @@
     "importBy": "Champ(s) d'entité(s) connexe(s)",
     "createIfNotExist": "Créer un enregistrement de données connexes",
     "locale": "Langue",
-    "sourceFields": "Champs Source",
+    "sourceFields": "Champs de la source",
     "type": "Type",
     "foreignColumn": "Champ(s) source(s)",
     "foreignImportBy": "Champ(s) d'entité(s) connexe(s)",
