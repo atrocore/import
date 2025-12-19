@@ -11,7 +11,7 @@
     "sheet": "Feuille",
     "entity": "Entité cible",
     "delimiter": "Séparateur de valeur de liste",
-    "sourceFields": "Champs Source",
+    "sourceFields": "Champs de la source",
     "file": "Fichier",
     "isActive": "Actif",
     "lastStatus": "Dernier statut",
