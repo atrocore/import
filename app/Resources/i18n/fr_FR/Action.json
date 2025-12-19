@@ -1,6 +1,6 @@
 {
   "fields": {
-    "importFeed": "Importation de flux",
+    "importFeed": "Flux d'import",
     "payload": "Charge utile",
     "uploadAndImport": "Télécharger & Importer"
   },
