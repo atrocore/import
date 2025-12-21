@@ -74,7 +74,7 @@
     "uploadAndImport": "Charger et importer",
     "Pending": "En attente",
     "Success": "Succès",
-    "Running": "La course à pied",
+    "Running": "En cours",
     "Failed": "Échec",
     "Canceled": "Annulé",
     "createImportJobs": "Créer des tâches d'importation pour %s",
