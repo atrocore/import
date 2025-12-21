@@ -6,9 +6,9 @@
     "createdByImport": "Créé par import"
   },
   "labels": {
-    "importErrorDuring24Hours": "Erreur de flux/tâches d'import pendant 24 heures",
-    "importErrorDuring7Days": "Erreur de flux/tâches d'import pendant 7 jours",
-    "importErrorDuring28Days": "Erreur de flux/tâches d'import pendant 28 jours"
+    "importErrorDuring24Hours": "Erreur de flux/tâches d'imports pendant 24 heures",
+    "importErrorDuring7Days": "Erreur de flux/tâches d'imports pendant 7 jours",
+    "importErrorDuring28Days": "Erreur de flux/tâches d'imports pendant 28 jours"
   },
   "scopeNames": {
     "ImportFeed": "Flux d'import",
@@ -18,7 +18,7 @@
   },
   "scopeNamesPlural": {
     "ImportConfiguratorItem": "Configurateur",
-    "ImportFeed": "Flux d'import",
+    "ImportFeed": "Flux d'imports",
     "ImportJob": "Tâches d'import",
     "ImportJobLog": "Journaux de tâche d'import"
   },
