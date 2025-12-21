@@ -23,7 +23,7 @@
   "labels": {
     "Pending": "En attente",
     "Success": "Succès",
-    "Running": "La course à pied",
+    "Running": "En cours",
     "Failed": "Échec",
     "Canceled": "Annulé",
     "generate": "Générer",
