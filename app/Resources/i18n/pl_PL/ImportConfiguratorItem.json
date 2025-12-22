@@ -14,18 +14,19 @@
     "foreignColumn": "Pole źródłowe",
     "foreignImportBy": "Powiązane pola encji",
     "replaceArray": "Zastąp",
-    "importByForListAttribute": "Powiązane pola encji dla list"
-  },
-  "links": {
-    "importFeed": "Importuj źródło",
-    "channel": "Kanał"
+    "importByForListAttribute": "Powiązane pola encji dla list",
+    "urlHeaders": "Nagłówki żądań",
+    "valueExtractor": "Ekstraktor wartości",
+    "entityAttribute": "Atrybut"
   },
   "labels": {
     "main": "Główne",
     "mapping": "Mapowanie pola do wstawienia",
     "search": "Mapowanie pola do wyszukiwania",
     "additionalInformation": "Dodatkowe informacje",
-    "importByForAttributeValue": "Dotyczy tylko atrybutu typu Lista lub Lista wielowartościowa"
+    "importByForAttributeValue": "Dotyczy tylko atrybutu typu Lista lub Lista wielowartościowa",
+    "urlHeaders": "Nagłówki żądań",
+    "_addAttribute": "[Dodaj atrybut]"
   },
   "exceptions": {
     "wrongFieldsNumber": "Dla wyszukiwania liczba pól źródłowych powinna być taka sama jak liczba pól powiązanej encji.",
@@ -38,6 +39,13 @@
     "createIfNotExist": "Nowy rekord danych dla powiązanej encji zostanie utworzony, jeśli na podstawie dostarczonych danych nic nie zostanie znalezione.",
     "foreignColumn": "Ta(te) wartość(i) pola będą używane do utworzenia rekordu danych powiązanych.",
     "foreignImportBy": "Wybierz pola powiązanej encji w swoim systemie, które powinny być użyte do wstawiania na podstawie danych dostarczonych w polu wyboru \"Pola źródłowe\". Jeśli dostarczono tylko jedno pole danych, może być stosowany \"Separator pól dla relacji\". W innych przypadkach liczba dostarczonych pól danych i \"Pól powiązanej encji\" powinna być taka sama.",
-    "replaceArray": "Domyślnie dostarczone rekordy są dodawane do istniejących. Zaznacz to pole wyboru, jeśli te ostatnie powinny zostać zastąpione."
+    "replaceArray": "Domyślnie dostarczone rekordy są dodawane do istniejących. Zaznacz to pole wyboru, jeśli te ostatnie powinny zostać zastąpione.",
+    "valueExtractor": "To wyrażenie regularne zostanie użyte do wyodrębnienia wartości z pól źródłowych."
+  },
+  "groupOptions": {
+    "name": {
+      "attributes": "Atrybuty",
+      "fields": "Pola"
+    }
   }
 }

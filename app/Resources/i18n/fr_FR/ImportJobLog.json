@@ -1,13 +1,23 @@
 {
   "fields": {
-    "rowNumber": "Rangée",
-    "importJob": "Job d'import",
+    "rowNumber": "Numéro de ligne",
+    "importJob": "Tâche d'importation",
     "type": "Type",
     "entityName": "Entité",
     "entityId": "Identifiant de l'entité",
-    "message": "Message d'erreur"
+    "message": "Message d'erreur",
+    "row": "Données d'entrée"
   },
   "links": {
     "importJob": "Job d'import"
+  },
+  "options": {
+    "type": {
+      "create": "Créer",
+      "update": "Mise à jour",
+      "delete": "Supprimer",
+      "skip": "Ignorer",
+      "error": "Erreur"
+    }
   }
 }

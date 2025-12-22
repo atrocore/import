@@ -1,0 +1,51 @@
+{
+  "fields": {
+    "entityIdentifier": "Identificador",
+    "name": "Campo",
+    "column": "Campo(s) de origen",
+    "defaultContainer": "Valor por defecto",
+    "default": "Valor por defecto",
+    "importFeed": "Importación",
+    "importBy": "Campo(s) de entidad relacionado(s)",
+    "createIfNotExist": "Crear registro de datos relacionados",
+    "locale": "Idioma",
+    "entityAttribute": "Atributo",
+    "sourceFields": "Campos fuente",
+    "type": "Type",
+    "foreignColumn": "Campo(s) de origen",
+    "foreignImportBy": "Campo(s) de entidad relacionado(s)",
+    "replaceArray": "Sustituya",
+    "importByForListAttribute": "Campos de entidad relacionados para las listas",
+    "urlHeaders": "Encabezados de solicitud",
+    "valueExtractor": "Extractor de valores"
+  },
+  "groupOptions": {
+    "name": {
+      "fields": "Campos",
+      "attributes": "Atributos"
+    }
+  },
+  "labels": {
+    "main": "Mayor",
+    "mapping": "Asignación de campos para la inserción",
+    "search": "Mapeo de campos para la búsqueda",
+    "additionalInformation": "Información adicional",
+    "importByForAttributeValue": "Esto es sólo para Atributo de tipo Lista o Lista multivalor",
+    "urlHeaders": "Encabezados de solicitud",
+    "_addAttribute": "[Añadir atributo]"
+  },
+  "exceptions": {
+    "wrongFieldsNumber": "Para la búsqueda, la cantidad de campos fuente debe ser la misma que la cantidad de campos de entidad relacionados.",
+    "wrongForeignFieldsNumber": "Para la inserción, la cantidad de campos fuente debe ser la misma que la cantidad de campos de entidad relacionados.",
+    "foreignColumnsAndFieldsEmpty": "Los campos Fuente y Entidad relacionada no pueden estar vacíos."
+  },
+  "tooltips": {
+    "column": "Este(estos) valor(es) de campo se utilizará(n) para buscar si ya existe un registro de datos relacionado.",
+    "importBy": "Elija el/los campo(s) de entidad relacionado(s) en su sistema, que debe(n) ser utilizado(s) para buscar en base a los datos proporcionados en el campo de selección \"Campo(s) Fuente\". Si sólo se proporciona un campo de datos puede aplicarse el \"Delimitador de campo para la relación\". En otros casos, la cantidad de campos de datos proporcionados y \"Campo(s) de entidad(es) relacionada(s)\" debe ser la misma.",
+    "createIfNotExist": "Se creará un nuevo registro de datos para la entidad relacionada, si no se encuentra nada basado en los datos proporcionados.",
+    "foreignColumn": "Este(estos) valor(es) de campo se utilizará(n) para crear el registro de datos relacionado.",
+    "foreignImportBy": "Elija el/los campo(s) de entidad relacionado(s) en su sistema, que debe(n) ser utilizado(s) para la inserción basándose en los datos proporcionados en el campo de selección \"Campo(s) Fuente\". Si sólo se proporciona un campo de datos puede aplicarse el \"Delimitador de campo para la relación\". En otros casos, la cantidad de campos de datos proporcionados y \"Campo(s) de entidad(es) relacionada(s)\" debe ser la misma.",
+    "replaceArray": "Por defecto, el registro o registros proporcionados se añaden a los ya existentes. Marque esta casilla si debe reemplazar estos últimos.",
+    "valueExtractor": "Esta expresión regular se utilizará para extraer el valor del campo o campos de origen."
+  }
+}

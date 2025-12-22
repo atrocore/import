@@ -12,15 +12,15 @@
     "errorsCount": "Fehler",
     "attachment": "Importierte Datei",
     "convertedFile": "Konvertierte File",
-    "errorsAttachment": "Fehlerdatei",
-    "importJobLogs": "Fehlerlogs"
+    "importJobLogs": "Fehlerlogs",
+    "files": "Dateien"
   },
   "links": {
     "importFeed": "Import Feed",
-    "importJobLogs": "Fehlerlogs"
+    "importJobLogs": "Fehlerlogs",
+    "files": "Dateien"
   },
   "labels": {
-    "Create ImportJob": "Importauftrag erstellen",
     "Pending": "Steht aus",
     "Success": "Erfolg",
     "Running": "In Arbeit",
@@ -31,7 +31,14 @@
     "tryAgain": "Erneut importeren",
     "reCreate": "Nachschaffen",
     "loadCounters": "Klicken Sie auf das Aktualisierungs-Icon, um den Wert zu berechnen",
-    "seeRelevantRecords": "Klicken Sie hier, um die entsprechenden Datensätze zu sehen"
+    "seeRelevantRecords": "Klicken Sie hier, um die entsprechenden Datensätze zu sehen",
+    "generateFileConverted": "Datei generieren: Konvertiert",
+    "generateFileCreated": "Datei generieren: Erstellt",
+    "generateFileSkippedByScript": "Datei generieren: Vom Skript übersprungen",
+    "generateFileErrors": "Datei generieren: Fehler",
+    "generateFileUpdated": "Datei generieren: Aktualisiert",
+    "generateFileDeleted": "Datei generieren: Gelöscht",
+    "generateFileSkippedBySystem": "Datei generieren: Vom System übersprungen"
   },
   "tooltips": {
     "errorsAttachment": "Zeilen aus 'Importierter Datei', die nicht importiert wurden."

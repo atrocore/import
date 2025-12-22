@@ -1,0 +1,51 @@
+{
+  "fields": {
+    "entityIdentifier": "Identifikátor",
+    "column": "Zdrojové pole (pole)",
+    "sourceFields": "Zdrojová pole",
+    "foreignColumn": "Zdrojové pole (pole)",
+    "foreignImportBy": "Související pole subjektu",
+    "replaceArray": "Vyměňte stránky",
+    "importByForListAttribute": "Související pole entit pro seznamy",
+    "urlHeaders": "Záhlaví žádosti",
+    "valueExtractor": "Extraktor hodnot",
+    "defaultContainer": "Výchozí hodnota",
+    "default": "Výchozí hodnota",
+    "importFeed": "Importní krmivo",
+    "importBy": "Související pole subjektu",
+    "createIfNotExist": "Vytvoření souvisejícího datového záznamu",
+    "name": "Pole",
+    "entityAttribute": "Atribut",
+    "type": "Typ",
+    "locale": "Jazyk"
+  },
+  "labels": {
+    "main": "Hlavní stránka",
+    "mapping": "Mapování polí pro vložení",
+    "search": "Mapování polí pro vyhledávání",
+    "additionalInformation": "Další informace",
+    "importByForAttributeValue": "Toto platí pouze pro atribut typu Seznam nebo Vícehodnotový seznam.",
+    "urlHeaders": "Záhlaví žádosti",
+    "_addAttribute": "[Přidat atribut]"
+  },
+  "exceptions": {
+    "wrongFieldsNumber": "Pro vyhledávání by mělo být množství zdrojových polí stejné jako množství polí souvisejících entit.",
+    "wrongForeignFieldsNumber": "Při vkládání by množství zdrojových polí mělo být stejné jako množství polí souvisejících entit.",
+    "foreignColumnsAndFieldsEmpty": "Zdrojové pole (pole) a pole související entity nemohou být prázdná."
+  },
+  "tooltips": {
+    "column": "Hodnota(y) tohoto(těchto) pole bude(ou) použita(y) k vyhledávání, pokud již existuje související datový záznam.",
+    "importBy": "Zvolte pole souvisejícího subjektu ve vašem systému, které by mělo být použito k vyhledávání na základě údajů uvedených ve výběrovém poli \"Zdrojové pole\". Pokud je poskytnuto pouze jedno datové pole, může se použít \"Field Delimiter for Relation\" (Oddělovač polí pro vztah). V ostatních případech by množství poskytnutých datových polí a \"Pole(a) souvisejícího subjektu\" mělo být stejné.",
+    "createIfNotExist": "Pokud na základě zadaných údajů nebude nic nalezeno, bude vytvořen nový datový záznam pro související subjekt.",
+    "foreignColumn": "Tato hodnota (tyto hodnoty) pole bude použita (budou použity) k vytvoření souvisejícího datového záznamu.",
+    "foreignImportBy": "Na základě údajů uvedených ve výběrovém poli \"Zdrojová pole\" vyberte pole související entity ve vašem systému, která by měla být použita pro vložení. Pokud je poskytnuto pouze jedno datové pole, může se použít \"Oddělovač polí pro vztah\". V ostatních případech by množství poskytnutých datových polí a \"Pole(a) související entity\" mělo být stejné.",
+    "replaceArray": "Ve výchozím nastavení se zadané záznamy přidají ke stávajícím. Pokud mají být nahrazeny, nastavte toto políčko.",
+    "valueExtractor": "Tento regulární výraz se použije k získání hodnoty ze zdrojového pole (polí)."
+  },
+  "groupOptions": {
+    "name": {
+      "fields": "Pole",
+      "attributes": "Atributy"
+    }
+  }
+}

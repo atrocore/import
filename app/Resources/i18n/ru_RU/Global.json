@@ -1,0 +1,28 @@
+{
+  "fields": {
+    "filterCreateImportJob": "Создано командой Import Job",
+    "filterUpdateImportJob": "Обновлено с помощью Import Job",
+    "createdByImport": "Создано при помощи импорта",
+    "updatedByImport": "Обновлено за счет импорта"
+  },
+  "scopeNames": {
+    "ImportJob": "Импортная работа",
+    "ImportJobLog": "Импорт журнала заданий",
+    "ImportFeed": "Импортный фид",
+    "ImportConfiguratorItem": "Конфигуратор"
+  },
+  "scopeNamesPlural": {
+    "ImportFeed": "Импорт фидов",
+    "ImportJob": "Импортные работы",
+    "ImportJobLog": "Импорт журналов заданий",
+    "ImportConfiguratorItem": "Конфигуратор"
+  },
+  "labels": {
+    "importErrorDuring24Hours": "Ошибка импорта Feeds/Jobs в течение 24 часов",
+    "importErrorDuring7Days": "Ошибка импорта Feeds/Jobs в течение 7 дней",
+    "importErrorDuring28Days": "Ошибка импорта Feeds/Jobs в течение 28 дней"
+  },
+  "dashlets": {
+    "DataSyncErrorsImport": "Ошибки синхронизации данных при импорте"
+  }
+}

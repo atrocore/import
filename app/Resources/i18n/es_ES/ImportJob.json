@@ -1,0 +1,54 @@
+{
+  "fields": {
+    "files": "Archivos",
+    "importFeed": "Importar alimentación",
+    "state": "Estado",
+    "message": "Mensaje",
+    "start": "Comenzó en",
+    "end": "Terminado en",
+    "createdCount": "Creado",
+    "updatedCount": "Actualizado",
+    "deletedCount": "Eliminado",
+    "skippedCount": "Se ha saltado",
+    "errorsCount": "Errores",
+    "attachment": "Archivo importado",
+    "convertedFile": "Archivo convertido",
+    "importJobLogs": "Registros de errores"
+  },
+  "links": {
+    "importFeed": "Importar alimentación",
+    "importJobLogs": "Registros de errores",
+    "files": "Archivos"
+  },
+  "labels": {
+    "Pending": "Pendiente",
+    "Success": "Success",
+    "Running": "Correr",
+    "Failed": "Fallida",
+    "Canceled": "Canceled",
+    "generate": "Generar",
+    "generating": "Generando",
+    "tryAgain": "Importar de nuevo",
+    "reCreate": "Recree",
+    "generateFileConverted": "Generar archivo: Convertido",
+    "generateFileCreated": "Generar archivo: Creado",
+    "generateFileUpdated": "Generar archivo: Actualizado",
+    "generateFileDeleted": "Generar archivo: Eliminado",
+    "generateFileSkippedBySystem": "Generar archivo: Omitido por el sistema",
+    "generateFileSkippedByScript": "Generar archivo: omitido por el script",
+    "generateFileErrors": "Generar archivo: Errores",
+    "loadCounters": "Pulse el icono de actualización para calcular el valor.",
+    "seeRelevantRecords": "Haga clic aquí para ver los registros correspondientes."
+  },
+  "tooltips": {
+    "errorsAttachment": "Filas del 'Fichero importado' que no se han importado."
+  },
+  "exceptions": {
+    "cacheWriteFailed": "No se pueden escribir datos en la caché de importación."
+  },
+  "boolFilters": {
+    "onlyImportFailed24Hours": "Sólo importar trabajos que fallaron durante las últimas 24 horas",
+    "onlyImportFailed7Days": "Sólo Importar trabajos que fallaron durante los últimos 7 días",
+    "onlyImportFailed28Days": "Sólo importar trabajos que fallaron durante los últimos 28 días"
+  }
+}

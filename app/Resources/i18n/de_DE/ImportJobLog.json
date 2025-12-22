@@ -1,6 +1,6 @@
 {
   "fields": {
-    "rowNumber": "Reihennummer",
+    "rowNumber": "Zeile Nummer",
     "row": "Eingabedaten",
     "importJob": "Importauftrag",
     "type": "Typ",
@@ -10,5 +10,14 @@
   },
   "links": {
     "importJob": "Importauftrag"
+  },
+  "options": {
+    "type": {
+      "create": "Erstellen",
+      "update": "Aktualisierung",
+      "delete": "Löschen",
+      "skip": "Überspringen",
+      "error": "Fehler"
+    }
   }
 }

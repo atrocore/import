@@ -10,12 +10,15 @@
     "errorsCount": "Błędy",
     "attachment": "Zaimportowany Plik",
     "convertedFile": "Plik Skonwertowany",
-    "errorsAttachment": "Plik Błędów",
-    "importJobLogs": "Logi Błędów"
+    "importJobLogs": "Logi Błędów",
+    "files": "Pliki",
+    "start": "Rozpoczęto od",
+    "end": "Zakończono w"
   },
   "links": {
     "importFeed": "Importuj Źródło",
-    "importJobLogs": "Logi Błędów"
+    "importJobLogs": "Logi Błędów",
+    "files": "Pliki"
   },
   "labels": {
     "Pending": "Oczekujące",
@@ -26,7 +29,16 @@
     "generate": "Generuj",
     "generating": "Generowanie",
     "tryAgain": "Importuj ponownie",
-    "reCreate": "Odtwarzać"
+    "reCreate": "Odtwarzać",
+    "generateFileConverted": "Wygeneruj plik: przekonwertowany",
+    "generateFileCreated": "Wygeneruj plik: Utworzony",
+    "generateFileUpdated": "Wygeneruj plik: Aktualizacja",
+    "generateFileDeleted": "Wygeneruj plik: Usunięty",
+    "generateFileSkippedBySystem": "Generowanie pliku: Pominięte przez system",
+    "generateFileSkippedByScript": "Wygeneruj plik: pominięte przez skrypt",
+    "generateFileErrors": "Generuj plik: Błędy",
+    "loadCounters": "Proszę kliknąć ikonę odświeżania, aby obliczyć wartość.",
+    "seeRelevantRecords": "Proszę kliknąć tutaj, aby zobaczyć odpowiednie rekordy."
   },
   "tooltips": {
     "errorsAttachment": "Wiersze z 'Zaimportowanego pliku', które nie zostały zaimportowane."
@@ -35,5 +47,8 @@
     "onlyImportFailed24Hours": "Tylko Zadania Importu, które nie powiodły się w ciągu ostatnich 24 godzin",
     "onlyImportFailed7Days": "Tylko Zadania Importu, które nie powiodły się w ciągu ostatnich 7 dni",
     "onlyImportFailed28Days": "Tylko Zadania Importu, które nie powiodły się w ciągu ostatnich 28 dni"
+  },
+  "exceptions": {
+    "cacheWriteFailed": "Nie można zapisać danych do pamięci podręcznej importu."
   }
 }

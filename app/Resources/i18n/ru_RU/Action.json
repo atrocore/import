@@ -1,0 +1,12 @@
+{
+  "fields": {
+    "importFeed": "Импортный фид",
+    "payload": "Параметры",
+    "uploadAndImport": "Загрузка и импорт"
+  },
+  "options": {
+    "type": {
+      "import": "Импортный фид"
+    }
+  }
+}

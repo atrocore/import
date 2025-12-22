@@ -1,13 +1,23 @@
 {
-	"fields": {
-		"rowNumber": "Numer wiersza",
-		"importJob": "Zadanie importu",
-		"type": "Typ",
-		"entityName": "Nazwa jednostki",
-		"entityId": "Identyfikator jednostki",
-		"message": "Komunikat błędu"
-	},
-	"links": {
-		"importJob": "Zadanie importu"
-	}
+  "fields": {
+    "rowNumber": "Numer wiersza",
+    "importJob": "Zadanie importu",
+    "type": "Typ",
+    "entityName": "Nazwa jednostki",
+    "entityId": "Identyfikator jednostki",
+    "message": "Komunikat błędu",
+    "row": "Dane wejściowe"
+  },
+  "links": {
+    "importJob": "Zadanie importu"
+  },
+  "options": {
+    "type": {
+      "create": "Utwórz",
+      "update": "Aktualizuj",
+      "delete": "Usuń",
+      "skip": "Pomiń",
+      "error": "Błąd"
+    }
+  }
 }

@@ -1,0 +1,23 @@
+{
+  "fields": {
+    "rowNumber": "Numero di fila",
+    "row": "Dati di ingresso",
+    "importJob": "Importazione di lavoro",
+    "type": "Tipo",
+    "entityName": "Entità",
+    "entityId": "Id dell'entità",
+    "message": "Messaggio di errore"
+  },
+  "links": {
+    "importJob": "Importazione di lavoro"
+  },
+  "options": {
+    "type": {
+      "create": "Creare",
+      "update": "Aggiornamento",
+      "delete": "Cancellare",
+      "skip": "Salta",
+      "error": "Errore"
+    }
+  }
+}

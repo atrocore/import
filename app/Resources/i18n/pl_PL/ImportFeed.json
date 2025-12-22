@@ -9,7 +9,7 @@
     "connection": "Połączenie",
     "format": "Format",
     "sheet": "Arkusz",
-    "entity": "Encja",
+    "entity": "Podmiot docelowy",
     "delimiter": "Separator wartości listy",
     "sourceFields": "Pola źródłowe",
     "file": "Plik",
@@ -27,10 +27,20 @@
     "decimalMark": "Znak dziesiętny",
     "importFile": "Plik danych",
     "configuratorItems": "Konfigurator",
-    "emptyValue": "Pusta wartość",
-    "nullValue": "Wartość null",
-    "markForNoRelation": "Oznaczenie braku relacji",
-    "fieldDelimiterForRelation": "Separator pól dla relacji"
+    "emptyValue": "Znacznik pustej wartości",
+    "nullValue": "Znacznik wartości zerowej",
+    "markForNoRelation": "Znacznik braku związku",
+    "fieldDelimiterForRelation": "Separator pól dla relacji",
+    "skipValue": "Znacznik pominiętej wartości ",
+    "type": "Typ zaopatrzenia",
+    "processingType": "Typ przetwarzania",
+    "rootNode": "Węzeł główny",
+    "markForUnlinkedAttribute": "Marker dla niepowiązanego atrybutu",
+    "executeAs": "Wykonać jako",
+    "feedPayload": "Dane wejściowe",
+    "scheduledJobs": "Zaplanowane zadania",
+    "files": "Pliki",
+    "folder": "Folder"
   },
   "links": {
     "connection": "Połączenie",
@@ -67,7 +77,11 @@
     "Running": "Trwa",
     "Failed": "Niepowodzenie",
     "Canceled": "Anulowano",
-    "createImportJobs": "Tworzenie zadań importu dla %s"
+    "createImportJobs": "Tworzenie zadań importu dla %s",
+    "excelFormatWarning": "Plik Excel jest ładowany do pamięci i przetwarzany w całości. Importowanie złożonych plików zależy od zasobów Państwa serwera. Dlatego w przypadku dużych plików zalecamy korzystanie z CSV, ponieważ są one przetwarzane wiersz po wierszu.",
+    "wrongTypeForCreatingFromExportFeed": "Jest on teraz dostępny tylko dla typu eksportu pliku.",
+    "Data Processing": "Przetwarzanie danych",
+    "Data Sourcing": "Pozyskiwanie danych"
   },
   "messages": {
     "importNow": "Czy na pewno chcesz zaimportować dane z wybranego źródła?"
@@ -109,20 +123,32 @@
     "importFeedIsInactive": "Kanał importu jest nieaktywny",
     "missingSourceFieldAsIdentifiers": "Pole źródłowe '%s' oznaczone jako identyfikator jest brakujące.",
     "noEntityFound": "Nie znaleziono rekordu danych dla powiązanej encji '%s'.",
-    "listSeparatorNotAllowed": "Użycie separatora wartości listy w wartości pola '%s' jest niedozwolone."
+    "listSeparatorNotAllowed": "Użycie separatora wartości listy w wartości pola '%s' jest niedozwolone.",
+    "noEntityIdentifier": "Proszę wybrać kolumnę Identyfikator dla konfiguratora."
   },
   "options": {
     "repeatProcessing": {
       "mistake": "Generuj błąd dla powtarzających się rekordów",
       "repeat": "Zezwalaj na powtarzanie przetwarzania rekordów danych",
       "skip": "Pomiń powtarzające się rekordy danych"
+    },
+    "executeAs": {
+      "sameUser": "Ten sam użytkownik",
+      "system": "System"
+    },
+    "processingType": {
+      "configurator": "Konfigurator"
     }
   },
   "tooltips": {
     "keptStringNodes": "Dodaj tutaj węzły, które powinny być traktowane jako węzły liści, aby wszystkie dane za nimi były traktowane jako pojedyncza tablica.",
     "file": "Ten plik zostanie użyty do utworzenia konfiguracji. Może to być plik przykładowy lub plik do zaimportowania.",
     "repeatProcessing": "Powtarzanie rekordów danych jest określane przez identyfikatory w konfiguratorze.",
-    "skipValue": "Zostanie zinterpretowana jako wartość do pominięcia."
+    "skipValue": "Zostanie zinterpretowana jako wartość do pominięcia.",
+    "markForNoRelation": "Oznacza relację, która nie powinna być powiązana z daną jednostką.",
+    "emptyValue": "Wartość zostanie zinterpretowana jako \"pusta\" wartość.",
+    "executeAs": "Proszę określić użytkownika, którego system użyje do wykonania importu.",
+    "nullValue": "Wartość zostanie zinterpretowana jako wartość \"NULL\"."
   },
   "boolFilters": {
     "onlyImportFailed24Hours": "Tylko kanały importu, które nie powiodły się w ciągu ostatnich 24 godzin",

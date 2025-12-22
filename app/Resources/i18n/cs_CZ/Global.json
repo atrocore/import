@@ -1,0 +1,28 @@
+{
+  "scopeNames": {
+    "ImportJobLog": "Importovat protokol úloh",
+    "ImportFeed": "Importní krmivo",
+    "ImportConfiguratorItem": "Konfigurátor",
+    "ImportJob": "Import práce"
+  },
+  "scopeNamesPlural": {
+    "ImportConfiguratorItem": "Konfigurátor",
+    "ImportFeed": "Importní kanály",
+    "ImportJob": "Import pracovních míst",
+    "ImportJobLog": "Importovat protokoly úloh"
+  },
+  "fields": {
+    "filterCreateImportJob": "Vytvořil Import Job",
+    "filterUpdateImportJob": "Aktualizováno o Import Job",
+    "createdByImport": "Vytvořil import",
+    "updatedByImport": "Aktualizováno importem"
+  },
+  "labels": {
+    "importErrorDuring28Days": "Chyba importu krmiv/úloh během 28 dnů",
+    "importErrorDuring24Hours": "Chyba importu krmiv/úloh během 24 hodin",
+    "importErrorDuring7Days": "Chyba importu krmiv/úkolů během 7 dnů"
+  },
+  "dashlets": {
+    "DataSyncErrorsImport": "Chyby synchronizace dat pro import"
+  }
+}

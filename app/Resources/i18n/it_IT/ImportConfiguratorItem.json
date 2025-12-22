@@ -1,0 +1,51 @@
+{
+  "fields": {
+    "entityIdentifier": "Identificatore",
+    "name": "Campo",
+    "column": "Campo/i sorgente/i",
+    "defaultContainer": "Valore predefinito",
+    "default": "Valore predefinito",
+    "importFeed": "Importazione Feed",
+    "importBy": "Campo/i dell'entità correlata",
+    "createIfNotExist": "Creare un record di dati correlati",
+    "locale": "Lingua",
+    "entityAttribute": "Attributo",
+    "sourceFields": "Campi sorgente",
+    "type": "Tipo",
+    "foreignColumn": "Campo/i sorgente/i",
+    "foreignImportBy": "Campo/i dell'entità correlata",
+    "replaceArray": "Sostituire",
+    "importByForListAttribute": "Campi entità correlati per gli elenchi",
+    "urlHeaders": "Intestazioni della richiesta",
+    "valueExtractor": "Estrattore di valori"
+  },
+  "groupOptions": {
+    "name": {
+      "fields": "Campi",
+      "attributes": "Attributi"
+    }
+  },
+  "labels": {
+    "main": "Principale",
+    "mapping": "Mappatura dei campi per l'inserimento",
+    "search": "Mappatura dei campi per la ricerca",
+    "additionalInformation": "Informazioni aggiuntive",
+    "importByForAttributeValue": "Questo è solo per gli attributi di tipo Elenco o Elenco a più valori.",
+    "urlHeaders": "Intestazioni della richiesta",
+    "_addAttribute": "[Aggiungi attributo]"
+  },
+  "exceptions": {
+    "wrongFieldsNumber": "Per la ricerca, la quantità di campi sorgente dovrebbe essere uguale alla quantità di campi entità correlati.",
+    "wrongForeignFieldsNumber": "Per l'inserimento, la quantità di campi sorgente dovrebbe essere uguale alla quantità di campi entità correlati.",
+    "foreignColumnsAndFieldsEmpty": "Il campo (o i campi) sorgente e il campo (o i campi) dell'entità correlata non possono essere vuoti."
+  },
+  "tooltips": {
+    "column": "Questo(i) valore(i) di campo verrà utilizzato per cercare se esiste già un record di dati correlato.",
+    "importBy": "Scelga il/i campo/i dell'entità correlata nel suo sistema, da utilizzare per la ricerca in base ai dati forniti nel campo di selezione \"Campo/i di origine\". Se viene fornito un solo campo dati, può essere applicato il \"Delimitatore di campo per la relazione\". In altri casi, la quantità di campi dati forniti e \"Campo/i entità correlato/i\" deve essere la stessa.",
+    "createIfNotExist": "Verrà creato un nuovo record di dati per l'entità correlata, se non viene trovato nulla in base ai dati forniti.",
+    "foreignColumn": "Il valore di questo/i campo/i verrà utilizzato per creare il record di dati correlati.",
+    "foreignImportBy": "Scelga il/i campo/i dell'entità correlata nel suo sistema, che deve essere utilizzato per l'inserimento in base ai dati forniti nel campo di selezione \"Campo/i di origine\". Se viene fornito un solo campo dati, può essere applicato il \"Delimitatore di campo per la relazione\". In altri casi, la quantità di campi dati forniti e di \"Campo/i entità correlato/i\" deve essere la stessa.",
+    "replaceArray": "Per impostazione predefinita, i record forniti vengono aggiunti a quelli esistenti. Imposti questa casella di controllo se questi ultimi devono essere sostituiti.",
+    "valueExtractor": "Questa espressione regolare verrà utilizzata per estrarre il valore dal campo o dai campi di origine."
+  }
+}
