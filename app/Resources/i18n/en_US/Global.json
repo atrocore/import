@@ -1,26 +1,26 @@
 {
   "fields": {
-    "filterCreateImportJob": "Created by Import Job",
-    "filterUpdateImportJob": "Updated by Import Job",
+    "filterCreateImportJob": "Created by Import Execution",
+    "filterUpdateImportJob": "Updated by Import Execution",
     "createdByImport": "Created by import",
     "updatedByImport": "Updated by import"
   },
   "scopeNames": {
     "ImportFeed": "Import Feed",
     "ImportConfiguratorItem": "Configurator",
-    "ImportJob": "Import Job",
-    "ImportJobLog": "Import Job Log"
+    "ImportJob": "Import Execution",
+    "ImportJobLog": "Import Log"
   },
   "scopeNamesPlural": {
     "ImportConfiguratorItem": "Configurator",
     "ImportFeed": "Import Feeds",
-    "ImportJob": "Import Jobs",
-    "ImportJobLog": "Import Job Logs"
+    "ImportJob": "Import Executions",
+    "ImportJobLog": "Import Logs"
   },
   "labels": {
-    "importErrorDuring24Hours": "Import Feeds/Jobs Error during 24 Hours",
-    "importErrorDuring7Days": "Import Feeds/Jobs Error during 7 days",
-    "importErrorDuring28Days": "Import Feeds/Jobs Error during 28 days"
+    "importErrorDuring24Hours": "Import Feeds/Executions Error during 24 Hours",
+    "importErrorDuring7Days": "Import Feeds/Executions Error during 7 days",
+    "importErrorDuring28Days": "Import Feeds/Executions Error during 28 days"
   },
   "dashlets": {
     "DataSyncErrorsImport": "Data sync errors for Import"

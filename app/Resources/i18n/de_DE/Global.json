@@ -1,21 +1,21 @@
 {
   "fields": {
-    "filterCreateImportJob": "Erstellt durch Importauftrag",
-    "filterUpdateImportJob": "Aktualisiert durch Importauftrag",
+    "filterCreateImportJob": "Erstellt durch Importausführung",
+    "filterUpdateImportJob": "Aktualisiert durch Importausführung",
     "createdByImport": "Erstellt durch Import",
     "updatedByImport": "Aktualisiert durch Import"
   },
   "scopeNames": {
     "ImportFeed": "Import Feed",
     "ImportConfiguratorItem": "Konfigurator",
-    "ImportJob": "Importauftrag",
+    "ImportJob": "Importausführung",
     "ImportJobLog": "Import-Auftragslog"
   },
   "scopeNamesPlural": {
     "ImportFeed": "Import Feeds",
     "ImportConfiguratorItem": "Konfigurator",
-    "ImportJob": "Importaufträge",
-    "ImportJobLog": "Importauftragslogs"
+    "ImportJob": "Importausführung",
+    "ImportJobLog": "Importauftrag"
   },
   "labels": {
     "importErrorDuring24Hours": "Fehler beim Importieren von Feeds/Jobs während 24 Stunden",
