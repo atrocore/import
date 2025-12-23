@@ -24,7 +24,7 @@
     "fileFieldDelimiter": "Field Delimiter",
     "fileTextQualifier": "Text Qualifier",
     "isFileHeaderRow": "Header Row",
-    "importJobs": "Import Jobs",
+    "importJobs": "Import Executions",
     "importCronJobs": "Import Cron Jobs",
     "importFeedTypeSimples": "Import Feed Type Simple",
     "fileDataAction": "Action",
@@ -41,11 +41,6 @@
     "scheduledJobs": "Scheduled Jobs",
     "executeAs": "Execute As",
     "feedPayload": "Payload"
-  },
-  "links": {
-    "connection": "Connection",
-    "importJobs": "Import Jobs",
-    "configuratorItems": "Configurator"
   },
   "labels": {
     "wrongTypeForCreatingFromExportFeed": "It is now only available for the 'File' Export Feed type.",

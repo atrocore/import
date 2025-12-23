@@ -2,14 +2,11 @@
   "fields": {
     "rowNumber": "Row Number",
     "row": "Input Data",
-    "importJob": "Import Job",
+    "importJob": "Import Executions",
     "type": "Type",
     "entityName": "Entity",
     "entityId": "Entity Id",
     "message": "Error Message"
-  },
-  "links": {
-    "importJob": "Import Job"
   },
   "options": {
     "type": {

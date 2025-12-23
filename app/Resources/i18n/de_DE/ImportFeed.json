@@ -24,7 +24,7 @@
     "fileDataAction": "Aktion",
     "thousandSeparator": "Tausendertrennzeichen",
     "decimalMark": "Dezimaltrennzeichen",
-    "importJobs": "Importaufträge",
+    "importJobs": "Importausführung",
     "configuratorItems": "Konfigurator",
     "emptyValue": "Markierung für leeren Wert",
     "nullValue": "Markierung für Nullwert",
@@ -41,11 +41,6 @@
     "executeAs": "Ausführen als",
     "files": "Dateien",
     "sourceFields": "Quellfelder"
-  },
-  "links": {
-    "connection": "Verbindung",
-    "importJobs": "Importaufträge",
-    "configuratorItems": "Konfigurator"
   },
   "labels": {
     "excelFormatWarning": "Excel file is loaded into memory and processed in its entirety. Importing complex files depends on your server resources. Therefore, for large files, we recommend using CSV, as this is processed row by row.",
