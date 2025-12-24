@@ -1,26 +1,26 @@
 {
   "scopeNames": {
-    "ImportJobLog": "Importovat protokol úloh",
+    "ImportJobLog": "Protokol importu",
     "ImportFeed": "Importní krmivo",
     "ImportConfiguratorItem": "Konfigurátor",
-    "ImportJob": "Import práce"
+    "ImportJob": "Provedení importu"
   },
   "scopeNamesPlural": {
     "ImportConfiguratorItem": "Konfigurátor",
     "ImportFeed": "Importní kanály",
-    "ImportJob": "Import pracovních míst",
-    "ImportJobLog": "Importovat protokoly úloh"
+    "ImportJob": "Provádění importu",
+    "ImportJobLog": "Importovat protokoly"
   },
   "fields": {
-    "filterCreateImportJob": "Vytvořil Import Job",
-    "filterUpdateImportJob": "Aktualizováno o Import Job",
+    "filterCreateImportJob": "Vytvořil Import Execution",
+    "filterUpdateImportJob": "Aktualizováno provedením importu",
     "createdByImport": "Vytvořil import",
     "updatedByImport": "Aktualizováno importem"
   },
   "labels": {
-    "importErrorDuring28Days": "Chyba importu krmiv/úloh během 28 dnů",
-    "importErrorDuring24Hours": "Chyba importu krmiv/úloh během 24 hodin",
-    "importErrorDuring7Days": "Chyba importu krmiv/úkolů během 7 dnů"
+    "importErrorDuring28Days": "Chyba importu krmiv/výkonů během 28 dnů",
+    "importErrorDuring24Hours": "Chyba importu krmiv/výkonů během 24 hodin",
+    "importErrorDuring7Days": "Chyba importu krmiv/výkonů během 7 dnů"
   },
   "dashlets": {
     "DataSyncErrorsImport": "Chyby synchronizace dat pro import"
