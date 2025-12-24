@@ -1,7 +1,7 @@
 {
   "fields": {
     "rowNumber": "Numer wiersza",
-    "importJob": "Zadanie importu",
+    "importJob": "Wykonanie importu",
     "type": "Typ",
     "entityName": "Nazwa jednostki",
     "entityId": "Identyfikator jednostki",
