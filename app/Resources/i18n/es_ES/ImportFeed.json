@@ -24,7 +24,7 @@
     "fileFieldDelimiter": "Delimitador de campo",
     "fileTextQualifier": "Calificador de texto",
     "isFileHeaderRow": "Fila de cabecera",
-    "importJobs": "Trabajos de importación",
+    "importJobs": "Ejecuciones de importación",
     "importCronJobs": "Importar Cron Jobs",
     "importFeedTypeSimples": "Importar tipo de alimentación Simple",
     "fileDataAction": "Acción",
