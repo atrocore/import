@@ -1,7 +1,7 @@
 {
   "fields": {
     "rowNumber": "Номер рядка",
-    "importJob": "Завдання імпорту",
+    "importJob": "Виконання імпорту",
     "type": "Тип",
     "entityName": "Сутність",
     "entityId": "Id сутності",
