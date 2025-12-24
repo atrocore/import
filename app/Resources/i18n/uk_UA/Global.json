@@ -1,26 +1,26 @@
 {
   "fields": {
-    "filterCreateImportJob": "Створено під час імпорту",
-    "filterUpdateImportJob": "Оновлено під час імпорту",
+    "filterCreateImportJob": "Створено виконанням імпорту",
+    "filterUpdateImportJob": "Оновлено виконанням імпорту",
     "createdByImport": "Створено під час імпорту",
     "updatedByImport": "Оновлено під час імпорту"
   },
   "scopeNames": {
     "ImportFeed": "Імпортний фід",
     "ImportConfiguratorItem": "Конфігуратор",
-    "ImportJob": "Завдання імпорту",
-    "ImportJobLog": "Лог завдання імпорту"
+    "ImportJob": "Виконання імпорту",
+    "ImportJobLog": "Журнал імпорту"
   },
   "scopeNamesPlural": {
     "ImportFeed": "Імпортні фіди",
     "ImportConfiguratorItem": "Конфігуратор",
-    "ImportJob": "Завдання імпорту",
-    "ImportJobLog": "Логи завдань імпорту"
+    "ImportJob": "Виконання імпорту",
+    "ImportJobLog": "Імпорт журналів"
   },
   "labels": {
-    "importErrorDuring24Hours": "Помилки імпортних фідів/завдань протягом 24 годин",
-    "importErrorDuring7Days": "Помилки імпортних фідів/завдань протягом 7 днів",
-    "importErrorDuring28Days": "Помилка імпортих фідів/завдань протягом 28 днів"
+    "importErrorDuring24Hours": "Помилка імпорту каналів/виконань протягом 24 годин",
+    "importErrorDuring7Days": "Помилка імпорту каналів/виконань протягом 7 днів",
+    "importErrorDuring28Days": "Помилка імпорту каналів/виконань протягом 28 днів"
   },
   "dashlets": {
     "DataSyncErrorsImport": "Помилки синхронізації імпорту даних"
