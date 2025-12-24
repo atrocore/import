@@ -2,7 +2,7 @@
   "fields": {
     "rowNumber": "Numero di fila",
     "row": "Dati di ingresso",
-    "importJob": "Importazione di lavoro",
+    "importJob": "Esecuzioni di importazione",
     "type": "Tipo",
     "entityName": "Entità",
     "entityId": "Id dell'entità",
