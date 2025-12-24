@@ -8,9 +8,6 @@
     "entityId": "Id de entidad",
     "message": "Mensaje de error"
   },
-  "links": {
-    "importJob": "Trabajo de importación"
-  },
   "options": {
     "type": {
       "create": "Crear",

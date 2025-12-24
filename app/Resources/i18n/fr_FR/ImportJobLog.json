@@ -8,9 +8,6 @@
     "message": "Message d'erreur",
     "row": "Données d'entrée"
   },
-  "links": {
-    "importJob": "Job d'import"
-  },
   "options": {
     "type": {
       "create": "Créer",

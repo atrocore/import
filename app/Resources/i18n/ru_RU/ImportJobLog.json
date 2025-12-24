@@ -8,9 +8,6 @@
     "type": "Тип",
     "entityName": "Сущность"
   },
-  "links": {
-    "importJob": "Импортная работа"
-  },
   "options": {
     "type": {
       "skip": "Пропустить",

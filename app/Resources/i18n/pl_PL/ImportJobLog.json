@@ -8,9 +8,6 @@
     "message": "Komunikat błędu",
     "row": "Dane wejściowe"
   },
-  "links": {
-    "importJob": "Zadanie importu"
-  },
   "options": {
     "type": {
       "create": "Utwórz",
