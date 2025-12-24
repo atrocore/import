@@ -9,7 +9,7 @@
     "ImportFeed": "Import Feed",
     "ImportConfiguratorItem": "Konfigurator",
     "ImportJob": "Importausführung",
-    "ImportJobLog": "Import-Auftragslog"
+    "ImportJobLog": "Protokoll importieren"
   },
   "scopeNamesPlural": {
     "ImportFeed": "Import Feeds",
@@ -18,9 +18,9 @@
     "ImportJobLog": "Importauftrag"
   },
   "labels": {
-    "importErrorDuring24Hours": "Fehler beim Importieren von Feeds/Jobs während 24 Stunden",
-    "importErrorDuring7Days": "Fehler beim Importieren von Feeds/Jobs während 7 Tagen",
-    "importErrorDuring28Days": "Fehler beim Importieren von Feeds/Jobs während 28 Tagen"
+    "importErrorDuring24Hours": "Fehler beim Importieren von Feeds/Ausführungen während 24 Stunden",
+    "importErrorDuring7Days": "Fehler beim Importieren von Feeds/Ausführungen während 7 Tagen",
+    "importErrorDuring28Days": "Fehler beim Importieren von Feeds/Ausführungen während 28 Tagen"
   },
   "dashlets": {
     "DataSyncErrorsImport": "Synchronisierungsfehler für Datenimport"
