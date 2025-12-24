@@ -1,7 +1,7 @@
 {
   "fields": {
     "rowNumber": "Numéro de ligne",
-    "importJob": "Tâche d'importation",
+    "importJob": "Exécution des importations",
     "type": "Type",
     "entityName": "Entité",
     "entityId": "Identifiant de l'entité",
