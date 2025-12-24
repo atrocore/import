@@ -24,7 +24,7 @@
     "fileFieldDelimiter": "Delimitatore di campo",
     "fileTextQualifier": "Qualificatore di testo",
     "isFileHeaderRow": "Riga di intestazione",
-    "importJobs": "Importazione di lavori",
+    "importJobs": "Esecuzioni di importazione",
     "importCronJobs": "Importazione di lavori Cron",
     "importFeedTypeSimples": "Importazione del tipo di mangime Semplice",
     "fileDataAction": "Azione",
