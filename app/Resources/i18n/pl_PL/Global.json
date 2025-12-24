@@ -1,26 +1,26 @@
 {
   "fields": {
-    "filterCreateImportJob": "Utworzone przez zadanie importu",
-    "filterUpdateImportJob": "Zaktualizowane przez zadanie importu",
+    "filterCreateImportJob": "Utworzone przez wykonanie importu",
+    "filterUpdateImportJob": "Aktualizacja przez wykonanie importu",
     "createdByImport": "Utworzone przez import",
     "updatedByImport": "Zaktualizowane przez import"
   },
   "scopeNames": {
     "ImportFeed": "Importuj Źródło",
     "ImportConfiguratorItem": "Konfigurator",
-    "ImportJob": "Zadanie importu",
-    "ImportJobLog": "Log zadania importu"
+    "ImportJob": "Wykonanie importu",
+    "ImportJobLog": "Dziennik importu"
   },
   "scopeNamesPlural": {
     "ImportConfiguratorItem": "Konfigurator",
     "ImportFeed": "Importuj Źródła",
-    "ImportJob": "Zadania importu",
-    "ImportJobLog": "Logi zadań importu"
+    "ImportJob": "Wykonanie importu",
+    "ImportJobLog": "Import dzienników"
   },
   "labels": {
-    "importErrorDuring24Hours": "Błąd importu źródeł/zadań w ciągu 24 godzin",
-    "importErrorDuring7Days": "Błąd importu źródeł/zadań w ciągu 7 dni",
-    "importErrorDuring28Days": "Błąd importu źródeł/zadań w ciągu 28 dni"
+    "importErrorDuring24Hours": "Błąd importu kanałów/wykonań w ciągu 24 godzin",
+    "importErrorDuring7Days": "Błąd importu kanałów/wykonań w ciągu 7 dni",
+    "importErrorDuring28Days": "Błąd importu kanałów/wykonań w ciągu 28 dni"
   },
   "dashlets": {
     "DataSyncErrorsImport": "Błędy synchronizacji danych dla Importu"
