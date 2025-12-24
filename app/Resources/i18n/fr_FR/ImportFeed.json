@@ -42,11 +42,6 @@
     "folder": "Dossier",
     "files": "Fichiers"
   },
-  "links": {
-    "connection": "Connexion",
-    "importJobs": "Tâches d'import",
-    "configuratorItems": "Configurateur"
-  },
   "labels": {
     "parseFile": "Analyse des fichiers : {{fileName}}",
     "creatingImportJobs": "Création de jobs d'import ...",

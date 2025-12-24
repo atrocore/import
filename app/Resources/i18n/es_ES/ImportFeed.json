@@ -42,11 +42,6 @@
     "executeAs": "Ejecutar como",
     "feedPayload": "Carga útil"
   },
-  "links": {
-    "connection": "Conexión",
-    "importJobs": "Trabajos de importación",
-    "configuratorItems": "Configurador"
-  },
   "labels": {
     "wrongTypeForCreatingFromExportFeed": "Ahora sólo está disponible para el tipo de alimentación de exportación \"Archivo\".",
     "excelFormatWarning": "El archivo Excel se carga en memoria y se procesa en su totalidad. La importación de archivos complejos depende de los recursos de su servidor. Por ello, para archivos de gran tamaño, recomendamos utilizar CSV, ya que se procesa fila por fila.",

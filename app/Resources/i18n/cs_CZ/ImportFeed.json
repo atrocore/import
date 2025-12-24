@@ -83,11 +83,6 @@
     "onlyImportFailed28Days": "Pouze importovat kanály, které selhaly během posledních 28 dnů",
     "onlyImportFailed24Hours": "Pouze importovat kanály, které selhaly během posledních 24 hodin"
   },
-  "links": {
-    "importJobs": "Import pracovních míst",
-    "configuratorItems": "Konfigurátor",
-    "connection": "Připojení"
-  },
   "messages": {
     "importNow": "Jste si jisti, že chcete importovat data z vybraného zdroje?"
   },

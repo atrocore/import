@@ -78,11 +78,6 @@
     "convertSuccess": "Файл загружен",
     "\\t": "\\t"
   },
-  "links": {
-    "configuratorItems": "Конфигуратор",
-    "connection": "Соединение",
-    "importJobs": "Импортные работы"
-  },
   "exceptions": {
     "delimitersMustBeDifferent": "Все параметры фида должны иметь уникальные значения.",
     "noSpecifiedAttribute": "Не указан '{{key}}' для атрибута '{{name}}'.",

@@ -42,11 +42,6 @@
     "files": "Файли",
     "sheet": "Лист"
   },
-  "links": {
-    "connection": "З'єднання",
-    "importJobs": "Завдання імпорту",
-    "configuratorItems": "Конфігуратор"
-  },
   "labels": {
     "parseFile": "Аналіз файлу: {{fileName}}",
     "creatingImportJobs": "Створення завдань імпорту...",
