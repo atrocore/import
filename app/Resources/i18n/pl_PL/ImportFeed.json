@@ -19,7 +19,7 @@
     "fileFieldDelimiter": "Separator pól",
     "fileTextQualifier": "Określenie tekstu",
     "isFileHeaderRow": "Wiersz nagłówka",
-    "importJobs": "Zadania importu",
+    "importJobs": "Wykonanie importu",
     "importCronJobs": "Zadania importu Cron",
     "importFeedTypeSimples": "Prosty typ importu",
     "fileDataAction": "Akcja",
