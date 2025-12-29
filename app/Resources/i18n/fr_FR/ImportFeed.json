@@ -19,7 +19,7 @@
     "fileFieldDelimiter": "Délimiteur de champ",
     "fileTextQualifier": "Qualificatif de texte",
     "isFileHeaderRow": "Ligne d'en-tête",
-    "importJobs": "Exécution des importations",
+    "importJobs": "Exécutions d'imports",
     "importCronJobs": "Tâche planifiée d'import",
     "importFeedTypeSimples": "Importation Type de flux Simple",
     "fileDataAction": "Action",
