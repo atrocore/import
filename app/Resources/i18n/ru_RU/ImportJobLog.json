@@ -2,14 +2,11 @@
   "fields": {
     "rowNumber": "Номер строки",
     "message": "Сообщение об ошибке",
-    "importJob": "Импортная работа",
+    "importJob": "Выполнение импорта",
     "row": "Входные данные",
     "entityId": "Id сущности",
     "type": "Тип",
     "entityName": "Сущность"
-  },
-  "links": {
-    "importJob": "Импортная работа"
   },
   "options": {
     "type": {

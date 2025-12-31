@@ -1,26 +1,26 @@
 {
   "fields": {
-    "filterCreateImportJob": "Creato da Import Job",
-    "filterUpdateImportJob": "Aggiornato da Importazione lavoro",
+    "filterCreateImportJob": "Creato dall'esecuzione dell'importazione",
+    "filterUpdateImportJob": "Aggiornato dall'esecuzione dell'importazione",
     "createdByImport": "Creato dall'importazione",
     "updatedByImport": "Aggiornato dall'importazione"
   },
   "scopeNames": {
     "ImportFeed": "Importazione Feed",
     "ImportConfiguratorItem": "Configuratore",
-    "ImportJob": "Importazione di lavoro",
-    "ImportJobLog": "Importazione del registro lavori"
+    "ImportJob": "Esecuzione dell'importazione",
+    "ImportJobLog": "Registro di importazione"
   },
   "scopeNamesPlural": {
     "ImportConfiguratorItem": "Configuratore",
     "ImportFeed": "Importazione di feed",
-    "ImportJob": "Importazione di lavori",
-    "ImportJobLog": "Importazione dei registri dei lavori"
+    "ImportJob": "Esecuzioni di importazione",
+    "ImportJobLog": "Importazione di registri"
   },
   "labels": {
-    "importErrorDuring24Hours": "Errore nell'importazione dei feed/lavori durante le 24 ore",
-    "importErrorDuring7Days": "Importazione di feed/lavori Errore durante 7 giorni",
-    "importErrorDuring28Days": "Importazione di feed/lavori Errore durante 28 giorni"
+    "importErrorDuring24Hours": "Errore nell'importazione dei feed/esecuzioni durante le 24 ore",
+    "importErrorDuring7Days": "Errore nell'importazione di Feed/Esecuzioni durante 7 giorni",
+    "importErrorDuring28Days": "Importazione di Feed/Esecuzioni Errore durante 28 giorni"
   },
   "dashlets": {
     "DataSyncErrorsImport": "Errori di sincronizzazione dei dati per l'importazione"

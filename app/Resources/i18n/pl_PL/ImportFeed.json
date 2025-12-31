@@ -19,7 +19,7 @@
     "fileFieldDelimiter": "Separator pól",
     "fileTextQualifier": "Określenie tekstu",
     "isFileHeaderRow": "Wiersz nagłówka",
-    "importJobs": "Zadania importu",
+    "importJobs": "Wykonanie importu",
     "importCronJobs": "Zadania importu Cron",
     "importFeedTypeSimples": "Prosty typ importu",
     "fileDataAction": "Akcja",
@@ -41,11 +41,6 @@
     "scheduledJobs": "Zaplanowane zadania",
     "files": "Pliki",
     "folder": "Folder"
-  },
-  "links": {
-    "connection": "Połączenie",
-    "importJobs": "Zadania importu",
-    "configuratorItems": "Konfigurator"
   },
   "labels": {
     "parseFile": "Analiza pliku: {{fileName}}",

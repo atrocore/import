@@ -19,7 +19,7 @@
     "fileFieldDelimiter": "Délimiteur de champ",
     "fileTextQualifier": "Qualificatif de texte",
     "isFileHeaderRow": "Ligne d'en-tête",
-    "importJobs": "Tâches d'import",
+    "importJobs": "Exécutions d'imports",
     "importCronJobs": "Tâche planifiée d'import",
     "importFeedTypeSimples": "Importation Type de flux Simple",
     "fileDataAction": "Action",
@@ -41,11 +41,6 @@
     "feedPayload": "Charge utile",
     "folder": "Dossier",
     "files": "Fichiers"
-  },
-  "links": {
-    "connection": "Connexion",
-    "importJobs": "Tâches d'import",
-    "configuratorItems": "Configurateur"
   },
   "labels": {
     "parseFile": "Analyse des fichiers : {{fileName}}",

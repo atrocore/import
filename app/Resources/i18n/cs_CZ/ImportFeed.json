@@ -11,7 +11,7 @@
     "\\t": "\\t",
     "|": "|",
     "doubleQuote": "Dvojitá citace",
-    "singleQuote": "Jediná citace",
+    "singleQuote": "Jednotlivá citace",
     "create": "Vytvořit pouze",
     "create_update": "Vytvoření a aktualizace",
     "update": "Pouze aktualizace",
@@ -55,7 +55,7 @@
     "fileFieldDelimiter": "Oddělovač polí",
     "fileTextQualifier": "Textový kvalifikátor",
     "isFileHeaderRow": "Řádek záhlaví",
-    "importJobs": "Import pracovních míst",
+    "importJobs": "Provádění importu",
     "importCronJobs": "Import úloh Cron",
     "importFeedTypeSimples": "Typ importu krmiva Jednoduchý",
     "thousandSeparator": "Tisíc oddělovačů",
@@ -82,11 +82,6 @@
     "onlyImportFailed7Days": "Pouze importovat kanály, které selhaly během posledních 7 dní",
     "onlyImportFailed28Days": "Pouze importovat kanály, které selhaly během posledních 28 dnů",
     "onlyImportFailed24Hours": "Pouze importovat kanály, které selhaly během posledních 24 hodin"
-  },
-  "links": {
-    "importJobs": "Import pracovních míst",
-    "configuratorItems": "Konfigurátor",
-    "connection": "Připojení"
   },
   "messages": {
     "importNow": "Jste si jisti, že chcete importovat data z vybraného zdroje?"
@@ -116,7 +111,7 @@
     "incorrectUnitValue": "Formát naměřené hodnoty je neplatný. Očekává se hodnota \"10 mm\".",
     "incorrectUnit": "Jednotka měření \"%s\" pro pole \"%s\" je nesprávná.",
     "incorrectAttributeUnit": "Jednotka měření \"%s\" pro hodnotu atributu \"%s\" je nesprávná.",
-    "permissionDenied": "Povolení odepřeno",
+    "permissionDenied": "Povolení zamítnuto",
     "nothingToUpdate": "Nic k aktualizaci",
     "configuratorEmpty": "Konfigurátor nemůže být prázdný.",
     "utf8Expected": "Nahraný soubor by měl být kódován v UTF-8.",
@@ -153,6 +148,6 @@
     "nullValue": "Hodnota bude interpretována jako hodnota \"NULL\".",
     "emptyValue": "Hodnota bude interpretována jako \"prázdná\" hodnota.",
     "skipValue": "Bude interpretováno jako hodnota, která má být přeskočena.",
-    "executeAs": "Určete, kterého uživatele systém použije k provedení importu."
+    "executeAs": "Zadejte, kterého uživatele systém použije k provedení importu."
   }
 }

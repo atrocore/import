@@ -1,26 +1,26 @@
 {
   "fields": {
-    "filterCreateImportJob": "Créé par job d'import",
+    "filterCreateImportJob": "Créé par l'exécution d'import",
     "updatedByImport": "Mis à jour par import",
-    "filterUpdateImportJob": "Mis à jour par job d'import",
+    "filterUpdateImportJob": "Mise à jour par l'exécution d'import",
     "createdByImport": "Créé par import"
   },
   "labels": {
-    "importErrorDuring24Hours": "Erreur de flux/tâches d'imports pendant 24 heures",
-    "importErrorDuring7Days": "Erreur de flux/tâches d'imports pendant 7 jours",
-    "importErrorDuring28Days": "Erreur de flux/tâches d'imports pendant 28 jours"
+    "importErrorDuring24Hours": "Erreur flux d'imports/exécutions pendant 24 heures",
+    "importErrorDuring7Days": "Erreur flux d'imports/exécutions pendant 7 jours",
+    "importErrorDuring28Days": "Erreur flux d'imports/exécutions pendant 28 jours"
   },
   "scopeNames": {
     "ImportFeed": "Flux d'import",
     "ImportConfiguratorItem": "Configurateur",
-    "ImportJob": "Tâche d'importation",
-    "ImportJobLog": "Journal de tâche d'import"
+    "ImportJob": "Exécution d'import",
+    "ImportJobLog": "Journal d'import"
   },
   "scopeNamesPlural": {
     "ImportConfiguratorItem": "Configurateur",
     "ImportFeed": "Flux d'imports",
-    "ImportJob": "Tâches d'import",
-    "ImportJobLog": "Journaux de tâche d'import"
+    "ImportJob": "Exécutions d'imports",
+    "ImportJobLog": "Jounaux d'imports"
   },
   "dashlets": {
     "DataSyncErrorsImport": "Erreurs de synchronisation des données pour l'importation"

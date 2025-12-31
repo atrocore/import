@@ -2,14 +2,11 @@
   "fields": {
     "rowNumber": "Číslo řádku",
     "row": "Vstupní data",
-    "importJob": "Import práce",
+    "importJob": "Provádění importu",
     "entityId": "Id subjektu",
     "message": "Chybová zpráva",
     "type": "Typ",
     "entityName": "Entita"
-  },
-  "links": {
-    "importJob": "Import práce"
   },
   "options": {
     "type": {

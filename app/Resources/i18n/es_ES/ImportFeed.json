@@ -24,7 +24,7 @@
     "fileFieldDelimiter": "Delimitador de campo",
     "fileTextQualifier": "Calificador de texto",
     "isFileHeaderRow": "Fila de cabecera",
-    "importJobs": "Trabajos de importación",
+    "importJobs": "Ejecuciones de importación",
     "importCronJobs": "Importar Cron Jobs",
     "importFeedTypeSimples": "Importar tipo de alimentación Simple",
     "fileDataAction": "Acción",
@@ -41,11 +41,6 @@
     "scheduledJobs": "Tareas programadas",
     "executeAs": "Ejecutar como",
     "feedPayload": "Carga útil"
-  },
-  "links": {
-    "connection": "Conexión",
-    "importJobs": "Trabajos de importación",
-    "configuratorItems": "Configurador"
   },
   "labels": {
     "wrongTypeForCreatingFromExportFeed": "Ahora sólo está disponible para el tipo de alimentación de exportación \"Archivo\".",
