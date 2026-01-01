@@ -148,6 +148,6 @@
     "nullValue": "Hodnota bude interpretována jako hodnota \"NULL\".",
     "emptyValue": "Hodnota bude interpretována jako \"prázdná\" hodnota.",
     "skipValue": "Bude interpretováno jako hodnota, která má být přeskočena.",
-    "executeAs": "Zadejte, kterého uživatele systém použije k provedení importu."
+    "executeAs": "Určete, kterého uživatele má systém použít pro import."
   }
 }
