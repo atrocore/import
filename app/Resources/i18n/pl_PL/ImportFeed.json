@@ -142,7 +142,7 @@
     "skipValue": "Zostanie zinterpretowana jako wartość do pominięcia.",
     "markForNoRelation": "Oznacza relację, która nie powinna być powiązana z daną jednostką.",
     "emptyValue": "Wartość zostanie zinterpretowana jako \"pusta\" wartość.",
-    "executeAs": "Proszę określić użytkownika, którego system użyje do wykonania importu.",
+    "executeAs": "Określ, którego użytkownika system powinien użyć do importu.",
     "nullValue": "Wartość zostanie zinterpretowana jako wartość \"NULL\"."
   },
   "boolFilters": {
