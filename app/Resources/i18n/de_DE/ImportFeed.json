@@ -36,8 +36,8 @@
     "feedPayload": "Nutzlast",
     "rootNode": "Wurzelknoten",
     "importFile": "Daten-Datei",
-    "importCronJobs": "Cron-Aufträge importieren",
-    "importFeedTypeSimples": "Importieren Sie Futtermittel Typ Einfach",
+    "importCronJobs": "Import-Cron-Aufträge",
+    "importFeedTypeSimples": "Importfed-Typ Einfach",
     "executeAs": "Ausführen als",
     "files": "Dateien",
     "sourceFields": "Quellfelder"
@@ -75,7 +75,7 @@
     "Running": "In Arbeit",
     "Failed": "Fehlgeschlagen",
     "Canceled": "Abgebrochen",
-    "wrongTypeForCreatingFromExportFeed": "Sie ist jetzt nur noch für den Export-Feed-Typ 'Datei' verfügbar.",
+    "wrongTypeForCreatingFromExportFeed": "Es ist jetzt nur noch für den Export-Feed-Typ 'Datei' verfügbar.",
     "createImportJobs": "Importaufträge für %s erstellen"
   },
   "messages": {
@@ -119,7 +119,7 @@
     "missingSourceFieldAsIdentifiers": "Als Kennung markiertes Quellfeld '%s' fehlt.",
     "noEntityFound": "Kein Datensatz für die zugehörige Entität '%s' gefunden.",
     "listSeparatorNotAllowed": "Die Verwendung des Trennzeichens für Listenwerte im Wert für das Feld '%s' ist nicht erlaubt.",
-    "noEntityIdentifier": "Bitte wählen Sie die Spalte Identifier für den Konfigurator."
+    "noEntityIdentifier": "Bitte wählen Sie die Identifizierungs-Spalte für den Konfigurator."
   },
   "options": {
     "repeatProcessing": {
@@ -143,7 +143,7 @@
     "nullValue": "Der Wert wird als \"NULL\"-Wert interpretiert.",
     "emptyValue": "Der Wert wird als \"leerer\" Wert zusätzlich zur leeren Zelle interpretiert.",
     "skipValue": "Wird als zu übergehender Wert interpretiert.",
-    "executeAs": "Geben Sie an, welchen Benutzer das System für den Import verwenden soll"
+    "executeAs": "Geben Sie an, welchen Benutzer das System für den Import verwenden soll."
   },
   "boolFilters": {
     "onlyImportFailed24Hours": "Nur Import Feeds, die in den letzten 24 Stunden fehlgeschlagen sind",
