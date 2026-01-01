@@ -5,7 +5,7 @@
     "column": "Campo(s) de origen",
     "defaultContainer": "Valor por defecto",
     "default": "Valor por defecto",
-    "importFeed": "Importación",
+    "importFeed": "Importar alimentación",
     "importBy": "Campo(s) de entidad relacionado(s)",
     "createIfNotExist": "Crear registro de datos relacionados",
     "locale": "Idioma",
@@ -45,7 +45,7 @@
     "createIfNotExist": "Se creará un nuevo registro de datos para la entidad relacionada, si no se encuentra nada basado en los datos proporcionados.",
     "foreignColumn": "Este(estos) valor(es) de campo se utilizará(n) para crear el registro de datos relacionado.",
     "foreignImportBy": "Elija el/los campo(s) de entidad relacionado(s) en su sistema, que debe(n) ser utilizado(s) para la inserción basándose en los datos proporcionados en el campo de selección \"Campo(s) Fuente\". Si sólo se proporciona un campo de datos puede aplicarse el \"Delimitador de campo para la relación\". En otros casos, la cantidad de campos de datos proporcionados y \"Campo(s) de entidad(es) relacionada(s)\" debe ser la misma.",
-    "replaceArray": "Por defecto, el registro o registros proporcionados se añaden a los ya existentes. Marque esta casilla si debe reemplazar estos últimos.",
+    "replaceArray": "Por defecto, los registros proporcionados se añaden a los ya existentes. Marque esta casilla si debe reemplazar estos últimos.",
     "valueExtractor": "Esta expresión regular se utilizará para extraer el valor del campo o campos de origen."
   }
 }
