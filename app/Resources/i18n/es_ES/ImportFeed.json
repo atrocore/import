@@ -143,7 +143,7 @@
     "nullValue": "El valor se interpretará como valor \"NULL\".",
     "emptyValue": "El valor se interpretará como un valor \"vacío\".",
     "skipValue": "Se interpretará como valor a omitir.",
-    "executeAs": "Especifique qué usuario utilizará el sistema para realizar la importación"
+    "executeAs": "Especifique qué usuario debe utilizar el sistema para la importación."
   },
   "boolFilters": {
     "onlyImportFailed24Hours": "Sólo Importar Feeds que fallaron durante las últimas 24 horas",
