@@ -1,6 +1,6 @@
 {
   "fields": {
-    "rowNumber": "Zeile Nummer",
+    "rowNumber": "Zeilen-Nummer",
     "row": "Eingabedaten",
     "importJob": "Importausführung",
     "type": "Typ",
@@ -11,7 +11,7 @@
   "options": {
     "type": {
       "create": "Erstellen",
-      "update": "Aktualisierung",
+      "update": "Aktualisieren",
       "delete": "Löschen",
       "skip": "Überspringen",
       "error": "Fehler"
