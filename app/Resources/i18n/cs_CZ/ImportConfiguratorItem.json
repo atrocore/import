@@ -31,7 +31,7 @@
   "exceptions": {
     "wrongFieldsNumber": "Pro vyhledávání by mělo být množství zdrojových polí stejné jako množství polí souvisejících entit.",
     "wrongForeignFieldsNumber": "Při vkládání by množství zdrojových polí mělo být stejné jako množství polí souvisejících entit.",
-    "foreignColumnsAndFieldsEmpty": "Zdrojové pole (pole) a pole související entity nemohou být prázdná."
+    "foreignColumnsAndFieldsEmpty": "Zdrojové pole (pole) a pole souvisejícího subjektu (subjektů) nemohou být prázdná."
   },
   "tooltips": {
     "column": "Hodnota(y) tohoto(těchto) pole bude(ou) použita(y) k vyhledávání, pokud již existuje související datový záznam.",
@@ -39,7 +39,7 @@
     "createIfNotExist": "Pokud na základě zadaných údajů nebude nic nalezeno, bude vytvořen nový datový záznam pro související subjekt.",
     "foreignColumn": "Tato hodnota (tyto hodnoty) pole bude použita (budou použity) k vytvoření souvisejícího datového záznamu.",
     "foreignImportBy": "Na základě údajů uvedených ve výběrovém poli \"Zdrojová pole\" vyberte pole související entity ve vašem systému, která by měla být použita pro vložení. Pokud je poskytnuto pouze jedno datové pole, může se použít \"Oddělovač polí pro vztah\". V ostatních případech by množství poskytnutých datových polí a \"Pole(a) související entity\" mělo být stejné.",
-    "replaceArray": "Ve výchozím nastavení se zadané záznamy přidají ke stávajícím. Pokud mají být nahrazeny, nastavte toto políčko.",
+    "replaceArray": "Ve výchozím nastavení se zadané záznamy přidají k existujícím záznamům. Pokud mají být nahrazeny, nastavte toto políčko.",
     "valueExtractor": "Tento regulární výraz se použije k získání hodnoty ze zdrojového pole (polí)."
   },
   "groupOptions": {
