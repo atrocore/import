@@ -5,7 +5,7 @@
     "importJob": "Выполнение импорта",
     "row": "Входные данные",
     "entityId": "Id сущности",
-    "type": "Тип",
+    "type": "Type",
     "entityName": "Сущность"
   },
   "options": {
