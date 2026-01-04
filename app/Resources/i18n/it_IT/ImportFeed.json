@@ -124,7 +124,7 @@
   "options": {
     "repeatProcessing": {
       "mistake": "Genera un errore per i record ripetuti",
-      "repeat": "Consente l'elaborazione ripetuta dei record di dati",
+      "repeat": "Consentire l'elaborazione ripetuta dei record di dati",
       "skip": "Salta i record di dati ripetuti"
     },
     "executeAs": {
