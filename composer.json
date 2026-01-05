@@ -4,7 +4,7 @@
   "require": {
     "atrocore/core": ">=2.1.25 <2.3.0",
     "ext-simplexml": "*",
-    "phpoffice/phpspreadsheet": "~1.16.0@stable"
+    "phpoffice/phpspreadsheet": "~5.3.0@stable"
   },
   "conflict": {
     "atrocore/pim": "<1.14.0"
