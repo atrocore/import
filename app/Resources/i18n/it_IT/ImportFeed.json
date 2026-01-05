@@ -124,7 +124,7 @@
   "options": {
     "repeatProcessing": {
       "mistake": "Genera un errore per i record ripetuti",
-      "repeat": "Consente l'elaborazione ripetuta dei record di dati",
+      "repeat": "Consentire l'elaborazione ripetuta dei record di dati",
       "skip": "Salta i record di dati ripetuti"
     },
     "executeAs": {
@@ -143,7 +143,7 @@
     "nullValue": "Il valore sarà interpretato come valore \"NULL\".",
     "emptyValue": "Il valore sarà interpretato come valore \"vuoto\".",
     "skipValue": "Sarà interpretato come valore da saltare.",
-    "executeAs": "Specificare l'utente che il sistema utilizzerà per eseguire l'importazione."
+    "executeAs": "Specificare quale utente il sistema deve utilizzare per l'importazione."
   },
   "boolFilters": {
     "onlyImportFailed24Hours": "Importa solo i feed falliti nelle ultime 24 ore.",
