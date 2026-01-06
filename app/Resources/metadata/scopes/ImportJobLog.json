@@ -2,7 +2,16 @@
   "entity": true,
   "layouts": false,
   "tab": false,
-  "acl": false,
+  "acl": true,
+  "aclActionList": [
+    "read"
+  ],
+  "aclActionLevelListMap": {
+    "read": [
+      "all",
+      "no"
+    ]
+  },
   "customizable": false,
   "importable": false,
   "notifications": false,
