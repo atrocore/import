@@ -55,6 +55,7 @@ class Metadata extends AbstractListener
                 'importDisabled'            => true,
                 'textFilterDisabled'        => true,
                 'emHidden'                  => true,
+                'openApiDisabled'           => true
             ];
 
             $data['entityDefs'][$scope]['fields']['filterUpdateImportJob'] = [
@@ -71,6 +72,7 @@ class Metadata extends AbstractListener
                 'importDisabled'            => true,
                 'textFilterDisabled'        => true,
                 'emHidden'                  => true,
+                'openApiDisabled'           => true
             ];
         }
 
