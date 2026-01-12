@@ -667,7 +667,8 @@
       "type": "datetime",
       "readOnly": true,
       "notStorable": true,
-      "filterDisabled": true
+      "filterDisabled": true,
+      "openApiDisabled": true
     },
     "feedPayload": {
       "type": "text",
