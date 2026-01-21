@@ -19,7 +19,7 @@
     "children": {
       "create": false,
       "select": false,
-      "rowActionsView": "import:views/import-job/record/row-actions/relationship",
+      "rowActionsView": "import:views/import-job/record/row-actions/default",
       "view": "import:views/import-feed/record/panels/import-jobs"
     },
     "importJobLogs": {
