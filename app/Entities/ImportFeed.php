@@ -138,7 +138,6 @@ class ImportFeed extends Base
                 'foreignImportBy'           => $item->get('foreignImportBy'),
                 'default'                   => $item->get('default'),
                 'importBy'                  => $item->get('importBy'),
-                'type'                      => $item->get('type'),
                 'locale'                    => $item->get('locale'),
                 'entity'                    => $result['entity'],
                 'delimiter'                 => $result['delimiter'],

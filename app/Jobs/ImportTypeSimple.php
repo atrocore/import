@@ -212,8 +212,6 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
 
         $this->prepareConfigurator($data);
 
-        $ids = [];
-
         $processedIds = [];
 
         while (!empty($inputData = $this->readConvertedFile($importJob->get('convertedFileId'), $data))) {
@@ -247,9 +245,6 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
                     $entity = $this->findExistEntity($entityService->getEntityType(), $data['data'], $where);
                     if (!empty($entity)) {
                         $id = $entity->get('id');
-                        if (self::isDeleteAction($data['action'])) {
-                            $ids[] = $id;
-                        }
                     }
 
                     /**
@@ -360,9 +355,6 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
                             $log->set('type', 'create');
                             $log->set('entityId', $id);
                             $processedIds[] = $id;
-                            if (self::isDeleteAction($action)) {
-                                $ids[] = $id;
-                            }
                         }
                     } elseif ($action === 'delete_found') {
                         $entityService->deleteEntity($id);
@@ -401,6 +393,7 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
                         $this->getEntityManager()->saveEntity($log);
                     } else {
                         $log->set('type', 'skip');
+                        $log->set('entityId', $id);
                         $this->getEntityManager()->saveEntity($log);
                     }
 
@@ -420,31 +413,6 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
         }
 
         $this->getMemoryStorage()->set('importRowNumber', (int)(($data['rowNumberPart'] ?? 0) + ($data['offset'] ?? 1)));
-
-
-        if (self::isDeleteAction($data['action'])) {
-            $parentJobId = $importJob->get('parentId');
-            if (empty($parentJobId)) {
-                throw new Error('Parent job does not exist');
-            }
-
-            $cacheData = [];
-            $cacheFile = $this->createTmpFile("import-$parentJobId-existing-{$importJob->get('id')}.txt");
-
-            // put existing ids to the file cache
-            while (!empty($ids) || !empty($cacheData)) {
-                if (count($cacheData) < 60000 && !empty($ids)) {
-                    $cacheData[array_pop($ids)] = true;
-                    continue;
-                }
-
-                fwrite($cacheFile, json_encode($cacheData));
-                fwrite($cacheFile, PHP_EOL);
-                $cacheData = [];
-            }
-
-            fclose($cacheFile);
-        }
 
         $this->getMemoryStorage()->delete('importJobId');
         $this->getMemoryStorage()->delete('skipAssignmentNotifications');
@@ -834,146 +802,60 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
         ];
     }
 
-    public static function clearCache(): void
-    {
-        Util::removeDir(self::CACHE_DIR);
-    }
-
-    public function prepareDeleteCache(string $parentId, array $ids): string
-    {
-        $cacheFileName = Util::generateId() . '.txt';
-        $cacheFile = $this->createTmpFile($cacheFileName);
-
-        // merge cache files of every job
-        foreach ($ids as $jobId) {
-            $fileName = self::CACHE_DIR . "/import-$parentId-existing-$jobId.txt";
-            if (!file_exists($fileName)) {
-                continue;
-            }
-
-            $jobCache = fopen($fileName, 'r');
-            while (!empty($row = fgets($jobCache))) {
-                fwrite($cacheFile, $row);
-            }
-
-            fclose($jobCache);
-            unlink($fileName);
-        }
-
-        fclose($cacheFile);
-
-        return self::CACHE_DIR . DIRECTORY_SEPARATOR . $cacheFileName;
-    }
-
-    public function generateDeleteFilesFromCache(ImportFeed $importFeed, string $cacheFileName, string $entityName): array
+    public function generateDeleteFilesForJob(Entity $importJob): array
     {
         $result = [];
-        $stmt = $this->getEntityManager()->getConnection()
-            ->createQueryBuilder()
-            ->select('id')
-            ->from($this->getEntityManager()->getMapper()->toDb($entityName))
-            ->where('deleted = :false')
-            ->setParameter('false', false, ParameterType::BOOLEAN)
-            ->executeQuery();
+
+        /** @var \Import\Repositories\ImportJobLog $repository */
+        $repository = $this->getEntityManager()->getRepository('ImportJobLog');
+        /** @var \Import\Entities\ImportFeed $importFeed */
+        $importFeed = $importJob->get('importFeed');
 
         $folder = $this->getService('ImportFeed')->createImportFileFolder($importFeed);
-        foreach ($this->createFilesToDeleteFromStatement($importFeed, $stmt, $cacheFileName) as $fileName) {
+        if (!is_dir(self::CACHE_DIR) && !mkdir(self::CACHE_DIR)) {
+            throw new Error($this->translate('cacheWriteFailed', 'exceptions', 'ImportJob'));
+        }
+
+        $offset = 0;
+        $limit = (int)$importFeed->get('maxPerJob') ?: 60000;
+        while (true) {
+            $ids = $repository->getNotFoundEntityIdsByJobId($importJob->get('id'), $importJob->get('entityName'), $limit, $offset);
+            if (empty($ids)) {
+                break;
+            }
+
+            $name = Util::generateUniqueHash() . '.csv';
+            $filePath = self::CACHE_DIR . DIRECTORY_SEPARATOR . $name;
+            $resource = fopen($filePath, 'w+');
+            if ($resource === false) {
+                throw new Error($this->translate('cacheWriteFailed', 'exceptions', 'ImportJob'));
+            }
+
+            fputcsv($resource, ['id'], $importFeed->getDelimiter(), $importFeed->getEnclosure());
+
+            foreach ($ids as $id) {
+                fputcsv($resource, [$id], $importFeed->getDelimiter(), $importFeed->getEnclosure());
+            }
+
+            fclose($resource);
+
             $input = new \stdClass();
-            $input->name = ImportFeedService::generateFileName($fileName);
+            $input->name = ImportFeedService::generateFileName($name);
             $input->mimeType = 'text/csv';
             $input->importFeedId = $importFeed->get('id');
             $input->folderId = $folder->get('id');
-            $fileData = $this->getService('File')->moveLocalFileToFileEntity($input, self::CACHE_DIR . "/$fileName");
+            $fileData = $this->getService('File')->moveLocalFileToFileEntity($input, $filePath);
             $result[] = $fileData;
+
+            $offset += $limit;
         }
 
         return $result;
     }
 
-    private function createFilesToDeleteFromStatement(ImportFeed $importFeed, \Doctrine\DBAL\Result $stmt, string $cacheFileName): array
+    public static function clearCache(): void
     {
-        $part = 1;
-        $maxPerJob = (int)$importFeed->get('maxPerJob');
-        $linesCount = 0;
-        $cacheFile = fopen($cacheFileName, 'r');
-
-        $csvBaseName = date('Y-m-d H:i:s');
-        if ($maxPerJob > 0) {
-            $csvFileName = "$csvBaseName ($part).csv";
-        } else {
-            $csvFileName = "$csvBaseName.csv";
-        }
-
-        $csvFile = $this->createTmpFile($csvFileName);
-        fputcsv($csvFile, ['id'], $importFeed->getDelimiter(), $importFeed->getEnclosure());
-
-        $files = [];
-        $records = [];
-        while (($row = $stmt->fetchAssociative()) !== false || !empty($records)) {
-            if (count($records) < 60000 && $row !== false) {
-                $records[] = $row['id'];
-                continue;
-            }
-
-            $existing = [];
-            while (($cacheRow = fgets($cacheFile)) !== false) {
-                $cacheRow = json_decode($cacheRow, true);
-
-                foreach ($records as $record) {
-                    if (isset($cacheRow[$record])) {
-                        $existing[] = $record;
-                    }
-                }
-            }
-            rewind($cacheFile);
-
-            foreach (array_diff($records, $existing) as $diffId) {
-                if ($maxPerJob > 0 && $linesCount >= $maxPerJob) {
-                    $linesCount = 0;
-                    $part += 1;
-                    $files[] = $csvFileName;
-                    fclose($csvFile);
-                    $csvFileName = "$csvBaseName ($part).csv";
-                    $csvFile = $this->createTmpFile($csvFileName);
-                    fputcsv($csvFile, ['id'], $importFeed->getDelimiter(), $importFeed->getEnclosure());
-                }
-
-                fputcsv($csvFile, [$diffId], $importFeed->getDelimiter(), $importFeed->getEnclosure());
-                $linesCount += 1;
-            }
-
-            $records = [];
-            if ($row !== false) {
-                $records[] = $row['id'];
-            }
-        }
-
-        if ($linesCount > 0) {
-            $files[] = $csvFileName;
-        } else {
-            unlink(self::CACHE_DIR . "/$csvFileName");
-        }
-
-        fclose($cacheFile);
-        unlink($cacheFileName);
-        fclose($csvFile);
-
-        return $files;
-    }
-
-    /** @return resource */
-    private function createTmpFile(string $name)
-    {
-        if (!is_dir(self::CACHE_DIR) && !mkdir(self::CACHE_DIR)) {
-            throw new Error($this->translate('cacheWriteFailed', 'exceptions', 'ImportJob'));
-        }
-
-        $resource = fopen(self::CACHE_DIR . DIRECTORY_SEPARATOR . $name, 'w+');
-        if ($resource === false) {
-            throw new Error($this->translate('cacheWriteFailed', 'exceptions', 'ImportJob'));
-        }
-
-        return $resource;
+        Util::removeDir(self::CACHE_DIR);
     }
 
     public function prepareConfigurator(array &$data): void

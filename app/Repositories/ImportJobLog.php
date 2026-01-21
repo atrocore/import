@@ -107,6 +107,42 @@ class ImportJobLog extends Archive
         return array_column($result, 'entity_id');
     }
 
+    public function getNotFoundEntityIdsByJobId(string $jobId, string $entityName, int $limit = 0, int $offset = 0): array
+    {
+        // cannot perform cross-db subquery
+        if ($this->hasClickHouse()) {
+            return [];
+        }
+
+        $subquery = $this->getConnection()->createQueryBuilder()
+            ->select('ijl.entity_id')
+            ->from('import_job_log', 'ijl')
+            ->where('ijl.deleted = :false')
+            ->andWhere('ijl.import_job_id = :jobId')
+            ->andWhere('ijl.type IN (:type)')
+            ->andWhere('ijl.entity_id IS NOT NULL');
+
+        $qb = $this->getConnection()->createQueryBuilder()
+            ->select('id')
+            ->from($this->getMapper()->toDb($entityName))
+            ->where('deleted = :false')
+            ->andWhere('id NOT IN (' . $subquery->getSQL() . ')')
+            ->setParameter('false', false, ParameterType::BOOLEAN)
+            ->setParameter('jobId', $jobId)
+            ->setParameter('type', ['create', 'update', 'skip'], Connection::PARAM_STR_ARRAY);
+
+        if ($limit > 0) {
+            $qb->setMaxResults($limit);
+        }
+
+        if ($offset > 0) {
+            $qb->setFirstResult($offset);
+        }
+
+        return $qb->executeQuery()
+            ->fetchFirstColumn();
+    }
+
 
     protected function getClickHouseConnection(): Connection
     {
