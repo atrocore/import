@@ -19,10 +19,6 @@
       "type": "link",
       "readOnly": true
     },
-    "sortOrder": {
-      "type": "float",
-      "readOnly": true
-    },
     "entityName": {
       "type": "varchar",
       "readOnly": true,
@@ -207,7 +203,7 @@
     }
   },
   "collection": {
-    "sortBy": "sortOrder",
+    "sortBy": "id",
     "asc": false
   },
   "indexes": {

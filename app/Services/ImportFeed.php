@@ -689,16 +689,11 @@ class ImportFeed extends Base
 
         $this->getEntityManager()->getConnection()->createQueryBuilder()
             ->update('import_job')
-            ->set('sort_order', ':sortOrder')
             ->set('queue_item_id', ':queueItemId')
             ->where('id = :id')
-            ->setParameter('sortOrder', time())
             ->setParameter('queueItemId', $jobEntity->get('id'))
             ->setParameter('id', $data['data']['importJobId'])
             ->executeQuery();
-
-        // waiting because we need a correct next sort number
-        sleep(1);
 
         return !empty($id);
     }
@@ -782,7 +777,6 @@ class ImportFeed extends Base
         $entity->set('importFeedId', $feed->get('id'));
         $entity->set('entityName', $entityType);
         $entity->set('attachmentId', $attachmentId);
-        $entity->set('sortOrder', time() - (new \DateTime('2023-01-01'))->getTimestamp());
 
         if (!empty($payload)) {
             $entity->set('payload', $payload);
