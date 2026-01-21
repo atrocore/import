@@ -391,7 +391,7 @@ class ImportFeed extends Base
     public function runImport(
         string    $importFeedId,
         string    $attachmentId,
-        \stdClass $payload = null,
+        ?\stdClass $payload = null,
         ?string   $priority = null
     ): bool
     {
@@ -767,7 +767,7 @@ class ImportFeed extends Base
         ImportFeedEntity $feed,
         string           $entityType,
         string           $attachmentId,
-        \stdClass        $payload = null
+        ?\stdClass        $payload = null
     ): ImportJob
     {
         $entityLabel = $this->getInjection('language')->translate($entityType, 'scopeNames');
