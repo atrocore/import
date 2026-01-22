@@ -168,10 +168,20 @@ class ImportFeed extends Base
             return $folder;
         }
 
+        $folder = $this->createImportFileFolderFromId($importFeed->get('id'));
+
+        $importFeed->set('folderId', $folder->id);
+        $this->getEntityManager()->saveEntity($importFeed);
+
+        return $folder;
+    }
+
+    protected function createImportFileFolderFromId(string $id): Folder
+    {
         /** @var \Atro\Repositories\Folder $folderRepo */
         $folderRepo = $this->getEntityManager()->getRepository('Folder');
 
-        $folder = $folderRepo->where(['code' => $importFeed->get('id')])->findOne();
+        $folder = $folderRepo->where(['code' => $id])->findOne();
         if (empty($folder)) {
             $root = $folderRepo->where(['code' => 'import_feeds'])->findOne();
             if (empty($root)) {
@@ -185,18 +195,15 @@ class ImportFeed extends Base
             }
 
             $post = new \stdClass();
-            $post->name = $importFeed->get('id');
-            $post->code = $importFeed->get('id');
+            $post->name = $id;
+            $post->code = $id;
             $post->parentId = $root->get('id');
             $post->parentsIds = [$root->get('id')];
 
             $this->getServiceFactory()->create('Folder')->createEntity($post);
 
-            $folder = $folderRepo->where(['code' => $importFeed->get('id')])->findOne();
+            $folder = $folderRepo->where(['code' => $id])->findOne();
         }
-
-        $importFeed->set('folderId', $folder->id);
-        $this->getEntityManager()->saveEntity($importFeed);
 
         return $folder;
     }
@@ -854,6 +861,7 @@ class ImportFeed extends Base
         }
 
         $attachment = new \stdClass();
+        $attachment->id = Util::generateId();
         $attachment->name = $exportFeed->get('name') . '(From Export)';
         $attachment->description = $exportFeed->get('description');
         $attachment->code = $exportFeed->code;
@@ -868,6 +876,7 @@ class ImportFeed extends Base
         $attachment->nullValue = $exportFeed->getFeedField('nullValue');
         $attachment->markForNoRelation = $exportFeed->getFeedField('markForNoRelation');
         $attachment->markForUnlinkedAttribute = $exportFeed->getFeedField('markForUnlinkedAttribute');
+        $attachment->folderId = $this->createImportFileFolderFromId($attachment->id)->get('id');
         if (!empty($locale)) {
             $attachment->thousandSeparator = $locale->get('thousandSeparator');
             $attachment->decimalMark = $locale->get('decimalMark');
