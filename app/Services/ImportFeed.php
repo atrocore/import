@@ -391,7 +391,7 @@ class ImportFeed extends Base
     public function runImport(
         string    $importFeedId,
         string    $attachmentId,
-        \stdClass $payload = null,
+        ?\stdClass $payload = null,
         ?string   $priority = null
     ): bool
     {
@@ -444,7 +444,6 @@ class ImportFeed extends Base
 
         $service = $this->getImportTypeService($importFeed);
         $jobStates = array_unique(array_column($jobsData, 'state'));
-        $jobIds = array_column($jobsData, 'id');
         $entityName = $parent->get('entityName');
         $maxPerJob = (int)$importFeed->get('maxPerJob');
         $qmData = $qmJob->get('payload');
@@ -464,13 +463,9 @@ class ImportFeed extends Base
             $qmData['data']['entity'] = $entityName;
 
             $confItem = [];
-            foreach ($qmData['data']['configuration'] ?? [] as $item) {
-                // copy common field configuration
-                if ($item['entity'] == $entityName && $item['type'] == 'Field') {
-                    foreach ($service->getCommonFieldsList() as $commonField) {
-                        $confItem[$commonField] = $item[$commonField];
-                    }
-                    break;
+            if (!empty($item = $qmData['data']['configuration'][0])) {
+                foreach ($service->getCommonFieldsList() as $commonField) {
+                    $confItem[$commonField] = $item[$commonField];
                 }
             }
 
@@ -479,15 +474,13 @@ class ImportFeed extends Base
                 return false;
             }
 
-            $confItem['type'] = 'Field';
             $confItem['name'] = 'id';
             $confItem['entity'] = $entityName;
             $confItem['column'] = ['id'];
             $qmData['data']['configuration'] = [$confItem];
 
             // generate import file
-            $cacheFileName = $service->prepareDeleteCache($parent->get('id'), $jobIds);
-            $files = $service->generateDeleteFilesFromCache($importFeed, $cacheFileName, $entityName);
+            $files = $service->generateDeleteFilesForJob($parent);
 
             if (empty($files)) {
                 return false;
@@ -696,16 +689,11 @@ class ImportFeed extends Base
 
         $this->getEntityManager()->getConnection()->createQueryBuilder()
             ->update('import_job')
-            ->set('sort_order', ':sortOrder')
             ->set('queue_item_id', ':queueItemId')
             ->where('id = :id')
-            ->setParameter('sortOrder', time())
             ->setParameter('queueItemId', $jobEntity->get('id'))
             ->setParameter('id', $data['data']['importJobId'])
             ->executeQuery();
-
-        // waiting because we need a correct next sort number
-        sleep(1);
 
         return !empty($id);
     }
@@ -779,7 +767,7 @@ class ImportFeed extends Base
         ImportFeedEntity $feed,
         string           $entityType,
         string           $attachmentId,
-        \stdClass        $payload = null
+        ?\stdClass        $payload = null
     ): ImportJob
     {
         $entityLabel = $this->getInjection('language')->translate($entityType, 'scopeNames');
@@ -789,7 +777,6 @@ class ImportFeed extends Base
         $entity->set('importFeedId', $feed->get('id'));
         $entity->set('entityName', $entityType);
         $entity->set('attachmentId', $attachmentId);
-        $entity->set('sortOrder', time() - (new \DateTime('2023-01-01'))->getTimestamp());
 
         if (!empty($payload)) {
             $entity->set('payload', $payload);

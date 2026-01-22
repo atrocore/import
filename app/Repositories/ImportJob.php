@@ -161,10 +161,8 @@ class ImportJob extends Base
                 if (\Import\Jobs\ImportTypeSimple::isDeleteAction($qmData->action)) {
                     if (!empty($qmData->importJobCreatorId)) {
                         do {
-                            if ($this->getQmJobStatus($qmData->importJobCreatorId) == 'Running') {
-                                $jobs = array_filter($children, function ($child) use ($parent) {
-                                    return $child['entity_name'] == $parent->get('entityName');
-                                });
+                            if (!in_array($this->getQmJobStatus($qmData->importJobCreatorId), ['Failed', 'Canceled', 'Success'])) {
+                                $jobs = array_filter($children, fn($child) => $child['entity_name'] == $parent->get('entityName'));
                                 $jobsStates = array_unique(array_column($jobs, 'state'));
 
                                 if (in_array('Pending', $jobsStates) || in_array('Running', $jobsStates)) {
@@ -179,9 +177,7 @@ class ImportJob extends Base
                         } while (true);
                     }
 
-                    $jobs = array_filter($children, function ($child) use ($parent) {
-                        return $child['entity_name'] == $parent->get('entityName');
-                    });
+                    $jobs = array_filter($children, fn($child) => $child['entity_name'] == $parent->get('entityName'));
 
                     if ($this->getImportService()->pushDeleteJobs($parent, $jobs, $qmJob)) {
                         return;

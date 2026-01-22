@@ -23,24 +23,13 @@ class ImportFeed extends Base
 
     public static function getFileParserClass(string $format): string
     {
-        switch ($format) {
-            case 'CSV':
-                $className = \Import\FileParsers\Csv::class;
-                break;
-            case 'Excel':
-                $className = \Import\FileParsers\Excel::class;
-                break;
-            case 'JSON':
-                $className = \Import\FileParsers\Json::class;
-                break;
-            case 'XML':
-                $className = \Import\FileParsers\Xml::class;
-                break;
-            default:
-                throw new \Error('Unknown file format');
-        }
-
-        return $className;
+        return match ($format) {
+            'CSV'   => \Import\FileParsers\Csv::class,
+            'Excel' => \Import\FileParsers\Excel::class,
+            'JSON'  => \Import\FileParsers\Json::class,
+            'XML'   => \Import\FileParsers\Xml::class,
+            default => throw new \Error('Unknown file format'),
+        };
     }
 
     public function setFeedField(string $name, $value): void
@@ -138,7 +127,6 @@ class ImportFeed extends Base
                 'foreignImportBy'           => $item->get('foreignImportBy'),
                 'default'                   => $item->get('default'),
                 'importBy'                  => $item->get('importBy'),
-                'type'                      => $item->get('type'),
                 'locale'                    => $item->get('locale'),
                 'entity'                    => $result['entity'],
                 'delimiter'                 => $result['delimiter'],
