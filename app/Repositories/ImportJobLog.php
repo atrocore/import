@@ -127,6 +127,7 @@ class ImportJobLog extends Archive
             ->from($this->getMapper()->toDb($entityName))
             ->where('deleted = :false')
             ->andWhere('id NOT IN (' . $subquery->getSQL() . ')')
+            ->orderBy('id')
             ->setParameter('false', false, ParameterType::BOOLEAN)
             ->setParameter('jobId', $jobId)
             ->setParameter('type', ['create', 'update', 'skip'], Connection::PARAM_STR_ARRAY);
