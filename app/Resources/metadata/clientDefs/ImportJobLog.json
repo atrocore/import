@@ -5,8 +5,7 @@
     "onlyMy"
   ],
   "recordViews": {
-    "detail": "import:views/import-job-log/record/detail",
-    "list": "import:views/import-job-log/record/list"
+    "detail": "import:views/import-job-log/record/detail"
   },
   "iconClass": "code-block"
 }
