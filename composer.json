@@ -7,7 +7,7 @@
     "phpoffice/phpspreadsheet": "^1.16.0@stable"
   },
   "conflict": {
-    "atrocore/pim": "<1.14.0"
+    "atrocore/pim": "<1.15.23"
   },
   "autoload": {
     "psr-4": {
