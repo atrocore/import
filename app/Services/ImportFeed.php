@@ -779,11 +779,19 @@ class ImportFeed extends Base
     {
         $entityLabel = $this->getInjection('language')->translate($entityType, 'scopeNames');
 
+        $user = $this->getUser();
+
         $entity = $this->getEntityManager()->getEntity('ImportJob');
         $entity->set('name', "{$entityLabel}: {$feed->get('name')}");
         $entity->set('importFeedId', $feed->get('id'));
         $entity->set('entityName', $entityType);
         $entity->set('attachmentId', $attachmentId);
+        $entity->set('ownerUserId', $user->get('id'));
+        $entity->set('assignedUserId', $feed->get('assignedUserId') ?? $user->get('id'));
+        $entity->set('teamsIds', array_intersect(
+            array_column($feed->get('teams')->toArray(), 'id'),
+            array_column($user->get('teams')->toArray(), 'id')
+        ));
 
         if (!empty($payload)) {
             $entity->set('payload', $payload);
