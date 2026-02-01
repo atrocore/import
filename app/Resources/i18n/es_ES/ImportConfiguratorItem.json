@@ -8,7 +8,7 @@
     "importFeed": "Importar alimentación",
     "importBy": "Campo(s) de entidad relacionado(s)",
     "createIfNotExist": "Crear registro de datos relacionados",
-    "locale": "Idioma",
+    "locale": "Languages",
     "entityAttribute": "Atributo",
     "sourceFields": "Campos fuente",
     "type": "Tipo",
@@ -22,7 +22,7 @@
   "groupOptions": {
     "name": {
       "fields": "Campos",
-      "attributes": "Atributos"
+      "attributes": "Atributo"
     }
   },
   "labels": {
