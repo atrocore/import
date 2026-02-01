@@ -15,7 +15,7 @@
     "column": "Исходное поле(я)",
     "name": "Поле",
     "locale": "Язык",
-    "type": "Type",
+    "type": "Тип",
     "importFeed": "Импортный фид",
     "entityAttribute": "Атрибут"
   },
