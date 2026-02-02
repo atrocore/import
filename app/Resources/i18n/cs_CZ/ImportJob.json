@@ -7,7 +7,7 @@
     "generating": "Generování",
     "tryAgain": "Znovu importovat",
     "reCreate": "Znovu vytvořit",
-    "generateFileConverted": "Vytvořit soubor: Převedeno",
+    "generateFileConverted": "Generovat soubor: Převedeno",
     "generateFileCreated": "Generovat soubor: Created",
     "generateFileUpdated": "Generovat soubor: Aktualizováno",
     "generateFileDeleted": "Generovat soubor: Odstraněno",
@@ -31,7 +31,7 @@
     "onlyImportFailed7Days": "Pouze import úloh, které selhaly během posledních 7 dní"
   },
   "fields": {
-    "importFeed": "Importní krmivo",
+    "importFeed": "Importovat krmivo",
     "message": "Zpráva",
     "updatedCount": "Aktualizováno",
     "skippedCount": "Vynechaný",
@@ -47,7 +47,7 @@
     "deletedCount": "Odstraněno"
   },
   "links": {
-    "importFeed": "Importní krmivo",
+    "importFeed": "Importovat krmivo",
     "importJobLogs": "Protokoly o chybách",
     "files": "Soubory"
   }
