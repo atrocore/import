@@ -33,7 +33,7 @@
   "fields": {
     "importFeed": "Importovat krmivo",
     "message": "Zpráva",
-    "updatedCount": "Aktualizováno",
+    "updatedCount": "Aktualizace",
     "skippedCount": "Vynechaný",
     "errorsCount": "Chyby",
     "attachment": "Importovaný soubor",
