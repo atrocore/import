@@ -858,11 +858,18 @@ class ImportFeed extends Base
                 if (empty($attribute) || $attribute->get('type') === 'script') {
                     continue;
                 }
+
             }
 
 
             if (!empty($configuratorItem->column)) {
-                $protected = $this->getMetadata()->get(['entityDefs', $exportFeed->getFeedFields()['entity'], 'fields', $configuratorItem->column, 'protected']);
+                if(!empty($configuratorItem->entityAttributeId)) {
+                    $attribute = $this->getEntityManager()->getEntity('Attribute', $configuratorItem->entityAttributeId);
+                    $protected = $attribute->get('isProtected');
+                }else{
+                    $protected =  $this->getMetadata()->get(['entityDefs', $exportFeed->getFeedFields()['entity'], 'fields', $configuratorItem->column, 'protected']);
+                }
+
                 if (empty($protected)) {
                     $sourceFields[] = $configuratorItem->column;
                 }
@@ -912,10 +919,17 @@ class ImportFeed extends Base
             $attachment->importFeedId = $importFeed->id;
             $attachment->name = $configuratorItem->name;
             if (!empty($configuratorItem->column)) {
-                $protected = $this->getMetadata()->get(['entityDefs',$exportFeed->getFeedField('entity'), 'fields', $configuratorItem->column, 'protected']);
+                if(!empty($configuratorItem->entityAttributeId)) {
+                    $attribute = $this->getEntityManager()->getEntity('Attribute', $configuratorItem->entityAttributeId);
+                    $protected = $attribute->get('isProtected');
+                }else{
+                    $protected =  $this->getMetadata()->get(['entityDefs', $exportFeed->getFeedFields()['entity'], 'fields', $configuratorItem->column, 'protected']);
+                }
+
                 if(!empty($protected)){
                     continue;
                 }
+
                 $attachment->column = [$configuratorItem->column];
             }
             $attachment->scope = $configuratorItem->scope;
