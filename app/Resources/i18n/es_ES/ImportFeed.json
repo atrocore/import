@@ -61,7 +61,7 @@
     "|": "|",
     "doubleQuote": "Cita doble",
     "singleQuote": "Cotización única",
-    "create": "Sólo crear",
+    "create": "Crear sólo",
     "create_update": "Crear y actualizar",
     "update": "Sólo actualización",
     "delete_found": "Borrar sólo (registros encontrados)",
