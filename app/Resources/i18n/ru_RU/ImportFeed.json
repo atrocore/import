@@ -7,7 +7,7 @@
     "connection": "Соединение",
     "decimalMark": "Десятичный разделитель",
     "isFileHeaderRow": "Строка заголовка",
-    "isActive": "Активные",
+    "isActive": "Активный",
     "scheduledJobs": "Задания планировщика",
     "configuratorItems": "Конфигуратор",
     "delimiter": "Разделитель значений списка",
