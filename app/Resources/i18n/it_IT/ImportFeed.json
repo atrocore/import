@@ -38,7 +38,7 @@
     "markForUnlinkedAttribute": "Marcatore per attributo non collegato",
     "skipValue": "Marcatore per il valore saltato ",
     "fieldDelimiterForRelation": "Delimitatore di campo per la relazione",
-    "scheduledJobs": "Lavori programmati",
+    "scheduledJobs": "Lavoro programmato",
     "executeAs": "Esegui come",
     "feedPayload": "Carico utile"
   },
