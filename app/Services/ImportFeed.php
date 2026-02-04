@@ -858,7 +858,6 @@ class ImportFeed extends Base
                 if (empty($attribute) || $attribute->get('type') === 'script') {
                     continue;
                 }
-
             }
 
             if (!empty($configuratorItem->column)) {
