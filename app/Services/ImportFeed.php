@@ -861,7 +861,6 @@ class ImportFeed extends Base
 
             }
 
-
             if (!empty($configuratorItem->column)) {
                 if(!empty($configuratorItem->entityAttributeId)) {
                     $attribute = $this->getEntityManager()->getEntity('Attribute', $configuratorItem->entityAttributeId);
