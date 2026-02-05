@@ -24,7 +24,14 @@
         "maxSize": 20,
         "sortField": "sortOrder"
       },
-      "rowActionsView": "views/record/row-actions/edit-and-remove",
+      "actions": {
+        "unlinkRelated": {
+          "disabled": true
+        },
+        "quickView": {
+          "disabled": true
+        }
+      },
       "view": "import:views/import-feed/record/panels/configurator-items"
     },
     "importJobs": {
