@@ -861,9 +861,19 @@ class ImportFeed extends Base
             }
 
             if (!empty($configuratorItem->column)) {
-                $sourceFields[] = $configuratorItem->column;
+                if(!empty($configuratorItem->entityAttributeId)) {
+                    $attribute = $this->getEntityManager()->getEntity('Attribute', $configuratorItem->entityAttributeId);
+                    $protected = $attribute->get('isProtected');
+                }else{
+                    $protected =  $this->getMetadata()->get(['entityDefs', $exportFeed->getFeedFields()['entity'], 'fields', $configuratorItem->column, 'protected']);
+                }
+
+                if (empty($protected)) {
+                    $sourceFields[] = $configuratorItem->column;
+                }
             }
         }
+
         if (empty($sourceFields)) {
             $sourceFields = ['ID'];
         }
@@ -907,6 +917,17 @@ class ImportFeed extends Base
             $attachment->importFeedId = $importFeed->id;
             $attachment->name = $configuratorItem->name;
             if (!empty($configuratorItem->column)) {
+                if(!empty($configuratorItem->entityAttributeId)) {
+                    $attribute = $this->getEntityManager()->getEntity('Attribute', $configuratorItem->entityAttributeId);
+                    $protected = $attribute->get('isProtected');
+                }else{
+                    $protected =  $this->getMetadata()->get(['entityDefs', $exportFeed->getFeedFields()['entity'], 'fields', $configuratorItem->column, 'protected']);
+                }
+
+                if(!empty($protected)){
+                    continue;
+                }
+
                 $attachment->column = [$configuratorItem->column];
             }
             $attachment->scope = $configuratorItem->scope;
