@@ -188,8 +188,8 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
         $currentUserId = $this->getContainer()->get('user')->get('id');
         $userChanged = false;
 
-        if ($executeAs === 'system' && $currentUserId !== 'system') {
-            $userChanged = $this->auth('system');
+        if ($executeAs === 'system' && $currentUserId !== $this->getConfig()->get('systemUserId')) {
+            $userChanged = $this->auth($this->getConfig()->get('systemUserId'));
         }
 
         if ($this->getMetadata()->get("scopes.$scope.hasAttribute")) {
@@ -430,7 +430,7 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
         if (empty($user)) {
             return false;
         }
-        if ($userId === 'system') {
+        if ($user->isSystem()) {
             $user->set('isAdmin', true);
             $user->set('ipAddress', $_SERVER['REMOTE_ADDR'] ?? null);
         }
