@@ -18,6 +18,7 @@ use Atro\Core\Exceptions\NotModified;
 use Atro\Core\EventManager\Event;
 use Atro\Entities\File;
 use Atro\Entities\Job;
+use Atro\Entities\User;
 use Atro\Jobs\AbstractJob;
 use Atro\Jobs\JobInterface;
 use Atro\Core\EventManager\Manager;
@@ -184,12 +185,19 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
             throw new Error('importFeedId, importJobId or entity is empty');
         }
 
-        $executeAs = $data['executeAs'] ?? 'system';
-        $currentUserId = $this->getContainer()->get('user')->get('id');
-        $userChanged = false;
+        $currentUser = $this->getContainer()->get('user');
 
-        if ($executeAs === 'system' && $currentUserId !== 'system') {
-            $userChanged = $this->auth('system');
+        $executeAs = $data['executeAs'] ?? 'system';
+        if ($executeAs === 'system') {
+            $user = $this->getEntityManager()->getRepository('User')->getGlobalSystemUser();
+        } else {
+            $user = $this->getContainer()->get('user')->getSystemUser();
+        }
+
+        $userChanged = $currentUser !== $user;
+
+        if ($userChanged) {
+            $this->auth($user);
         }
 
         if ($this->getMetadata()->get("scopes.$scope.hasAttribute")) {
@@ -419,25 +427,20 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
         $this->getMemoryStorage()->delete('skipHooks');
         $this->getMemoryStorage()->delete('importRowNumber');
 
-        if (!empty($userChanged)) {
-            $this->auth($currentUserId);
+        if ($userChanged) {
+            $this->auth($currentUser);
         }
     }
 
-    protected function auth(string $userId): bool
+    protected function auth(User $user): void
     {
-        $user = $this->getEntityManager()->getRepository('User')->get($userId);
-        if (empty($user)) {
-            return false;
-        }
-        if ($userId === 'system') {
-            $user->set('isAdmin', true);
+        if ($user->isSystemUser()) {
             $user->set('ipAddress', $_SERVER['REMOTE_ADDR'] ?? null);
         }
+
         $this->getEntityManager()->setUser($user);
         $this->getContainer()->setUser($user);
         $this->getContainer()->get('acl')->setUser($user);
-        return true;
     }
 
     public function afterRowProceed(string $entityType, array $where, ?string $id, ?array $row, ?int $rowNumber): void
