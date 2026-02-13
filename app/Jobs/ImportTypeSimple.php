@@ -430,7 +430,7 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
         if (empty($user)) {
             return false;
         }
-        if ($user->isSystem()) {
+        if ($user->isGlobalSystemUser()) {
             $user->set('isAdmin', true);
             $user->set('ipAddress', $_SERVER['REMOTE_ADDR'] ?? null);
         }
