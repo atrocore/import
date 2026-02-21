@@ -36,7 +36,7 @@
     "nullValue": "Marker for Null Value",
     "markForNoRelation": "Marker for No Relation",
     "markForUnlinkedAttribute": "Marker for Unlinked Attribute",
-    "skipValue": "Marker for Skipped Value ",
+    "skipValue": "Marker for Skipped Value",
     "fieldDelimiterForRelation": "Field Delimiter for Relation",
     "scheduledJobs": "Scheduled Jobs",
     "executeAs": "Execute As",
