@@ -29,7 +29,7 @@
     "configuratorItems": "Configurateur",
     "emptyValue": "Marqueur de valeur vide",
     "nullValue": "Marqueur de valeur nulle",
-    "skipValue": "Marqueur pour valeur à ignorer ",
+    "skipValue": "Marqueur pour valeur à ignorer",
     "markForNoRelation": "Marqueur pour \"pas de relation\"",
     "fieldDelimiterForRelation": "Délimiteur de champ pour la relation",
     "scheduledJobs": "Jobs programmés",
