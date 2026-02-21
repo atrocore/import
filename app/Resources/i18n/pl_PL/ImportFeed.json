@@ -31,7 +31,7 @@
     "nullValue": "Znacznik wartości zerowej",
     "markForNoRelation": "Znacznik braku związku",
     "fieldDelimiterForRelation": "Separator pól dla relacji",
-    "skipValue": "Znacznik pominiętej wartości ",
+    "skipValue": "Znacznik pominiętej wartości",
     "type": "Typ zaopatrzenia",
     "processingType": "Typ przetwarzania",
     "rootNode": "Węzeł główny",
