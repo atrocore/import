@@ -2,7 +2,7 @@
   "fields": {
     "importFeed": "Importfeed",
     "state": "Zustand",
-    "message": "Botschaft",
+    "message": "Meldung",
     "start": "Angefangen bei",
     "end": "Beendet am",
     "createdCount": "Erstellt",
@@ -16,7 +16,7 @@
     "files": "Dateien"
   },
   "links": {
-    "importFeed": "Import Feed",
+    "importFeed": "Import-Feed",
     "importJobLogs": "Fehlerlogs",
     "files": "Dateien"
   },
@@ -27,11 +27,11 @@
     "Failed": "Fehlgeschlagen",
     "Canceled": "Abgebrochen",
     "generate": "Generieren",
-    "generating": "Erstellen",
+    "generating": "in Erstellung",
     "tryAgain": "Erneut importeren",
     "reCreate": "Nachschaffen",
-    "loadCounters": "Klicken Sie auf das Aktualisierungs-Icon, um den Wert zu berechnen",
-    "seeRelevantRecords": "Klicken Sie hier, um die entsprechenden Datensätze zu sehen",
+    "loadCounters": "Klicken Sie auf das Symbol „Aktualisieren“, um den Wert zu berechnen.",
+    "seeRelevantRecords": "Klicken Sie hier, um die entsprechenden Datensätze anzuzeigen.",
     "generateFileConverted": "Datei generieren: Konvertiert",
     "generateFileCreated": "Datei generieren: Erstellt",
     "generateFileSkippedByScript": "Datei generieren: Vom Skript übersprungen",
