@@ -6,7 +6,7 @@
     "updatedByImport": "Aktualisiert durch Import"
   },
   "scopeNames": {
-    "ImportFeed": "Import Feed",
+    "ImportFeed": "Import-Feed",
     "ImportConfiguratorItem": "Konfigurator",
     "ImportJob": "Importausführung",
     "ImportJobLog": "Import-Protokoll"
@@ -14,8 +14,8 @@
   "scopeNamesPlural": {
     "ImportFeed": "Import Feeds",
     "ImportConfiguratorItem": "Konfigurator",
-    "ImportJob": "Importausführung",
-    "ImportJobLog": "Importauftrag"
+    "ImportJob": "Importausführungen",
+    "ImportJobLog": "Import-Logs"
   },
   "labels": {
     "importErrorDuring24Hours": "Fehler bei Importfeeds/Ausführungen während 24 Stunden",
