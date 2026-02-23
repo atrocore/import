@@ -1,8 +1,8 @@
 {
   "labels": {
-    "importFeed": "Import Feed"
+    "importFeed": "Import-Feed"
   },
   "descriptions": {
-    "importFeed": "Import Feed konfigurieren, um Daten zu importieren."
+    "importFeed": "Konfiguration von Import-Feeds, die für den Import von Daten in die Entitäten verwendet werden sollen"
   }
 }

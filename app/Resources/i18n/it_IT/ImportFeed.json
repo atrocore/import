@@ -36,9 +36,9 @@
     "nullValue": "Marcatore per il valore nullo",
     "markForNoRelation": "Marcatore per Nessuna Relazione",
     "markForUnlinkedAttribute": "Marcatore per attributo non collegato",
-    "skipValue": "Marcatore per il valore saltato ",
+    "skipValue": "Marcatore per il valore saltato",
     "fieldDelimiterForRelation": "Delimitatore di campo per la relazione",
-    "scheduledJobs": "Lavori programmati",
+    "scheduledJobs": "Lavoro programmato",
     "executeAs": "Esegui come",
     "feedPayload": "Carico utile"
   },
@@ -124,7 +124,7 @@
   "options": {
     "repeatProcessing": {
       "mistake": "Genera un errore per i record ripetuti",
-      "repeat": "Consentire l'elaborazione ripetuta dei record di dati",
+      "repeat": "Consente l'elaborazione ripetuta dei record di dati",
       "skip": "Salta i record di dati ripetuti"
     },
     "executeAs": {

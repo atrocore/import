@@ -2,11 +2,11 @@
   "fields": {
     "rowNumber": "Zeilen-Nummer",
     "row": "Eingabedaten",
-    "importJob": "Importausführung",
+    "importJob": "Importausführungen",
     "type": "Typ",
     "entityName": "Entität",
     "entityId": "Objekt-ID",
-    "message": "Nachricht"
+    "message": "Fehlermeldung"
   },
   "options": {
     "type": {
