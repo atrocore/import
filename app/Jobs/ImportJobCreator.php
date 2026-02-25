@@ -83,6 +83,7 @@ class ImportJobCreator extends AbstractJob implements JobInterface
         }
 
         $service = $importFeedService->getImportTypeService($importFeed);
+        $this->getMemoryStorage()->set('disableFileTransactions', true);
 
         $partNumber = 1;
         while (!empty($fileData = $fileParser->getFileData($attachment, $offset, $maxPerJob))) {
@@ -128,5 +129,7 @@ class ImportJobCreator extends AbstractJob implements JobInterface
             $rowNumberPart = $rowNumberPart + $maxPerJob;
             $partNumber++;
         }
+
+        $this->getMemoryStorage()->delete('disableFileTransactions');
     }
 }
