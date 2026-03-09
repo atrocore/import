@@ -158,6 +158,8 @@ class Csv extends Injectable implements FileParserInterface
             if ($originalEncoding === false || $originalEncoding === 'UTF-8') {
                 fclose($file);
                 fclose($tempFile);
+                @unlink($tempFilename);
+
                 return;
             }
 
