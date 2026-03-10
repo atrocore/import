@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Import\FieldConverters;
 
 use Atro\Core\Exceptions\NotModified;
+use Atro\Core\Utils\RegexUtil;
 use Atro\Core\KeyValueStorages\StorageInterface;
 use Espo\Core\Services\Base;
 use Espo\Core\Utils\Language;
@@ -56,14 +57,14 @@ class Wysiwyg
 
         $inputRow->{$config['name']} = $value != null ? (string)$value : $value;
     }
-
+    
     public function extractValue(array $config, $value, string $emptyValue, string $nullValue)
     {
         if (empty($value) || in_array(strtolower((string)$value), [strtolower($emptyValue), strtolower($nullValue)]) || empty($config['valueExtractor'])) {
             return $value;
         }
 
-        preg_match($config['valueExtractor'], $value, $matches);
+        preg_match(RegexUtil::toPhpPattern($config['valueExtractor']), $value, $matches);
         return $matches[0] ?? $emptyValue;
     }
 
