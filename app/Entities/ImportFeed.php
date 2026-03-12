@@ -24,10 +24,10 @@ class ImportFeed extends Base
     public static function getFileParserClass(string $format): string
     {
         return match ($format) {
-            'CSV'   => \Import\FileParsers\Csv::class,
+            'CSV' => \Import\FileParsers\Csv::class,
             'Excel' => \Import\FileParsers\Excel::class,
-            'JSON'  => \Import\FileParsers\Json::class,
-            'XML'   => \Import\FileParsers\Xml::class,
+            'JSON' => \Import\FileParsers\Json::class,
+            'XML' => \Import\FileParsers\Xml::class,
             default => throw new \Error('Unknown file format'),
         };
     }
@@ -46,6 +46,11 @@ class ImportFeed extends Base
 
     public function getFeedField(string $name)
     {
+        // For backward compatibility
+        if ($name === 'httpConnectionId') {
+            return $this->get('connectionId');
+        }
+
         $data = $this->getFeedFields();
 
         if (!isset($data[$name])) {

@@ -13,9 +13,6 @@
     "importFeed": {
       "type": "link",
       "view": "import:views/action/fields/import-feed",
-      "notStorable": true,
-      "virtualField": true,
-      "entity": "ImportFeed",
       "filterDisabled": true,
       "massUpdateDisabled": true,
       "importDisabled": true,
@@ -39,33 +36,6 @@
           ]
         }
       }
-    },
-    "importFeedId": {
-      "type": "varchar",
-      "notStorable": true,
-      "virtualField": true,
-      "layoutListDisabled": true,
-      "layoutListSmallDisabled": true,
-      "layoutDetailDisabled": true,
-      "layoutDetailSmallDisabled": true,
-      "massUpdateDisabled": true,
-      "filterDisabled": true,
-      "exportDisabled": true,
-      "importDisabled": true,
-      "emHidden": true
-    },
-    "importFeedName": {
-      "type": "varchar",
-      "notStorable": true,
-      "layoutListDisabled": true,
-      "layoutListSmallDisabled": true,
-      "layoutDetailDisabled": true,
-      "layoutDetailSmallDisabled": true,
-      "massUpdateDisabled": true,
-      "filterDisabled": true,
-      "exportDisabled": true,
-      "importDisabled": true,
-      "emHidden": true
     },
     "uploadAndImport": {
       "type": "bool",
@@ -95,6 +65,12 @@
           ]
         }
       }
+    }
+  },
+  "links": {
+    "importFeed": {
+      "type": "belongsTo",
+      "entity": "ImportFeed"
     }
   }
 }
