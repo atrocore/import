@@ -609,7 +609,6 @@ class ImportFeed extends Base
         parent::init();
 
         $this->addDependency('language');
-        $this->addDependency('filePathBuilder');
         $this->addDependency('container');
     }
 

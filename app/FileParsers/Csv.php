@@ -28,7 +28,6 @@ class Csv extends Injectable implements FileParserInterface
 
     public function __construct()
     {
-        $this->addDependency('fileStorageManager');
         $this->addDependency('eventManager');
     }
 
