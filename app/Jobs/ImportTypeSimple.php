@@ -439,8 +439,7 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
         }
 
         $this->getEntityManager()->setUser($user);
-        $this->getContainer()->setUser($user);
-        $this->getContainer()->get('acl')->setUser($user);
+        $this->getContainer()->get(\Atro\Core\UserContext::class)->set($user);
     }
 
     public function afterRowProceed(string $entityType, array $where, ?string $id, ?array $row, ?int $rowNumber): void

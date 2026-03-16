@@ -352,6 +352,5 @@ class ImportJob extends Base
         parent::init();
 
         $this->addDependency('serviceFactory');
-        $this->addDependency('fileStorageManager');
     }
 }
