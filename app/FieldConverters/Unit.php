@@ -24,11 +24,6 @@ class Unit extends Link
         $restore->$fieldName = $entity->get($item['name']);
     }
 
-    protected function getFieldName(array $config): string
-    {
-        return $config['name'];
-    }
-
     protected function getForeignEntityName(array $config): string
     {
         return 'Unit';
