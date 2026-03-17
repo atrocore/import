@@ -83,7 +83,7 @@ class ImportJobLog extends Archive
 
     public function getEntityIds(string $entityName, string $type, ?array $importJobIds, $limit = 65000): array
     {
-        $con = $this->hasClickHouse() ? $this->getClickHouseConnection() : $this->getConnection();
+        $con = $this->hasClickHouse() ? $this->getClickHouseConnection() : $this->getDbal();
 
         $importJobPart = '';
 
@@ -114,20 +114,12 @@ class ImportJobLog extends Archive
             return [];
         }
 
-        $subquery = $this->getConnection()->createQueryBuilder()
-            ->select('ijl.entity_id')
-            ->from('import_job_log', 'ijl')
-            ->where('ijl.deleted = :false')
-            ->andWhere('ijl.import_job_id = :jobId')
-            ->andWhere('ijl.type IN (:type)')
-            ->andWhere('ijl.entity_id IS NOT NULL');
-
-        $qb = $this->getConnection()->createQueryBuilder()
-            ->select('id')
-            ->from($this->getMapper()->toDb($entityName))
-            ->where('deleted = :false')
-            ->andWhere('id NOT IN (' . $subquery->getSQL() . ')')
-            ->orderBy('id')
+        $qb = $this->getDbal()->createQueryBuilder()
+            ->select('t.id')
+            ->from($this->getMapper()->toDb($entityName), 't')
+            ->where('t.deleted = :false')
+            ->andWhere('NOT EXISTS (SELECT 1 FROM import_job_log ijl WHERE ijl.deleted = :false AND ijl.import_job_id = :jobId AND ijl.type IN (:type) AND ijl.entity_id IS NOT NULL AND ijl.entity_id = t.id)')
+            ->orderBy('t.id')
             ->setParameter('false', false, ParameterType::BOOLEAN)
             ->setParameter('jobId', $jobId)
             ->setParameter('type', ['create', 'update', 'skip'], Connection::PARAM_STR_ARRAY);
