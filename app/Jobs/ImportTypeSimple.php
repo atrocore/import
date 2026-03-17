@@ -927,6 +927,10 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
         $fieldName = $item['name'];
         $type = $this->getMetadata()->get(['entityDefs', $item['entity'], 'fields', $fieldName, 'type'], 'varchar');
 
+        if ($type === "link" && !empty($this->getMetadata()->get(['entityDefs', $item['entity'], 'fields', $fieldName, 'unitIdField']))) {
+            $type = 'unit';
+        }
+
         if ($type === "varchar" && !empty($this->getMetadata()->get(['entityDefs', $item['entity'], 'fields', $fieldName, 'unitField']))) {
             $type = 'valueWithUnit';
         }
