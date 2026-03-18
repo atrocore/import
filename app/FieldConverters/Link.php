@@ -80,7 +80,7 @@ class Link extends Varchar
                             [$values[$k]]);
 
                     if (empty($fieldData['notStorable']) && isset($values[$k]) && $values[$k] !== '' && $values[$k] !== (string)$config['emptyValue']) {
-                        $where[$field] = $values[$k];
+                        $where[$field] = $input->{$field};
                     }
                 }
 
