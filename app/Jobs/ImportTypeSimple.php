@@ -273,6 +273,12 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
                                 throw new BadRequest($this->translate('alreadyProceeded', 'exceptions', 'ImportFeed'));
                         }
                     }
+                } catch (BadRequest $e) {
+                    $log->set('type', 'error');
+                    $log->set('message', $e->getMessage());
+                    $this->getEntityManager()->saveEntity($log);
+
+                    continue;
                 } catch (\Throwable $e) {
                     $log->set('type', 'skip');
                     $this->getEntityManager()->saveEntity($log);
