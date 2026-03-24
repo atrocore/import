@@ -19,7 +19,6 @@ use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Http\Response\BoolResponse;
 use Atro\Core\Routing\Route;
 use Atro\Handlers\AbstractHandler;
-use Mezzio\Router\RouteResult;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -43,10 +42,8 @@ class ImportJobCreateLinkHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $routeResult = $request->getAttribute(RouteResult::class);
-        $params      = $routeResult?->getMatchedParams() ?? [];
-        $id          = (string) ($params['id']   ?? '');
-        $link        = (string) ($params['link'] ?? '');
+        $id   = (string) $request->getAttribute('id');
+        $link = (string) $request->getAttribute('link');
 
         if ($link !== 'files') {
             throw new NotFound();

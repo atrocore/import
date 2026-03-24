@@ -19,7 +19,6 @@ use Atro\Core\Http\Response\JsonResponse;
 use Atro\Core\Routing\Route;
 use Atro\Handlers\AbstractHandler;
 use Espo\ORM\EntityCollection;
-use Mezzio\Router\RouteResult;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -46,8 +45,7 @@ class ImportJobGetRecordCountersHandler extends AbstractHandler
             throw new Forbidden();
         }
 
-        $routeResult = $request->getAttribute(RouteResult::class);
-        $id          = (string) ($routeResult?->getMatchedParams()['id'] ?? '');
+        $id = (string) $request->getAttribute('id');
 
         if ($id === '') {
             throw new NotFound();
