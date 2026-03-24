@@ -13,6 +13,14 @@ declare(strict_types=1);
 
 namespace Import;
 
+use Atro\Core\EntityTypeHandlers\CreateHandler;
+use Atro\Core\EntityTypeHandlers\CreateLinkHandler;
+use Atro\Core\EntityTypeHandlers\ListHandler;
+use Atro\Core\EntityTypeHandlers\ListLinkedHandler;
+use Atro\Core\EntityTypeHandlers\MassDeleteHandler;
+use Atro\Core\EntityTypeHandlers\MassUpdateHandler;
+use Atro\Core\EntityTypeHandlers\MergeHandler;
+use Atro\Core\EntityTypeHandlers\RemoveLinkHandler;
 use Atro\Core\ModuleManager\AbstractModule;
 use Espo\Core\Utils\Util;
 use Import\Console\CreateImportProcessingType;
@@ -40,6 +48,22 @@ class Module extends AbstractModule
     {
         return [
             "create import processing type <className>" => CreateImportProcessingType::class
+        ];
+    }
+
+    public function getEntityTypeHandlerExcludes(): array
+    {
+        return [
+            // ImportConfiguratorItem — all mutation and listing is managed via ImportFeed
+            ListHandler::class       => ['ImportConfiguratorItem'],
+            ListLinkedHandler::class => ['ImportConfiguratorItem'],
+            MassUpdateHandler::class => ['ImportConfiguratorItem', 'ImportJob'],
+            MassDeleteHandler::class => ['ImportConfiguratorItem'],
+            CreateLinkHandler::class => ['ImportConfiguratorItem'],
+            RemoveLinkHandler::class => ['ImportConfiguratorItem'],
+            MergeHandler::class      => ['ImportConfiguratorItem'],
+            // ImportJob — direct creation is not allowed; use /ImportFeed/action/runImport
+            CreateHandler::class     => ['ImportJob'],
         ];
     }
 }
