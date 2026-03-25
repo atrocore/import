@@ -11,7 +11,7 @@
 
 declare(strict_types=1);
 
-namespace Import\Handlers\ImportJob;
+namespace Import\Handlers\ImportFeed;
 
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Forbidden;
@@ -23,32 +23,36 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/ImportJob/action/reCreate',
+    path: '/ImportFeed/action/runImport',
     methods: ['POST'],
-    summary: 'Re-create import job',
-    description: 'Re-creates an import job from an existing one, optionally with a new attachment.',
-    tag: 'ImportJob',
-    requestBody: ['required' => true, 'content' => ['application/json' => ['schema' => ['type' => 'object', 'required' => ['id'], 'properties' => ['id' => ['type' => 'string'], 'attachmentId' => ['type' => 'string']]]]]],
+    summary: 'Run import',
+    description: 'Triggers an import job for the specified import feed.',
+    tag: 'ImportFeed',
+    requestBody: ['required' => true, 'content' => ['application/json' => ['schema' => ['type' => 'object', 'required' => ['importFeedId'], 'properties' => ['importFeedId' => ['type' => 'string', 'nullable' => true], 'attachmentId' => ['type' => 'string', 'nullable' => true]]]]]],
     responses: [
-        200 => ['description' => 'Job re-created', 'content' => ['application/json' => ['schema' => ['type' => 'boolean']]]],
+        200 => ['description' => 'Import started', 'content' => ['application/json' => ['schema' => ['type' => 'boolean']]]],
     ],
 )]
-class ImportJobReCreateHandler extends AbstractHandler
+class RunImportHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
+        if (!$this->getAcl()->check('ImportFeed', 'read')) {
+            throw new Forbidden();
+        }
+
         if (!$this->getAcl()->check('ImportJob', 'create')) {
             throw new Forbidden();
         }
 
         $data = $this->getRequestBody($request);
 
-        if (!property_exists($data, 'id') || empty($data->id)) {
+        if (!property_exists($data, 'importFeedId')) {
             throw new BadRequest();
         }
 
-        $attachmentId = property_exists($data, 'attachmentId') ? $data->attachmentId : null;
+        $attachmentId = property_exists($data, 'attachmentId') ? (string) $data->attachmentId : '';
 
-        return new BoolResponse($this->getRecordService('ImportJob')->reCreateImportJob((string) $data->id, $attachmentId));
+        return new BoolResponse($this->getRecordService('ImportFeed')->runImport((string) $data->importFeedId, $attachmentId));
     }
 }

@@ -34,7 +34,7 @@ use Psr\Http\Server\RequestHandlerInterface;
         200 => ['description' => 'List of import jobs', 'content' => ['application/json' => ['schema' => ['type' => 'array', 'items' => ['type' => 'object']]]]],
     ],
 )]
-class ImportJobGetImportJobsViaScopeHandler extends AbstractHandler
+class GetImportJobsViaScopeHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {

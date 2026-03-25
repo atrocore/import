@@ -31,7 +31,7 @@ use Psr\Http\Server\RequestHandlerInterface;
         200 => ['description' => 'List of sheets', 'content' => ['application/json' => ['schema' => ['type' => 'array', 'items' => ['type' => 'string']]]]],
     ],
 )]
-class ImportFeedGetFileSheetsHandler extends AbstractHandler
+class GetFileSheetsHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {

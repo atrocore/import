@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Import\Handlers\ImportFeed;
 
-use Atro\Core\Exceptions\Forbidden;
+use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Http\Response\JsonResponse;
 use Atro\Core\Routing\Route;
 use Atro\Handlers\AbstractHandler;
@@ -22,25 +22,29 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/ImportFeed/action/parseFileColumns',
-    methods: ['POST'],
-    summary: 'Parse file columns',
-    description: 'Parses the columns from the provided file for an import feed.',
+    path: '/ImportFeed/action/verifyFeedByCode',
+    methods: ['GET'],
+    summary: 'Verify feed by code',
+    description: 'Verifies an import feed by its code.',
     tag: 'ImportFeed',
+    auth: false,
+    parameters: [
+        ['name' => 'code', 'in' => 'query', 'required' => true, 'schema' => ['type' => 'string']],
+    ],
     responses: [
-        200 => ['description' => 'List of parsed columns', 'content' => ['application/json' => ['schema' => ['type' => 'array', 'items' => ['type' => 'object']]]]],
+        200 => ['description' => 'Verification result', 'content' => ['application/json' => ['schema' => ['type' => 'object', 'properties' => ['message' => ['type' => 'string']]]]]],
     ],
 )]
-class ImportFeedParseFileColumnsHandler extends AbstractHandler
+class VerifyFeedByCodeHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        if (!$this->getAcl()->check('ImportFeed', 'read')) {
-            throw new Forbidden();
+        $code = $request->getQueryParams()['code'] ?? '';
+
+        if (empty($code)) {
+            throw new BadRequest();
         }
 
-        $data = $this->getRequestBody($request);
-
-        return new JsonResponse($this->getRecordService('ImportFeed')->parseFileColumns($data));
+        return new JsonResponse(['message' => $this->getRecordService('ImportFeed')->verifyFeedByCode($code)]);
     }
 }

@@ -40,7 +40,7 @@ use Psr\Http\Server\RequestHandlerInterface;
         404 => ['description' => 'Import job not found'],
     ],
 )]
-class ImportJobListImportJobLogsHandler extends AbstractHandler
+class ListImportJobLogsHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {

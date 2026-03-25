@@ -38,7 +38,7 @@ use Psr\Http\Server\RequestHandlerInterface;
         404 => ['description' => 'Link not supported'],
     ],
 )]
-class ImportJobCreateLinkHandler extends AbstractHandler
+class CreateLinkHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {

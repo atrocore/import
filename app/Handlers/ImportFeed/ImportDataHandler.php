@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Import\Handlers\ImportFeed;
 
 use Atro\Core\Exceptions\BadRequest;
-use Atro\Core\Http\Response\JsonResponse;
+use Atro\Core\Http\Response\BoolResponse;
 use Atro\Core\Routing\Route;
 use Atro\Handlers\AbstractHandler;
 use Psr\Http\Message\ResponseInterface;
@@ -22,29 +22,29 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/ImportFeed/action/verifyFeedByCode',
-    methods: ['GET'],
-    summary: 'Verify feed by code',
-    description: 'Verifies an import feed by its code.',
+    path: '/ImportFeed/action/importData',
+    methods: ['POST'],
+    summary: 'Import data',
+    description: 'Imports data into the system using the specified feed code and JSON payload.',
     tag: 'ImportFeed',
     auth: false,
-    parameters: [
-        ['name' => 'code', 'in' => 'query', 'required' => true, 'schema' => ['type' => 'string']],
-    ],
+    requestBody: ['required' => true, 'content' => ['application/json' => ['schema' => ['type' => 'object', 'required' => ['code', 'json'], 'properties' => ['code' => ['type' => 'string'], 'json' => ['type' => 'object']]]]]],
     responses: [
-        200 => ['description' => 'Verification result', 'content' => ['application/json' => ['schema' => ['type' => 'object', 'properties' => ['message' => ['type' => 'string']]]]]],
+        200 => ['description' => 'Import accepted', 'content' => ['application/json' => ['schema' => ['type' => 'boolean']]]],
     ],
 )]
-class ImportFeedVerifyFeedByCodeHandler extends AbstractHandler
+class ImportDataHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $code = $request->getQueryParams()['code'] ?? '';
+        $data = $this->getRequestBody($request);
 
-        if (empty($code)) {
+        if (!property_exists($data, 'code') || !property_exists($data, 'json')) {
             throw new BadRequest();
         }
 
-        return new JsonResponse(['message' => $this->getRecordService('ImportFeed')->verifyFeedByCode($code)]);
+        $this->getRecordService('ImportFeed')->importData($data);
+
+        return new BoolResponse(true);
     }
 }

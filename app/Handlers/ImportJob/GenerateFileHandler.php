@@ -33,7 +33,7 @@ use Psr\Http\Server\RequestHandlerInterface;
         200 => ['description' => 'Queue item ID', 'content' => ['application/json' => ['schema' => ['type' => 'object', 'properties' => ['queueItemId' => ['type' => 'string']]]]]],
     ],
 )]
-class ImportJobGenerateFileHandler extends AbstractHandler
+class GenerateFileHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {

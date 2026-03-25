@@ -15,7 +15,7 @@ namespace Import\Handlers\ImportFeed;
 
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Forbidden;
-use Atro\Core\Http\Response\BoolResponse;
+use Atro\Core\Http\Response\JsonResponse;
 use Atro\Core\Routing\Route;
 use Atro\Handlers\AbstractHandler;
 use Psr\Http\Message\ResponseInterface;
@@ -23,36 +23,36 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/ImportFeed/action/runImport',
+    path: '/ImportFeed/action/createFromExport',
     methods: ['POST'],
-    summary: 'Run import',
-    description: 'Triggers an import job for the specified import feed.',
+    summary: 'Create import feed from export feed',
+    description: 'Creates a new import feed based on an existing export feed configuration.',
     tag: 'ImportFeed',
-    requestBody: ['required' => true, 'content' => ['application/json' => ['schema' => ['type' => 'object', 'required' => ['importFeedId'], 'properties' => ['importFeedId' => ['type' => 'string', 'nullable' => true], 'attachmentId' => ['type' => 'string', 'nullable' => true]]]]]],
+    requestBody: ['required' => true, 'content' => ['application/json' => ['schema' => ['type' => 'object', 'required' => ['exportFeedId'], 'properties' => ['exportFeedId' => ['type' => 'string']]]]]],
     responses: [
-        200 => ['description' => 'Import started', 'content' => ['application/json' => ['schema' => ['type' => 'boolean']]]],
+        200 => ['description' => 'Created import feed ID', 'content' => ['application/json' => ['schema' => ['type' => 'object', 'properties' => ['id' => ['type' => 'string']]]]]],
     ],
 )]
-class ImportFeedRunImportHandler extends AbstractHandler
+class CreateFromExportHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        if (!$this->getAcl()->check('ImportFeed', 'read')) {
+        if (!$this->getMetadata()->isModuleInstalled('Export')) {
             throw new Forbidden();
         }
 
-        if (!$this->getAcl()->check('ImportJob', 'create')) {
+        if (!$this->getAcl()->check('ImportFeed', 'create')) {
             throw new Forbidden();
         }
 
         $data = $this->getRequestBody($request);
 
-        if (!property_exists($data, 'importFeedId')) {
+        if (!property_exists($data, 'exportFeedId')) {
             throw new BadRequest();
         }
 
-        $attachmentId = property_exists($data, 'attachmentId') ? (string) $data->attachmentId : '';
+        $importFeed = $this->getRecordService('ImportFeed')->createFromExportFeed($data->exportFeedId);
 
-        return new BoolResponse($this->getRecordService('ImportFeed')->runImport((string) $data->importFeedId, $attachmentId));
+        return new JsonResponse(['id' => $importFeed->id]);
     }
 }
