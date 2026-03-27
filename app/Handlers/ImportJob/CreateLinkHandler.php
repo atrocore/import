@@ -25,17 +25,27 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/ImportJob/{id}/{link}',
-    methods: ['POST'],
+    methods: [
+        'POST',
+    ],
     summary: 'Create link for import job',
     description: 'Only the "files" link is supported.',
     tag: 'ImportJob',
     parameters: [
-        ['name' => 'id',   'in' => 'path', 'required' => true, 'schema' => ['type' => 'string']],
-        ['name' => 'link', 'in' => 'path', 'required' => true, 'schema' => ['type' => 'string']],
+        ['name' => 'id',   'in' => 'path', 'required' => true, 'schema' => [
+            'type' => 'string',
+        ]],
+        ['name' => 'link', 'in' => 'path', 'required' => true, 'schema' => [
+            'type' => 'string',
+        ]],
     ],
     responses: [
-        200 => ['description' => 'Link created', 'content' => ['application/json' => ['schema' => ['type' => 'boolean']]]],
-        404 => ['description' => 'Link not supported'],
+        200 => ['description' => 'Link created', 'content' => ['application/json' => ['schema' => [
+            'type' => 'boolean',
+        ]]]],
+        404 => [
+            'description' => 'Link not supported',
+        ],
     ],
 )]
 class CreateLinkHandler extends AbstractHandler

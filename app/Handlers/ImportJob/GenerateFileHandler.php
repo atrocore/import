@@ -24,13 +24,24 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/ImportJob/action/generateFile',
-    methods: ['POST'],
+    methods: [
+        'POST',
+    ],
     summary: 'Generate file',
     description: 'Queues a job to generate the converted or error file for the specified import job.',
     tag: 'ImportJob',
-    requestBody: ['required' => true, 'content' => ['application/json' => ['schema' => ['type' => 'object', 'required' => ['id', 'type'], 'properties' => ['id' => ['type' => 'string'], 'type' => ['type' => 'string']]]]]],
+    requestBody: ['required' => true, 'content' => ['application/json' => ['schema' => ['type' => 'object', 'required' => [
+        'id',
+        'type',
+    ], 'properties' => ['id' => [
+        'type' => 'string',
+    ], 'type' => [
+        'type' => 'string',
+    ]]]]]],
     responses: [
-        200 => ['description' => 'Queue item ID', 'content' => ['application/json' => ['schema' => ['type' => 'object', 'properties' => ['queueItemId' => ['type' => 'string']]]]]],
+        200 => ['description' => 'Queue item ID', 'content' => ['application/json' => ['schema' => ['type' => 'object', 'properties' => ['queueItemId' => [
+            'type' => 'string',
+        ]]]]]],
     ],
 )]
 class GenerateFileHandler extends AbstractHandler

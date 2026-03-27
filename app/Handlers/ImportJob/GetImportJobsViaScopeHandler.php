@@ -23,15 +23,21 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/ImportJob/action/getImportJobsViaScope',
-    methods: ['GET'],
+    methods: [
+        'GET',
+    ],
     summary: 'Get import jobs via scope',
     description: 'Returns import jobs filtered by the specified entity scope.',
     tag: 'ImportJob',
     parameters: [
-        ['name' => 'scope', 'in' => 'query', 'required' => true, 'schema' => ['type' => 'string']],
+        ['name' => 'scope', 'in' => 'query', 'required' => true, 'schema' => [
+            'type' => 'string',
+        ]],
     ],
     responses: [
-        200 => ['description' => 'List of import jobs', 'content' => ['application/json' => ['schema' => ['type' => 'array', 'items' => ['type' => 'object']]]]],
+        200 => ['description' => 'List of import jobs', 'content' => ['application/json' => ['schema' => ['type' => 'array', 'items' => [
+            'type' => 'object',
+        ]]]]],
     ],
 )]
 class GetImportJobsViaScopeHandler extends AbstractHandler

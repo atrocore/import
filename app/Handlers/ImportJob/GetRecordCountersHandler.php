@@ -25,16 +25,24 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/ImportJob/{id}/action/getRecordCounters',
-    methods: ['GET'],
+    methods: [
+        'GET',
+    ],
     summary: 'Get record counters',
     description: 'Returns created/updated/deleted/skipped/error counters for the specified import job.',
     tag: 'ImportJob',
     parameters: [
-        ['name' => 'id', 'in' => 'path', 'required' => true, 'schema' => ['type' => 'string']],
+        ['name' => 'id', 'in' => 'path', 'required' => true, 'schema' => [
+            'type' => 'string',
+        ]],
     ],
     responses: [
-        200 => ['description' => 'Record counters', 'content' => ['application/json' => ['schema' => ['type' => 'object']]]],
-        404 => ['description' => 'Import job not found'],
+        200 => ['description' => 'Record counters', 'content' => ['application/json' => ['schema' => [
+            'type' => 'object',
+        ]]]],
+        404 => [
+            'description' => 'Import job not found',
+        ],
     ],
 )]
 class GetRecordCountersHandler extends AbstractHandler

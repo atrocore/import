@@ -23,14 +23,25 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/ImportFeed/action/importData',
-    methods: ['POST'],
+    methods: [
+        'POST',
+    ],
     summary: 'Import data',
     description: 'Imports data into the system using the specified feed code and JSON payload.',
     tag: 'ImportFeed',
     auth: false,
-    requestBody: ['required' => true, 'content' => ['application/json' => ['schema' => ['type' => 'object', 'required' => ['code', 'json'], 'properties' => ['code' => ['type' => 'string'], 'json' => ['type' => 'object']]]]]],
+    requestBody: ['required' => true, 'content' => ['application/json' => ['schema' => ['type' => 'object', 'required' => [
+        'code',
+        'json',
+    ], 'properties' => ['code' => [
+        'type' => 'string',
+    ], 'json' => [
+        'type' => 'object',
+    ]]]]]],
     responses: [
-        200 => ['description' => 'Import accepted', 'content' => ['application/json' => ['schema' => ['type' => 'boolean']]]],
+        200 => ['description' => 'Import accepted', 'content' => ['application/json' => ['schema' => [
+            'type' => 'boolean',
+        ]]]],
     ],
 )]
 class ImportDataHandler extends AbstractHandler

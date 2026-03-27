@@ -24,13 +24,25 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/ImportFeed/action/runImport',
-    methods: ['POST'],
+    methods: [
+        'POST',
+    ],
     summary: 'Run import',
     description: 'Triggers an import job for the specified import feed.',
     tag: 'ImportFeed',
-    requestBody: ['required' => true, 'content' => ['application/json' => ['schema' => ['type' => 'object', 'required' => ['importFeedId'], 'properties' => ['importFeedId' => ['type' => 'string', 'nullable' => true], 'attachmentId' => ['type' => 'string', 'nullable' => true]]]]]],
+    requestBody: ['required' => true, 'content' => ['application/json' => ['schema' => ['type' => 'object', 'required' => [
+        'importFeedId',
+    ], 'properties' => ['importFeedId' => [
+        'type' => 'string',
+        'nullable' => true,
+    ], 'attachmentId' => [
+        'type' => 'string',
+        'nullable' => true,
+    ]]]]]],
     responses: [
-        200 => ['description' => 'Import started', 'content' => ['application/json' => ['schema' => ['type' => 'boolean']]]],
+        200 => ['description' => 'Import started', 'content' => ['application/json' => ['schema' => [
+            'type' => 'boolean',
+        ]]]],
     ],
 )]
 class RunImportHandler extends AbstractHandler

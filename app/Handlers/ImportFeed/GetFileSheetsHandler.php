@@ -23,12 +23,16 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/ImportFeed/action/getFileSheets',
-    methods: ['POST'],
+    methods: [
+        'POST',
+    ],
     summary: 'Get file sheets',
     description: 'Returns the list of sheets from the provided file for an import feed.',
     tag: 'ImportFeed',
     responses: [
-        200 => ['description' => 'List of sheets', 'content' => ['application/json' => ['schema' => ['type' => 'array', 'items' => ['type' => 'string']]]]],
+        200 => ['description' => 'List of sheets', 'content' => ['application/json' => ['schema' => ['type' => 'array', 'items' => [
+            'type' => 'string',
+        ]]]]],
     ],
 )]
 class GetFileSheetsHandler extends AbstractHandler

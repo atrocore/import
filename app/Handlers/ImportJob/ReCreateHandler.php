@@ -24,13 +24,23 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/ImportJob/action/reCreate',
-    methods: ['POST'],
+    methods: [
+        'POST',
+    ],
     summary: 'Re-create import job',
     description: 'Re-creates an import job from an existing one, optionally with a new attachment.',
     tag: 'ImportJob',
-    requestBody: ['required' => true, 'content' => ['application/json' => ['schema' => ['type' => 'object', 'required' => ['id'], 'properties' => ['id' => ['type' => 'string'], 'attachmentId' => ['type' => 'string']]]]]],
+    requestBody: ['required' => true, 'content' => ['application/json' => ['schema' => ['type' => 'object', 'required' => [
+        'id',
+    ], 'properties' => ['id' => [
+        'type' => 'string',
+    ], 'attachmentId' => [
+        'type' => 'string',
+    ]]]]]],
     responses: [
-        200 => ['description' => 'Job re-created', 'content' => ['application/json' => ['schema' => ['type' => 'boolean']]]],
+        200 => ['description' => 'Job re-created', 'content' => ['application/json' => ['schema' => [
+            'type' => 'boolean',
+        ]]]],
     ],
 )]
 class ReCreateHandler extends AbstractHandler

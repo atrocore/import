@@ -23,16 +23,22 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
     path: '/ImportFeed/action/verifyFeedByCode',
-    methods: ['GET'],
+    methods: [
+        'GET',
+    ],
     summary: 'Verify feed by code',
     description: 'Verifies an import feed by its code.',
     tag: 'ImportFeed',
     auth: false,
     parameters: [
-        ['name' => 'code', 'in' => 'query', 'required' => true, 'schema' => ['type' => 'string']],
+        ['name' => 'code', 'in' => 'query', 'required' => true, 'schema' => [
+            'type' => 'string',
+        ]],
     ],
     responses: [
-        200 => ['description' => 'Verification result', 'content' => ['application/json' => ['schema' => ['type' => 'object', 'properties' => ['message' => ['type' => 'string']]]]]],
+        200 => ['description' => 'Verification result', 'content' => ['application/json' => ['schema' => ['type' => 'object', 'properties' => ['message' => [
+            'type' => 'string',
+        ]]]]]],
     ],
 )]
 class VerifyFeedByCodeHandler extends AbstractHandler
