@@ -18,6 +18,20 @@ Espo.define('import:views/import-feed/fields/sheet', 'views/fields/enum',
                 }
             });
 
+            // setOptionList (called from disableOptions inside Dep.prototype.setup) uses Array.includes()
+            // with strict equality. The server returns sheet as an integer (e.g. 0), but params.options
+            // are strings ("0"). 0 !== "0", so includes() returns false and triggers 'change', clearing
+            // the value. Normalize to string here and on every model change (e.g. cancel reverts to integer).
+            const normalizeToString = () => {
+                const v = this.model.get(this.name);
+                if (v !== null && v !== undefined && typeof v !== 'string') {
+                    this.model.set(this.name, String(v), {silent: true});
+                }
+            };
+
+            normalizeToString();
+            this.listenTo(this.model, 'change:' + this.name, normalizeToString);
+
             this.params.options = [];
             this.translatedOptions = {};
 
