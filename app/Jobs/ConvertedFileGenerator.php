@@ -168,14 +168,15 @@ class ConvertedFileGenerator extends AbstractJob implements JobInterface
         $inputData->name = ImportFeed::generateFileName(str_replace('_', '-', Util::toUnderScore($type)) . '-' . str_replace(' ', '-', strtolower($feed->get('name'))) . '.csv');
 
         $fileParser->setData(['isFileHeaderRow' => true]);
-        $fileArr = $this->getFileService()
+        $fileId = $this->getFileService()
             ->createFileViaContents($inputData, $fileParser->createFileContent($preparedRows));
 
-        $this->currentJob->get('payload')->fileName = $fileArr['name'];
-        $this->currentJob->get('payload')->downloadUrl = $fileArr['downloadUrl'];
+        $fileEntity = $this->getEntityManager()->getRepository('File')->get($fileId);
+        $this->currentJob->get('payload')->fileName = $fileEntity->get('name');
+        $this->currentJob->get('payload')->downloadUrl = $fileEntity->getDownloadUrl();
         $this->getEntityManager()->saveEntity($this->currentJob);
 
-        return $fileArr['id'];
+        return $fileId;
     }
 
     protected function getImportTypeSimpleService(): ImportTypeSimple

@@ -98,9 +98,9 @@ class ImportJobCreator extends AbstractJob implements JobInterface
             }
             $input->folderId = $importFeedService->createImportFileFolder($importFeed)->get('id');
 
-            $jobAttachment = $fileService->createFileViaContents($input, $fileParser->createFileContent($part));
+            $jobAttachmentId = $fileService->createFileViaContents($input, $fileParser->createFileContent($part));
 
-            $jobData = $service->prepareJobData($importFeed, $jobAttachment['id']);
+            $jobData = $service->prepareJobData($importFeed, $jobAttachmentId);
             if (!empty($payload->format)) {
                 $jobData['fileFormat'] = $payload->format;
             }
@@ -116,7 +116,7 @@ class ImportJobCreator extends AbstractJob implements JobInterface
             $jobData['sheet'] = 0;
             $jobData['rowNumberPart'] = $rowNumberPart;
             $jobData['data']['importJobId'] = $importFeedService
-                ->createImportJob($importFeed, $importFeed->getFeedField('entity'), $jobAttachment['id'], $payload)
+                ->createImportJob($importFeed, $importFeed->getFeedField('entity'), $jobAttachmentId, $payload)
                 ->get('id');
 
             if (!empty($data['jobData']) && is_array($data['jobData'])) {

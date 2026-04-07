@@ -99,11 +99,11 @@ class ImportConfiguratorItem extends Base
         return new $class($this->getInjection('container'), $this);
     }
 
-    public function updateEntity($id, $data)
+    public function updateEntity(string $id, \stdClass $data): bool
     {
         if (property_exists($data, '_previousItemId') && property_exists($data, '_itemId')) {
             $this->getRepository()->updatePosition((string)$data->_itemId, (string)$data->_previousItemId);
-            return $this->readEntity($id);
+            return true;
         }
 
         return parent::updateEntity($id, $data);
