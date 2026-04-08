@@ -131,7 +131,7 @@ Espo.define('import:views/import-job/record/detail', 'views/record/detail',
 
         actionGenerateFile(type) {
             this.notify(this.translate('generating', 'labels', 'ImportJob'));
-            this.ajaxPostRequest('ImportJob/action/generateFile', {
+            this.ajaxPostRequest('ImportJob/generateFile', {
                 id: this.model.get('id'),
                 type: type
             }).then(response => {

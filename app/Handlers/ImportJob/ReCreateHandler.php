@@ -23,24 +23,51 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/ImportJob/action/reCreate',
+    path: '/ImportJob/reCreate',
     methods: [
         'POST',
     ],
     summary: 'Re-create import job',
     description: 'Re-creates an import job from an existing one, optionally with a new attachment.',
     tag: 'ImportJob',
-    requestBody: ['required' => true, 'content' => ['application/json' => ['schema' => ['type' => 'object', 'required' => [
-        'id',
-    ], 'properties' => ['id' => [
-        'type' => 'string',
-    ], 'attachmentId' => [
-        'type' => 'string',
-    ]]]]]],
+    requestBody: [
+        'required' => true,
+        'content'  => [
+            'application/json' => [
+                'schema' => [
+                    'type'       => 'object',
+                    'required'   => [
+                        'id',
+                    ],
+                    'properties' => [
+                        'id'           => [
+                            'type' => 'string',
+                        ],
+                        'attachmentId' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                ],
+            ],
+        ],
+    ],
     responses: [
-        200 => ['description' => 'Job re-created', 'content' => ['application/json' => ['schema' => [
-            'type' => 'boolean',
-        ]]]],
+        200 => [
+            'description' => 'Job re-created',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type' => 'boolean',
+                    ],
+                ],
+            ],
+        ],
+        400 => [
+            'description' => 'id is required',
+        ],
+        403 => [
+            'description' => 'Access denied',
+        ],
     ],
 )]
 class ReCreateHandler extends AbstractHandler

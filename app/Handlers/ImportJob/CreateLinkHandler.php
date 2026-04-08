@@ -15,7 +15,6 @@ namespace Import\Handlers\ImportJob;
 
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Forbidden;
-use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Http\Response\BoolResponse;
 use Atro\Core\Routing\Route;
 use Atro\Handlers\AbstractHandler;
@@ -24,27 +23,39 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/ImportJob/{id}/{link}',
+    path: '/ImportJob/{id}/linkFile',
     methods: [
         'POST',
     ],
-    summary: 'Create link for import job',
-    description: 'Only the "files" link is supported.',
+    summary: 'Attach file to import job',
+    description: 'Links an uploaded file attachment to an existing import job.',
     tag: 'ImportJob',
     parameters: [
-        ['name' => 'id',   'in' => 'path', 'required' => true, 'schema' => [
-            'type' => 'string',
-        ]],
-        ['name' => 'link', 'in' => 'path', 'required' => true, 'schema' => [
-            'type' => 'string',
-        ]],
+        [
+            'name'     => 'id',
+            'in'       => 'path',
+            'required' => true,
+            'schema'   => [
+                'type' => 'string',
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'Link created', 'content' => ['application/json' => ['schema' => [
-            'type' => 'boolean',
-        ]]]],
-        404 => [
-            'description' => 'Link not supported',
+        200 => [
+            'description' => 'Link created',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type' => 'boolean',
+                    ],
+                ],
+            ],
+        ],
+        400 => [
+            'description' => 'id is required',
+        ],
+        403 => [
+            'description' => 'Access denied',
         ],
     ],
 )]
@@ -52,12 +63,7 @@ class CreateLinkHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $id   = (string) $request->getAttribute('id');
-        $link = (string) $request->getAttribute('link');
-
-        if ($link !== 'files') {
-            throw new NotFound();
-        }
+        $id = (string) $request->getAttribute('id');
 
         if (!$this->getAcl()->check('ImportJob', 'edit')) {
             throw new Forbidden();
@@ -68,7 +74,7 @@ class CreateLinkHandler extends AbstractHandler
         }
 
         $data = $this->getRequestBody($request);
-        $this->getRecordService('ImportJob')->linkEntity($id, $link, $data->id ?? '');
+        $this->getRecordService('ImportJob')->linkEntity($id, 'files', $data->id ?? '');
 
         return new BoolResponse(true);
     }

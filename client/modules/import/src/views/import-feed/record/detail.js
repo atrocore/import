@@ -60,7 +60,7 @@ Espo.define('import:views/import-feed/record/detail', 'views/record/detail',
                     attachmentId: null,
                 };
                 this.notify(this.translate('creatingImportJobs', 'labels', 'ImportFeed'));
-                this.ajaxPostRequest('ImportFeed/action/runImport', data).then(response => {
+                this.ajaxPostRequest('ImportFeed/runImport', data).then(response => {
                     if (response) {
                         this.notify('Created', 'success');
                         this.model.trigger('importRun');
@@ -84,7 +84,7 @@ Espo.define('import:views/import-feed/record/detail', 'views/record/detail',
                     };
 
                     this.notify(this.translate('creatingImportJobs', 'labels', 'ImportFeed'));
-                    this.ajaxPostRequest('ImportFeed/action/runImport', data).then(response => {
+                    this.ajaxPostRequest('ImportFeed/runImport', data).then(response => {
                         if (response) {
                             this.notify('Created', 'success');
                             view.dialog.close();

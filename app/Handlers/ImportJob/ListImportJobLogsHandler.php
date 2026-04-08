@@ -31,30 +31,74 @@ use Psr\Http\Server\RequestHandlerInterface;
     description: 'Returns only error-type log entries linked to the specified import job.',
     tag: 'ImportJob',
     parameters: [
-        ['name' => 'id',      'in' => 'path',  'required' => true,  'schema' => [
-            'type' => 'string',
-        ]],
-        ['name' => 'offset',  'in' => 'query', 'required' => false, 'schema' => [
-            'type' => 'integer',
-            'example' => 0,
-        ]],
-        ['name' => 'maxSize', 'in' => 'query', 'required' => false, 'schema' => [
-            'type' => 'integer',
-            'example' => 50,
-        ]],
-        ['name' => 'sortBy',  'in' => 'query', 'required' => false, 'schema' => [
-            'type' => 'string',
-        ]],
-        ['name' => 'asc',     'in' => 'query', 'required' => false, 'schema' => [
-            'type' => 'boolean',
-        ]],
+        [
+            'name'     => 'id',
+            'in'       => 'path',
+            'required' => true,
+            'schema'   => [
+                'type' => 'string',
+            ],
+        ],
+        [
+            'name'     => 'offset',
+            'in'       => 'query',
+            'required' => false,
+            'schema'   => [
+                'type'    => 'integer',
+                'example' => 0,
+            ],
+        ],
+        [
+            'name'     => 'maxSize',
+            'in'       => 'query',
+            'required' => false,
+            'schema'   => [
+                'type'    => 'integer',
+                'example' => 50,
+            ],
+        ],
+        [
+            'name'     => 'sortBy',
+            'in'       => 'query',
+            'required' => false,
+            'schema'   => [
+                'type' => 'string',
+            ],
+        ],
+        [
+            'name'     => 'asc',
+            'in'       => 'query',
+            'required' => false,
+            'schema'   => [
+                'type' => 'boolean',
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'Collection of error log entries', 'content' => ['application/json' => ['schema' => ['type' => 'object', 'properties' => ['total' => [
-            'type' => 'integer',
-        ], 'list' => ['type' => 'array', 'items' => [
-            'type' => 'object',
-        ]]]]]]],
+        200 => [
+            'description' => 'Collection of error log entries',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type'       => 'object',
+                        'properties' => [
+                            'total' => [
+                                'type' => 'integer',
+                            ],
+                            'list'  => [
+                                'type'  => 'array',
+                                'items' => [
+                                    'type' => 'object',
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ],
+        403 => [
+            'description' => 'Access denied',
+        ],
         404 => [
             'description' => 'Import job not found',
         ],

@@ -22,17 +22,30 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/ImportFeed/action/getFileSheets',
+    path: '/ImportFeed/getFileSheets',
     methods: [
         'POST',
     ],
     summary: 'Get file sheets',
-    description: 'Returns the list of sheets from the provided file for an import feed.',
+    description: 'Returns the sheet names available in the uploaded Excel or similar file attached to the import feed configuration.',
     tag: 'ImportFeed',
     responses: [
-        200 => ['description' => 'List of sheets', 'content' => ['application/json' => ['schema' => ['type' => 'array', 'items' => [
-            'type' => 'string',
-        ]]]]],
+        200 => [
+            'description' => 'List of sheets',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type'  => 'array',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                ],
+            ],
+        ],
+        403 => [
+            'description' => 'Access denied',
+        ],
     ],
 )]
 class GetFileSheetsHandler extends AbstractHandler

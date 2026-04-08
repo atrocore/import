@@ -22,23 +22,43 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/ImportFeed/action/verifyFeedByCode',
+    path: '/ImportFeed/verifyFeedByCode',
     methods: [
         'GET',
     ],
     summary: 'Verify feed by code',
-    description: 'Verifies an import feed by its code.',
+    description: 'Checks whether an import feed exists and is active for the given code. Returns a status message.',
     tag: 'ImportFeed',
     auth: false,
     parameters: [
-        ['name' => 'code', 'in' => 'query', 'required' => true, 'schema' => [
-            'type' => 'string',
-        ]],
+        [
+            'name'     => 'code',
+            'in'       => 'query',
+            'required' => true,
+            'schema'   => [
+                'type' => 'string',
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'Verification result', 'content' => ['application/json' => ['schema' => ['type' => 'object', 'properties' => ['message' => [
-            'type' => 'string',
-        ]]]]]],
+        200 => [
+            'description' => 'Verification result',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type'       => 'object',
+                        'properties' => [
+                            'message' => [
+                                'type' => 'string',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ],
+        400 => [
+            'description' => 'code is required',
+        ],
     ],
 )]
 class VerifyFeedByCodeHandler extends AbstractHandler

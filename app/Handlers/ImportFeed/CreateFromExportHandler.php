@@ -23,22 +23,53 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/ImportFeed/action/createFromExport',
+    path: '/ImportFeed/createFromExport',
     methods: [
         'POST',
     ],
     summary: 'Create import feed from export feed',
     description: 'Creates a new import feed based on an existing export feed configuration.',
     tag: 'ImportFeed',
-    requestBody: ['required' => true, 'content' => ['application/json' => ['schema' => ['type' => 'object', 'required' => [
-        'exportFeedId',
-    ], 'properties' => ['exportFeedId' => [
-        'type' => 'string',
-    ]]]]]],
+    requestBody: [
+        'required' => true,
+        'content'  => [
+            'application/json' => [
+                'schema' => [
+                    'type'       => 'object',
+                    'required'   => [
+                        'exportFeedId',
+                    ],
+                    'properties' => [
+                        'exportFeedId' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                ],
+            ],
+        ],
+    ],
     responses: [
-        200 => ['description' => 'Created import feed ID', 'content' => ['application/json' => ['schema' => ['type' => 'object', 'properties' => ['id' => [
-            'type' => 'string',
-        ]]]]]],
+        200 => [
+            'description' => 'Created import feed ID',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type'       => 'object',
+                        'properties' => [
+                            'id' => [
+                                'type' => 'string',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ],
+        400 => [
+            'description' => 'exportFeedId is required',
+        ],
+        403 => [
+            'description' => 'Access denied',
+        ],
     ],
 )]
 class CreateFromExportHandler extends AbstractHandler

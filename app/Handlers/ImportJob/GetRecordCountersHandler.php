@@ -24,22 +24,38 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/ImportJob/{id}/action/getRecordCounters',
+    path: '/ImportJob/{id}/recordCounters',
     methods: [
         'GET',
     ],
     summary: 'Get record counters',
     description: 'Returns created/updated/deleted/skipped/error counters for the specified import job.',
     tag: 'ImportJob',
+    skipActionHistory: true,
     parameters: [
-        ['name' => 'id', 'in' => 'path', 'required' => true, 'schema' => [
-            'type' => 'string',
-        ]],
+        [
+            'name'     => 'id',
+            'in'       => 'path',
+            'required' => true,
+            'schema'   => [
+                'type' => 'string',
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'Record counters', 'content' => ['application/json' => ['schema' => [
-            'type' => 'object',
-        ]]]],
+        200 => [
+            'description' => 'Record counters',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type' => 'object',
+                    ],
+                ],
+            ],
+        ],
+        403 => [
+            'description' => 'Access denied',
+        ],
         404 => [
             'description' => 'Import job not found',
         ],

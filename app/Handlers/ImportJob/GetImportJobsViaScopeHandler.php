@@ -22,7 +22,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/ImportJob/action/getImportJobsViaScope',
+    path: '/ImportJob/getImportJobsViaScope',
     methods: [
         'GET',
     ],
@@ -30,14 +30,32 @@ use Psr\Http\Server\RequestHandlerInterface;
     description: 'Returns import jobs filtered by the specified entity scope.',
     tag: 'ImportJob',
     parameters: [
-        ['name' => 'scope', 'in' => 'query', 'required' => true, 'schema' => [
-            'type' => 'string',
-        ]],
+        [
+            'name'     => 'scope',
+            'in'       => 'query',
+            'required' => true,
+            'schema'   => [
+                'type' => 'string',
+            ],
+        ],
     ],
     responses: [
-        200 => ['description' => 'List of import jobs', 'content' => ['application/json' => ['schema' => ['type' => 'array', 'items' => [
-            'type' => 'object',
-        ]]]]],
+        200 => [
+            'description' => 'List of import jobs',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type'  => 'array',
+                        'items' => [
+                            'type' => 'object',
+                        ],
+                    ],
+                ],
+            ],
+        ],
+        400 => [
+            'description' => 'scope is required',
+        ],
     ],
 )]
 class GetImportJobsViaScopeHandler extends AbstractHandler

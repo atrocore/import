@@ -22,17 +22,30 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/ImportFeed/action/parseFileColumns',
+    path: '/ImportFeed/parseFileColumns',
     methods: [
         'POST',
     ],
     summary: 'Parse file columns',
-    description: 'Parses the columns from the provided file for an import feed.',
+    description: 'Reads the uploaded file attached to the import feed and returns its column headers for use in field mapping.',
     tag: 'ImportFeed',
     responses: [
-        200 => ['description' => 'List of parsed columns', 'content' => ['application/json' => ['schema' => ['type' => 'array', 'items' => [
-            'type' => 'object',
-        ]]]]],
+        200 => [
+            'description' => 'List of parsed columns',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type'  => 'array',
+                        'items' => [
+                            'type' => 'object',
+                        ],
+                    ],
+                ],
+            ],
+        ],
+        403 => [
+            'description' => 'Access denied',
+        ],
     ],
 )]
 class ParseFileColumnsHandler extends AbstractHandler
