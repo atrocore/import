@@ -249,6 +249,32 @@ class ImportFeed extends Base
         return $this->getFileColumns($payload);
     }
 
+    public function queueFileColumnsParse(\stdClass $payload): array
+    {
+        if (!property_exists($payload, 'attachmentId')) {
+            throw new BadRequest($this->exception("noSuchFile"));
+        }
+
+        $attachment = $this->getEntityManager()->getEntity('File', $payload->attachmentId);
+        if (empty($attachment)) {
+            throw new BadRequest($this->exception("noSuchFile"));
+        }
+
+        $name = str_replace("{{fileName}}", $attachment->get('name'), $this->translate('parseFile'));
+
+        $jobEntity = $this->getEntityManager()->getEntity('Job');
+        $jobEntity->set([
+            'name'    => $name,
+            'type'    => 'BackgroundFileParser',
+            'payload' => [
+                'payload' => $payload,
+            ],
+        ]);
+        $this->getEntityManager()->saveEntity($jobEntity);
+
+        return ['jobId' => $jobEntity->get('id')];
+    }
+
     public function getFileSheets(\stdClass $payload): array
     {
         if (!property_exists($payload, 'format') || $payload->format !== 'Excel') {
