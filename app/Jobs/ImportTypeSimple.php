@@ -152,15 +152,11 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
         $fileParser = $this->getFileParser('CSV');
         $fileParser->setData($jobData);
 
-        $convertedFile = $this
+        $fileId = $this
             ->getService('File')
             ->createFileViaContents($inputData, $fileParser->createFileContent($rows));
 
-        if (is_array($convertedFile)) {
-            $convertedFile = $this->getEntityManager()->getEntity('File', $convertedFile['id']);
-        }
-
-        return $convertedFile;
+        return $this->getEntityManager()->getEntity('File', $fileId);
     }
 
     public function run(Job $job): void
@@ -852,8 +848,7 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
             $input->mimeType = 'text/csv';
             $input->importFeedId = $importFeed->get('id');
             $input->folderId = $folder->get('id');
-            $fileData = $this->getService('File')->moveLocalFileToFileEntity($input, $filePath);
-            $result[] = $fileData;
+            $result[] = $this->getService('File')->moveLocalFileToFileEntity($input, $filePath);
 
             $offset += $limit;
         }

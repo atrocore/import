@@ -496,8 +496,7 @@ class ImportFeed extends Base
             $payload = new \stdClass();
             $payload->parentJobId = $parent->get('id');
             $rowNumberPart = 0;
-            foreach ($files as $file) {
-                $fileId = is_array($file) ? $file['id'] : $file->get('id');
+            foreach ($files as $fileId) {
                 $qmData['attachmentId'] = $fileId;
                 $qmData['rowNumberPart'] = $rowNumberPart;
                 $rowNumberPart += $maxPerJob;
@@ -978,9 +977,9 @@ class ImportFeed extends Base
         $input->name = 'easy-catalog.json';
         $input->importFeedId = $importFeed->get('id');
 
-        $file = $this->getFileService()->createFileViaContents($input, json_encode($data->json));
+        $fileId = $this->getFileService()->createFileViaContents($input, json_encode($data->json));
 
-        $this->runImport($importFeed->id, $file['id']);
+        $this->runImport($importFeed->id, $fileId);
     }
 
     public function createFileDuplicate(File $file, ?string $folderId): string
@@ -1010,15 +1009,15 @@ class ImportFeed extends Base
             $input->folderId = $folderId;
         }
 
-        $fileData = $this->getFileService()->moveLocalFileToFileEntity($input, $path);
+        $fileId = $this->getFileService()->moveLocalFileToFileEntity($input, $path);
 
         Util::removeDir(dirname($path));
 
-        if (empty($fileData['id'])) {
+        if (empty($fileId)) {
             throw new Error('File duplicate was not created!');
         }
 
-        return $fileData['id'];
+        return $fileId;
     }
 
     protected function getFileService(): FileService
