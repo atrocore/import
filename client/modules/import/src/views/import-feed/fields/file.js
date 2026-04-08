@@ -25,7 +25,6 @@ Espo.define('import:views/import-feed/fields/file', 'views/fields/file',
                     this.prepareAccept();
                     this.reRender();
                 });
-                this.shouldAvoidAutomaticalExtensionUpdate  = true;
             }
         },
 
@@ -45,6 +44,13 @@ Espo.define('import:views/import-feed/fields/file', 'views/fields/file',
             if (this.model.get('format') === 'XML') {
                 this.accept = '.xml';
             }
+        },
+
+        getCreateAttributes() {
+            const res = Dep.prototype.getCreateAttributes.call(this);
+            delete res.shouldAvoidAutomaticalExtensionUpdate;
+            res.headers = {'Skip-Extension-Update': 'true'};
+            return res;
         },
 
     })
