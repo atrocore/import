@@ -56,11 +56,10 @@ Espo.define('import:views/import-feed/record/detail', 'views/record/detail',
 
             this.confirm(this.translate('importNow', 'messages', 'ImportFeed'), () => {
                 const data = {
-                    importFeedId: this.model.get('id'),
-                    attachmentId: null,
+                    fileId: null,
                 };
                 this.notify(this.translate('creatingImportJobs', 'labels', 'ImportFeed'));
-                this.ajaxPostRequest('ImportFeed/runImport', data).then(response => {
+                this.ajaxPostRequest('ImportFeed/' + this.model.get('id') + '/runImport', data).then(response => {
                     if (response) {
                         this.notify('Created', 'success');
                         this.model.trigger('importRun');
@@ -78,13 +77,13 @@ Espo.define('import:views/import-feed/record/detail', 'views/record/detail',
                 model: this.model
             }, view => {
                 view.on('runImport', payload => {
+                    const id = payload.importFeedId || this.model.get('id');
                     const data = {
-                        importFeedId: payload.importFeedId || null,
-                        attachmentId: payload.attachmentId || null,
+                        fileId: payload.fileId || null,
                     };
 
                     this.notify(this.translate('creatingImportJobs', 'labels', 'ImportFeed'));
-                    this.ajaxPostRequest('ImportFeed/runImport', data).then(response => {
+                    this.ajaxPostRequest('ImportFeed/' + id + '/runImport', data).then(response => {
                         if (response) {
                             this.notify('Created', 'success');
                             view.dialog.close();

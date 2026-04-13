@@ -25,6 +25,13 @@
     "importJobLogs": {
       "create": false,
       "select": false,
+      "where": [
+        {
+          "type": "in",
+          "attribute": "type",
+          "value": ["error"]
+        }
+      ],
       "actions": {
         "unlinkRelated": {
           "disabled": true

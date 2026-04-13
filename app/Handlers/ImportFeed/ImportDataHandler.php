@@ -45,7 +45,8 @@ use Psr\Http\Server\RequestHandlerInterface;
                             'type' => 'string',
                         ],
                         'json' => [
-                            'type' => 'object',
+                            'type'                 => 'object',
+                            'additionalProperties' => true,
                         ],
                     ],
                 ],
@@ -64,7 +65,7 @@ use Psr\Http\Server\RequestHandlerInterface;
             ],
         ],
         400 => [
-            'description' => 'code and json are required',
+            'description' => "'code' or 'json' is missing or empty",
         ],
     ],
 )]
@@ -74,11 +75,15 @@ class ImportDataHandler extends AbstractHandler
     {
         $data = $this->getRequestBody($request);
 
-        if (!property_exists($data, 'code') || !property_exists($data, 'json')) {
-            throw new BadRequest();
+        if (!property_exists($data, 'code') || empty($data->code)) {
+            throw new BadRequest("'code' is required.");
         }
 
-        $this->getRecordService('ImportFeed')->importData($data);
+        if (!property_exists($data, 'json')) {
+            throw new BadRequest("'json' is required.");
+        }
+
+        $this->getRecordService('ImportFeed')->importData((string) $data->code, $data->json);
 
         return new BoolResponse(true);
     }

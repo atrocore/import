@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Import\Services;
 
+use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\NotFound;
 use Doctrine\DBAL\ParameterType;
 use Atro\Core\Templates\Services\Base;
@@ -42,14 +43,6 @@ class ImportJob extends Base
         }
     }
 
-    public function getImportJobsViaScope(string $scope): array
-    {
-        return $this
-            ->getEntityManager()
-            ->getRepository('ImportJob')
-            ->getImportJobsViaScope($scope);
-    }
-
     public function prepareCounts(EntityCollection $collection): void
     {
         $data = $this->getRepository()->getJobsCounts(array_column($collection->toArray(), 'id'));
@@ -63,8 +56,63 @@ class ImportJob extends Base
         }
     }
 
+    public function generateFile(string $id, string $type): string
+    {
+        if (!$this->getAcl()->check('ImportJob', 'read')) {
+            throw new Forbidden();
+        }
+
+        $type = $type === 'convertedFile' ? 'converted' : $type;
+        $name = $this->getInjection('container')->get('language')->translate('generateFile' . ucfirst($type), 'labels', 'ImportJob');
+
+        $jobEntity = $this->getEntityManager()->getEntity('Job');
+        $jobEntity->set([
+            'name'    => $name,
+            'type'    => 'ConvertedFileGenerator',
+            'payload' => [
+                'type'        => $type,
+                'importJobId' => $id,
+            ],
+        ]);
+        $this->getEntityManager()->saveEntity($jobEntity);
+
+        return $jobEntity->get('id');
+    }
+
+    public function getRecordCounters(string $id): array
+    {
+        if (!$this->getAcl()->check('ImportJob', 'read')) {
+            throw new Forbidden();
+        }
+
+        $importJob = $this->getEntityManager()->getEntity('ImportJob', $id);
+        if (empty($importJob)) {
+            throw new NotFound();
+        }
+
+        $result = ['id' => $importJob->id, 'state' => $importJob->get('state')];
+        $fields = ['createdCount', 'updatedCount', 'deletedCount', 'skippedCount', 'errorsCount'];
+
+        foreach ($fields as $field) {
+            if ($importJob->get($field) === null) {
+                $this->prepareCounts(new EntityCollection([$importJob]));
+            }
+            $result[$field] = $importJob->get($field) ?? 0;
+        }
+
+        if (!in_array($importJob->get('state'), ['Pending', 'Running'])) {
+            $this->getEntityManager()->saveEntity($importJob);
+        }
+
+        return $result;
+    }
+
     public function reCreateImportJob(string $id, ?string $attachmentId = null): bool
     {
+        if (!$this->getAcl()->check('ImportJob', 'create')) {
+            throw new Forbidden();
+        }
+
         $job = $this->getEntity($id);
         if (empty($job)) {
             throw new NotFound();

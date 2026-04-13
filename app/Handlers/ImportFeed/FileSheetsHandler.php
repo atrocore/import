@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Import\Handlers\ImportFeed;
 
-use Atro\Core\Exceptions\Forbidden;
+use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Http\Response\JsonResponse;
 use Atro\Core\Routing\Route;
 use Atro\Handlers\AbstractHandler;
@@ -22,16 +22,26 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/ImportFeed/getFileSheets',
+    path: '/ImportFeed/fileSheets',
     methods: [
-        'POST',
+        'GET',
     ],
-    summary: 'Get file sheets',
-    description: 'Returns the sheet names available in the uploaded Excel or similar file attached to the import feed configuration.',
+    summary: 'Get Excel sheet names',
+    description: 'Returns the sheet names for the given file. Only Excel format is supported; other formats return an empty array.',
     tag: 'ImportFeed',
+    parameters: [
+        [
+            'name'     => 'fileId',
+            'in'       => 'query',
+            'required' => true,
+            'schema'   => [
+                'type' => 'string',
+            ],
+        ],
+    ],
     responses: [
         200 => [
-            'description' => 'List of sheets',
+            'description' => 'List of sheet names',
             'content'     => [
                 'application/json' => [
                     'schema' => [
@@ -43,21 +53,24 @@ use Psr\Http\Server\RequestHandlerInterface;
                 ],
             ],
         ],
+        400 => [
+            'description' => 'fileId is required, the file does not exist, or the file is not a valid Excel file',
+        ],
         403 => [
             'description' => 'Access denied',
         ],
-    ],
+    ]
 )]
-class GetFileSheetsHandler extends AbstractHandler
+class FileSheetsHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        if (!$this->getAcl()->check('ImportFeed', 'read')) {
-            throw new Forbidden();
+        $fileId = $request->getQueryParams()['fileId'] ?? '';
+
+        if (empty($fileId)) {
+            throw new BadRequest();
         }
 
-        $data = $this->getRequestBody($request);
-
-        return new JsonResponse($this->getRecordService('ImportFeed')->getFileSheets($data));
+        return new JsonResponse($this->getRecordService('ImportFeed')->getFileSheets($fileId));
     }
 }

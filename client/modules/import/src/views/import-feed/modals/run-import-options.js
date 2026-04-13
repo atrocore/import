@@ -63,7 +63,7 @@ Espo.define('import:views/import-feed/modals/run-import-options', 'views/modal',
 
             let data = {
                 importFeedId: this.model.id || null,
-                attachmentId: this.model.get('importFileId') || null,
+                fileId: this.model.get('importFileId') || null,
             };
 
             this.trigger('runImport', data);

@@ -47,9 +47,8 @@ Espo.define('import:views/import-job/record/list', 'views/record/list',
                 }, view => {
                     view.on('runImport', payload => {
                         this.notify(this.translate('creatingImportJobs', 'labels', 'ImportFeed'));
-                        this.ajaxPostRequest('ImportJob/reCreate', {
-                            id: model.get('id'),
-                            attachmentId: model.get('importFileId')
+                        this.ajaxPostRequest('ImportJob/' + model.get('id') + '/reCreate', {
+                            fileId: model.get('importFileId')
                         }).then(response => {
                             if (response) {
                                 this.notify('Created', 'success');
@@ -65,7 +64,7 @@ Espo.define('import:views/import-job/record/list', 'views/record/list',
 
         actionGenerateFileForJob(data) {
             this.notify(this.translate('generating', 'labels', 'ImportJob'));
-            this.ajaxPostRequest('ImportJob/generateFile', {id: data.id, type: data.type}).then(response => {
+            this.ajaxPostRequest('ImportJob/' + data.id + '/generateFile', {type: data.type}).then(response => {
                 let interval = setInterval(() => {
                     this.ajaxGetRequest(`Job/${response.queueItemId}?silent=true`).success(res => {
                         this.notify(this.translate('generating', 'labels', 'ImportJob'));

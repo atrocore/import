@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace Import\Handlers\ImportFeed;
 
 use Atro\Core\Exceptions\BadRequest;
-use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Http\Response\BoolResponse;
 use Atro\Core\Routing\Route;
 use Atro\Handlers\AbstractHandler;
@@ -23,27 +22,32 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/ImportFeed/runImport',
+    path: '/ImportFeed/{id}/runImport',
     methods: [
         'POST',
     ],
     summary: 'Run import',
     description: 'Triggers an import job for the specified import feed.',
     tag: 'ImportFeed',
+    parameters: [
+        [
+            'name'        => 'id',
+            'in'          => 'path',
+            'required'    => true,
+            'description' => 'Import feed record ID',
+            'schema'      => [
+                'type' => 'string',
+            ],
+        ],
+    ],
     requestBody: [
-        'required' => true,
+        'required' => false,
         'content'  => [
             'application/json' => [
                 'schema' => [
                     'type'       => 'object',
-                    'required'   => [
-                        'importFeedId',
-                    ],
                     'properties' => [
-                        'importFeedId' => [
-                            'type' => 'string',
-                        ],
-                        'attachmentId' => [
+                        'fileId' => [
                             'type'     => 'string',
                             'nullable' => true,
                         ],
@@ -75,22 +79,15 @@ class RunImportHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        if (!$this->getAcl()->check('ImportFeed', 'read')) {
-            throw new Forbidden();
-        }
+        $id = (string) $request->getAttribute('id');
 
-        if (!$this->getAcl()->check('ImportJob', 'create')) {
-            throw new Forbidden();
+        if (empty($id)) {
+            throw new BadRequest("'id' is required.");
         }
 
         $data = $this->getRequestBody($request);
+        $fileId = property_exists($data, 'fileId') ? (string) $data->fileId : '';
 
-        if (!property_exists($data, 'importFeedId')) {
-            throw new BadRequest();
-        }
-
-        $attachmentId = property_exists($data, 'attachmentId') ? (string) $data->attachmentId : '';
-
-        return new BoolResponse($this->getRecordService('ImportFeed')->runImport((string) $data->importFeedId, $attachmentId));
+        return new BoolResponse($this->getRecordService('ImportFeed')->runImport($id, $fileId));
     }
 }

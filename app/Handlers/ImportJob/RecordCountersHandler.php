@@ -13,12 +13,10 @@ declare(strict_types=1);
 
 namespace Import\Handlers\ImportJob;
 
-use Atro\Core\Exceptions\Forbidden;
-use Atro\Core\Exceptions\NotFound;
+use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Http\Response\JsonResponse;
 use Atro\Core\Routing\Route;
 use Atro\Handlers\AbstractHandler;
-use Espo\ORM\EntityCollection;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -31,13 +29,13 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Get record counters',
     description: 'Returns created/updated/deleted/skipped/error counters for the specified import job.',
     tag: 'ImportJob',
-    skipActionHistory: true,
     parameters: [
         [
-            'name'     => 'id',
-            'in'       => 'path',
-            'required' => true,
-            'schema'   => [
+            'name'        => 'id',
+            'in'          => 'path',
+            'required'    => true,
+            'description' => 'Import job record ID',
+            'schema'      => [
                 'type' => 'string',
             ],
         ],
@@ -48,10 +46,36 @@ use Psr\Http\Server\RequestHandlerInterface;
             'content'     => [
                 'application/json' => [
                     'schema' => [
-                        'type' => 'object',
+                        'type'       => 'object',
+                        'properties' => [
+                            'id'           => [
+                                'type' => 'string',
+                            ],
+                            'state'        => [
+                                'type' => 'string',
+                            ],
+                            'createdCount' => [
+                                'type' => 'integer',
+                            ],
+                            'updatedCount' => [
+                                'type' => 'integer',
+                            ],
+                            'deletedCount' => [
+                                'type' => 'integer',
+                            ],
+                            'skippedCount' => [
+                                'type' => 'integer',
+                            ],
+                            'errorsCount'  => [
+                                'type' => 'integer',
+                            ],
+                        ],
                     ],
                 ],
             ],
+        ],
+        400 => [
+            'description' => 'id is required',
         ],
         403 => [
             'description' => 'Access denied',
@@ -61,39 +85,16 @@ use Psr\Http\Server\RequestHandlerInterface;
         ],
     ],
 )]
-class GetRecordCountersHandler extends AbstractHandler
+class RecordCountersHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        if (!$this->getAcl()->check('ImportJob', 'read')) {
-            throw new Forbidden();
-        }
-
         $id = (string) $request->getAttribute('id');
 
-        if ($id === '') {
-            throw new NotFound();
+        if (empty($id)) {
+            throw new BadRequest("'id' is required.");
         }
 
-        $importJob = $this->getEntityManager()->getEntity('ImportJob', $id);
-        if (empty($importJob)) {
-            throw new NotFound();
-        }
-
-        $result = ['id' => $importJob->id, 'state' => $importJob->get('state')];
-        $fields = ['createdCount', 'updatedCount', 'deletedCount', 'skippedCount', 'errorsCount'];
-
-        foreach ($fields as $field) {
-            if ($importJob->get($field) === null) {
-                $this->getRecordService('ImportJob')->prepareCounts(new EntityCollection([$importJob]));
-            }
-            $result[$field] = $importJob->get($field) ?? 0;
-        }
-
-        if (!in_array($importJob->get('state'), ['Pending', 'Running'])) {
-            $this->getEntityManager()->saveEntity($importJob);
-        }
-
-        return new JsonResponse($result);
+        return new JsonResponse($this->getRecordService('ImportJob')->getRecordCounters($id));
     }
 }

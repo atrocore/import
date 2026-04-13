@@ -50,16 +50,11 @@ Espo.define('import:views/import-feed/fields/sheet', 'views/fields/enum',
 
         loadFileSheets() {
             let fileId = this.model.get('fileId');
-            if (!fileId) {
+            if (!fileId || this.model.get('format') !== 'Excel') {
                 return;
             }
 
-            let data = {
-                attachmentId: fileId,
-                format: this.model.get('format')
-            };
-
-            this.ajaxPostRequest(`ImportFeed/getFileSheets`, data).success(response => {
+            this.ajaxGetRequest(`ImportFeed/fileSheets`, {fileId}).success(response => {
                 this.model.set('sheetOptions', response, {silent: true});
                 this.model.set(this.name, null, {silent: true});
                 this.originalOptionList = null;

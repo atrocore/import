@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace Import\Handlers\ImportJob;
 
 use Atro\Core\Exceptions\BadRequest;
-use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Http\Response\BoolResponse;
 use Atro\Core\Routing\Route;
 use Atro\Handlers\AbstractHandler;
@@ -23,28 +22,34 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/ImportJob/reCreate',
+    path: '/ImportJob/{id}/reCreate',
     methods: [
         'POST',
     ],
     summary: 'Re-create import job',
-    description: 'Re-creates an import job from an existing one, optionally with a new attachment.',
+    description: 'Re-creates an import job from an existing one, optionally with a new file.',
     tag: 'ImportJob',
+    parameters: [
+        [
+            'name'        => 'id',
+            'in'          => 'path',
+            'required'    => true,
+            'description' => 'Import job record ID',
+            'schema'      => [
+                'type' => 'string',
+            ],
+        ],
+    ],
     requestBody: [
-        'required' => true,
+        'required' => false,
         'content'  => [
             'application/json' => [
                 'schema' => [
                     'type'       => 'object',
-                    'required'   => [
-                        'id',
-                    ],
                     'properties' => [
-                        'id'           => [
-                            'type' => 'string',
-                        ],
-                        'attachmentId' => [
-                            'type' => 'string',
+                        'fileId' => [
+                            'type'     => 'string',
+                            'nullable' => true,
                         ],
                     ],
                 ],
@@ -74,18 +79,15 @@ class ReCreateHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        if (!$this->getAcl()->check('ImportJob', 'create')) {
-            throw new Forbidden();
+        $id = (string) $request->getAttribute('id');
+
+        if (empty($id)) {
+            throw new BadRequest("'id' is required.");
         }
 
         $data = $this->getRequestBody($request);
+        $fileId = property_exists($data, 'fileId') ? $data->fileId : null;
 
-        if (!property_exists($data, 'id') || empty($data->id)) {
-            throw new BadRequest();
-        }
-
-        $attachmentId = property_exists($data, 'attachmentId') ? $data->attachmentId : null;
-
-        return new BoolResponse($this->getRecordService('ImportJob')->reCreateImportJob((string) $data->id, $attachmentId));
+        return new BoolResponse($this->getRecordService('ImportJob')->reCreateImportJob($id, $fileId));
     }
 }

@@ -68,7 +68,7 @@ class VerifyFeedByCodeHandler extends AbstractHandler
         $code = $request->getQueryParams()['code'] ?? '';
 
         if (empty($code)) {
-            throw new BadRequest();
+            throw new BadRequest("'code' is required.");
         }
 
         return new JsonResponse(['message' => $this->getRecordService('ImportFeed')->verifyFeedByCode($code)]);
