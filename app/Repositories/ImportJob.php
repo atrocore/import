@@ -25,7 +25,7 @@ class ImportJob extends Base
 
     public function getImportJobsViaScope(string $scope): array
     {
-        return $this->getConnection()->createQueryBuilder()
+        return $this->getDbal()->createQueryBuilder()
             ->distinct()
             ->select('ij.id, ij.name')
             ->from('import_job_log', 'ijl')
@@ -111,7 +111,7 @@ class ImportJob extends Base
 
     private function getChildJobs(string $parentId): array
     {
-        return $this->getConnection()->createQueryBuilder()
+        return $this->getDbal()->createQueryBuilder()
             ->select('id, state, entity_name')
             ->from('import_job')
             ->where('parent_id = :id')
@@ -123,9 +123,9 @@ class ImportJob extends Base
 
     private function getQmJobStatus(string $id): ?string
     {
-        $result = $this->getConnection()->createQueryBuilder()
+        $result = $this->getDbal()->createQueryBuilder()
             ->select('status')
-            ->from($this->getConnection()->quoteIdentifier('job'))
+            ->from($this->getDbal()->quoteIdentifier('job'))
             ->where('id = :id')
             ->andWhere('deleted = :false')
             ->setParameter('false', false, ParameterType::BOOLEAN)
@@ -138,6 +138,21 @@ class ImportJob extends Base
         }
 
         return null;
+    }
+
+    private function getImportJobState(string $id): ?string
+    {
+        $result = $this->getDbal()->createQueryBuilder()
+            ->select('state')
+            ->from('import_job')
+            ->where('id = :id')
+            ->andWhere('deleted = :false')
+            ->setParameter('false', false, ParameterType::BOOLEAN)
+            ->setParameter('id', $id)
+            ->executeQuery()
+            ->fetchAssociative();
+
+        return $result !== false ? $result['state'] : null;
     }
 
     public function updateParentState(Entity $entity): void
@@ -155,28 +170,27 @@ class ImportJob extends Base
         if (in_array($entity->get('state'), ['Success', 'Failed'])) {
             $children = $this->getChildJobs($parent->get('id'));
             $qmJob = $this->getQmJob($entity);
+            $qmData = !empty($qmJob) ? $qmJob->get('payload') : null;
 
-            if (!empty($qmJob)) {
-                $qmData = $qmJob->get('payload');
-                if (\Import\Jobs\ImportTypeSimple::isDeleteAction($qmData->action)) {
-                    if (!empty($qmData->importJobCreatorId)) {
-                        do {
-                            if (!in_array($this->getQmJobStatus($qmData->importJobCreatorId), ['Failed', 'Canceled', 'Success'])) {
-                                $jobs = array_filter($children, fn($child) => $child['entity_name'] == $parent->get('entityName'));
-                                $jobsStates = array_unique(array_column($jobs, 'state'));
-
-                                if (in_array('Pending', $jobsStates) || in_array('Running', $jobsStates)) {
-                                    break;
-                                }
-
-                                sleep(1);
-                                $children = $this->getChildJobs($parent->get('id'));
-                            } else {
-                                break;
-                            }
-                        } while (true);
+            if (!empty($qmData->importJobCreatorId)) {
+                do {
+                    if (in_array($this->getQmJobStatus($qmData->importJobCreatorId), ['Failed', 'Canceled', 'Success', null])) {
+                        break;
                     }
+                    $childStates = array_column($children, 'state');
+                    if (in_array('Pending', $childStates) || in_array('Running', $childStates)) {
+                        return;
+                    }
+                    sleep(1);
+                    $children = $this->getChildJobs($parent->get('id'));
+                    if (in_array($this->getImportJobState($parent->get('id')), ['Canceled', 'Failed', null])) {
+                        return;
+                    }
+                } while (true);
+            }
 
+            if (!empty($qmJob) && !empty($qmData)) {
+                if (\Import\Jobs\ImportTypeSimple::isDeleteAction($qmData->action)) {
                     $jobs = array_filter($children, fn($child) => $child['entity_name'] == $parent->get('entityName'));
 
                     if ($this->getImportService()->pushDeleteJobs($parent, $jobs, $qmJob)) {
@@ -273,17 +287,17 @@ class ImportJob extends Base
 
     public function getJobsCounts(array $ids): array
     {
-        $data = $this->getConnection()->createQueryBuilder()
+        $data = $this->getDbal()->createQueryBuilder()
             ->select('id')
             ->addSelect("(SELECT COUNT(id) FROM import_job_log WHERE deleted=:false AND type='create' AND import_job_id=import_job.id) created_count")
-            ->addSelect("(SELECT COUNT(DISTINCT " . $this->getConnection()->quoteIdentifier('row_number') . ") FROM import_job_log WHERE deleted=:false AND type='update' AND import_job_id=import_job.id) updated_count")
+            ->addSelect("(SELECT COUNT(DISTINCT " . $this->getDbal()->quoteIdentifier('row_number') . ") FROM import_job_log WHERE deleted=:false AND type='update' AND import_job_id=import_job.id) updated_count")
             ->addSelect("(SELECT COUNT(id) FROM import_job_log WHERE deleted=:false AND type='delete' AND import_job_id=import_job.id) deleted_count")
             ->addSelect("(SELECT COUNT(id) FROM import_job_log WHERE deleted=:false AND type='error' AND import_job_id=import_job.id) errors_count")
             ->addSelect("(SELECT COUNT(id) FROM import_job_log WHERE deleted=:false AND type='skip' AND import_job_id=import_job.id) skipped_count")
             ->from('import_job')
             ->where('id IN (:ids)')
             ->andWhere('deleted=:false')
-            ->setParameter('ids', $ids, $this->getConnection()::PARAM_STR_ARRAY)
+            ->setParameter('ids', $ids, $this->getDbal()::PARAM_STR_ARRAY)
             ->setParameter('false', false, ParameterType::BOOLEAN)
             ->fetchAllAssociative();
 
@@ -321,7 +335,7 @@ class ImportJob extends Base
     {
         parent::clearDeletedRecords();
 
-        $this->getConnection()->createQueryBuilder()
+        $this->getDbal()->createQueryBuilder()
             ->delete('import_job_log')
             ->where('import_job_id not in (select id from import_job)')
             ->executeStatement();
@@ -332,7 +346,7 @@ class ImportJob extends Base
         $res = parent::deleteFromDb($id);
 
         if ($res) {
-            $this->getConnection()->createQueryBuilder()
+            $this->getDbal()->createQueryBuilder()
                 ->delete('import_job_log')
                 ->where('import_job_id = :id')
                 ->setParameter('id', $id)
