@@ -11,9 +11,8 @@
 
 declare(strict_types=1);
 
-namespace Import\Handlers\ImportFeed;
+namespace Import\Handlers\File;
 
-use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Http\Response\JsonResponse;
 use Atro\Core\Routing\Route;
 use Atro\Handlers\AbstractHandler;
@@ -22,19 +21,20 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/ImportFeed/fileSheets',
+    path: '/File/{id}/sheets',
     methods: [
         'GET',
     ],
     summary: 'Get Excel sheet names',
     description: 'Returns the sheet names for the given file. Only Excel format is supported; other formats return an empty array.',
-    tag: 'ImportFeed',
+    tag: 'File',
     parameters: [
         [
-            'name'     => 'fileId',
-            'in'       => 'query',
-            'required' => true,
-            'schema'   => [
+            'name'        => 'id',
+            'in'          => 'path',
+            'required'    => true,
+            'description' => 'ID of the File record.',
+            'schema'      => [
                 'type' => 'string',
             ],
         ],
@@ -53,24 +53,20 @@ use Psr\Http\Server\RequestHandlerInterface;
                 ],
             ],
         ],
-        400 => [
-            'description' => 'fileId is required, the file does not exist, or the file is not a valid Excel file',
-        ],
         403 => [
             'description' => 'Access denied',
         ],
-    ]
+    ],
+    entities: [
+        'File',
+    ],
 )]
 class FileSheetsHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $fileId = $request->getQueryParams()['fileId'] ?? '';
+        $id = $request->getAttribute('id');
 
-        if (empty($fileId)) {
-            throw new BadRequest();
-        }
-
-        return new JsonResponse($this->getRecordService('ImportFeed')->getFileSheets($fileId));
+        return new JsonResponse($this->getRecordService('ImportFeed')->getFileSheets($id));
     }
 }
