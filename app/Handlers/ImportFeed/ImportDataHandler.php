@@ -46,27 +46,27 @@ use Psr\Http\Server\RequestHandlerInterface;
                             'description' => 'The unique code of the import feed to use for processing the data.',
                         ],
                         'json' => [
-                            'type'                 => 'object',
-                            'additionalProperties' => true,
+                            'type'  => 'array',
+                            'items' => [
+                                'type' => 'object',
+                            ],
                         ],
                     ],
                 ],
                 'example' => [
                     'code' => 'my-import-feed',
                     'json' => [
-                        'data' => [
-                            [
-                                'ID'         => '001',
-                                'Name'       => 'Product A',
-                                'SKU'        => 'SKU-001',
-                                'Amount' => 10,
-                            ],
-                            [
-                                'ID'     => '002',
-                                'Name'   => 'Product B',
-                                'SKU'    => 'SKU-002',
-                                'Amount' => 5,
-                            ],
+                        [
+                            'ID'     => '001',
+                            'Name'   => 'Product A',
+                            'SKU'    => 'SKU-001',
+                            'Amount' => 10,
+                        ],
+                        [
+                            'ID'     => '002',
+                            'Name'   => 'Product B',
+                            'SKU'    => 'SKU-002',
+                            'Amount' => 5,
                         ],
                     ],
                 ],
