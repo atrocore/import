@@ -42,7 +42,8 @@ use Psr\Http\Server\RequestHandlerInterface;
                     ],
                     'properties' => [
                         'code' => [
-                            'type' => 'string',
+                            'type'        => 'string',
+                            'description' => 'The unique code of the import feed to use for processing the data.',
                         ],
                         'json' => [
                             'type'                 => 'object',
