@@ -82,14 +82,16 @@ use Psr\Http\Server\RequestHandlerInterface;
                             'nullable' => true,
                         ],
                         'excludedNodes'    => [
-                            'type'  => 'array',
-                            'items' => [
+                            'type'     => 'array',
+                            'nullable' => true,
+                            'items'    => [
                                 'type' => 'string',
                             ],
                         ],
                         'keptStringNodes'  => [
-                            'type'  => 'array',
-                            'items' => [
+                            'type'     => 'array',
+                            'nullable' => true,
+                            'items'    => [
                                 'type' => 'string',
                             ],
                         ],
