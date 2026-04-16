@@ -107,7 +107,7 @@ Espo.define('import:views/import-feed/fields/source-fields', 'views/fields/multi
                     if (action !== 'fileUpdate') {
                         options.async = false;
                     }
-                    this.ajaxGetRequest('ImportFeed/parseFileColumns', data, options).success(response => {
+                    this.ajaxPostRequest('ImportFeed/parseFileColumns', data, options).success(response => {
                         this.model.set('sourceFields', response, {silent: true});
                         this.selected = response;
                         this.reRender();
