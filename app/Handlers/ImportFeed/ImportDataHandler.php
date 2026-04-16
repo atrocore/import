@@ -34,7 +34,7 @@ use Psr\Http\Server\RequestHandlerInterface;
         'required' => true,
         'content'  => [
             'application/json' => [
-                'schema' => [
+                'schema'  => [
                     'type'       => 'object',
                     'required'   => [
                         'code',
@@ -47,6 +47,27 @@ use Psr\Http\Server\RequestHandlerInterface;
                         'json' => [
                             'type'                 => 'object',
                             'additionalProperties' => true,
+                        ],
+                    ],
+                ],
+                'example' => [
+                    'code' => 'my-import-feed',
+                    'json' => [
+                        'data' => [
+                            [
+                                'ID'         => '001',
+                                'Name'       => 'Product A',
+                                'SKU'        => 'SKU-001',
+                                'Amount'     => 10,
+                                'Main Image' => 'https://example.com/image-a.jpg',
+                            ],
+                            [
+                                'ID'         => '002',
+                                'Name'       => 'Product B',
+                                'SKU'        => 'SKU-002',
+                                'Amount'     => 5,
+                                'Main Image' => 'https://example.com/image-b.jpg',
+                            ],
                         ],
                     ],
                 ],
