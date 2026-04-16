@@ -361,7 +361,7 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
                         if ($action == 'delete_found') {
                             $log->set('type', 'delete');
                         } else {
-                            $id = $entityService->createEntity($input)->get('id');
+                            $id = $entityService->createEntity($input);
                             $log->set('type', 'create');
                             $log->set('entityId', $id);
                             $processedIds[] = $id;

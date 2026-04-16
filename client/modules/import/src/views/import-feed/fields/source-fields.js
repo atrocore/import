@@ -72,7 +72,7 @@ Espo.define('import:views/import-feed/fields/source-fields', 'views/fields/multi
         },
 
         loadFileColumns(action) {
-            let fileId = this.model.get('fileId');
+            const fileId = this.model.get('fileId');
             if (!fileId) {
                 return;
             }
@@ -81,35 +81,49 @@ Espo.define('import:views/import-feed/fields/source-fields', 'views/fields/multi
             this.selected = [];
             this.reRender();
 
-            let data = {
-                importFeedId: this.model.get('id'),
-                attachmentId: fileId,
+            const data = {
+                fileId: fileId,
                 format: this.model.get('format'),
                 delimiter: this.model.get('fileFieldDelimiter'),
                 enclosure: this.model.get('fileTextQualifier'),
                 rootNode: this.model.get('rootNode'),
                 excludedNodes: this.model.get('excludedNodes'),
                 keptStringNodes: this.model.get('keptStringNodes'),
-                isHeaderRow: this.model.get('isFileHeaderRow') ? 1 : 0,
+                isHeaderRow: !!this.model.get('isFileHeaderRow'),
                 sheet: this.model.get('sheet')
             };
 
-            let options = {};
-            if (action !== 'fileUpdate') {
-                options.async = false;
-            }
+            const proceed = (fileSize) => {
+                const isLarge = fileSize > 2 * 1024 * 1024;
 
-            this.ajaxPostRequest(`ImportFeed/action/ParseFileColumns`, data, options).success(response => {
-                if (response.jobId) {
-                    Backbone.trigger('showQueuePanel');
-                    this.$el.html('<img alt="preloader" class="preloader" style="height:19px;margin-top:6px;margin-left:-8px" src="client/img/atro-loader.svg" />');
-                    this.readSourceFieldsFromJob(response.jobId);
+                if (isLarge) {
+                    this.ajaxPostRequest('ImportFeed/parseFileColumnsAsync', data).success(response => {
+                        Backbone.trigger('showQueuePanel');
+                        this.$el.html('<img alt="preloader" class="preloader" style="height:19px;margin-top:6px;margin-left:-8px" src="client/img/atro-loader.svg" />');
+                        this.readSourceFieldsFromJob(response.jobId);
+                    });
                 } else {
-                    this.model.set('sourceFields', response, {silent: true});
-                    this.selected = response;
-                    this.reRender();
+                    let options = {};
+                    if (action !== 'fileUpdate') {
+                        options.async = false;
+                    }
+                    this.ajaxPostRequest('ImportFeed/parseFileColumns', data, options).success(response => {
+                        this.model.set('sourceFields', response, {silent: true});
+                        this.selected = response;
+                        this.reRender();
+                    });
                 }
-            });
+            };
+
+            if (this._cachedFileId === fileId && this._cachedFileSize !== undefined) {
+                proceed(this._cachedFileSize);
+            } else {
+                this.ajaxGetRequest(`File/${fileId}`).success(file => {
+                    this._cachedFileId = fileId;
+                    this._cachedFileSize = file.fileSize || 0;
+                    proceed(this._cachedFileSize);
+                });
+            }
         }
     })
 );

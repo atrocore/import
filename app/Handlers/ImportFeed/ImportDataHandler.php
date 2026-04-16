@@ -22,7 +22,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/ImportFeed/action/importData',
+    path: '/ImportFeed/importData',
     methods: [
         'POST',
     ],
@@ -30,18 +30,63 @@ use Psr\Http\Server\RequestHandlerInterface;
     description: 'Imports data into the system using the specified feed code and JSON payload.',
     tag: 'ImportFeed',
     auth: false,
-    requestBody: ['required' => true, 'content' => ['application/json' => ['schema' => ['type' => 'object', 'required' => [
-        'code',
-        'json',
-    ], 'properties' => ['code' => [
-        'type' => 'string',
-    ], 'json' => [
-        'type' => 'object',
-    ]]]]]],
+    requestBody: [
+        'required' => true,
+        'content'  => [
+            'application/json' => [
+                'schema'  => [
+                    'type'       => 'object',
+                    'required'   => [
+                        'code',
+                        'json',
+                    ],
+                    'properties' => [
+                        'code' => [
+                            'type'        => 'string',
+                            'description' => 'The unique code of the import feed to use for processing the data.',
+                        ],
+                        'json' => [
+                            'type'  => 'array',
+                            'items' => [
+                                'type' => 'object',
+                            ],
+                        ],
+                    ],
+                ],
+                'example' => [
+                    'code' => 'my-import-feed',
+                    'json' => [
+                        [
+                            'ID'     => '001',
+                            'Name'   => 'Product A',
+                            'SKU'    => 'SKU-001',
+                            'Amount' => 10,
+                        ],
+                        [
+                            'ID'     => '002',
+                            'Name'   => 'Product B',
+                            'SKU'    => 'SKU-002',
+                            'Amount' => 5,
+                        ],
+                    ],
+                ],
+            ],
+        ],
+    ],
     responses: [
-        200 => ['description' => 'Import accepted', 'content' => ['application/json' => ['schema' => [
-            'type' => 'boolean',
-        ]]]],
+        200 => [
+            'description' => 'Import accepted',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type' => 'boolean',
+                    ],
+                ],
+            ],
+        ],
+        400 => [
+            'description' => "'code' or 'json' is missing or empty",
+        ],
     ],
 )]
 class ImportDataHandler extends AbstractHandler
@@ -50,11 +95,15 @@ class ImportDataHandler extends AbstractHandler
     {
         $data = $this->getRequestBody($request);
 
-        if (!property_exists($data, 'code') || !property_exists($data, 'json')) {
-            throw new BadRequest();
+        if (!property_exists($data, 'code') || empty($data->code)) {
+            throw new BadRequest("'code' is required.");
         }
 
-        $this->getRecordService('ImportFeed')->importData($data);
+        if (!property_exists($data, 'json')) {
+            throw new BadRequest("'json' is required.");
+        }
+
+        $this->getRecordService('ImportFeed')->importData((string) $data->code, $data->json);
 
         return new BoolResponse(true);
     }

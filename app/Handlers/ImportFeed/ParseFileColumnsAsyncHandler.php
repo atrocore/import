@@ -22,12 +22,12 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/ImportFeed/parseFileColumns',
+    path: '/ImportFeed/parseFileColumnsAsync',
     methods: [
         'POST',
     ],
-    summary: 'Parse file source fields',
-    description: "Synchronously reads the uploaded file and returns its source fields (column names for CSV/Excel, key paths for JSON/XML).\n\n> Use for files up to **2 MB**. For larger files use `POST /ImportFeed/parseFileColumnsAsync`.",
+    summary: 'Parse file source fields as background job',
+    description: "Queues a background job to parse the source fields from the uploaded file (column names for CSV/Excel, key paths for JSON/XML). Use for files larger than 2 MB.\n\n**How to retrieve the result:**\n1. Call this endpoint to receive a `jobId`\n2. Poll `GET /Job/{jobId}` every few seconds\n3. When `status` is `Success`, the parsed source fields are available in `payload.sourceFields`\n4. When `status` is `Canceled`, the parsing failed",
     tag: 'ImportFeed',
     requestBody: [
         'required' => true,
@@ -40,10 +40,10 @@ use Psr\Http\Server\RequestHandlerInterface;
                         'format',
                     ],
                     'properties' => [
-                        'fileId'           => [
+                        'fileId'          => [
                             'type' => 'string',
                         ],
-                        'format'           => [
+                        'format'          => [
                             'type' => 'string',
                             'enum' => [
                                 'CSV',
@@ -52,46 +52,40 @@ use Psr\Http\Server\RequestHandlerInterface;
                                 'XML',
                             ],
                         ],
-                        'delimiter'        => [
-                            'type'     => 'string',
-                            'nullable' => true,
-                            'enum'     => [
+                        'delimiter'       => [
+                            'type' => 'string',
+                            'enum' => [
                                 ',',
                                 ';',
                                 '\t',
                             ],
                         ],
-                        'enclosure'        => [
-                            'type'     => 'string',
-                            'nullable' => true,
-                            'enum'     => [
+                        'enclosure'       => [
+                            'type' => 'string',
+                            'enum' => [
                                 'singleQuote',
                                 'doubleQuote',
                             ],
                         ],
-                        'isHeaderRow'      => [
-                            'type'     => 'boolean',
-                            'nullable' => true,
+                        'isHeaderRow'     => [
+                            'type' => 'boolean',
                         ],
-                        'sheet'            => [
+                        'sheet'           => [
                             'type'     => 'integer',
                             'nullable' => true,
                         ],
-                        'rootNode'         => [
-                            'type'     => 'string',
-                            'nullable' => true,
+                        'rootNode'        => [
+                            'type' => 'string',
                         ],
-                        'excludedNodes'    => [
-                            'type'     => 'array',
-                            'nullable' => true,
-                            'items'    => [
+                        'excludedNodes'   => [
+                            'type'  => 'array',
+                            'items' => [
                                 'type' => 'string',
                             ],
                         ],
-                        'keptStringNodes'  => [
-                            'type'     => 'array',
-                            'nullable' => true,
-                            'items'    => [
+                        'keptStringNodes' => [
+                            'type'  => 'array',
+                            'items' => [
                                 'type' => 'string',
                             ],
                         ],
@@ -102,13 +96,15 @@ use Psr\Http\Server\RequestHandlerInterface;
     ],
     responses: [
         200 => [
-            'description' => 'List of source fields detected in the file',
+            'description' => 'Background job queued',
             'content'     => [
                 'application/json' => [
                     'schema' => [
-                        'type'  => 'array',
-                        'items' => [
-                            'type' => 'string',
+                        'type'       => 'object',
+                        'properties' => [
+                            'jobId' => [
+                                'type' => 'string',
+                            ],
                         ],
                     ],
                 ],
@@ -122,20 +118,20 @@ use Psr\Http\Server\RequestHandlerInterface;
         ],
     ],
 )]
-class ParseFileColumnsHandler extends AbstractHandler
+class ParseFileColumnsAsyncHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $body = $this->getRequestBody($request);
+        $data = $this->getRequestBody($request);
 
-        if (empty($body->fileId)) {
+        if (!property_exists($data, 'fileId') || empty($data->fileId)) {
             throw new BadRequest("'fileId' is required.");
         }
 
-        if (empty($body->format)) {
+        if (!property_exists($data, 'format') || empty($data->format)) {
             throw new BadRequest("'format' is required.");
         }
 
-        return new JsonResponse($this->getRecordService('ImportFeed')->getFileColumns($body));
+        return new JsonResponse($this->getRecordService('ImportFeed')->queueFileColumnsParse($data));
     }
 }

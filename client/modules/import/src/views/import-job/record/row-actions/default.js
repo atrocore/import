@@ -16,7 +16,7 @@ Espo.define('import:views/import-job/record/row-actions/default', 'views/record/
             'click [data-action=loadCounters]': function (e) {
                 e.currentTarget?.classList.add('ph-spin');
 
-                this.ajaxGetRequest(`ImportJob/${this.model.id}/recordCounters`).then(response => {
+                this.ajaxGetRequest('ImportJob/' + this.model.id + '/recordCounters').then(response => {
                     if (response.state) {
                         this.model.set('state', response.state);
                     }

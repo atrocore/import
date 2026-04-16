@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Import\Handlers\ImportJob;
 
 use Atro\Core\Exceptions\BadRequest;
-use Atro\Core\Http\Response\BoolResponse;
+use Atro\Core\Http\Response\JsonResponse;
 use Atro\Core\Routing\Route;
 use Atro\Handlers\AbstractHandler;
 use Psr\Http\Message\ResponseInterface;
@@ -22,12 +22,12 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/ImportJob/{id}/reCreate',
+    path: '/ImportJob/{id}/recordCounters',
     methods: [
-        'POST',
+        'GET',
     ],
-    summary: 'Re-create import job',
-    description: 'Re-creates an import job from an existing one, optionally with a new file.',
+    summary: 'Get record counters',
+    description: 'Returns created/updated/deleted/skipped/error counters for the specified import job.',
     tag: 'ImportJob',
     parameters: [
         [
@@ -40,29 +40,36 @@ use Psr\Http\Server\RequestHandlerInterface;
             ],
         ],
     ],
-    requestBody: [
-        'required' => false,
-        'content'  => [
-            'application/json' => [
-                'schema' => [
-                    'type'       => 'object',
-                    'properties' => [
-                        'fileId' => [
-                            'type'     => 'string',
-                            'nullable' => true,
-                        ],
-                    ],
-                ],
-            ],
-        ],
-    ],
     responses: [
         200 => [
-            'description' => 'Job re-created',
+            'description' => 'Record counters',
             'content'     => [
                 'application/json' => [
                     'schema' => [
-                        'type' => 'boolean',
+                        'type'       => 'object',
+                        'properties' => [
+                            'id'           => [
+                                'type' => 'string',
+                            ],
+                            'state'        => [
+                                'type' => 'string',
+                            ],
+                            'createdCount' => [
+                                'type' => 'integer',
+                            ],
+                            'updatedCount' => [
+                                'type' => 'integer',
+                            ],
+                            'deletedCount' => [
+                                'type' => 'integer',
+                            ],
+                            'skippedCount' => [
+                                'type' => 'integer',
+                            ],
+                            'errorsCount'  => [
+                                'type' => 'integer',
+                            ],
+                        ],
                     ],
                 ],
             ],
@@ -73,9 +80,12 @@ use Psr\Http\Server\RequestHandlerInterface;
         403 => [
             'description' => 'Access denied',
         ],
+        404 => [
+            'description' => 'Import job not found',
+        ],
     ],
 )]
-class ReCreateHandler extends AbstractHandler
+class RecordCountersHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
@@ -85,9 +95,6 @@ class ReCreateHandler extends AbstractHandler
             throw new BadRequest("'id' is required.");
         }
 
-        $data = $this->getRequestBody($request);
-        $fileId = property_exists($data, 'fileId') ? $data->fileId : null;
-
-        return new BoolResponse($this->getRecordService('ImportJob')->reCreateImportJob($id, $fileId));
+        return new JsonResponse($this->getRecordService('ImportJob')->getRecordCounters($id));
     }
 }

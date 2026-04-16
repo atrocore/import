@@ -90,7 +90,7 @@ Espo.define('import:views/import-job/record/detail', 'views/record/detail',
 
             target.disabled = true;
             this.notify('Loading...');
-            this.ajaxGetRequest(`ImportJob/${this.model.id}/recordCounters`).success(response => {
+            this.ajaxGetRequest('ImportJob/' + this.model.id + '/recordCounters').success(response => {
                 this.model.set('lastCounterData', response, {silent: true});
                 this.model.trigger('importCounterChanged');
 
@@ -131,8 +131,7 @@ Espo.define('import:views/import-job/record/detail', 'views/record/detail',
 
         actionGenerateFile(type) {
             this.notify(this.translate('generating', 'labels', 'ImportJob'));
-            this.ajaxPostRequest('ImportJob/action/generateFile', {
-                id: this.model.get('id'),
+            this.ajaxPostRequest('ImportJob/' + this.model.get('id') + '/generateFile', {
                 type: type
             }).then(response => {
                 let interval = setInterval(() => {
