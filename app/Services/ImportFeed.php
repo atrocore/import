@@ -21,6 +21,7 @@ use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\NotFound;
 use Atro\Core\FileStorage\FileStorageInterface;
 use Atro\Core\Templates\Services\Base;
+use Atro\Core\Utils\IdGenerator;
 use Atro\Core\Utils\Language;
 use Atro\Core\Utils\Util;
 use Atro\Entities\File;
@@ -924,7 +925,7 @@ class ImportFeed extends Base
         }
 
         $attachment = new \stdClass();
-        $attachment->id = Util::generateId();
+        $attachment->id = IdGenerator::uuid();
         $attachment->name = $exportFeed->get('name') . '(From Export)';
         $attachment->description = $exportFeed->get('description');
         $attachment->code = $exportFeed->code;
@@ -944,7 +945,8 @@ class ImportFeed extends Base
             $attachment->thousandSeparator = $locale->get('thousandSeparator');
             $attachment->decimalMark = $locale->get('decimalMark');
         }
-        $importFeed = $this->createEntity($attachment);
+        $importFeedId = $this->createEntity($attachment);
+        $importFeed = $this->getEntityManager()->getEntity('ImportFeed', $importFeedId);
 
         foreach ($exportFeed->configuratorItems as $configuratorItem) {
             if ($configuratorItem->type === 'Fixed value' || $configuratorItem->type === 'script' || $configuratorItem->type === 'allAttributes') {

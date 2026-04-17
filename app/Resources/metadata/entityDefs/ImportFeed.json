@@ -157,6 +157,10 @@
               "type": "equals",
               "attribute": "format",
               "value": "Excel"
+            },
+            {
+              "type": "isNotEmpty",
+              "attribute": "fileId"
             }
           ]
         },
@@ -166,6 +170,10 @@
               "type": "equals",
               "attribute": "format",
               "value": "Excel"
+            },
+            {
+              "type": "isNotEmpty",
+              "attribute": "fileId"
             }
           ]
         }
