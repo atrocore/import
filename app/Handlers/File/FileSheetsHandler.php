@@ -11,9 +11,8 @@
 
 declare(strict_types=1);
 
-namespace Import\Handlers\ImportFeed;
+namespace Import\Handlers\File;
 
-use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Http\Response\JsonResponse;
 use Atro\Core\Routing\Route;
 use Atro\Handlers\AbstractHandler;
@@ -22,55 +21,52 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/ImportFeed/verifyFeedByCode',
+    path: '/File/{id}/sheets',
     methods: [
         'GET',
     ],
-    summary: 'Verify feed by code',
-    description: 'Checks whether an import feed exists and is active for the given code. Returns a status message.',
-    tag: 'ImportFeed',
-    auth: false,
+    summary: 'Get Excel sheet names',
+    description: 'Returns the sheet names for the given file. Only Excel format is supported; other formats return an empty array.',
+    tag: 'File',
     parameters: [
         [
-            'name'     => 'code',
-            'in'       => 'query',
-            'required' => true,
-            'schema'   => [
+            'name'        => 'id',
+            'in'          => 'path',
+            'required'    => true,
+            'description' => 'ID of the File record.',
+            'schema'      => [
                 'type' => 'string',
             ],
         ],
     ],
     responses: [
         200 => [
-            'description' => 'Verification result',
+            'description' => 'List of sheet names',
             'content'     => [
                 'application/json' => [
                     'schema' => [
-                        'type'       => 'object',
-                        'properties' => [
-                            'message' => [
-                                'type' => 'string',
-                            ],
+                        'type'  => 'array',
+                        'items' => [
+                            'type' => 'string',
                         ],
                     ],
                 ],
             ],
         ],
-        400 => [
-            'description' => 'code is required',
+        403 => [
+            'description' => 'Access denied',
         ],
     ],
+    entities: [
+        'File',
+    ],
 )]
-class VerifyFeedByCodeHandler extends AbstractHandler
+class FileSheetsHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $code = $request->getQueryParams()['code'] ?? '';
+        $id = $request->getAttribute('id');
 
-        if (empty($code)) {
-            throw new BadRequest("'code' is required.");
-        }
-
-        return new JsonResponse(['message' => $this->getRecordService('ImportFeed')->verifyFeedByCode($code)]);
+        return new JsonResponse($this->getRecordService('ImportFeed')->getFileSheets($id));
     }
 }

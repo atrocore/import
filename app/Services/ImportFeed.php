@@ -15,19 +15,20 @@ namespace Import\Services;
 
 use Atro\Core\AttributeFieldConverter;
 use Atro\Core\EventManager\Event;
-use Atro\Core\Exceptions\Error;
-use Atro\Core\FileStorage\FileStorageInterface;
-use Atro\Core\Utils\Language;
-use Atro\Entities\File;
-use Atro\Jobs\JobInterface;
-use Atro\Services\File as FileService;
-use Atro\Entities\Folder;
 use Atro\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\Error;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\NotFound;
+use Atro\Core\FileStorage\FileStorageInterface;
 use Atro\Core\Templates\Services\Base;
-use Doctrine\DBAL\ParameterType;
+use Atro\Core\Utils\IdGenerator;
+use Atro\Core\Utils\Language;
 use Atro\Core\Utils\Util;
+use Atro\Entities\File;
+use Atro\Entities\Folder;
+use Atro\Jobs\JobInterface;
+use Atro\Services\File as FileService;
+use Doctrine\DBAL\ParameterType;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
 use Import\Console\CreateImportProcessingType;
@@ -59,7 +60,7 @@ class ImportFeed extends Base
         $parts = explode('.', $name);
         $ext = array_pop($parts);
 
-        return implode('.', $parts).'_'.date('YmdHis').'.'.$ext;
+        return implode('.', $parts) . '_' . date('YmdHis') . '.' . $ext;
     }
 
     public function putAttributesToMetadata(string $importFeedId): void
@@ -84,7 +85,7 @@ class ImportFeed extends Base
                 ->setParameter('false', false, ParameterType::BOOLEAN)
                 ->setParameter('importFeedId', $importFeed->get('id'));
 
-            if (class_exists("\\Pim\\Module")){
+            if (class_exists("\\Pim\\Module")) {
                 $qb->addSelect("c.name as channel_name");
                 $qb->leftJoin('a', $conn->quoteIdentifier('channel'), 'c', 'c.id=a.channel_id');
             }
@@ -210,11 +211,11 @@ class ImportFeed extends Base
 
     public function parseFileColumns(\stdClass $payload): array
     {
-        if (!property_exists($payload, 'attachmentId')) {
+        if (!property_exists($payload, 'fileId')) {
             throw new BadRequest($this->exception("noSuchFile"));
         }
 
-        $attachment = $this->getEntityManager()->getEntity('File', $payload->attachmentId);
+        $attachment = $this->getEntityManager()->getEntity('File', $payload->fileId);
         if (empty($attachment)) {
             throw new BadRequest($this->exception("noSuchFile"));
         }
@@ -249,32 +250,62 @@ class ImportFeed extends Base
         return $this->getFileColumns($payload);
     }
 
-    public function getFileSheets(\stdClass $payload): array
+    public function queueFileColumnsParse(\stdClass $payload): array
     {
-        if (!property_exists($payload, 'format') || $payload->format !== 'Excel') {
-            return [];
+        if (!$this->getAcl()->check('ImportFeed', 'read')) {
+            throw new Forbidden();
         }
 
-        if (!property_exists($payload, 'attachmentId')) {
+        if (!property_exists($payload, 'fileId')) {
             throw new BadRequest($this->exception("noSuchFile"));
         }
 
-        $attachment = $this->getEntityManager()->getEntity('File', $payload->attachmentId);
+        $attachment = $this->getEntityManager()->getEntity('File', $payload->fileId);
         if (empty($attachment)) {
             throw new BadRequest($this->exception("noSuchFile"));
         }
 
-        return $this->getFileParser($payload->format)->getFileSheetsNames($attachment);
+        $name = str_replace("{{fileName}}", $attachment->get('name'), $this->translate('parseFile'));
+
+        $jobEntity = $this->getEntityManager()->getEntity('Job');
+        $jobEntity->set([
+            'name'    => $name,
+            'type'    => 'BackgroundFileParser',
+            'payload' => [
+                'payload' => $payload,
+            ],
+        ]);
+        $this->getEntityManager()->saveEntity($jobEntity);
+
+        return ['jobId' => $jobEntity->get('id')];
+    }
+
+    public function getFileSheets(string $fileId): array
+    {
+        if (!$this->getAcl()->check('ImportFeed', 'read')) {
+            throw new Forbidden();
+        }
+
+        $this->validateExcelFile($fileId);
+
+        $attachment = $this->getEntityManager()->getEntity('File', $fileId);
+
+        return $this->getFileParser('Excel')->getFileSheetsNames($attachment);
     }
 
     public function getFileColumns(\stdClass $payload): array
     {
-        if (!property_exists($payload, 'attachmentId')) {
+        if (!$this->getUser()->isSystemUser()
+            && !$this->getAcl()->check('ImportFeed', 'read')) {
+            throw new Forbidden();
+        }
+
+        if (!property_exists($payload, 'fileId')) {
             throw new BadRequest($this->exception("noSuchFile"));
         }
 
         /** @var File $attachment */
-        $attachment = $this->getEntityManager()->getEntity('File', $payload->attachmentId);
+        $attachment = $this->getEntityManager()->getEntity('File', $payload->fileId);
         if (empty($attachment)) {
             throw new BadRequest($this->exception("noSuchFile"));
         }
@@ -396,12 +427,21 @@ class ImportFeed extends Base
     }
 
     public function runImport(
-        string    $importFeedId,
-        string    $attachmentId,
+        string     $importFeedId,
+        string     $attachmentId,
         ?\stdClass $payload = null,
-        ?string   $priority = null
+        ?string    $priority = null
     ): bool
     {
+        if (!$this->getUser()->isSystemUser()) {
+            if (!$this->getAcl()->check('ImportFeed', 'read')) {
+                throw new Forbidden();
+            }
+            if (!$this->getAcl()->check('ImportJob', 'create')) {
+                throw new Forbidden();
+            }
+        }
+
         $event = $this
             ->getInjection('eventManager')
             ->dispatch('ImportFeedService', 'beforeRunImport',
@@ -772,7 +812,7 @@ class ImportFeed extends Base
         ImportFeedEntity $feed,
         string           $entityType,
         string           $attachmentId,
-        ?\stdClass        $payload = null
+        ?\stdClass       $payload = null
     ): ImportJob
     {
         $entityLabel = $this->getInjection('language')->translate($entityType, 'scopeNames');
@@ -829,6 +869,14 @@ class ImportFeed extends Base
 
     public function createFromExportFeed($exportFeedId)
     {
+        if (!$this->getMetadata()->isModuleInstalled('Export')) {
+            throw new Forbidden();
+        }
+
+        if (!$this->getAcl()->check('ImportFeed', 'create')) {
+            throw new Forbidden();
+        }
+
         $exportFeed = $this->getEntityManager()->getEntity('ExportFeed', $exportFeedId);
         if (empty($exportFeed)) {
             throw new NotFound();
@@ -859,11 +907,11 @@ class ImportFeed extends Base
             }
 
             if (!empty($configuratorItem->column)) {
-                if(!empty($configuratorItem->entityAttributeId)) {
+                if (!empty($configuratorItem->entityAttributeId)) {
                     $attribute = $this->getEntityManager()->getEntity('Attribute', $configuratorItem->entityAttributeId);
                     $protected = $attribute->get('isProtected');
-                }else{
-                    $protected =  $this->getMetadata()->get(['entityDefs', $exportFeed->getFeedFields()['entity'], 'fields', $configuratorItem->column, 'protected']);
+                } else {
+                    $protected = $this->getMetadata()->get(['entityDefs', $exportFeed->getFeedFields()['entity'], 'fields', $configuratorItem->column, 'protected']);
                 }
 
                 if (empty($protected)) {
@@ -877,7 +925,7 @@ class ImportFeed extends Base
         }
 
         $attachment = new \stdClass();
-        $attachment->id = Util::generateId();
+        $attachment->id = IdGenerator::uuid();
         $attachment->name = $exportFeed->get('name') . '(From Export)';
         $attachment->description = $exportFeed->get('description');
         $attachment->code = $exportFeed->code;
@@ -897,7 +945,8 @@ class ImportFeed extends Base
             $attachment->thousandSeparator = $locale->get('thousandSeparator');
             $attachment->decimalMark = $locale->get('decimalMark');
         }
-        $importFeed = $this->createEntity($attachment);
+        $importFeedId = $this->createEntity($attachment);
+        $importFeed = $this->getEntityManager()->getEntity('ImportFeed', $importFeedId);
 
         foreach ($exportFeed->configuratorItems as $configuratorItem) {
             if ($configuratorItem->type === 'Fixed value' || $configuratorItem->type === 'script' || $configuratorItem->type === 'allAttributes') {
@@ -915,14 +964,14 @@ class ImportFeed extends Base
             $attachment->importFeedId = $importFeed->id;
             $attachment->name = $configuratorItem->name;
             if (!empty($configuratorItem->column)) {
-                if(!empty($configuratorItem->entityAttributeId)) {
+                if (!empty($configuratorItem->entityAttributeId)) {
                     $attribute = $this->getEntityManager()->getEntity('Attribute', $configuratorItem->entityAttributeId);
                     $protected = $attribute->get('isProtected');
-                }else{
-                    $protected =  $this->getMetadata()->get(['entityDefs', $exportFeed->getFeedFields()['entity'], 'fields', $configuratorItem->column, 'protected']);
+                } else {
+                    $protected = $this->getMetadata()->get(['entityDefs', $exportFeed->getFeedFields()['entity'], 'fields', $configuratorItem->column, 'protected']);
                 }
 
-                if(!empty($protected)){
+                if (!empty($protected)) {
                     continue;
                 }
 
@@ -966,9 +1015,9 @@ class ImportFeed extends Base
         return 'Import feed is correctly configured';
     }
 
-    public function importData(\stdClass $data)
+    public function importData(string $code, mixed $json): void
     {
-        $importFeed = $this->getRepository()->where(['code' => $data->code])->findOne();
+        $importFeed = $this->getRepository()->where(['code' => $code])->findOne();
         if (empty($importFeed)) {
             throw new NotFound();
         }
@@ -977,7 +1026,7 @@ class ImportFeed extends Base
         $input->name = 'easy-catalog.json';
         $input->importFeedId = $importFeed->get('id');
 
-        $fileId = $this->getFileService()->createFileViaContents($input, json_encode($data->json));
+        $fileId = $this->getFileService()->createFileViaContents($input, json_encode($json));
 
         $this->runImport($importFeed->id, $fileId);
     }
@@ -987,7 +1036,7 @@ class ImportFeed extends Base
         /** @var FileStorageInterface $storage */
         $storage = $this->getInjection('container')->get($file->getStorage()->get('type') . 'Storage');
 
-        $path = self::TMP_DIR.DIRECTORY_SEPARATOR.Util::generateId().DIRECTORY_SEPARATOR.$file->get('name');
+        $path = self::TMP_DIR . DIRECTORY_SEPARATOR . Util::generateId() . DIRECTORY_SEPARATOR . $file->get('name');
 
         Util::createDir(dirname($path));
 

@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace Import\Handlers\ImportJob;
 
 use Atro\Core\Exceptions\BadRequest;
-use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Http\Response\JsonResponse;
 use Atro\Core\Routing\Route;
 use Atro\Handlers\AbstractHandler;
@@ -23,55 +22,93 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/ImportJob/action/generateFile',
+    path: '/ImportJob/{id}/generateFile',
     methods: [
         'POST',
     ],
     summary: 'Generate file',
     description: 'Queues a job to generate the converted or error file for the specified import job.',
     tag: 'ImportJob',
-    requestBody: ['required' => true, 'content' => ['application/json' => ['schema' => ['type' => 'object', 'required' => [
-        'id',
-        'type',
-    ], 'properties' => ['id' => [
-        'type' => 'string',
-    ], 'type' => [
-        'type' => 'string',
-    ]]]]]],
+    parameters: [
+        [
+            'name'        => 'id',
+            'in'          => 'path',
+            'required'    => true,
+            'description' => 'Import job record ID',
+            'schema'      => [
+                'type' => 'string',
+            ],
+        ],
+    ],
+    requestBody: [
+        'required' => true,
+        'content'  => [
+            'application/json' => [
+                'schema' => [
+                    'type'       => 'object',
+                    'required'   => [
+                        'type',
+                    ],
+                    'properties' => [
+                        'type' => [
+                            'type' => 'string',
+                            'enum' => [
+                                'errors',
+                                'skippedByScript',
+                                'skippedBySystem',
+                                'deleted',
+                                'updated',
+                                'created',
+                                'convertedFile',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ],
+    ],
     responses: [
-        200 => ['description' => 'Queue item ID', 'content' => ['application/json' => ['schema' => ['type' => 'object', 'properties' => ['queueItemId' => [
-            'type' => 'string',
-        ]]]]]],
+        200 => [
+            'description' => 'Queue item ID',
+            'content'     => [
+                'application/json' => [
+                    'schema' => [
+                        'type'       => 'object',
+                        'properties' => [
+                            'queueItemId' => [
+                                'type' => 'string',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ],
+        400 => [
+            'description' => 'id and type are required',
+        ],
+        403 => [
+            'description' => 'Access denied',
+        ],
     ],
 )]
 class GenerateFileHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        if (!$this->getAcl()->check('ImportJob', 'read')) {
-            throw new Forbidden();
+        $id = (string) $request->getAttribute('id');
+
+        if (empty($id)) {
+            throw new BadRequest("'id' is required.");
         }
 
         $data = $this->getRequestBody($request);
 
-        if (!property_exists($data, 'id') || !property_exists($data, 'type')) {
-            throw new BadRequest();
+        if (!property_exists($data, 'type') || empty($data->type)) {
+            throw new BadRequest("'type' is required.");
         }
 
-        $type = $data->type === 'convertedFile' ? 'converted' : $data->type;
-        $name = $this->getLanguage()->translate('generateFile' . ucfirst($type), 'labels', 'ImportJob');
+        $queueItemId = $this->getRecordService('ImportJob')->generateFile($id, (string) $data->type);
 
-        $jobEntity = $this->getEntityManager()->getEntity('Job');
-        $jobEntity->set([
-            'name'    => $name,
-            'type'    => 'ConvertedFileGenerator',
-            'payload' => [
-                'type'        => $type,
-                'importJobId' => $data->id,
-            ],
-        ]);
-        $this->getEntityManager()->saveEntity($jobEntity);
-
-        return new JsonResponse(['queueItemId' => $jobEntity->get('id')]);
+        return new JsonResponse(['queueItemId' => $queueItemId]);
     }
 }
