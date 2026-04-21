@@ -112,7 +112,7 @@ Espo.define('import:views/import-configurator-item/fields/name', 'views/fields/e
                 dialog.once('select', model => {
                     this.wait(true);
                     this.notify('Loading...');
-                    this.ajaxGetRequest('Attribute/getAttributesDefs', {
+                    this.ajaxGetRequest('Attribute/attributesDefs', {
                         entityName: entity,
                         attributesIds: [model.id]
                     }, { async: false }).success(res => {
