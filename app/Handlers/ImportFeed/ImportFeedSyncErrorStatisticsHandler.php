@@ -28,7 +28,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     tag: 'ImportFeed',
     responses: [
         200 => [
-            'description' => 'Dashlet data',
+            'description' => 'Import sync error statistics',
             'content'     => [
                 'application/json' => [
                     'schema' => [
