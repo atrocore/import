@@ -11,7 +11,7 @@
 
 declare(strict_types=1);
 
-namespace Import\Handlers\Dashlet;
+namespace Import\Handlers\ImportFeed;
 
 use Atro\Core\Http\Response\JsonResponse;
 use Atro\Core\Routing\Route;
@@ -21,11 +21,11 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Route(
-    path: '/Dashlet/dataSyncErrorsImport',
+    path: '/ImportFeed/syncErrorStatistics',
     methods: ['GET'],
-    summary: 'Get import data sync errors dashlet data',
+    summary: 'Get import sync error statistics',
     description: 'Returns failed import job counts grouped by time interval (1, 7, 28 days).',
-    tag: 'Dashlet',
+    tag: 'ImportFeed',
     responses: [
         200 => [
             'description' => 'Dashlet data',
@@ -74,7 +74,7 @@ use Psr\Http\Server\RequestHandlerInterface;
         ],
     ],
 )]
-class DashletDataSyncErrorsImportHandler extends AbstractHandler
+class ImportFeedSyncErrorStatisticsHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
