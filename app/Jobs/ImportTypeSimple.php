@@ -300,6 +300,7 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
 
                 if ($data['action'] == 'delete_not_found') {
                     $log->set('type', 'skip');
+                    $log->set('entityId', $id);
                     $this->getEntityManager()->saveEntity($log);
                     continue 1;
                 }
