@@ -13,7 +13,7 @@ Espo.define('import:views/dashlets/data-sync-errors-import', 'views/dashlets/abs
 
         _template: '<div class="list-container">{{{list}}}</div>',
 
-        collectionUrl: 'Dashlet/DataSyncErrorsImport',
+        collectionUrl: 'ImportFeed/syncErrorStatistics',
 
         actionRefresh: function () {
             this.collection.fetch();
