@@ -44,11 +44,11 @@ use Atro\Handlers\Action\AbstractActionTypeSyncHandler;
                     'properties' => [
                         'entityId'     => [
                             'type'        => 'string',
-                            'description' => 'Limit import scope to a specific entity record (by ID). The feed\'s where filter is overridden with a single-ID constraint.',
+                            'description' => 'ID of the entity record that provides context for condition evaluation and template rendering. Its fields are accessible as `{{ entity.* }}` in Twig expressions. Does not select which records the action operates on — use `where` for that.',
                         ],
                         'where'        => [
                             'type'        => 'array',
-                            'description' => 'Filter conditions for mass import. Applied as the feed\'s scope filter.',
+                            'description' => 'Standard AtroCore filter conditions that select the records the action operates on. The action runs once for every matching record.',
                             'items'       => ['type' => 'object'],
                         ],
                         'attachmentId' => [
