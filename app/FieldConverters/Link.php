@@ -73,6 +73,8 @@ class Link extends Varchar
                                 'name'              => $field,
                                 'column'            => [0],
                                 'default'           => null,
+                                'emptyValue'        => $config['emptyValue'] ?? '',
+                                'nullValue'         => $config['nullValue'] ?? 'Null',
                                 'decimalMark'       => $config['decimalMark'] ?? null,
                                 'thousandSeparator' => $config['thousandSeparator'] ?? null,
                                 'valueExtractor'    => $config['valueExtractor'] ?? null
@@ -115,7 +117,8 @@ class Link extends Varchar
                     }
 
                     try {
-                        $entity = $this->getService($entityName, true)->createEntity($input);
+                        $entityId = $this->getService($entityName, true)->createEntity($input);
+                        $entity = $this->getEntityManager()->getEntity($entityName, $entityId);
                     } catch (NotUnique|ConstraintViolationException $e) {
                         $entity = $this->findAlreadyExistsEntity($entityName, $where);
                     } catch (\Throwable $e) {
@@ -303,7 +306,14 @@ class Link extends Varchar
         $res = [];
         foreach ($configuration['importBy'] as $k => $field) {
             $column = count($configuration['column']) === 1 ? $configuration['column'][0] : $configuration['column'][$k];
-            $columnName = empty($configuration['mainConfig']['column']) ? $column : $configuration['mainConfig']['column'][$k];
+            $mainConfigColumn = $configuration['mainConfig']['column'] ?? [];
+            if (empty($mainConfigColumn)) {
+                $columnName = $column;
+            } elseif (count($mainConfigColumn) === 1) {
+                $columnName = $mainConfigColumn[0];
+            } else {
+                $columnName = $mainConfigColumn[$k] ?? $column;
+            }
             foreach ($rows as $row) {
                 if ($row[$columnName] === $configuration['nullValue']) {
                     $res[$field][] = null;
