@@ -51,7 +51,7 @@ class Module extends AbstractModule
             // ImportConfiguratorItem — all mutation and listing is managed via ImportFeed
             ListHandler::class       => ['ImportConfiguratorItem'],
             // ImportJob — direct creation is not allowed; use /ImportFeed/action/runImport
-            CreateHandler::class     => ['ImportConfiguratorItem', 'ImportJob']
+            CreateHandler::class     => ['ImportJob']
         ];
     }
 }
