@@ -121,8 +121,6 @@ class Metadata extends AbstractListener
         $data['entityDefs']['Action']['fields']['payload']['conditionalProperties']['visible']['conditionGroup'][0]['attribute'] = 'type';
         $data['entityDefs']['Action']['fields']['payload']['conditionalProperties']['visible']['conditionGroup'][0]['value'][] = 'import';
 
-        $data['entityDefs']['Action']['fields']['inBackground']['conditionalProperties']['visible']['conditionGroup'][0]['value'][] = 'import';
-
         if (empty($data['entityDefs']['ScheduledJob']['fields']['maximumHoursToLookBack']['conditionalProperties']['visible']['conditionGroup'][0])) {
             $data['entityDefs']['ScheduledJob']['fields']['maximumHoursToLookBack']['conditionalProperties']['visible']['conditionGroup'][0] = [
                 'type'      => 'in',

@@ -300,6 +300,7 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
 
                 if ($data['action'] == 'delete_not_found') {
                     $log->set('type', 'skip');
+                    $log->set('entityId', $id);
                     $this->getEntityManager()->saveEntity($log);
                     continue 1;
                 }
@@ -338,7 +339,7 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
                                 if (!property_exists($input, '__attributesToRemove')) {
                                     $input->__attributesToRemove = [];
                                 }
-                                $input->__attributesToRemove[] = $item['name'];
+                                $input->__attributesToRemove[] = $item['entityAttributeId'];
                             } else {
                                 $this->getService('ImportConfiguratorItem')->getFieldConverter($type)->convert($input, $item, $row);
                             }
