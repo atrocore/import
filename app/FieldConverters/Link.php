@@ -154,6 +154,12 @@ class Link extends Varchar
         $fieldName = $this->getFieldName($config);
 
         $inputRow->$fieldName = $value;
+        if (!empty($config['entityAttributeId'])) {
+            if (!property_exists($inputRow, '__attributes')) {
+                $inputRow->__attributes = [];
+            }
+            $inputRow->__attributes[] = $config['entityAttributeId'];
+        }
     }
 
     public function prepareValue(\stdClass $restore, Entity $entity, array $item): void
