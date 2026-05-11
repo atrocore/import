@@ -104,12 +104,12 @@ class Link extends Varchar
                 }
 
                 if (empty($entity) && $input !== new \stdClass() && !empty($config['createIfNotExist'])) {
-                    $user = $this->container->get('user');
+                    $user   = $this->container->get('user');
                     $userId = empty($user) ? null : $user->get('id');
 
-                    $input->ownerUserId = $userId;
-                    $input->ownerUserName = $userId;
-                    $input->assignedUserId = $userId;
+                    $input->ownerUserId      = $userId;
+                    $input->ownerUserName    = $userId;
+                    $input->assignedUserId   = $userId;
                     $input->assignedUserName = $userId;
 
                     if (!empty($config['foreignImportBy']) && !empty($config['foreignColumn'])) {
@@ -118,7 +118,7 @@ class Link extends Varchar
 
                     try {
                         $entityId = $this->getService($entityName, true)->createEntity($input);
-                        $entity = $this->getEntityManager()->getEntity($entityName, $entityId);
+                        $entity   = $this->getEntityManager()->getEntity($entityName, $entityId);
                     } catch (NotUnique|ConstraintViolationException $e) {
                         $entity = $this->findAlreadyExistsEntity($entityName, $where);
                     } catch (\Throwable $e) {
@@ -247,8 +247,8 @@ class Link extends Varchar
 
     protected function prepareInputForCreateIfNotExist($input, array $config, array $row): void
     {
-        $foreignValues = [];
-        $foreignColumn = $config['foreignColumn'];
+        $foreignValues   = [];
+        $foreignColumn   = $config['foreignColumn'];
         $foreignImportBy = $config['foreignImportBy'];
 
         if (count($foreignColumn) === 1) {
@@ -284,15 +284,14 @@ class Link extends Varchar
         }
 
         if (!empty($configuration['importBy']) && !empty($configuration['column'])) {
-            $whereForCollection = $this->prepareWhereForCollection($configuration, $rows);
-            $collection = $this->getEntityManager()->getRepository($entityName)->where($whereForCollection)->find();
-            $collection = $this->prepareCollectionBeforeWhereKeysCreated($collection);
+            $whereForCollection = $this->prepareWhereForCollection($entityName, $configuration, $rows);
+            $collection         = $this->getEntityManager()->getRepository($entityName)->where($whereForCollection)->find();
 
             foreach ($collection as $entity) {
                 $itemKey = $service->createMemoryKey($entity->getEntityType(), $entity->get('id'));
                 $this->getMemoryStorage()->set($itemKey, $entity);
-                $foreignKeys[$configuration['pos']][$entityName][] = $itemKey;
-                $whereKey = $service->createWhereKey(array_keys($where), $entity);
+                $foreignKeys[$configuration['pos']][$entityName][]               = $itemKey;
+                $whereKey                                                        = $service->createWhereKey(array_keys($where), $entity);
                 $foreignWhereKeys[$configuration['pos']][$entityName][$whereKey] = $itemKey;
             }
 
@@ -301,11 +300,11 @@ class Link extends Varchar
         }
     }
 
-    protected function prepareWhereForCollection(array $configuration, array $rows): array
+    protected function prepareWhereForCollection(string $entityName, array $configuration, array $rows): array
     {
         $res = [];
         foreach ($configuration['importBy'] as $k => $field) {
-            $column = count($configuration['column']) === 1 ? $configuration['column'][0] : $configuration['column'][$k];
+            $column           = count($configuration['column']) === 1 ? $configuration['column'][0] : $configuration['column'][$k];
             $mainConfigColumn = $configuration['mainConfig']['column'] ?? [];
             if (empty($mainConfigColumn)) {
                 $columnName = $column;
@@ -326,11 +325,22 @@ class Link extends Varchar
 
                 $values = explode($configuration['delimiter'], (string)$row[$columnName]);
                 foreach ($values as $value) {
-                    $value = explode($configuration['fieldDelimiterForRelation'], $value)[$k] ?? null;
+                    $value         = explode($configuration['fieldDelimiterForRelation'], $value)[$k] ?? null;
                     $res[$field][] = $this->extractValue($configuration, $value, (string)$configuration['emptyValue'], (string)$configuration['nullValue']);
                 }
             }
             $res[$field] = array_values(array_unique($res[$field]));
+        }
+
+        if ($entityName === 'ExtensibleEnumOption' && !empty($this->getExtensibleEnumId($configuration))) {
+            $res['AND'] = [
+                'innerSql' => [
+                    'sql'        => 'EXISTS(select 1 from extensible_enum_extensible_enum_option eeeeo where eeeeo.extensible_enum_id = :extensibleEnumId and t1.id = eeeeo.extensible_enum_option_id and eeeeo.deleted = :false)',
+                    'parameters' => [
+                        'extensibleEnumId' => $this->getExtensibleEnumId($configuration),
+                    ]
+                ]
+            ];
         }
 
         return $res;
@@ -343,7 +353,7 @@ class Link extends Varchar
 
     protected function findEntityInMemory(array $where, array $config): ?Entity
     {
-        $entityName = $this->getForeignEntityName($config);
+        $entityName       = $this->getForeignEntityName($config);
         $foreignWhereKeys = $this->getMemoryStorage()->get(self::MEMORY_WHERE_FOREIGN_KEYS) ?? [];
 
         ksort($where);
@@ -356,12 +366,31 @@ class Link extends Varchar
         return null;
     }
 
-    protected function prepareCollectionBeforeWhereKeysCreated($collection): EntityCollection
-    {
-        return $collection;
-    }
-
     protected function beforeSetValue(Entity $entity, array $config, array $row): void
     {
+        if (empty($config['createIfNotExist'])) {
+            return;
+        }
+
+        if ($entity->getEntityName() !== 'ExtensibleEnumOption' || empty($this->getExtensibleEnumId($config))) {
+            return;
+        }
+
+
+        $link = $this->getEntityManager(true)->getRepository('ExtensibleEnumExtensibleEnumOption')->get();
+        $link->set([
+            'extensibleEnumId'       => $this->getExtensibleEnumId($config),
+            'extensibleEnumOptionId' => $entity->get('id')
+        ]);
+
+        try {
+            $this->getEntityManager(true)->saveEntity($link);
+        } catch (NotUnique|ConstraintViolationException $e) {
+        }
+    }
+
+    protected function getExtensibleEnumId(array $config): ?string
+    {
+        return $this->getMetadata()->get(['entityDefs', $config['entity'], 'fields', $config['name'], 'extensibleEnumId']);
     }
 }
