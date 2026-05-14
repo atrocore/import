@@ -14,13 +14,12 @@ declare(strict_types=1);
 namespace Import\Listeners;
 
 use Atro\Core\EventManager\Event;
-use Atro\Core\KeyValueStorages\StorageInterface;
 use Atro\Core\Utils\Util;
-use Atro\Listeners\AbstractListener;
+use Atro\Listeners\AbstractMetadataListener;
 use Import\Console\CreateImportProcessingType;
 use Import\ProcessingTypes\AbstractProcessingType;
 
-class Metadata extends AbstractListener
+class Metadata extends AbstractMetadataListener
 {
     public function modify(Event $event)
     {
@@ -171,10 +170,5 @@ class Metadata extends AbstractListener
         }
 
         $event->setArgument('data', $data);
-    }
-
-    protected function getMemoryStorage(): StorageInterface
-    {
-        return $this->getContainer()->get('memoryStorage');
     }
 }
