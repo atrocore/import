@@ -169,7 +169,7 @@ Espo.define('import:views/import-configurator-item/fields/default-container', 'v
                 viewName = 'views/admin/field-manager/fields/extensible-multi-enum-default';
             } else if (type === 'varchar') {
                 if (this.getMetadata().get(`entityDefs.${this.model.get('entity')}.fields.${this.model.get('name')}.unitField`)) {
-                    viewName = this.getMetadata().get(`entityDefs.${this.model.get('entity')}.fields.${this.model.get('name')}.view`);
+                    viewName = this.getMetadata().get(`entityDefs.${this.model.get('entity')}.fields.${this.model.get('name')}.view`) || viewName;
                 }
             }
 
