@@ -958,7 +958,7 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
         $linkFields = [];
         foreach ($fields as $field) {
             $type = $this->getMetadata()->get(['entityDefs', $scope, 'fields', $field, 'type']);
-            if (in_array($type, ['link', 'linkMultiple', 'extensibleEnum', 'extensibleMultiEnum'])) {
+            if (in_array($type, ['link', 'linkMultiple'])) {
                 $value = $field;
                 if ($type == 'link') {
                     $value .= 'Id';
