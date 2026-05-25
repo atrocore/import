@@ -37,7 +37,7 @@ Espo.define('import:views/import-configurator-item/fields/value-extractor', 'vie
             let measureId = this.getMetadata().get(`entityDefs.${this.model.get('entity')}.fields.${this.model.get('name')}.measureId`);
 
             return !!(measureId &&
-                (!this.getMetadata().get(`entityDefs.${this.model.get('entity')}.fields.${this.model.get('name')}.unitField`) || this.getMetadata().get(`entityDefs.${this.model.get('entity')}.fields.${this.model.get('name')}.attributeId`)));
+                (!this.getMetadata().get(`entityDefs.${this.model.get('entity')}.fields.${this.model.get('name')}.combinedField`) || this.getMetadata().get(`entityDefs.${this.model.get('entity')}.fields.${this.model.get('name')}.attributeId`)));
         },
 
         afterRender() {

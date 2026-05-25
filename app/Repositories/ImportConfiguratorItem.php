@@ -82,7 +82,7 @@ class ImportConfiguratorItem extends Base
         $this->checkIfVirtualFieldIsIdentifier($entity, $importFeed);
 
         $type = $this->getMetadata()->get(['entityDefs', $importFeed->getFeedField('entity'), 'fields', $entity->get('name'), 'type'], 'varchar');
-        if ($type === 'varchar' && !empty($this->getMetadata()->get(['entityDefs', $importFeed->getFeedField('entity'), 'fields', $entity->get('name'), 'unitField']))) {
+        if ($type === 'varchar' && !empty($this->getMetadata()->get(['entityDefs', $importFeed->getFeedField('entity'), 'fields', $entity->get('name'), 'combinedField']))) {
             $type = 'valueWithUnit';
         }
 
