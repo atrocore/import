@@ -140,21 +140,6 @@ class Metadata extends AbstractMetadataListener
             $data['entityDefs']['ScheduledJob']['fields']['maximumDaysForJobExist']['conditionalProperties']['visible']['conditionGroup'][0]['value'][] = 'ImportJobRemove';
         }
 
-
-        $data['entityDefs']['ExtensibleEnumOption']['fields']['extensibleEnumId'] = [
-            'type'                      => 'varchar',
-            'notStorable'               => true,
-            'layoutDetailDisabled'      => true,
-            'layoutDetailSmallDisabled' => true,
-            'layoutListDisabled'        => true,
-            'layoutListSmallDisabled'   => true,
-            'layoutMassUpdateDisabled'  => true,
-            'exportDisabled'            => true,
-            'importDisabled'            => true,
-            'textFilterDisabled'        => true,
-            'emHidden'                  => true,
-        ];
-
         foreach (Util::scanDir(CreateImportProcessingType::DIR) as $fileName) {
             $type = str_replace('.php', '', $fileName);
 

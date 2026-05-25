@@ -105,7 +105,6 @@ Espo.define('import:views/import-configurator-item/fields/default-container', 'v
 
             } else if (type === 'unit') {
                 this.params.measureId = this.getMetadata().get(`entityDefs.${this.model.get('entity')}.fields.${this.model.get('name')}.measureId`);
-                this.model.defs.fields["default"]['extensibleEnumId'] = this.params.measureId;
             } else if (type === 'measure') {
                 this.params.measureId = this.getMetadata().get(`entityDefs.${this.model.get('entity')}.fields.${this.model.get('name')}.measureId`);
                 this.model.defs.fields["default"]['measureId'] = this.params.measureId;
