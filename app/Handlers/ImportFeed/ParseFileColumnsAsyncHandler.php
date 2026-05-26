@@ -76,15 +76,18 @@ use Psr\Http\Server\RequestHandlerInterface;
                         ],
                         'rootNode'        => [
                             'type' => 'string',
+                            'nullable' => true,
                         ],
                         'excludedNodes'   => [
                             'type'  => 'array',
+                            'nullable' => true,
                             'items' => [
                                 'type' => 'string',
                             ],
                         ],
                         'keptStringNodes' => [
                             'type'  => 'array',
+                            'nullable' => true,
                             'items' => [
                                 'type' => 'string',
                             ],
