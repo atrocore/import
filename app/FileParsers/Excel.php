@@ -16,6 +16,7 @@ namespace Import\FileParsers;
 use Atro\Core\EventManager\Event;
 use Espo\Core\Exceptions\BadRequest;
 use Atro\Entities\File;
+use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
@@ -103,7 +104,7 @@ class Excel extends Csv
         foreach ($data as $rowData) {
             $column = 1;
             foreach ($rowData as $cellData) {
-                $sheet->setCellValueByColumnAndRow($column, $row, $cellData);
+                $sheet->setCellValue(Coordinate::stringFromColumnIndex($column) . $row, $cellData);
                 $column++;
             }
             $row++;
