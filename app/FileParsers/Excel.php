@@ -103,7 +103,7 @@ class Excel extends Csv
         foreach ($data as $rowData) {
             $column = 1;
             foreach ($rowData as $cellData) {
-                $sheet->setCellValueByColumnAndRow($column, $row, $cellData);
+                $sheet->setCellValue(\PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($column) . $row, $cellData);
                 $column++;
             }
             $row++;
