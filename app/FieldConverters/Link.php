@@ -133,7 +133,6 @@ class Link extends Varchar
                 }
 
                 if (!empty($entity)) {
-                    $this->beforeSetValue($entity, $config, $row);
                     $value = $entity->get('id');
                 } else {
                     $value = $default;
@@ -338,17 +337,6 @@ class Link extends Varchar
             $res[$field] = array_values(array_unique($res[$field]));
         }
 
-        if ($entityName === 'ExtensibleEnumOption' && !empty($this->getExtensibleEnumId($configuration))) {
-            $res['AND'] = [
-                'innerSql' => [
-                    'sql'        => 'EXISTS(select 1 from extensible_enum_extensible_enum_option eeeeo where eeeeo.extensible_enum_id = :extensibleEnumId and t1.id = eeeeo.extensible_enum_option_id and eeeeo.deleted = :false)',
-                    'parameters' => [
-                        'extensibleEnumId' => $this->getExtensibleEnumId($configuration),
-                    ]
-                ]
-            ];
-        }
-
         return $res;
     }
 
@@ -370,33 +358,5 @@ class Link extends Varchar
         }
 
         return null;
-    }
-
-    protected function beforeSetValue(Entity $entity, array $config, array $row): void
-    {
-        if (empty($config['createIfNotExist'])) {
-            return;
-        }
-
-        if ($entity->getEntityName() !== 'ExtensibleEnumOption' || empty($this->getExtensibleEnumId($config))) {
-            return;
-        }
-
-
-        $link = $this->getEntityManager(true)->getRepository('ExtensibleEnumExtensibleEnumOption')->get();
-        $link->set([
-            'extensibleEnumId'       => $this->getExtensibleEnumId($config),
-            'extensibleEnumOptionId' => $entity->get('id')
-        ]);
-
-        try {
-            $this->getEntityManager(true)->saveEntity($link);
-        } catch (NotUnique|ConstraintViolationException $e) {
-        }
-    }
-
-    protected function getExtensibleEnumId(array $config): ?string
-    {
-        return $this->getMetadata()->get(['entityDefs', $config['entity'], 'fields', $config['name'], 'extensibleEnumId']);
     }
 }

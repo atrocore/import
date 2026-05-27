@@ -27,7 +27,7 @@ Espo.define('import:views/import-configurator-item/fields/replace-array', 'views
             Dep.prototype.afterRender.call(this);
 
             let type = this.getMetadata().get(`entityDefs.${this.model.get('entity')}.fields.${this.model.get('name')}.type`);
-            if (type === 'linkMultiple' || type === 'array' || type === 'multiEnum' || type === 'extensibleMultiEnum') {
+            if (type === 'linkMultiple' || type === 'array' || type === 'multiEnum') {
                 this.show();
             } else {
                 this.hide();
