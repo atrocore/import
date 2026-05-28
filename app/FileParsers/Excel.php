@@ -16,6 +16,7 @@ namespace Import\FileParsers;
 use Atro\Core\EventManager\Event;
 use Espo\Core\Exceptions\BadRequest;
 use Atro\Entities\File;
+use Import\Core\ExcelRowReadFilter;
 use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
@@ -41,7 +42,7 @@ class Excel extends Csv
 
     public function getFileData(File $attachment, int $offset = 0, ?int $limit = null): ?array
     {
-        $sheet = $this->data['sheet'] ?? 0;
+        $sheetIndex = $this->data['sheet'] ?? 0;
 
         $path = $this->getLocalFilePath($attachment);
 
@@ -52,37 +53,38 @@ class Excel extends Csv
         $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReaderForFile($path);
         $reader->setReadDataOnly(true);
 
-        $rowNumber = 0;
+        $sheetNames = $reader->listWorksheetNames($path);
+        $sheetName  = $sheetNames[$sheetIndex] ?? null;
+
+        if ($sheetName !== null) {
+            $reader->setLoadSheetsOnly([$sheetName]);
+        }
+
+        $startRow = $offset + 1;
+        $endRow   = $limit !== null ? $offset + $limit : PHP_INT_MAX;
+
+        $readFilter = new ExcelRowReadFilter($startRow, $endRow);
+
+        $reader->setReadFilter($readFilter);
+
+        $worksheet = $reader->load($path)->getSheet(0);
 
         $data = [];
-
-        $worksheet = $reader->load($path)->getSheet($sheet);
         foreach ($worksheet->getRowIterator() as $row) {
-            $dataRow = [];
+            $dataRow      = [];
             $cellIterator = $row->getCellIterator();
             $cellIterator->setIterateOnlyExistingCells(false);
             foreach ($cellIterator as $cell) {
                 $dataRow[] = $cell->getValue();
             }
 
-            if ($limit !== null && count($data) >= $limit) {
-                break;
+            if (array_filter($dataRow, fn($v) => $v !== null)) {
+                $data[] = $dataRow;
             }
-
-            if ($offset === null || $rowNumber >= $offset) {
-                $skip = true;
-                foreach ($dataRow as $v) {
-                    if ($v !== null) {
-                        $skip = false;
-                        break;
-                    }
-                }
-                if (!$skip) {
-                    $data[] = $dataRow;
-                }
-            }
-            $rowNumber++;
         }
+
+        $worksheet->disconnectCells();
+        unset($worksheet);
 
         if (empty($data)) {
             return null;
