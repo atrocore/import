@@ -56,6 +56,29 @@ class Json extends Injectable implements FileParserInterface
             ->getArgument('data');
     }
 
+    public function hasFileData(File $attachment): bool
+    {
+        $contents = file_get_contents($attachment->getFilePath());
+        if (empty($contents)) {
+            return true;
+        }
+
+        $data = @json_decode($contents, true);
+        if (empty($data)) {
+            return true;
+        }
+
+        $rootNode = $this->data['rootNode'] ?? null;
+        if (!empty($rootNode)) {
+            $parts = explode('.', $rootNode);
+            foreach ($parts as $part) {
+                $data = $data[$part] ?? [];
+            }
+        }
+
+        return !empty($data);
+    }
+
     public function createFileContent(array $data): string
     {
         return json_encode($data, JSON_PRETTY_PRINT);
