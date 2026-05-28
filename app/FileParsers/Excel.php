@@ -93,6 +93,28 @@ class Excel extends Csv
             ->getArgument('data');
     }
 
+    public function hasFileData(File $attachment): bool
+    {
+        $sheet = $this->data['sheet'] ?? 0;
+        $path = $this->getLocalFilePath($attachment);
+
+        if (!file_exists($path)) {
+            return true;
+        }
+
+        $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReaderForFile($path);
+        $reader->setReadDataOnly(true);
+
+        $rowCount = 0;
+        foreach ($reader->load($path)->getSheet($sheet)->getRowIterator() as $row) {
+            if (++$rowCount > 1) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public function createFileContent(array $data): string
     {
         $tmpFilePath = tempnam(sys_get_temp_dir(), 'excel_');

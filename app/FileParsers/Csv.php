@@ -107,6 +107,34 @@ class Csv extends Injectable implements FileParserInterface
             ->getArgument('data');
     }
 
+    public function hasFileData(File $attachment): bool
+    {
+        $delimiter = $this->data['delimiter'] ?? ';';
+        $enclosure = $this->data['enclosure'] ?? '"';
+        $isFileHeaderRow = $this->data['isFileHeaderRow'] ?? true;
+
+        if ($delimiter === '\t') {
+            $delimiter = "\t";
+        }
+
+        $path = $this->getLocalFilePath($attachment);
+        if (!file_exists($path)) {
+            return true;
+        }
+
+        $file = fopen($path, 'r');
+        $this->skipBOM($file);
+
+        if ($isFileHeaderRow) {
+            fgetcsv($file, 0, $delimiter, $enclosure);
+        }
+
+        $row = fgetcsv($file, 0, $delimiter, $enclosure);
+        fclose($file);
+
+        return $row !== false;
+    }
+
     public function createFileContent(array $data): string
     {
         $delimiter = $this->data['delimiter'] ?? ';';

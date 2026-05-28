@@ -35,6 +35,34 @@ class Xml extends Json
             ->getArgument('data');
     }
 
+    public function hasFileData(File $attachment): bool
+    {
+        $contents = file_get_contents($attachment->getFilePath());
+        if (empty($contents)) {
+            return true;
+        }
+
+        $xml = simplexml_load_string($contents, 'SimpleXMLElement', LIBXML_NOCDATA);
+        if ($xml === false) {
+            return true;
+        }
+
+        $data = json_decode(json_encode($xml), true);
+        if (empty($data)) {
+            return true;
+        }
+
+        $rootNode = $this->data['rootNode'] ?? null;
+        if (!empty($rootNode)) {
+            $parts = explode('.', $rootNode);
+            foreach ($parts as $part) {
+                $data = $data[$part] ?? [];
+            }
+        }
+
+        return !empty($data);
+    }
+
     public function createFileContent(array $data): string
     {
         return '';
