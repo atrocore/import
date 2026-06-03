@@ -42,44 +42,54 @@ Espo.define('import:views/import-job/record/detail', 'views/record/detail',
                 });
             }
 
-            if (['Failed', 'Canceled', 'Success'].includes(this.model.get('state')) && this.model.get('processingType') === 'configurator') {
-                this.dropdownItemList.push({
-                    name: 'generateFileCreated',
-                    action: 'generateFileCreated',
-                    label: this.translate('generateFileCreated', 'labels', 'ImportJob'),
-                });
-
-                this.dropdownItemList.push({
-                    name: 'generateFileUpdated',
-                    action: 'generateFileUpdated',
-                    label: this.translate('generateFileUpdated', 'labels', 'ImportJob'),
-                });
-
-                this.dropdownItemList.push({
-                    name: 'generateFileDeleted',
-                    action: 'generateFileDeleted',
-                    label: this.translate('generateFileDeleted', 'labels', 'ImportJob'),
-                });
-
-                this.dropdownItemList.push({
-                    name: 'generateFileSkippedBySystem',
-                    action: 'generateFileSkippedBySystem',
-                    label: this.translate('generateFileSkippedBySystem', 'labels', 'ImportJob'),
-                });
-
-                if (this.getMetadata().get('scopes.Synchronization.type')) {
+            if (['Failed', 'Canceled', 'Success'].includes(this.model.get('state'))) {
+                if (this.model.get('createdCount') > 0) {
                     this.dropdownItemList.push({
-                        name: 'generateFileSkippedByScript',
-                        action: 'generateFileSkippedByScript',
-                        label: this.translate('generateFileSkippedByScript', 'labels', 'ImportJob'),
+                        name: 'generateFileCreated',
+                        action: 'generateFileCreated',
+                        label: this.translate('generateFileCreated', 'labels', 'ImportJob'),
                     });
                 }
 
-                this.dropdownItemList.push({
-                    name: 'generateFileErrors',
-                    action: 'generateFileErrors',
-                    label: this.translate('generateFileErrors', 'labels', 'ImportJob'),
-                });
+                if (this.model.get('updatedCount') > 0) {
+                    this.dropdownItemList.push({
+                        name: 'generateFileUpdated',
+                        action: 'generateFileUpdated',
+                        label: this.translate('generateFileUpdated', 'labels', 'ImportJob'),
+                    });
+                }
+
+                if (this.model.get('deletedCount') > 0) {
+                    this.dropdownItemList.push({
+                        name: 'generateFileDeleted',
+                        action: 'generateFileDeleted',
+                        label: this.translate('generateFileDeleted', 'labels', 'ImportJob'),
+                    });
+                }
+
+                if (this.model.get('skippedCount') > 0) {
+                    this.dropdownItemList.push({
+                        name: 'generateFileSkippedBySystem',
+                        action: 'generateFileSkippedBySystem',
+                        label: this.translate('generateFileSkippedBySystem', 'labels', 'ImportJob'),
+                    });
+
+                    if (this.getMetadata().get('scopes.Synchronization.type')) {
+                        this.dropdownItemList.push({
+                            name: 'generateFileSkippedByScript',
+                            action: 'generateFileSkippedByScript',
+                            label: this.translate('generateFileSkippedByScript', 'labels', 'ImportJob'),
+                        });
+                    }
+                }
+
+                if (this.model.get('errorsCount') > 0) {
+                    this.dropdownItemList.push({
+                        name: 'generateFileErrors',
+                        action: 'generateFileErrors',
+                        label: this.translate('generateFileErrors', 'labels', 'ImportJob'),
+                    });
+                }
             }
 
             Dep.prototype.setupActionItems.call(this);
