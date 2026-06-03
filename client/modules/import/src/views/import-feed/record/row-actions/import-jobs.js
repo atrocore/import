@@ -78,65 +78,78 @@ Espo.define('import:views/import-feed/record/row-actions/import-jobs', 'views/re
                 });
             }
 
-            if (['Failed', 'Canceled', 'Success'].includes(this.model.get('state')) && this.model.get('processingType') === 'configurator') {
-                list.push({
-                    action: 'generateFileForJob',
-                    label: this.translate('generateFileCreated', 'labels', 'ImportJob'),
-                    data: {
-                        id: this.model.id,
-                        type: 'created'
-                    }
-                });
-                list.push({
-                    action: 'generateFileForJob',
-                    label: this.translate('generateFileUpdated', 'labels', 'ImportJob'),
-                    data: {
-                        id: this.model.id,
-                        type: 'updated'
-                    }
-                });
-                list.push({
-                    action: 'generateFileForJob',
-                    label: this.translate('generateFileDeleted', 'labels', 'ImportJob'),
-                    data: {
-                        id: this.model.id,
-                        type: 'deleted'
-                    }
-                });
-                list.push({
-                    action: 'generateFileForJob',
-                    label: this.translate('generateFileSkippedBySystem', 'labels', 'ImportJob'),
-                    data: {
-                        id: this.model.id,
-                        type: 'skippedBySystem'
-                    }
-                });
-
-                if (this.getMetadata().get('scopes.Synchronization.type')) {
+            if (['Failed', 'Canceled', 'Success'].includes(this.model.get('state'))) {
+                if (this.model.get('createdCount') > 0) {
                     list.push({
                         action: 'generateFileForJob',
-                        label: this.translate('generateFileSkippedByScript', 'labels', 'ImportJob'),
+                        label: this.translate('generateFileCreated', 'labels', 'ImportJob'),
                         data: {
                             id: this.model.id,
-                            type: 'skippedByScript'
+                            type: 'created'
                         }
                     });
                 }
 
-                list.push({
-                    action: 'generateFileForJob',
-                    label: this.translate('generateFileErrors', 'labels', 'ImportJob'),
-                    data: {
-                        id: this.model.id,
-                        type: 'errors'
+                if (this.model.get('updatedCount') > 0) {
+                    list.push({
+                        action: 'generateFileForJob',
+                        label: this.translate('generateFileUpdated', 'labels', 'ImportJob'),
+                        data: {
+                            id: this.model.id,
+                            type: 'updated'
+                        }
+                    });
+                }
+
+                if (this.model.get('deletedCount') > 0) {
+                    list.push({
+                        action: 'generateFileForJob',
+                        label: this.translate('generateFileDeleted', 'labels', 'ImportJob'),
+                        data: {
+                            id: this.model.id,
+                            type: 'deleted'
+                        }
+                    });
+                }
+
+                if (this.model.get('skippedCount') > 0) {
+                    list.push({
+                        action: 'generateFileForJob',
+                        label: this.translate('generateFileSkippedBySystem', 'labels', 'ImportJob'),
+                        data: {
+                            id: this.model.id,
+                            type: 'skippedBySystem'
+                        }
+                    });
+
+                    if (this.getMetadata().get('scopes.Synchronization.type')) {
+                        list.push({
+                            action: 'generateFileForJob',
+                            label: this.translate('generateFileSkippedByScript', 'labels', 'ImportJob'),
+                            data: {
+                                id: this.model.id,
+                                type: 'skippedByScript'
+                            }
+                        });
                     }
-                });
+                }
+
+                if (this.model.get('errorsCount') > 0) {
+                    list.push({
+                        action: 'generateFileForJob',
+                        label: this.translate('generateFileErrors', 'labels', 'ImportJob'),
+                        data: {
+                            id: this.model.id,
+                            type: 'errors'
+                        }
+                    });
+                }
             }
 
             if (this.model.get('state') === 'Success' && this.getAcl().check(scope, 'edit')) {
                 list.push({
                     action: 'reCreateImportJob',
-                    label: 'reCreate',
+                    label: this.translate('reCreate', 'labels', 'ImportJob'),
                     data: {
                         id: this.model.id
                     }
