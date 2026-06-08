@@ -18,8 +18,7 @@ use Espo\Core\Exceptions\BadRequest;
 use Atro\Entities\File;
 use Import\Core\ExcelRowReadFilter;
 use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
-use PhpOffice\PhpSpreadsheet\IOFactory;
-use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
+use PhpOffice\PhpSpreadsheet\IOFactory as SpreadsheetFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 
 class Excel extends Csv
@@ -28,7 +27,7 @@ class Excel extends Csv
     {
         $path = $this->getLocalFilePath($attachment);
 
-        $reader = new Xlsx();
+        $reader = SpreadsheetFactory::createReaderForFile($path);
         $reader->setReadDataOnly(true);
 
         try {
@@ -50,7 +49,7 @@ class Excel extends Csv
             throw new BadRequest("File '$path' does not exist.");
         }
 
-        $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReaderForFile($path);
+        $reader = SpreadsheetFactory::createReaderForFile($path);
         $reader->setReadDataOnly(true);
 
         $sheetNames = $reader->listWorksheetNames($path);
@@ -104,7 +103,7 @@ class Excel extends Csv
             return true;
         }
 
-        $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReaderForFile($path);
+        $reader = SpreadsheetFactory::createReaderForFile($path);
         $reader->setReadDataOnly(true);
 
         $rowCount = 0;
@@ -134,7 +133,7 @@ class Excel extends Csv
             $row++;
         }
 
-        $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
+        $writer = SpreadsheetFactory::createWriter($spreadsheet, 'Xlsx');
         $writer->save($tmpFilePath);
 
         $fileContent = file_get_contents($tmpFilePath);
