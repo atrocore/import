@@ -89,7 +89,7 @@ class ImportConfiguratorItem extends Base
         $this->prepareDefaultField($type, $entity);
 
         if (!empty($entity->get('createIfNotExist'))) {
-            $columns = $entity->get('foreignColumn');
+            $columns  = $entity->get('foreignColumn');
             $importBy = $entity->get('foreignImportBy');
 
             if (empty($columns) || empty($importBy)) {
@@ -126,14 +126,21 @@ class ImportConfiguratorItem extends Base
     public function checkIfVirtualFieldIsIdentifier(Entity $entity, Entity $importFeedEntity): void
     {
         $configuratorFieldName = $entity->get('name');
-        $isIdentifier = $entity->get('entityIdentifier');
+        $isIdentifier          = $entity->get('entityIdentifier');
 
         if (!empty($configuratorFieldName)) {
-            $isVirtualField = $this->getMetadata()
-                ->get(['entityDefs', $importFeedEntity->getFeedField('entity'), 'fields', $configuratorFieldName, 'notStorable']);
+            $fieldDefs = $this->getMetadata()
+                ->get(['entityDefs', $importFeedEntity->getFeedField('entity'), 'fields', $configuratorFieldName], []);
+
+            $isVirtualField = !empty($fieldDefs['notStorable']);
 
             if ($isIdentifier === true && $isVirtualField === true) {
-                throw new BadRequest('Virtual field should not be set as identifier');
+                $isParentField = $configuratorFieldName === 'parent' && $this->getMetadata()->get(['scopes', $importFeedEntity->getFeedField('entity'), 'type']) === 'Hierarchy';
+
+                // allow parent field only for hierarchy
+                if (!$isParentField) {
+                    throw new BadRequest('Virtual field should not be set as identifier');
+                }
             }
         }
     }
