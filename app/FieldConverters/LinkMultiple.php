@@ -221,8 +221,10 @@ class LinkMultiple extends Varchar
         return $config['name'] . 'Ids';
     }
 
-    protected function getForeignEntityName(array $config): string
+    protected function getForeignEntityName(array $config): ?string
     {
-        return $this->getMetadata()->get(['entityDefs', $config['entity'], 'links', $config['name'], 'entity']);
+        return
+            $this->getMetadata()->get(['entityDefs', $config['entity'], 'fields', $config['name'], 'entity'])
+            ?? $this->getMetadata()->get(['entityDefs', $config['entity'], 'links', $config['name'], 'entity']);
     }
 }
