@@ -37,22 +37,7 @@ Espo.define('import:views/import-configurator-item/fields/source-fields', 'views
         },
 
         getFormat() {
-            if (
-                this.getParentView()
-                && this.getParentView().getParentView()
-                && this.getParentView().getParentView().getParentView()
-                && this.getParentView().getParentView().getParentView().getParentView()
-            ) {
-                let view = this.getParentView().getParentView().getParentView().getParentView();
-                if (view.model) {
-                    return view.model.get('format');
-                }
-                if (view.getParentView() && view.getParentView().model) {
-                    return view.getParentView().model.get('format');
-                }
-            }
-
-            return null;
+            return this.model.collection?.importFeedModel?.get('format') || null;
         },
 
     })

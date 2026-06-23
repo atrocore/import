@@ -14,6 +14,11 @@ Espo.define('import:views/import-feed/record/panels/configurator-items', 'views/
         setup() {
             Dep.prototype.setup.call(this);
 
+            this.collection.importFeedModel = this.model;
+            this.listenTo(this.model, 'change:format', () => {
+                this.collection.importFeedModel = this.model;
+            });
+
             this.listenTo(this.collection, 'update', () => {
                 this.collection.forEach(model => {
                     if (model.get('entityAttributeId') && model.get('fieldDefs')) {

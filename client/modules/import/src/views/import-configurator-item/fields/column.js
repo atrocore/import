@@ -67,9 +67,12 @@ Espo.define('import:views/import-configurator-item/fields/column', 'views/fields
                     if (!sourceFields.includes(column)) {
                         style = 'style="color:red"';
                     }
-                    let parts = column.split('.');
-                    let last = parts.pop();
-                    items.push(last);
+                    if (['JSON', 'XML'].includes(this.getFormat())) {
+                        let parts = column.split('.');
+                        items.push(parts.pop());
+                    } else {
+                        items.push(column);
+                    }
                 });
 
                 this.$el.html('<span ' + style + ' title="' + originalValue.join(', ') + '">' + items.join(', ') + '</span>');
@@ -77,6 +80,10 @@ Espo.define('import:views/import-configurator-item/fields/column', 'views/fields
 
             Dep.prototype.afterRender.call(this);
 
+        },
+
+        getFormat() {
+            return this.model.collection?.importFeedModel?.get('format') || null;
         }
     })
 );
