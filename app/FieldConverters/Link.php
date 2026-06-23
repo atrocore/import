@@ -311,6 +311,8 @@ class Link extends Varchar
         foreach ($configuration['importBy'] as $k => $field) {
             $column           = count($configuration['column']) === 1 ? $configuration['column'][0] : $configuration['column'][$k];
             $mainConfigColumn = $configuration['mainConfig']['column'] ?? [];
+            $valueIndex       = (count($configuration['column']) === 1 || count($mainConfigColumn) === 1) ? $k : 0;
+
             if (empty($mainConfigColumn)) {
                 $columnName = $column;
             } elseif (count($mainConfigColumn) === 1) {
@@ -330,7 +332,7 @@ class Link extends Varchar
 
                 $values = explode($configuration['delimiter'], (string)$row[$columnName]);
                 foreach ($values as $value) {
-                    $value         = explode($configuration['fieldDelimiterForRelation'], $value)[$k] ?? null;
+                    $value         = explode($configuration['fieldDelimiterForRelation'], $value)[$valueIndex] ?? null;
                     $res[$field][] = $this->extractValue($configuration, $value, (string)$configuration['emptyValue'], (string)$configuration['nullValue']);
                 }
             }
