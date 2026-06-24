@@ -276,14 +276,15 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
 
                     continue;
                 } catch (\Throwable $e) {
-                    $log->set('type', 'skip');
+                    $log->set('type', 'error');
+                    $log->set('message', $e->getMessage());
                     $this->getEntityManager()->saveEntity($log);
 
                     if ($this->getConfig()->get('tracingImportErrors')) {
                         $GLOBALS['log']->error("Import Job '{$importJob->get('id')}' Failed. Message: '{$e->getMessage()}'. Trace: '{$e->getTraceAsString()}'.");
                     }
 
-                    continue 1;
+                    continue;
                 }
 
                 if (in_array($data['action'], ['create', 'create_delete']) && !empty($entity)) {
@@ -591,6 +592,10 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
 
         /** @var \Atro\Entities\File $file */
         $file = $this->getEntityById('File', $convertedFileId);
+
+        if (!preg_match('//u', $file->getContents())) {
+            throw new BadRequest($this->translate('utf8Expected', 'exceptions', 'ImportFeed'));
+        }
 
         $fileData = $fileParser->getFileData($file, $data['offset'], $data['limit']);
         if (empty($fileData)) {
