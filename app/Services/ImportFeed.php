@@ -882,6 +882,10 @@ class ImportFeed extends Base
             throw new NotFound();
         }
 
+        if (!$this->getServiceFactory()->create('ExportFeed')->isValid($exportFeed)) {
+            throw new BadRequest($this->getLanguage()->translate('exportFeedIsInvalid', 'exceptions', 'ExportFeed'));
+        }
+
         if ($exportFeed->get('type') !== 'simple') {
             throw new BadRequest($this->translate('wrongTypeForCreatingFromExportFeed'));
         }
@@ -892,8 +896,8 @@ class ImportFeed extends Base
         }
 
         $sourceFields = [];
-        foreach ($exportFeed->configuratorItems as $configuratorItem) {
-            if ($configuratorItem->type === 'Fixed value' || $configuratorItem->type === 'script' || $configuratorItem->type === 'allAttributes') {
+        foreach ($exportFeed->get('configuratorItems') as $configuratorItem) {
+            if ($configuratorItem->get('type') === 'Fixed value' || $configuratorItem->get('type') === 'script' || $configuratorItem->get('type') === 'allAttributes') {
                 continue;
             }
 
