@@ -118,7 +118,8 @@
       }
     },
     "default": {
-      "type": "text"
+      "type": "text",
+      "openApiPolymorphic": true
     },
     "defaultFrom": {
       "type": "float",
