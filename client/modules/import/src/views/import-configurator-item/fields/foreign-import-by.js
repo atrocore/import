@@ -31,6 +31,7 @@ Espo.define('import:views/import-configurator-item/fields/foreign-import-by', ['
                     this.model.set(this.name, null);
                 }
                 this.prepareOptions();
+                this.reRender();
             });
 
             this.listenTo(this.model, 'change:importBy', () => {
