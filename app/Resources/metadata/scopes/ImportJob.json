@@ -25,10 +25,5 @@
   "autoDeleteAfterDays": 21,
   "clearDeletedAfterDays": 35,
   "disableActionHistory": true,
-  "attributesDisabled": true,
-  "matchingDisabled": true,
-  "mergeDisabled": true,
-  "selectionDisabled": true,
-  "valueLockDisabled": true,
   "isSystem": true
 }
