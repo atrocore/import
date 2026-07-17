@@ -7,7 +7,6 @@
  * @copyright  Copyright (c) AtroCore GmbH (https://www.atrocore.com)
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
-
 Espo.define('import:views/import-job/record/row-actions/default', 'views/record/row-actions/default', Dep => {
 
     return Dep.extend({
@@ -29,17 +28,20 @@ Espo.define('import:views/import-job/record/row-actions/default', 'views/record/
             }
         },
 
+        hasUndefinedCounters() {
+            return ['createdCount', 'updatedCount', 'deletedCount', 'skippedCount', 'errorsCount'].some(field => this.model.get(field) === null)
+                || ['Pending', 'Running'].includes(this.model.get('state'));
+        },
+
         setup() {
             Dep.prototype.setup.call(this);
 
             this.on('after:render', () => {
-                if (!['createdCount', 'updatedCount', 'deletedCount', 'skippedCount', 'errorsCount'].some(field => this.model.get(field) === null)) {
-                    return;
+                if (this.hasUndefinedCounters()) {
+                    const iconContainer = $("<div class='icons-container fixed'></div>");
+                    iconContainer.html('<button type="button" class="btn btn-link btn-sm" data-action="loadCounters" title="' + this.translate('loadCounters', 'labels', 'ImportJob') + '"><i class="ph ph-arrows-clockwise"></i></button>');
+                    this.$el?.find('.list-row-buttons').prepend(iconContainer);
                 }
-
-                const iconContainer = $("<div class='icons-container fixed'></div>");
-                iconContainer.html('<button type="button" class="btn btn-link btn-sm" data-action="loadCounters" title="' + this.translate('loadCounters', 'labels', 'ImportJob') + '"><i class="ph ph-arrows-clockwise"></i></button>');
-                this.$el.find('.list-row-buttons').prepend(iconContainer);
 
                 this.listenTo(this.model, 'importCounterChanged', () => {
                     if (!['Pending', 'Running'].includes(this.model.get('state'))) {
