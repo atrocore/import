@@ -28,6 +28,5 @@
   "notificationDisabled": true,
   "hideFieldTypeFilters": true,
   "disableActionHistory": true,
-  "attributesDisabled": true,
-  "selectionDisabled": true
+  "isSystem": true
 }
