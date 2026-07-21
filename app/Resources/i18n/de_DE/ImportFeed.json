@@ -94,6 +94,7 @@
     "alreadyProceeded": "Datensatz mit dieser(n) Kennung(en) wurde bereits bearbeitet.",
     "relatedEntityCreatingFailed": "Die Erstellung des neuen Datensatzes in der Entität '%s' ist fehlgeschlagen:",
     "moreThanOneFound": "Mehr als ein Datensatz mit der Kennung '%s' gefunden.",
+    "cannotDetermineRecordToDelete": "Es kann nicht bestimmt werden, welcher Datensatz gelöscht werden soll, da mehr als ein passender Datensatz gefunden wurde. Überprüfen Sie die Konfiguration des Import-Feeds oder entfernen Sie doppelte Datensätze im System.",
     "wrongImportByValuesCount": "Die Anzahl der empfangenen Werte für die zugehörige Entität '%s' sollte nicht kleiner als die Anzahl der zugehörigen Entitätsfelder sein.",
     "nullNoneSame": "Keiner und Nullwert dürfen nicht identisch sein.",
     "skipNoneSameEmpty": "Keiner und überspringen dürfen nicht identisch sein.",

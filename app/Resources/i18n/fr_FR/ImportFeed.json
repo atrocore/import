@@ -94,6 +94,7 @@
     "alreadyProceeded": "L'enregistrement de données avec ce(s) identifiant(s) a déjà été effectué.",
     "relatedEntityCreatingFailed": "La création d'un nouvel enregistrement dans l'entité '%s' a échoué :",
     "moreThanOneFound": "Plus d'un enregistrement de données avec l'identifiant '%s' a été trouvé.",
+    "cannotDetermineRecordToDelete": "Impossible de déterminer quel enregistrement supprimer, car plusieurs enregistrements correspondants ont été trouvés. Vérifiez la configuration du flux d'import ou supprimez les enregistrements en double dans le système.",
     "wrongImportByValuesCount": "Le montant des valeurs reçues pour l'entité apparentée \"%s\" ne doit pas être inférieur au montant des champs de l'entité apparentée.",
     "nullNoneSame": "La valeur nulle et l'absence de valeur ne peuvent pas être identiques.",
     "skipNoneSameEmpty": "La valeur vide et la valeur à ignorer ne peuvent pas être identiques.",
