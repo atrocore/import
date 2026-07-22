@@ -122,7 +122,7 @@ class ImportJobLog extends Archive
             ->orderBy('t.id')
             ->setParameter('false', false, ParameterType::BOOLEAN)
             ->setParameter('jobId', $jobId)
-            ->setParameter('type', ['create', 'update', 'skip'], Connection::PARAM_STR_ARRAY);
+            ->setParameter('type', ['create', 'update', 'skip', 'error'], Connection::PARAM_STR_ARRAY);
 
         if ($limit > 0) {
             $qb->setMaxResults($limit);

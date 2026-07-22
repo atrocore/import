@@ -25,7 +25,7 @@ use Atro\Core\EventManager\Manager;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Utils\Util;
 use Atro\Services\AbstractService;
-use Doctrine\DBAL\ParameterType;
+use Import\Core\Exceptions\MoreThanOneRecordFound;
 use Espo\ORM\Entity;
 use Import\Entities\ImportFeed;
 use Import\Services\ImportFeed as ImportFeedService;
@@ -249,6 +249,7 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
                     $entity = $this->findExistEntity($entityService->getEntityType(), $data['data'], $where);
                     if (!empty($entity)) {
                         $id = $entity->get('id');
+                        $log->set('entityId', $id);
                     }
 
                     /**
@@ -273,6 +274,10 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
                     $log->set('type', 'error');
                     $log->set('message', $e->getMessage());
                     $this->getEntityManager()->saveEntity($log);
+
+                    if ($e instanceof MoreThanOneRecordFound && self::isDeleteAction($data['action'])) {
+                        throw new MoreThanOneRecordFound($this->translate('cannotDetermineRecordToDelete', 'exceptions', 'ImportFeed'));
+                    }
 
                     continue;
                 } catch (\Throwable $e) {
@@ -301,7 +306,6 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
 
                 if ($data['action'] == 'delete_not_found') {
                     $log->set('type', 'skip');
-                    $log->set('entityId', $id);
                     $this->getEntityManager()->saveEntity($log);
                     continue 1;
                 }
@@ -371,14 +375,12 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
                     } elseif ($action === 'delete_found') {
                         $entityService->deleteEntity($id);
                         $log->set('type', 'delete');
-                        $log->set('entityId', $id);
                         $processedIds[] = $id;
                     } else {
                         $notModified = true;
                         try {
                             $entityService->updateEntity($id, $input);
                             $log->set('type', 'update');
-                            $log->set('entityId', $id);
                             $processedIds[] = $id;
                             $notModified = false;
                         } catch (NotModified $e) {
@@ -405,7 +407,6 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
                         $this->getEntityManager()->saveEntity($log);
                     } else {
                         $log->set('type', 'skip');
-                        $log->set('entityId', $id);
                         $this->getEntityManager()->saveEntity($log);
                     }
 
@@ -775,7 +776,8 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
                         $fields[] = $this->translate($item['name'], 'fields', $entityType);
                     }
                 }
-                throw new BadRequest(sprintf($this->translate('moreThanOneFound', 'exceptions', 'ImportFeed'), implode(', ', $fields)));
+
+                throw new MoreThanOneRecordFound(sprintf($this->translate('moreThanOneFound', 'exceptions', 'ImportFeed'), implode(', ', $fields)));
             }
 
             return $this->getMemoryStorage()->get($whereKeys[$jsonWhere][0]);

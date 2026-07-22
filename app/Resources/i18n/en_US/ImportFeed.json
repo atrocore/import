@@ -95,6 +95,7 @@
     "alreadyProceeded": "Data record with such identifier(s) was already proceeded.",
     "relatedEntityCreatingFailed": "Creation of a new record in the entity '%s' failed:",
     "moreThanOneFound": "More than one data record with identifier '%s' found.",
+    "cannotDetermineRecordToDelete": "Unable to determine which record to delete because more than one matching record was found. Check the import feed configuration or remove duplicate records in the system.",
     "wrongImportByValuesCount": "The amount of the received values for the related entity '%s' should not be smaller than the amount of the related entity fields.",
     "nullNoneSame": "None and null value cannot be the same.",
     "skipNoneSameEmpty": "Empty and skip value cannot be the same.",
