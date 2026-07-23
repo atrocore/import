@@ -11,46 +11,31 @@
 Espo.define('import:views/import-feed/record/detail', 'views/record/detail',
     Dep => Dep.extend({
 
-        setup() {
-            Dep.prototype.setup.call(this);
+        setupActionItems() {
+            Dep.prototype.setupActionItems.call(this);
 
-            this.additionalButtons = [
+            const canImport = this.hasImportNow();
+
+            this.additionalButtons.push(
                 {
                     "action": "runImport",
-                    "label": this.translate('import', 'labels', 'ImportFeed')
+                    "label": this.translate('import', 'labels', 'ImportFeed'),
+                    "disabled": !canImport
+                },
+                {
+                    "action": "uploadAndRunImport",
+                    "label": this.translate('uploadAndImport', 'labels', 'ImportFeed'),
+                    "disabled": !canImport
                 }
-            ];
-
-            this.additionalButtons.push({
-                "action": "uploadAndRunImport",
-                "label": this.translate('uploadAndImport', 'labels', 'ImportFeed')
-            })
-
-            this.listenTo(this.model, 'after:save after:inlineEditSave', () => {
-                this.handleButtonsDisability();
-            });
+            );
         },
 
-        afterRender() {
-            Dep.prototype.afterRender.call(this);
-
-            this.handleButtonsDisability();
-        },
-
-        isButtonsDisabled() {
-            return !this.model.get('isActive') || !this.getAcl().check('ImportJob', 'create');
-        },
-
-        handleButtonsDisability() {
-            if (this.isButtonsDisabled()) {
-                this.additionalButtons.map(button => button.disabled = true);
-            } else {
-                this.additionalButtons.map(button => button.disabled = false);
-            }
+        hasImportNow() {
+            return this.model.get('isActive') && this.getAcl().check('ImportJob', 'create');
         },
 
         actionRunImport() {
-            if ($('.action[data-action=runImport]').prop('disabled')) {
+            if (!this.hasImportNow()) {
                 return;
             }
 
@@ -69,7 +54,7 @@ Espo.define('import:views/import-feed/record/detail', 'views/record/detail',
         },
 
         actionUploadAndRunImport() {
-            if ($('.action[data-action=uploadAndRunImport]').hasClass('disabled')) {
+            if (!this.hasImportNow()) {
                 return;
             }
 
