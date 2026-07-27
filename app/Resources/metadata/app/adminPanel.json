@@ -4,6 +4,7 @@
       "__APPEND__",
       {
         "url": "#ImportFeed",
+        "scope": "ImportFeed",
         "label": "importFeed",
         "description": "importFeed",
         "icon": "ph ph-download-simple",
