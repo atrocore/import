@@ -25,7 +25,7 @@ class V1Dot11Dot6 extends Base
     public function up(): void
     {
         if ($this->isPgSQL()) {
-            $this->exec("DROP INDEX IDX_IMPORT_JOB_NAME ON export_job");
+            $this->exec("DROP INDEX IDX_IMPORT_JOB_NAME ON import_job");
             $this->exec("ALTER TABLE import_job DROP name");
 
             $this->exec("DROP SEQUENCE IF EXISTS import_job_number_seq");
