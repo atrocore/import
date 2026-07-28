@@ -28,7 +28,7 @@ Espo.define('import:views/import-job/fields/records-counter-with-link', 'import:
             }
 
             let nameHash = {};
-            nameHash[this.model.id] = this.model.get('name');
+            nameHash[this.model.id] = this.model.get('number');
             return {
                 textFilter: '',
                 primary: null,
@@ -45,7 +45,7 @@ Espo.define('import:views/import-job/fields/records-counter-with-link', 'import:
                             value: [this.model.id],
                             data:{
                                 nameHash: {
-                                    [this.model.id]: this.model.get('name')
+                                    [this.model.id]: this.model.get('number')
                                 }
                             }
                         },

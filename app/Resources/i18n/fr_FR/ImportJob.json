@@ -1,5 +1,6 @@
 {
   "fields": {
+    "number": "Numéro",
     "importFeed": "Flux d'import",
     "state": "État",
     "message": "Message",

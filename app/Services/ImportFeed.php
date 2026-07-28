@@ -820,7 +820,6 @@ class ImportFeed extends Base
         $user = $this->getUser();
 
         $entity = $this->getEntityManager()->getEntity('ImportJob');
-        $entity->set('name', "{$entityLabel}: {$feed->get('name')}");
         $entity->set('importFeedId', $feed->get('id'));
         $entity->set('entityName', $entityType);
         $entity->set('attachmentId', $attachmentId);

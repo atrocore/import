@@ -41,7 +41,7 @@ Espo.define('import:views/import-job/fields/created-count', 'import:views/fields
                             value: [this.model.id],
                             data:{
                                 nameHash: {
-                                    [this.model.id]: this.model.get('name')
+                                    [this.model.id]: this.model.get('number')
                                 }
                             }
                         }

@@ -1,5 +1,6 @@
 {
   "fields": {
+    "number": "Номер",
     "importFeed": "Імпортний фід",
     "state": "Статус",
     "message": "Повідомлення",

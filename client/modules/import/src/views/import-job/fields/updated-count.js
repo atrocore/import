@@ -26,7 +26,7 @@ Espo.define('import:views/import-job/fields/updated-count', 'import:views/fields
 
         getSearchFilter() {
             let nameHash = {};
-            nameHash[this.model.id] = this.model.get('name');
+            nameHash[this.model.id] = this.model.get('number');
 
             return {
                 textFilter: '',
@@ -44,7 +44,7 @@ Espo.define('import:views/import-job/fields/updated-count', 'import:views/fields
                             value: [this.model.id],
                             data:{
                                 nameHash: {
-                                    [this.model.id]: this.model.get('name')
+                                    [this.model.id]: this.model.get('number')
                                 }
                             }
                         }
