@@ -45,7 +45,8 @@
     "errorsAttachment": "Zeilen aus 'Importierter Datei', die nicht importiert wurden."
   },
   "exceptions": {
-    "cacheWriteFailed": "Daten können nicht in den Import-Cache geschrieben werden."
+    "cacheWriteFailed": "Daten können nicht in den Import-Cache geschrieben werden.",
+    "cannotReCreateDeleteOnlyJob": "Dieser Importauftrag löscht nur Datensätze. Ein erneutes Erstellen ist nicht möglich, da ein Teil der Feed-Daten alles andere löschen würde."
   },
   "boolFilters": {
     "onlyImportFailed24Hours": "Nur Importaufträge, die in den letzten 24 Stunden fehlgeschlagen sind",

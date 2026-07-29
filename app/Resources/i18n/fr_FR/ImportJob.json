@@ -45,7 +45,8 @@
     "errorsAttachment": "Lignes du \"Fichier importé\" qui n'ont pas été importées."
   },
   "exceptions": {
-    "cacheWriteFailed": "Impossible d'écrire des données dans le cache d'importation."
+    "cacheWriteFailed": "Impossible d'écrire des données dans le cache d'importation.",
+    "cannotReCreateDeleteOnlyJob": "Cette tâche d'importation ne fait que supprimer des enregistrements. La recréer n'est pas possible, car une partie des données du flux supprimerait tout le reste."
   },
   "boolFilters": {
     "onlyImportFailed24Hours": "Uniquement les échecs des dernières 24 heures",
