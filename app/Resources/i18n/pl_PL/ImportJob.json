@@ -1,5 +1,6 @@
 {
   "fields": {
+    "number": "Numer",
     "importFeed": "Importuj Źródło",
     "state": "Stan",
     "message": "Wiadomość",

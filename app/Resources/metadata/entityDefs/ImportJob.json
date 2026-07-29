@@ -1,10 +1,7 @@
 {
   "fields": {
-    "name": {
-      "type": "varchar",
-      "required": true,
-      "trim": true,
-      "readOnly": true
+    "number": {
+      "type": "autoincrement"
     },
     "trial": {
       "type": "int",
@@ -207,12 +204,6 @@
     "asc": false
   },
   "indexes": {
-    "name": {
-      "columns": [
-        "name",
-        "deleted"
-      ]
-    },
     "entityName": {
       "columns": [
         "entityName",

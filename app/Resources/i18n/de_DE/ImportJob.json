@@ -1,5 +1,6 @@
 {
   "fields": {
+    "number": "Nummer",
     "importFeed": "Importfeed",
     "state": "Zustand",
     "message": "Meldung",

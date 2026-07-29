@@ -132,7 +132,6 @@ class ImportJob extends Base
                 $importJob = $this->getRepository()->get();
                 $importJob->set('id', Util::generateId());
                 $importJob->set('status', 'Pending');
-                $importJob->set('name', $job->get('name'));
                 $importJob->set('entityName', $job->get('entityName'));
                 $importJob->set('importFeedId', $job->get('importFeedId'));
                 $importJob->set('parentId', $job->get('parentId'));

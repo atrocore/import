@@ -1,5 +1,6 @@
 {
   "fields": {
+    "number": "Numero",
     "files": "File",
     "importFeed": "Importazione Feed",
     "state": "Stato",

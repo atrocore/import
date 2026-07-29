@@ -1,5 +1,6 @@
 {
   "fields": {
+    "number": "Número",
     "files": "Archivos",
     "importFeed": "Importar alimentación",
     "state": "Estado",
