@@ -13,13 +13,14 @@ declare(strict_types=1);
 
 namespace Import\Services;
 
+use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\NotFound;
-use Doctrine\DBAL\ParameterType;
+use Atro\Core\Utils\IdGenerator;
 use Atro\Core\Templates\Services\Base;
-use Espo\Core\Utils\Util;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
+use Import\Jobs\ImportTypeSimple;
 
 class ImportJob extends Base
 {
@@ -124,23 +125,38 @@ class ImportJob extends Base
 
         $importService = $this->getServiceFactory()->create('ImportFeed');
 
-        $feed = $this->getEntityManager()->getEntity('ImportFeed', $job->get('importFeedId'));
-        // if job is  child job
         if (!empty($job->get('parentId'))) {
             $queueItem = $job->get('queueItem');
             if (!empty($queueItem)) {
+                $data = $queueItem->get('payload');
+                if (ImportTypeSimple::isDeleteAction((string)($data->action ?? ''))) {
+                    $actionsMap = [
+                        'create_delete'        => 'create',
+                        'update_delete'        => 'update',
+                        'create_update_delete' => 'create_update'
+                    ];
+
+                    if (!isset($actionsMap[$data->action])) {
+                        throw new BadRequest($this->translate('cannotReCreateDeleteOnlyJob', 'exceptions', 'ImportJob'));
+                    }
+
+                    $data->action = $actionsMap[$data->action];
+                }
+
                 $importJob = $this->getRepository()->get();
-                $importJob->set('id', Util::generateId());
-                $importJob->set('status', 'Pending');
+                $importJob->set('id', IdGenerator::uuid());
+                $importJob->set('state', 'Pending');
                 $importJob->set('entityName', $job->get('entityName'));
                 $importJob->set('importFeedId', $job->get('importFeedId'));
-                $importJob->set('parentId', $job->get('parentId'));
                 $importJob->set('attachmentId', !empty($attachmentId) ? $attachmentId : $job->get('attachmentId'));
                 $this->getEntityManager()->saveEntity($importJob);
 
-                $data = $queueItem->get('payload');
                 $data->data->importJobId = $importJob->get('id');
                 $data->attachmentId = $importJob->get('attachmentId');
+                if (isset($data->payload->parentJobId)) {
+                    unset($data->payload->parentJobId);
+                }
+
                 $importService->push($queueItem->get('name'), $queueItem->get('type'), json_decode(json_encode($data), true));
             }
             return true;
