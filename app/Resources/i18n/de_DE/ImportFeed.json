@@ -84,6 +84,7 @@
   "exceptions": {
     "fileIdIsEmpty": "Sie müssen eine Datei im Feed festlegen, um ihn auszuführen",
     "noRecordsFoundFor": "Es wurden keine Datensätze in der Entität „%s“ mit: %s gefunden.",
+    "noRecordsFoundForWithFilter": "Es wurden keine Datensätze in der Entität „%s“ mit: %s und Filter für das Feld „%s“ gefunden.",
     "convertValidationPrefix": "Fehler für den Wert '{{value}}' aus der Spalte '{{column}}': ",
     "noFeedFileFound": "Feeddatei fehlt.",
     "measureIsNotSet": "Maß für das Attribut \"%s\" ist nicht gesetzt.",
