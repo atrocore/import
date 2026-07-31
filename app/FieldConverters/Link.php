@@ -97,9 +97,22 @@ class Link extends Varchar
                     $entity = $this->findEntityInMemory($where, $config);
 
                     if (empty($entity) && empty($config['createIfNotExist'])) {
-                        throw new BadRequest(
-                            sprintf($this->translate('noRecordsFoundFor', 'exceptions', 'ImportFeed'), $this->translate($entityName, 'scopeNames'), json_encode($where))
-                        );
+                        if (!empty($this->getFieldFilter($config, $entityName))) {
+                            $message = sprintf(
+                                $this->translate('noRecordsFoundForWithFilter', 'exceptions', 'ImportFeed'),
+                                $this->translate($entityName, 'scopeNames'),
+                                json_encode($where),
+                                $this->translate($config['name'], 'fields', $config['entity'])
+                            );
+                        } else {
+                            $message = sprintf(
+                                $this->translate('noRecordsFoundFor', 'exceptions', 'ImportFeed'),
+                                $this->translate($entityName, 'scopeNames'),
+                                json_encode($where)
+                            );
+                        }
+
+                        throw new BadRequest($message);
                     }
                 }
 
@@ -120,7 +133,7 @@ class Link extends Varchar
                         $entityId = $this->getService($entityName, true)->createEntity($input);
                         $entity   = $this->getEntityManager()->getEntity($entityName, $entityId);
                     } catch (NotUnique|ConstraintViolationException $e) {
-                        $entity = $this->findAlreadyExistsEntity($entityName, $where);
+                        $entity = $this->findAlreadyExistsEntity($entityName, $where, $config);
                     } catch (\Throwable $e) {
                         $className = get_class($e);
 
@@ -290,7 +303,9 @@ class Link extends Varchar
 
         if (!empty($configuration['importBy']) && !empty($configuration['column'])) {
             $whereForCollection = $this->prepareWhereForCollection($entityName, $configuration, $rows);
-            $collection         = $this->getEntityManager()->getRepository($entityName)->where($whereForCollection)->find();
+            $collection         = $this->getEntityManager()->getRepository($entityName)
+                ->where($whereForCollection)
+                ->find($this->getFieldFilterSelectParams($configuration, $entityName));
 
             foreach ($collection as $entity) {
                 $itemKey = $service->createMemoryKey($entity->getEntityType(), $entity->get('id'));
@@ -342,9 +357,47 @@ class Link extends Varchar
         return $res;
     }
 
-    protected function findAlreadyExistsEntity(string $entityName, array $where): ?Entity
+    protected function findAlreadyExistsEntity(string $entityName, array $where, array $config = []): ?Entity
     {
-        return $this->getEntityManager()->getRepository($entityName)->where($where)->findOne();
+        $selectParams = $this->getFieldFilterSelectParams($config, $entityName);
+        if (!empty($selectParams)) {
+            $selectParams['noCache'] = true;
+        }
+
+        return $this->getEntityManager()->getRepository($entityName)->where($where)->findOne($selectParams);
+    }
+
+    protected function getFieldFilter(array $config, string $entityName): array
+    {
+        if (empty($config['entity']) || empty($config['name'])) {
+            return [];
+        }
+
+        $fieldDefs = $this->getMetadata()->get(['entityDefs', $config['entity'], 'fields', $config['name']], []);
+
+        if (empty($fieldDefs['where']) || !is_array($fieldDefs['where'])) {
+            return [];
+        }
+
+        $foreignEntityName = $fieldDefs['entity']
+            ?? $this->getMetadata()->get(['entityDefs', $config['entity'], 'links', $config['name'], 'entity']);
+
+        if ($foreignEntityName !== $entityName) {
+            return [];
+        }
+
+        return $fieldDefs['where'];
+    }
+
+    protected function getFieldFilterSelectParams(array $config, string $entityName): array
+    {
+        $where = $this->getFieldFilter($config, $entityName);
+
+        if (empty($where)) {
+            return [];
+        }
+
+        return $this->container->get('selectManagerFactory')->create($entityName)->getSelectParams(['where' => $where]);
     }
 
     protected function findEntityInMemory(array $where, array $config): ?Entity

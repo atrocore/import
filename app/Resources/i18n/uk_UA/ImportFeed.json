@@ -84,6 +84,7 @@
   "exceptions": {
     "fileIdIsEmpty": "Ви повинні встановити файл у каналі, щоб його запустити",
     "noRecordsFoundFor": "Не знайдено записів в сутності \"%s\" з: %s.",
+    "noRecordsFoundForWithFilter": "Не знайдено записів в сутності \"%s\" з: %s та фільтром для поля \"%s\".",
     "convertValidationPrefix": "Помилка значення '{{value}}' для колонки '{{column}}': ",
     "noFeedFileFound": "Файл фіда відсутній.",
     "measureIsNotSet": "Міру для атрибута \"%s\" не задано.",

@@ -85,6 +85,7 @@
     "noEntityIdentifier": "Please, choose Identifier column for configurator.",
     "fileIdIsEmpty": "You must set a file on the feed to run it",
     "noRecordsFoundFor": "No record(s) found in the entity '%s' with: %s.",
+    "noRecordsFoundForWithFilter": "No record(s) found in the entity '%s' with: %s and filter for the field '%s'.",
     "convertValidationPrefix": "Error for value '{{value}}' from column '{{column}}': ",
     "noFeedFileFound": "Feed file is missing.",
     "measureIsNotSet": "Measure for the attribute \"%s\" is not set.",
