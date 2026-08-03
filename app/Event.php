@@ -4,6 +4,7 @@ namespace Import;
 
 use Atro\Core\ModuleManager\AfterInstallAfterDelete;
 use Espo\Core\Utils\Config;
+use Import\Seeders\FailedImportTemplateSeeder;
 
 class Event extends AfterInstallAfterDelete
 {
@@ -13,6 +14,8 @@ class Event extends AfterInstallAfterDelete
         $config = $this->getContainer()->get('config');
         $config->set('importJobsMaxDays', 21);
         $this->addNavigationItems(['ImportFeed']);
+
+        (new FailedImportTemplateSeeder($config, $this->getContainer()->get('connection')))->run();
     }
 
     public function afterDelete(): void
