@@ -15,11 +15,21 @@ class Event extends AfterInstallAfterDelete
         $config->set('importJobsMaxDays', 21);
         $this->addNavigationItems(['ImportFeed']);
 
-        (new FailedImportTemplateSeeder($config, $this->getContainer()->get('connection')))->run();
+        (new FailedImportTemplateSeeder($this->getConfig(), $this->getDbal()))->run();
     }
 
     public function afterDelete(): void
     {
         $this->removeNavigationItems(['ImportFeed']);
+    }
+
+    protected function getConfig(): \Atro\Core\Utils\Config
+    {
+        return $this->getContainer()->get('config');
+    }
+
+    protected function getDbal(): \Doctrine\DBAL\Connection
+    {
+        return $this->getContainer()->get('dbal');
     }
 }
