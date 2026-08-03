@@ -2,7 +2,8 @@
   "fields": {
     "importJob": {
       "type": "link",
-      "readOnly": true
+      "readOnly": true,
+      "foreignName": "number"
     },
     "type": {
       "type": "enum",
