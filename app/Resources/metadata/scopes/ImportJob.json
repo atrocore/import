@@ -16,6 +16,7 @@
   "streamDisabled": true,
   "disabled": false,
   "type": "Base",
+  "nameField": "number",
   "module": "Import",
   "object": true,
   "hasAssignedUser": false,
