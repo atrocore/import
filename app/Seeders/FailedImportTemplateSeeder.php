@@ -44,14 +44,37 @@ class FailedImportTemplateSeeder extends AbstractSeeder
             'subject' => 'Failed Import Executions',
             'isHtml' => true,
             'createdAt' => date('Y-m-d H:i:s'),
-            'body' => "<h1>Failed Import Executions</h1>
+            'body' => "<style>
+    * {
+        font-family: sans-serif;
+    }
+
+    table, th, td {
+        border: 1px solid #999;
+        border-collapse: collapse;
+    }
+
+    th, td {
+        text-align: center;
+        padding: 15px;
+    }
+
+    th:first-of-type, 
+    td:first-of-type {
+        text-align: left;
+    }
+</style>
+
+<h1>Failed Import Executions</h1>
 
 {% set jobs = findEntities('ImportJob', {'state': 'Failed', 'createdAt>=': 'now' | date_modify('-1 days') | date('Y-m-d H:i:s')}) %}
 
 {% set feeds = {} %}
 {% set feedNames = {} %}
+{% set total = 0 %}
 {% for job in jobs %}
     {% set feeds = feeds|merge({(job.importFeedId): (feeds[job.importFeedId] ?? 0) + 1}) %}
+    {% set total = total + 1 %}
 {% endfor %}
 
 <br/>
@@ -59,8 +82,8 @@ class FailedImportTemplateSeeder extends AbstractSeeder
 <table>
     <thead>
         <tr>
-            <th style=\"text-align: left;\">Feed</th>
-            <th>Failed Jobs count</th>
+            <th>Feed</th>
+            <th>Failed</th>
         </tr>
     </thead>
     <tbody>
@@ -71,6 +94,12 @@ class FailedImportTemplateSeeder extends AbstractSeeder
             <td><b>{{ count }}</b></td>
         </tr>
     {% endfor %}
+    {% if total > 0 %}
+        <tr>
+            <td><b>Total</b></td>
+            <td><b>{{ total }}</b></td>
+        </tr>
+    {% endif %}
 </table>
     ",
         ];
