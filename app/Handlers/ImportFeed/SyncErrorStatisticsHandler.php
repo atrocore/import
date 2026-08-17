@@ -74,7 +74,7 @@ use Psr\Http\Server\RequestHandlerInterface;
         ],
     ],
 )]
-class ImportFeedSyncErrorStatisticsHandler extends AbstractHandler
+class SyncErrorStatisticsHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {

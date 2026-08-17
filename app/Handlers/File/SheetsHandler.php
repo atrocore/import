@@ -61,7 +61,7 @@ use Psr\Http\Server\RequestHandlerInterface;
         'File',
     ],
 )]
-class FileSheetsHandler extends AbstractHandler
+class SheetsHandler extends AbstractHandler
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
