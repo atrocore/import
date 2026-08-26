@@ -6,7 +6,8 @@
   },
   "options": {
     "type": {
-      "import": "Імпортний фід"
+      "import": "Імпортний фід",
+      "reImportFailedJob": "Повторити невдалий імпорт"
     }
   }
 }

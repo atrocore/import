@@ -108,6 +108,35 @@ class ImportJob extends Base
         return $result;
     }
 
+    public function tryAgain(string $id): bool
+    {
+        $entity = $this->getRepository()->get($id);
+        if (empty($entity)) {
+            throw new NotFound();
+        }
+
+        if (!$this->getAcl()->check($entity, 'edit')) {
+            throw new Forbidden();
+        }
+
+        if (!in_array($entity->get('state'), ['Failed', 'Canceled'])) {
+            return false;
+        }
+
+        $entity->set('state', 'Pending');
+        $this->getEntityManager()->saveEntity($entity);
+
+        $queueItem = $entity->get('queueItem');
+        if (empty($queueItem)) {
+            throw new NotFound($this->translate('jobItemNotFound', 'exceptions', 'ImportJob'));
+        }
+
+        $queueItem->set('status', 'Pending');
+        $this->getEntityManager()->saveEntity($queueItem);
+
+        return true;
+    }
+
     public function reCreateImportJob(string $id, ?string $attachmentId = null): bool
     {
         if (!$this->getAcl()->check('ImportJob', 'create')) {

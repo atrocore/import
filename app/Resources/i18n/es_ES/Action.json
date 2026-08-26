@@ -6,7 +6,8 @@
   },
   "options": {
     "type": {
-      "import": "Importar alimentación"
+      "import": "Importar alimentación",
+      "reImportFailedJob": "Reimportar trabajo fallido"
     }
   }
 }

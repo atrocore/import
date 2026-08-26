@@ -6,7 +6,8 @@
 	},
 	"options": {
 		"type": {
-			"import": "Importuj Źródło"
+			"import": "Importuj Źródło",
+			"reImportFailedJob": "Ponów nieudane zadanie importu"
 		}
 	}
 }

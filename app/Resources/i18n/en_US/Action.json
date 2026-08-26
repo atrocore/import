@@ -6,7 +6,8 @@
   },
   "options": {
     "type": {
-      "import": "Import Feed"
+      "import": "Import Feed",
+      "reImportFailedJob": "Re-import failed job"
     }
   }
 }
