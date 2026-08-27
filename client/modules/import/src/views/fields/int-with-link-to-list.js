@@ -30,6 +30,7 @@ Espo.define('import:views/fields/int-with-link-to-list',
         actionShowList() {
             const searchFilter = this.getSearchFilter();
             this.getStorage().set('listQueryBuilder', this.listScope, searchFilter);
+            this.getStorage().set('treeSelectedNodes', this.listScope, []);
             window.open(`#${this.listScope}`, '_blank');
         },
 
