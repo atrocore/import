@@ -679,8 +679,8 @@
       "openApiDisabled": true
     },
     "feedPayload": {
-      "type": "text",
-      "view": "views/fields/script",
+      "type": "code",
+      "engine": "Twig",
       "language": "json",
       "notStorable": true,
       "dataField": true,
