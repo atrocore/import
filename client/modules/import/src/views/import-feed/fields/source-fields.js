@@ -54,21 +54,27 @@ Espo.define('import:views/import-feed/fields/source-fields', 'views/fields/multi
         readSourceFieldsFromJob(jobId) {
             this.ajaxGetRequest(`Job/${jobId}`).success(queueItem => {
                 if (queueItem.status === 'Canceled') {
-                    $('.attachment-upload .remove-attachment').click();
-                    this.model.set('sourceFields', []);
-                    this.$el.html('');
+                    this.clearSourceFields()
                 } else if (queueItem.status === 'Success') {
                     this.model.set('sourceFields', queueItem.payload.sourceFields);
+                } else if (queueItem.status === 'Failed') {
+                    this.notify(queueItem.message || 'Error occured!', 'error');
+                    this.clearSourceFields();
                 } else {
                     setTimeout(() => {
                         this.readSourceFieldsFromJob(jobId);
                     }, 4000);
                 }
             }).error(response => {
-                $('.attachment-upload .remove-attachment').click();
-                this.model.set('sourceFields', []);
-                this.$el.html('');
+                this.clearSourceFields();
             });
+        },
+
+        clearSourceFields() {
+            this.model.set('sourceFields', []);
+            this.model.set('fileId', null);
+            this.model.set('fileName', null);
+            this.reRender();
         },
 
         loadFileColumns(action) {
@@ -98,7 +104,6 @@ Espo.define('import:views/import-feed/fields/source-fields', 'views/fields/multi
 
                 if (isLarge) {
                     this.ajaxPostRequest('ImportFeed/parseFileColumnsAsync', data).success(response => {
-                        Backbone.trigger('showQueuePanel');
                         this.$el.html('<img alt="preloader" class="preloader" style="height:19px;margin-top:6px;margin-left:-8px" src="client/img/atro-loader.svg" />');
                         this.readSourceFieldsFromJob(response.jobId);
                     });
