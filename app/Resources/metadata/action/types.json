@@ -1,3 +1,4 @@
 {
-  "import": "\\Import\\ActionTypes\\Import"
+  "import": "\\Import\\ActionTypes\\Import",
+  "reImportFailedJob": "\\Import\\ActionTypes\\ReImportFailedJob"
 }

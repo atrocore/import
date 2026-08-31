@@ -6,7 +6,8 @@
   },
   "options": {
     "type": {
-      "import": "Importovat krmivo"
+      "import": "Importovat krmivo",
+      "reImportFailedJob": "Znovu importovat neúspěšnou úlohu"
     }
   }
 }

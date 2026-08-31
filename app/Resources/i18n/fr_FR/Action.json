@@ -6,7 +6,8 @@
   },
   "options": {
     "type": {
-      "import": "Importation de flux"
+      "import": "Importation de flux",
+      "reImportFailedJob": "Réimporter la tâche échouée"
     }
   }
 }

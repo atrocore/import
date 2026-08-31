@@ -46,7 +46,8 @@
   },
   "exceptions": {
     "cacheWriteFailed": "Cannot write data to the import cache.",
-    "cannotReCreateDeleteOnlyJob": "This import job only deletes records. Re-creating it is not possible, because a part of the feed data would delete everything else."
+    "cannotReCreateDeleteOnlyJob": "This import job only deletes records. Re-creating it is not possible, because a part of the feed data would delete everything else.",
+    "jobItemNotFound": "Job Not found"
   },
   "boolFilters": {
     "onlyImportFailed24Hours": "Only Import Jobs that failed during last 24 hours",
