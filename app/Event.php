@@ -3,7 +3,7 @@
 namespace Import;
 
 use Atro\Core\ModuleManager\AfterInstallAfterDelete;
-use Espo\Core\Utils\Config;
+use Atro\Core\Utils\Config;
 use Import\Seeders\FailedImportTemplateSeeder;
 
 class Event extends AfterInstallAfterDelete

@@ -20,7 +20,7 @@ use Espo\Core\Services\Base;
 use Espo\Core\Utils\Language;
 use Espo\ORM\Entity;
 use Espo\Core\Container;
-use Espo\Core\Utils\Config;
+use Atro\Core\Utils\Config;
 use Espo\Core\Utils\Metadata;
 use Espo\ORM\EntityManager;
 use Import\Jobs\ImportTypeSimple;
