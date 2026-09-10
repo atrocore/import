@@ -61,26 +61,29 @@ class ImportJobCreator extends AbstractJob implements JobInterface
         /** @var \Atro\Services\File $fileService */
         $fileService = $serviceFactory->create('File');
 
-        $isFileHeaderRow = !empty($importFeed->getFeedField('isFileHeaderRow'));
+        // a caller can force these instead of trusting the feed's own configuration - e.g. database-type
+        // feeds don't expose headerRowNumber/dataStartRowNumber at all, so ImportTypeDatabaseJobCreator
+        // passes the generated file's actual (fixed) layout through the payload
+        $headerRowNumber = (int)($data['headerRowNumber'] ?? $importFeed->getFeedField('headerRowNumber') ?? 1);
+        $dataStartRowNumber = (int)($data['dataStartRowNumber'] ?? $importFeed->getFeedField('dataStartRowNumber') ?? 2);
 
         $fileParser = $importFeedService->getFileParser($format);
         $fileParser->setData([
-            'isFileHeaderRow' => $isFileHeaderRow,
-            'delimiter'       => $delimiter,
-            'enclosure'       => $enclosure,
-            'sheet'           => $importFeed->get('sheet') ?? 0,
+            'headerRowNumber'    => $headerRowNumber,
+            'dataStartRowNumber' => $dataStartRowNumber,
+            'delimiter'          => $delimiter,
+            'enclosure'          => $enclosure,
+            'sheet'              => $importFeed->get('sheet') ?? 0,
         ]);
 
         $fileParser->convertAttachmentToUTF8($attachment);
 
-        $offset = 0;
-        $rowNumberPart = 0;
-
         $header = [];
-        if ($isFileHeaderRow) {
-            $header = $fileParser->getFileData($attachment, 0, 1);
-            $offset = 1;
+        if ($headerRowNumber > 0) {
+            $header = $fileParser->getFileData($attachment, $headerRowNumber - 1, 1);
         }
+        $offset = $dataStartRowNumber - 1;
+        $rowNumberPart = 0;
 
         $service = $importFeedService->getImportTypeService($importFeed);
         $this->getMemoryStorage()->set('disableFileTransactions', true);
@@ -100,7 +103,14 @@ class ImportJobCreator extends AbstractJob implements JobInterface
 
             $jobAttachmentId = $fileService->createFileViaContents($input, $fileParser->createFileContent($part));
 
-            $jobData = $service->prepareJobData($importFeed, $jobAttachmentId);
+            // this part file was assembled with its own header copied to row 1 (gap rows already
+            // dropped, see $header/$offset above), regardless of where the feed's own header sits -
+            // tell prepareJobData about the part file's actual layout so it resolves sourceFields
+            // (and offset) against row 1, not against the feed's original, possibly non-adjacent one
+            $partHeaderRowNumber = $headerRowNumber > 0 ? 1 : 0;
+            $partDataStartRowNumber = $headerRowNumber > 0 ? 2 : 1;
+
+            $jobData = $service->prepareJobData($importFeed, $jobAttachmentId, $partHeaderRowNumber, $partDataStartRowNumber);
             if (!empty($payload->format)) {
                 $jobData['fileFormat'] = $payload->format;
             }
@@ -110,6 +120,7 @@ class ImportJobCreator extends AbstractJob implements JobInterface
             if (!empty($payload->enclosure)) {
                 $jobData['enclosure'] = $payload->enclosure;
             }
+
             if (!empty($priority)) {
                 $jobData['data']['priority'] = $priority;
             }

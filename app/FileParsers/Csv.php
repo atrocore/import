@@ -38,19 +38,18 @@ class Csv extends Injectable implements FileParserInterface
 
     public function getFileColumns(File $attachment): array
     {
-        $isFileHeaderRow = $this->data['isFileHeaderRow'] ?? true;
+        $headerRowNumber = (int)($this->data['headerRowNumber'] ?? 1);
         $data = $this->data['fileData'] ?? null;
 
         // prepare result
         $result = [];
 
-        // get data
-        if ($data === null) {
-            $data = $this->getFileData($attachment, 0, 2);
-        }
+        if ($headerRowNumber > 0) {
+            if ($data === null) {
+                $data = $this->getFileData($attachment, $headerRowNumber - 1, 1);
+            }
 
-        if (isset($data[0])) {
-            if ($isFileHeaderRow && isset($data[1])) {
+            if (isset($data[0])) {
                 foreach ($data[0] as $k => $value) {
                     $value = trim((string)$value);
                     if (empty($value) && $value !== '0' && $value !== 0) {
@@ -58,7 +57,13 @@ class Csv extends Injectable implements FileParserInterface
                     }
                     $result[] = $this->removeNonPrintableCharacters($value);
                 }
-            } else {
+            }
+        } else {
+            if ($data === null) {
+                $data = $this->getFileData($attachment, 0, 1);
+            }
+
+            if (isset($data[0])) {
                 foreach ($data[0] as $k => $value) {
                     $result[] = $this->removeNonPrintableCharacters(self::createColumnName($k, $data));
                 }
@@ -111,7 +116,7 @@ class Csv extends Injectable implements FileParserInterface
     {
         $delimiter = $this->data['delimiter'] ?? ';';
         $enclosure = $this->data['enclosure'] ?? '"';
-        $isFileHeaderRow = $this->data['isFileHeaderRow'] ?? true;
+        $dataStartRowNumber = (int)($this->data['dataStartRowNumber'] ?? 1);
 
         if ($delimiter === '\t') {
             $delimiter = "\t";
@@ -125,7 +130,7 @@ class Csv extends Injectable implements FileParserInterface
         $file = fopen($path, 'r');
         $this->skipBOM($file);
 
-        if ($isFileHeaderRow) {
+        for ($i = 0; $i < $dataStartRowNumber - 1; $i++) {
             fgetcsv($file, 0, $delimiter, $enclosure);
         }
 
@@ -139,7 +144,7 @@ class Csv extends Injectable implements FileParserInterface
     {
         $delimiter = $this->data['delimiter'] ?? ';';
         $enclosure = $this->data['enclosure'] ?? '"';
-        $hasHeader = $this->data['isFileHeaderRow'] ?? false;
+        $hasHeader = ($this->data['headerRowNumber'] ?? 0) > 0;
 
         if ($delimiter == '\t') {
             $delimiter = "\t";

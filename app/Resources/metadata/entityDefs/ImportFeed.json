@@ -308,12 +308,37 @@
         }
       }
     },
-    "isFileHeaderRow": {
-      "type": "bool",
+    "headerRowNumber": {
+      "type": "int",
       "notStorable": true,
       "dataField": true,
       "filterDisabled": true,
-      "default": true,
+      "required": true,
+      "default": 1,
+      "min": 0,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "format",
+              "value": [
+                "CSV",
+                "Excel"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "dataStartRowNumber": {
+      "type": "int",
+      "notStorable": true,
+      "dataField": true,
+      "filterDisabled": true,
+      "required": true,
+      "default": 2,
+      "min": 1,
       "conditionalProperties": {
         "visible": {
           "conditionGroup": [

@@ -325,8 +325,7 @@ class ImportFeed extends Base
                     'delimiter') && !empty($payload->delimiter)) ? $payload->delimiter : ';',
             'enclosure'       => (property_exists($payload,
                     'enclosure') && $payload->enclosure == 'singleQuote') ? "'" : '"',
-            'isFileHeaderRow' => (property_exists($payload,
-                    'isHeaderRow') && is_null($payload->isHeaderRow)) ? true : !empty($payload->isHeaderRow),
+            'headerRowNumber' => property_exists($payload, 'headerRowNumber') ? (int)$payload->headerRowNumber : 1,
             'sheet'           => property_exists($payload, 'sheet') ? (int)$payload->sheet : 0,
             'rootNode'        => (property_exists($payload,
                     'rootNode') && !empty($payload->rootNode)) ? $payload->rootNode : null,
@@ -504,7 +503,8 @@ class ImportFeed extends Base
             $qmData = json_decode(json_encode($qmData), true);
             $qmData['action'] = 'delete_found';
             $qmData['fileFormat'] = 'CSV';
-            $qmData['isFileHeaderRow'] = true;
+            $qmData['headerRowNumber'] = 1;
+            $qmData['dataStartRowNumber'] = 2;
             $qmData['offset'] = 1;
             $qmData['data']['idField'] = ['id'];
             $qmData['data']['entity'] = $entityName;

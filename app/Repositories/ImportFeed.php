@@ -66,7 +66,23 @@ class ImportFeed extends Base
 
         $this->setFeedFieldsToDataJson($entity);
 
+        $this->validateHeaderRowNumbers($entity);
+
         $this->validateFeed($entity);
+    }
+
+    protected function validateHeaderRowNumbers(Entity $entity): void
+    {
+        if (!in_array($entity->getFeedField('format'), ['CSV', 'Excel'])) {
+            return;
+        }
+
+        $headerRowNumber = (int)$entity->getFeedField('headerRowNumber');
+        $dataStartRowNumber = (int)$entity->getFeedField('dataStartRowNumber');
+
+        if ($dataStartRowNumber <= $headerRowNumber) {
+            throw new BadRequest($this->getLanguage()->translate('dataStartRowMustBeGreaterThanHeaderRow', 'exceptions', 'ImportFeed'));
+        }
     }
 
     public function validateFeed(Entity $entity, bool $checkEntityIdentifier = false): void
