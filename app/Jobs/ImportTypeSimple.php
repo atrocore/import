@@ -42,8 +42,12 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
     private ?string $skipValue = null;
     private ?string $markForUnlinkedAttribute = null;
 
-    public function prepareJobData(ImportFeed $feed, string $attachmentId): array
-    {
+    public function prepareJobData(
+        ImportFeed $feed,
+        string $attachmentId,
+        ?int $headerRowNumber = null,
+        ?int $dataStartRowNumber = null
+    ): array {
         if (empty($attachmentId) || empty($file = $this->getEntityById('File', $attachmentId))) {
             $attachmentId = $feed->get('fileId');
             if (!empty($attachmentId)) {
@@ -55,25 +59,38 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
             throw new BadRequest($this->translate('noSuchFile', 'exceptions', 'ImportFeed'));
         }
 
+        // a caller can tell us the attachment's own row layout differs from the feed's configured
+        // one - e.g. ImportJobCreator hands us a split part file whose header (if any) was already
+        // normalized to row 1, regardless of where it sat in the original file
+        $headerRowNumber = $headerRowNumber ?? $feed->getHeaderRowNumber();
+        $dataStartRowNumber = $dataStartRowNumber ?? $feed->getDataStartRowNumber();
+
         $result = [
-            "name"             => $feed->get('name'),
-            "offset"           => $feed->isFileHeaderRow() ? 1 : 0,
-            "limit"            => $this->getConfig()->get('importLimit', 5000),
-            "fileFormat"       => $feed->getFeedField('format'),
-            "delimiter"        => $feed->getDelimiter(),
-            "enclosure"        => $feed->getEnclosure(),
-            "isFileHeaderRow"  => $feed->isFileHeaderRow(),
-            "adapter"          => $feed->getFeedField('adapter'),
-            "action"           => $feed->get('fileDataAction'),
-            "attachmentId"     => $attachmentId,
-            "importFeedId"     => $feed->get('id'),
-            "processingType"   => $feed->get('processingType'),
-            "data"             => $feed->getConfiguratorData(),
-            "repeatProcessing" => $feed->get("repeatProcessing"),
-            "sheet"            => $feed->get("sheet"),
-            "executeAs"        => $feed->get("executeAs"),
-            "feedPayload"      => $feed->getFeedField("feedPayload"),
+            "name"               => $feed->get('name'),
+            "offset"             => $dataStartRowNumber - 1,
+            "limit"              => $this->getConfig()->get('importLimit', 5000),
+            "fileFormat"         => $feed->getFeedField('format'),
+            "delimiter"          => $feed->getDelimiter(),
+            "enclosure"          => $feed->getEnclosure(),
+            "headerRowNumber"    => $headerRowNumber,
+            "dataStartRowNumber" => $dataStartRowNumber,
+            "adapter"            => $feed->getFeedField('adapter'),
+            "action"             => $feed->get('fileDataAction'),
+            "attachmentId"       => $attachmentId,
+            "importFeedId"       => $feed->get('id'),
+            "processingType"     => $feed->get('processingType'),
+            "data"               => $feed->getConfiguratorData(),
+            "repeatProcessing"   => $feed->get("repeatProcessing"),
+            "sheet"              => $feed->get("sheet"),
+            "executeAs"          => $feed->get("executeAs"),
+            "feedPayload"        => $feed->getFeedField("feedPayload"),
         ];
+
+        if (in_array($result['fileFormat'], ['CSV', 'Excel'], true)) {
+            $fileParser = $this->getFileParser($result['fileFormat']);
+            $fileParser->setData($result);
+            $result['sourceFields'] = $fileParser->getFileColumns($file);
+        }
 
         return $this
             ->getEventManager()
@@ -137,7 +154,7 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
         }
 
         if (!empty($rows)) {
-            if ($jobData['isFileHeaderRow'] ?? false) {
+            if (($jobData['headerRowNumber'] ?? 0) > 0) {
                 $rows = array_merge([array_keys($rows[0])], $rows);
             } else {
                 $rows[0] = array_keys($rows[0]);
@@ -205,6 +222,10 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
         $this->getMemoryStorage()->set('importRowNumber', $fileRow);
 
         $this->createConvertedFileForJob($importJobId, $data);
+
+        // the converted file is always structured header-then-data (no gap rows), regardless
+        // of the original file's headerRowNumber/dataStartRowNumber, so start reading it fresh
+        $data['offset'] = 0;
 
         $importJob = $this->getEntityById('ImportJob', $importJobId);
 
@@ -585,11 +606,9 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
         $fileParser = $this->getFileParser('CSV');
         $fileParser->setData($data);
 
-        // for getting header row
-        $includedHeaderRow = $data['offset'] === 1 && !empty($data['isFileHeaderRow']);
-        if ($includedHeaderRow) {
-            $data['offset'] = 0;
-        }
+        // the converted file is always header-then-data with no gap, so the header row (if any)
+        // only ever needs stripping on the very first read (offset 0)
+        $includedHeaderRow = $data['offset'] === 0 && ($data['headerRowNumber'] ?? 0) > 0;
 
         /** @var \Atro\Entities\File $file */
         $file = $this->getEntityById('File', $convertedFileId);
@@ -608,9 +627,10 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
         if (empty($data['sourceFields'])) {
             $fileParser->setData(array_merge($data, ['fileData' => $fileData]));
             $data['sourceFields'] = $fileParser->getFileColumns($file);
-            if ($includedHeaderRow) {
-                array_shift($fileData);
-            }
+        }
+
+        if ($includedHeaderRow) {
+            array_shift($fileData);
         }
 
         $newFileData = [];
@@ -634,12 +654,6 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
 
         $fileParser = $this->getFileParser($data['fileFormat']);
         $fileParser->setData($data);
-
-        // for getting header row
-        $includedHeaderRow = $data['offset'] === 1 && !empty($data['isFileHeaderRow']);
-        if ($includedHeaderRow) {
-            $data['offset'] = 0;
-        }
 
         $rowNumber = $this->getMemoryStorage()->get('importRowNumber') ?? (($data['rowNumberPart'] ?? 0) + ($data['offset'] ?? 1) + 1);
 
@@ -669,11 +683,10 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
          */
         if (in_array($data['fileFormat'], ['CSV', 'Excel'])) {
             if (empty($data['sourceFields'])) {
-                $fileParser->setData(array_merge($data, ['fileData' => $fileData]));
+                // resolve columns from the header row directly, independent of this batch's
+                // own read position (the header may not be adjacent to the data range at all)
+                $fileParser->setData($data);
                 $data['sourceFields'] = $fileParser->getFileColumns($attachment);
-                if ($includedHeaderRow) {
-                    array_shift($fileData);
-                }
             }
 
             $newFileData = [];

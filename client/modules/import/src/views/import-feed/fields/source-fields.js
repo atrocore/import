@@ -14,7 +14,7 @@ Espo.define('import:views/import-feed/fields/source-fields', 'views/fields/multi
         setup() {
             Dep.prototype.setup.call(this);
 
-            ['file', 'sheet', 'format', 'fileFieldDelimiter', 'fileTextQualifier', 'isFileHeaderRow', 'rootNode', 'excludedNodes', 'keptStringNodes'].forEach(fieldName => {
+            ['file', 'sheet', 'format', 'fileFieldDelimiter', 'fileTextQualifier', 'headerRowNumber', 'rootNode', 'excludedNodes', 'keptStringNodes'].forEach(fieldName => {
                 let action = fieldName === 'file' ? 'fileUpdate' : 'change:' + fieldName;
                 this.listenTo(this.model, action, () => {
                     if (this.getParentView().getView(fieldName).mode === 'edit') {
@@ -95,7 +95,7 @@ Espo.define('import:views/import-feed/fields/source-fields', 'views/fields/multi
                 rootNode: this.model.get('rootNode'),
                 excludedNodes: this.model.get('excludedNodes'),
                 keptStringNodes: this.model.get('keptStringNodes'),
-                isHeaderRow: !!this.model.get('isFileHeaderRow'),
+                headerRowNumber: this.model.get('headerRowNumber'),
                 sheet: this.model.get('sheet')
             };
 

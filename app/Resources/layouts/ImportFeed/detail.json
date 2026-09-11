@@ -111,9 +111,11 @@
       ],
       [
         {
-          "name": "isFileHeaderRow"
+          "name": "headerRowNumber"
         },
-        false
+        {
+          "name": "dataStartRowNumber"
+        }
       ],
       [
         {

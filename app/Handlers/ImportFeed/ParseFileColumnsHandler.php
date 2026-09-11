@@ -69,9 +69,10 @@ use Psr\Http\Server\RequestHandlerInterface;
                                 'doubleQuote',
                             ],
                         ],
-                        'isHeaderRow'      => [
-                            'type'     => 'boolean',
-                            'nullable' => true,
+                        'headerRowNumber'  => [
+                            'type'        => 'integer',
+                            'nullable'    => true,
+                            'description' => 'Row number containing the header (1-indexed); 0 means the file has no header row.',
                         ],
                         'sheet'            => [
                             'type'     => 'integer',

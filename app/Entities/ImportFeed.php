@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Import\Entities;
 
-use Espo\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Templates\Entities\Base;
 use Espo\Core\Utils\Json;
 
@@ -90,9 +90,18 @@ class ImportFeed extends Base
         return $this->getFeedField('fileTextQualifier') == 'singleQuote' ? "'" : '"';
     }
 
-    public function isFileHeaderRow(): bool
+    public function getHeaderRowNumber(): int
     {
-        return !empty($this->getFeedField('isFileHeaderRow'));
+        $value = $this->getFeedField('headerRowNumber');
+
+        return $value === null ? 1 : (int)$value;
+    }
+
+    public function getDataStartRowNumber(): int
+    {
+        $value = $this->getFeedField('dataStartRowNumber');
+
+        return $value === null ? 2 : (int)$value;
     }
 
     public function getConfiguratorData(): array

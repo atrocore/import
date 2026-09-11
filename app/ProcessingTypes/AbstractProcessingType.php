@@ -50,21 +50,12 @@ abstract class AbstractProcessingType
         $fileParser = $this->getFileParser($data['fileFormat']);
         $fileParser->setData($data);
 
-        // for getting header row
-        $includedHeaderRow = $data['offset'] === 1 && !empty($data['isFileHeaderRow']);
-        if ($includedHeaderRow) {
-            $data['offset'] = 0;
-        }
-
         switch ($data['fileFormat']) {
             case 'CSV':
             case 'Excel':
                 $columns = $fileParser->getFileColumns($attachment);
 
                 $fileOriginalData = $fileParser->getFileData($attachment, $data['offset'], $data['limit']);
-                if ($includedHeaderRow) {
-                    array_shift($fileOriginalData);
-                }
 
                 foreach ($fileOriginalData as $line => $fileLine) {
                     foreach ($fileLine as $k => $v) {

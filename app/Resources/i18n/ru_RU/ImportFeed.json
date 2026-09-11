@@ -6,7 +6,8 @@
     "format": "Формат",
     "connection": "Соединение",
     "decimalMark": "Десятичный разделитель",
-    "isFileHeaderRow": "Строка заголовка",
+    "headerRowNumber": "Номер строки заголовка",
+    "dataStartRowNumber": "Номер строки начала данных",
     "isActive": "Активный",
     "scheduledJobs": "Задания планировщика",
     "configuratorItems": "Конфигуратор",
@@ -80,6 +81,7 @@
   },
   "exceptions": {
     "delimitersMustBeDifferent": "Все параметры фида должны иметь уникальные значения.",
+    "dataStartRowMustBeGreaterThanHeaderRow": "Номер строки начала данных должен быть больше номера строки заголовка.",
     "noSpecifiedAttribute": "Не указан '{{key}}' для атрибута '{{name}}'.",
     "noSpecifiedField": "Для поля '{{key}}' не указано '{{name}}'.",
     "unlinkAndLinkInOneRow": "Многоязычный атрибут из '%s' должен быть помечен как несвязанный атрибут для всех языков, чтобы отменить его привязку.",
