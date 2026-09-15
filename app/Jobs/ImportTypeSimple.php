@@ -504,6 +504,7 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
         $rows = $this->getMemoryStorage()->get('importRowsPart');
 
         $collectionWhere = [];
+        $nullableFields = [];
         foreach ($rows as $row) {
             try {
                 $whereRow = $this->prepareWhere($entityType, $configuration, $row);
@@ -511,17 +512,35 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
                 continue;
             }
             foreach ($whereRow as $f => $v) {
-                if (!is_array($where[$f]) || !in_array($v, $where[$f])) {
+                if ($v === null) {
+                    $nullableFields[$f] = true;
+                    continue;
+                }
+                if (!isset($collectionWhere[$f]) || !in_array($v, $collectionWhere[$f], true)) {
                     $collectionWhere[$f][] = $v;
                 }
             }
         }
 
-        if (empty($collectionWhere)) {
+        if (empty($collectionWhere) && empty($nullableFields)) {
             throw new \Error('Where is empty');
         }
 
-        $key = md5($entityType . json_encode($collectionWhere));
+        $queryWhere = [];
+        foreach ($collectionWhere as $f => $values) {
+            if (isset($nullableFields[$f])) {
+                $queryWhere[] = ['OR' => [[$f => $values], [$f => null]]];
+            } else {
+                $queryWhere[$f] = $values;
+            }
+        }
+        foreach (array_keys($nullableFields) as $f) {
+            if (!isset($collectionWhere[$f])) {
+                $queryWhere[$f] = null;
+            }
+        }
+
+        $key = md5($entityType . json_encode($queryWhere));
 
         $empties = $this->getMemoryStorage()->get(self::MEMORY_EMPTY_QUERY_RES) ?? [];
         if (!empty($empties[$key])) {
@@ -529,7 +548,7 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
         }
 
         $existsEntities = $this->getEntityManager()->getRepository($entityType)
-            ->where($collectionWhere)
+            ->where($queryWhere)
             ->find();
 
         if (empty($existsEntities[0])) {
