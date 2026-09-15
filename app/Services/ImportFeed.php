@@ -506,6 +506,7 @@ class ImportFeed extends Base
             $qmData['headerRowNumber'] = 1;
             $qmData['dataStartRowNumber'] = 2;
             $qmData['offset'] = 1;
+            $qmData['sourceFields'] = ['id'];
             $qmData['data']['idField'] = ['id'];
             $qmData['data']['entity'] = $entityName;
 
