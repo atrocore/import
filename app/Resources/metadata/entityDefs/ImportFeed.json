@@ -400,6 +400,13 @@
               "type": "equals",
               "attribute": "processingType",
               "value": "configurator"
+            },
+            {
+              "type": "notIn",
+              "attribute": "format",
+              "value": [
+                "Excel"
+              ]
             }
           ]
         }
