@@ -38,7 +38,7 @@ class Csv extends Injectable implements FileParserInterface
 
     public function getFileColumns(File $attachment): array
     {
-        $headerRowNumber = (int)($this->data['headerRowNumber'] ?? 1);
+        $headerRowNumber = (int)($this->data['headerRowNumber'] ?? 0);
         $data = $this->data['fileData'] ?? null;
 
         // prepare result

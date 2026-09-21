@@ -325,7 +325,7 @@ class ImportFeed extends Base
                     'delimiter') && !empty($payload->delimiter)) ? $payload->delimiter : ';',
             'enclosure'       => (property_exists($payload,
                     'enclosure') && $payload->enclosure == 'singleQuote') ? "'" : '"',
-            'headerRowNumber' => property_exists($payload, 'headerRowNumber') ? (int)$payload->headerRowNumber : 1,
+            'headerRowNumber' => property_exists($payload, 'headerRowNumber') ? (int)$payload->headerRowNumber : 0,
             'sheet'           => property_exists($payload, 'sheet') ? (int)$payload->sheet : 0,
             'rootNode'        => (property_exists($payload,
                     'rootNode') && !empty($payload->rootNode)) ? $payload->rootNode : null,
