@@ -895,6 +895,13 @@ class ImportFeed extends Base
             $locale = $this->getEntityManager()->getEntity('Locale', $exportFeed->get('localeId'));
         }
 
+        // The last export header row is the one whose text the system also uses internally as
+        // the column's "real" name (see Export\Services\ExportTypeSimple::storeCsvFile()) - so
+        // it's the row whose values line up with Source Fields here. With no header row at all
+        // (0), there's nothing to match column names against, so no mapping can be derived.
+        $numberOfHeaders = (int)($exportFeed->get('numberOfHeaders') ?? 0);
+        $headerTextField = $numberOfHeaders > 0 ? "headerText{$numberOfHeaders}" : null;
+
         $sourceFields = [];
         foreach ($exportFeed->get('configuratorItems') as $configuratorItem) {
             if ($configuratorItem->get('type') === 'Fixed value' || $configuratorItem->get('type') === 'script' || $configuratorItem->get('type') === 'allAttributes') {
@@ -910,16 +917,16 @@ class ImportFeed extends Base
                 }
             }
 
-            if (!empty($configuratorItem->column)) {
+            if ($headerTextField !== null && !empty($configuratorItem->{$headerTextField})) {
                 if (!empty($configuratorItem->entityAttributeId)) {
                     $attribute = $this->getEntityManager()->getEntity('Attribute', $configuratorItem->entityAttributeId);
                     $protected = $attribute->get('isProtected');
                 } else {
-                    $protected = $this->getMetadata()->get(['entityDefs', $exportFeed->getFeedFields()['entity'], 'fields', $configuratorItem->column, 'protected']);
+                    $protected = $this->getMetadata()->get(['entityDefs', $exportFeed->getFeedFields()['entity'], 'fields', $configuratorItem->name, 'protected']);
                 }
 
                 if (empty($protected)) {
-                    $sourceFields[] = $configuratorItem->column;
+                    $sourceFields[] = $configuratorItem->{$headerTextField};
                 }
             }
         }
@@ -940,6 +947,8 @@ class ImportFeed extends Base
         $attachment->format = $format;
         $attachment->sourceFields = $sourceFields;
         $attachment->entity = $exportFeed->getFeedField('entity');
+        $attachment->headerRowNumber = $numberOfHeaders;
+        $attachment->dataStartRowNumber = $numberOfHeaders + 1;
         $attachment->emptyValue = $exportFeed->getFeedField('emptyValue');
         $attachment->nullValue = $exportFeed->getFeedField('nullValue');
         $attachment->markForNoRelation = $exportFeed->getFeedField('markForNoRelation');
@@ -967,19 +976,19 @@ class ImportFeed extends Base
             $attachment = new \stdClass();
             $attachment->importFeedId = $importFeed->id;
             $attachment->name = $configuratorItem->name;
-            if (!empty($configuratorItem->column)) {
+            if ($headerTextField !== null && !empty($configuratorItem->{$headerTextField})) {
                 if (!empty($configuratorItem->entityAttributeId)) {
                     $attribute = $this->getEntityManager()->getEntity('Attribute', $configuratorItem->entityAttributeId);
                     $protected = $attribute->get('isProtected');
                 } else {
-                    $protected = $this->getMetadata()->get(['entityDefs', $exportFeed->getFeedFields()['entity'], 'fields', $configuratorItem->column, 'protected']);
+                    $protected = $this->getMetadata()->get(['entityDefs', $exportFeed->getFeedFields()['entity'], 'fields', $configuratorItem->name, 'protected']);
                 }
 
                 if (!empty($protected)) {
                     continue;
                 }
 
-                $attachment->column = [$configuratorItem->column];
+                $attachment->column = [$configuratorItem->{$headerTextField}];
             }
             $attachment->scope = $configuratorItem->scope;
             $attachment->locale = $configuratorItem->language;
