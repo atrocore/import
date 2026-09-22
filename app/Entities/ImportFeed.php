@@ -94,14 +94,14 @@ class ImportFeed extends Base
     {
         $value = $this->getFeedField('headerRowNumber');
 
-        return $value === null ? 1 : (int)$value;
+        return $value === null ? 0 : (int)$value;
     }
 
     public function getDataStartRowNumber(): int
     {
         $value = $this->getFeedField('dataStartRowNumber');
 
-        return $value === null ? 2 : (int)$value;
+        return $value === null ? 1 : (int)$value;
     }
 
     public function getConfiguratorData(): array

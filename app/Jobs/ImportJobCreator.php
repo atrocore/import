@@ -64,8 +64,8 @@ class ImportJobCreator extends AbstractJob implements JobInterface
         // a caller can force these instead of trusting the feed's own configuration - e.g. database-type
         // feeds don't expose headerRowNumber/dataStartRowNumber at all, so ImportTypeDatabaseJobCreator
         // passes the generated file's actual (fixed) layout through the payload
-        $headerRowNumber = (int)($data['headerRowNumber'] ?? $importFeed->getFeedField('headerRowNumber') ?? 1);
-        $dataStartRowNumber = (int)($data['dataStartRowNumber'] ?? $importFeed->getFeedField('dataStartRowNumber') ?? 2);
+        $headerRowNumber = (int)($data['headerRowNumber'] ?? $importFeed->getFeedField('headerRowNumber') ?? 0);
+        $dataStartRowNumber = (int)($data['dataStartRowNumber'] ?? $importFeed->getFeedField('dataStartRowNumber') ?? 1);
 
         $fileParser = $importFeedService->getFileParser($format);
         $fileParser->setData([
