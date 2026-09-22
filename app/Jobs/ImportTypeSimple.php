@@ -44,10 +44,11 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
 
     public function prepareJobData(
         ImportFeed $feed,
-        string $attachmentId,
-        ?int $headerRowNumber = null,
-        ?int $dataStartRowNumber = null
-    ): array {
+        string     $attachmentId,
+        ?int       $headerRowNumber = null,
+        ?int       $dataStartRowNumber = null
+    ): array
+    {
         if (empty($attachmentId) || empty($file = $this->getEntityById('File', $attachmentId))) {
             $attachmentId = $feed->get('fileId');
             if (!empty($attachmentId)) {
@@ -62,7 +63,7 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
         // a caller can tell us the attachment's own row layout differs from the feed's configured
         // one - e.g. ImportJobCreator hands us a split part file whose header (if any) was already
         // normalized to row 1, regardless of where it sat in the original file
-        $headerRowNumber = $headerRowNumber ?? $feed->getHeaderRowNumber();
+        $headerRowNumber    = $headerRowNumber ?? $feed->getHeaderRowNumber();
         $dataStartRowNumber = $dataStartRowNumber ?? $feed->getDataStartRowNumber();
 
         $result = [
@@ -132,7 +133,7 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
 
         $idFields = $this->getLinkFields($jobData['data']['entity'], $jobData['data']['idField']);
 
-        $rows = [];
+        $rows                = [];
         $this->lastIteration = false;
         while (($inputData = $this->getInputData($jobData)) !== null) {
             if (empty($inputData)) {
@@ -153,20 +154,12 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
             $rows = array_merge($rows, $inputData);
         }
 
-        if (!empty($rows)) {
-            if (($jobData['headerRowNumber'] ?? 0) > 0) {
-                $rows = array_merge([array_keys($rows[0])], $rows);
-            } else {
-                $rows[0] = array_keys($rows[0]);
-            }
-        }
-
-        $inputData = new \stdClass();
-        $inputData->name = ImportFeedService::generateFileName('converted-' . str_replace(' ', '-', strtolower($importFeed->get('name'))) . '.csv');
+        $inputData               = new \stdClass();
+        $inputData->name         = ImportFeedService::generateFileName('converted-' . str_replace(' ', '-', strtolower($importFeed->get('name'))) . '.csv');
         $inputData->importFeedId = $importFeed->get('id');
-        $inputData->importJobId = $jobData['data']['importJobId'];
-        $inputData->folderId = $this->getService('ImportFeed')->createImportFileFolder($importFeed)->get('id');
-        $fileParser = $this->getFileParser('CSV');
+        $inputData->importJobId  = $jobData['data']['importJobId'];
+        $inputData->folderId     = $this->getService('ImportFeed')->createImportFileFolder($importFeed)->get('id');
+        $fileParser              = $this->getFileParser('CSV');
         $fileParser->setData($jobData);
 
         $fileId = $this
@@ -192,8 +185,8 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
         }
 
         $importFeedId = $data['importFeedId'] ?? null;
-        $importJobId = $data['data']['importJobId'] ?? null;
-        $scope = $data['data']['entity'] ?? null;
+        $importJobId  = $data['data']['importJobId'] ?? null;
+        $scope        = $data['data']['entity'] ?? null;
         if (empty($importFeedId) || empty($importJobId) || empty($scope)) {
             throw new Error('importFeedId, importJobId or entity is empty');
         }
@@ -266,7 +259,7 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
                 try {
                     $where = $this->prepareWhere($entityService->getEntityType(), $data['data'], $row);
 
-                    $id = null;
+                    $id     = null;
                     $entity = $this->findExistEntity($entityService->getEntityType(), $data['data'], $where);
                     if (!empty($entity)) {
                         $id = $entity->get('id');
@@ -338,8 +331,8 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
                 }
 
                 try {
-                    $input = new \stdClass();
-                    $input->_importJobData = $data;
+                    $input                      = new \stdClass();
+                    $input->_importJobData      = $data;
                     $input->_importInputDataRow = $row;
 
                     $this->getMemoryStorage()->set("import_job_{$importJob->get('id')}_rowNumberPart", $data['rowNumberPart'] ?? 0);
@@ -374,7 +367,7 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
                             $message = '';
                             if (array_key_exists('column', $item)) {
                                 $message = $this->translate('convertValidationPrefix', 'exceptions', 'ImportFeed');
-                                $values = [];
+                                $values  = [];
                                 foreach ($item['column'] as $column) {
                                     $values[] = array_key_exists($column, $row) ? $row[$column] : '';
                                 }
@@ -403,7 +396,7 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
                             $entityService->updateEntity($id, $input);
                             $log->set('type', 'update');
                             $processedIds[] = $id;
-                            $notModified = false;
+                            $notModified    = false;
                         } catch (NotModified $e) {
                         }
 
@@ -471,13 +464,13 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
     public function afterRowProceed(string $entityType, array $where, ?string $id, ?array $row, ?int $rowNumber): void
     {
         if (!empty($id)) {
-            $keys = $this->getMemoryStorage()->get(self::MEMORY_KEYS) ?? [];
-            $key = $this->createMemoryKey($entityType, $id);
+            $keys   = $this->getMemoryStorage()->get(self::MEMORY_KEYS) ?? [];
+            $key    = $this->createMemoryKey($entityType, $id);
             $keys[] = $key;
             $this->getMemoryStorage()->set(self::MEMORY_KEYS, $keys);
 
             $whereKeys = $this->getMemoryStorage()->get(self::MEMORY_WHERE_KEYS) ?? [];
-            $whereKey = $this->createWhereKey(array_keys($where), $this->getMemoryStorage()->get($key));
+            $whereKey  = $this->createWhereKey(array_keys($where), $this->getMemoryStorage()->get($key));
             if (empty($whereKeys[$whereKey]) || !in_array($key, $whereKeys[$whereKey])) {
                 $whereKeys[$whereKey][] = $key;
             }
@@ -486,10 +479,10 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
 
         $this->getEventManager()->dispatch(new Event([
             'importJobId' => $this->getMemoryStorage()->get('importJobId'),
-            'entityId' => $id,
-            'entityType' => $entityType,
-            'row' => $row,
-            'rowNumber' => $rowNumber,
+            'entityId'    => $id,
+            'entityType'  => $entityType,
+            'row'         => $row,
+            'rowNumber'   => $rowNumber,
 
         ]), 'afterProceedImportRow');
     }
@@ -643,10 +636,8 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
 
         $data['offset'] = $data['offset'] + $data['limit'];
 
-        if (empty($data['sourceFields'])) {
-            $fileParser->setData(array_merge($data, ['fileData' => $fileData]));
-            $data['sourceFields'] = $fileParser->getFileColumns($file);
-        }
+        $fileParser->setData(array_merge($data, ['fileData' => $fileData]));
+        $data['sourceFields'] = $fileParser->getFileColumns($file);
 
         if ($includedHeaderRow) {
             array_shift($fileData);
@@ -679,7 +670,7 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
         switch ($data['fileFormat']) {
             case 'CSV':
             case 'Excel':
-                $fileData = $fileParser->getFileData($attachment, $data['offset'], $data['limit']);
+                $fileData       = $fileParser->getFileData($attachment, $data['offset'], $data['limit']);
                 $data['offset'] = $data['offset'] + $data['limit'];
                 if ($fileData === null) {
                     $this->lastIteration = true;
@@ -688,7 +679,7 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
                 break;
             case 'JSON':
             case 'XML':
-                $fileData = $fileParser->getFileData($attachment);
+                $fileData            = $fileParser->getFileData($attachment);
                 $this->lastIteration = true;
                 break;
         }
@@ -721,11 +712,11 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
         /**
          * Prepare import rows
          */
-        $prepared = [];
+        $prepared     = [];
         $originalRows = $fileData;
         while (count($fileData) > 0) {
             $this->getMemoryStorage()->set('importRowNumber', ++$rowNumber);
-            $row = array_shift($fileData);
+            $row   = array_shift($fileData);
             $event = $this->getEventManager()->dispatch(new Event(['originalRows' => $originalRows, 'row' => $row, 'jobData' => $data, 'skip' => false]), 'prepareImportRow');
             if (!empty($event->getArgument('skip'))) {
                 if (!empty($data['data']['importJobId']) && !empty($data['data']['entity'])) {
@@ -861,14 +852,14 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
         }
 
         $offset = 0;
-        $limit = (int)$importFeed->get('maxPerJob') ?: 60000;
+        $limit  = (int)$importFeed->get('maxPerJob') ?: 60000;
         while (true) {
             $ids = $repository->getNotFoundEntityIdsByJobId($importJob->get('id'), $importJob->get('entityName'), $limit, $offset);
             if (empty($ids)) {
                 break;
             }
 
-            $name = Util::generateUniqueHash() . '.csv';
+            $name     = Util::generateUniqueHash() . '.csv';
             $filePath = self::CACHE_DIR . DIRECTORY_SEPARATOR . $name;
             $resource = fopen($filePath, 'w+');
             if ($resource === false) {
@@ -883,12 +874,12 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
 
             fclose($resource);
 
-            $input = new \stdClass();
-            $input->name = ImportFeedService::generateFileName($name);
-            $input->mimeType = 'text/csv';
+            $input               = new \stdClass();
+            $input->name         = ImportFeedService::generateFileName($name);
+            $input->mimeType     = 'text/csv';
             $input->importFeedId = $importFeed->get('id');
-            $input->folderId = $folder->get('id');
-            $result[] = $this->getService('File')->moveLocalFileToFileEntity($input, $filePath);
+            $input->folderId     = $folder->get('id');
+            $result[]            = $this->getService('File')->moveLocalFileToFileEntity($input, $filePath);
 
             $offset += $limit;
         }
@@ -907,7 +898,7 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
             return;
         }
 
-        $scope = $data['data']['entity'];
+        $scope     = $data['data']['entity'];
         $fieldDefs = $this->getMetadata()->get(['entityDefs', $scope, 'fields']) ?? [];
 
         foreach ($data['data']['configuration'] as $k => $v) {
@@ -927,7 +918,7 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
             }
 
             // set skip value
-            $this->skipValue = array_key_exists('skipValue', $v) ? $v['skipValue'] : 'Skip';
+            $this->skipValue                = array_key_exists('skipValue', $v) ? $v['skipValue'] : 'Skip';
             $this->markForUnlinkedAttribute = array_key_exists('markForUnlinkedAttribute', $v) ? $v['markForUnlinkedAttribute'] : 'N/A';
         }
     }
@@ -966,7 +957,7 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
     protected function prepareFieldType(array $item, \stdClass $input, ?Entity $entity): string
     {
         $fieldName = $item['name'];
-        $type = $this->getMetadata()->get(['entityDefs', $item['entity'], 'fields', $fieldName, 'type'], 'varchar');
+        $type      = $this->getMetadata()->get(['entityDefs', $item['entity'], 'fields', $fieldName, 'type'], 'varchar');
 
         if ($type === "link" && !empty($this->getMetadata()->get(['entityDefs', $item['entity'], 'fields', $fieldName, 'unitIdField']))) {
             $type = 'unit';

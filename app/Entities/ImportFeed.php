@@ -92,6 +92,11 @@ class ImportFeed extends Base
 
     public function getHeaderRowNumber(): int
     {
+        // headerRowNumber isn't a configurable concept outside CSV/Excel, Converted file must have headers
+        if (!in_array($this->getFeedField('format'), ['CSV', 'Excel'], true)) {
+            return 1;
+        }
+
         $value = $this->getFeedField('headerRowNumber');
 
         return $value === null ? 0 : (int)$value;
