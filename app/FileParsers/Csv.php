@@ -153,7 +153,7 @@ class Csv extends Injectable implements FileParserInterface
         $tmpFilePath = tempnam(sys_get_temp_dir(), 'csv_');
 
         $fp = fopen($tmpFilePath, 'w');
-        if ($hasHeader === false) {
+        if ($hasHeader) {
             fputcsv($fp, array_keys($data[0]), $delimiter, $enclosure);
         }
 
