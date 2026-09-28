@@ -29,7 +29,6 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Import data',
     description: 'Imports data into the system using the specified feed code and JSON payload.',
     tag: 'ImportFeed',
-    auth: false,
     requestBody: [
         'required' => true,
         'content'  => [
@@ -86,6 +85,12 @@ use Psr\Http\Server\RequestHandlerInterface;
         ],
         400 => [
             'description' => "'code' or 'json' is missing or empty",
+        ],
+        403 => [
+            'description' => 'The current user does not have read access to the import feed, or cannot create import jobs.',
+        ],
+        404 => [
+            'description' => 'No import feed matches the given code.',
         ],
     ],
 )]

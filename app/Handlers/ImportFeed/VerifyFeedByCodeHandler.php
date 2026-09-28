@@ -27,9 +27,8 @@ use Psr\Http\Server\RequestHandlerInterface;
         'GET',
     ],
     summary: 'Verify feed by code',
-    description: 'Checks whether an import feed exists and is active for the given code. Returns a status message.',
+    description: 'Checks whether an import feed is correctly configured for the given code. Returns the same message whether the code does not exist or the current user cannot access it, so codes cannot be enumerated.',
     tag: 'ImportFeed',
-    auth: false,
     parameters: [
         [
             'name'     => 'code',
