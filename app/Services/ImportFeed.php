@@ -1008,11 +1008,12 @@ class ImportFeed extends Base
 
     public function verifyFeedByCode(string $code)
     {
-        // a code that doesn't exist and one the current user can't read must look identical -
-        // otherwise the response itself lets a caller enumerate which codes are valid
         $importFeed = $this->getRepository()->where(['code' => $code])->findOne();
-        if (empty($importFeed) || !$this->getAcl()->check($importFeed, 'read')) {
+        if (empty($importFeed)) {
             return 'Import Feed code is invalid';
+        }
+        if (!$this->getAcl()->check($importFeed, 'read')) {
+            return 'You do not have access to this Import Feed';
         }
 
         $hasIdColumn = false;

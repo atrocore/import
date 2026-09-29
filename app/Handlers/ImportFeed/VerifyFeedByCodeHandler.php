@@ -27,7 +27,7 @@ use Psr\Http\Server\RequestHandlerInterface;
         'GET',
     ],
     summary: 'Verify feed by code',
-    description: 'Checks whether an import feed is correctly configured for the given code. Returns the same message whether the code does not exist or the current user cannot access it, so codes cannot be enumerated.',
+    description: 'Checks whether an import feed is correctly configured for the given code.',
     tag: 'ImportFeed',
     parameters: [
         [
@@ -41,14 +41,15 @@ use Psr\Http\Server\RequestHandlerInterface;
     ],
     responses: [
         200 => [
-            'description' => 'Verification result',
+            'description' => 'A human-readable status message: the code does not match any import feed, the current user does not have access to it, or the feed is (or is not) correctly configured with an ID column.',
             'content'     => [
                 'application/json' => [
                     'schema' => [
                         'type'       => 'object',
                         'properties' => [
                             'message' => [
-                                'type' => 'string',
+                                'type'        => 'string',
+                                'description' => 'One of: an invalid-code message, a no-access message, or the feed\'s configuration status.',
                             ],
                         ],
                     ],
