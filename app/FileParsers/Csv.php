@@ -144,7 +144,6 @@ class Csv extends Injectable implements FileParserInterface
     {
         $delimiter = $this->data['delimiter'] ?? ';';
         $enclosure = $this->data['enclosure'] ?? '"';
-        $hasHeader = ($this->data['headerRowNumber'] ?? 0) > 0;
 
         if ($delimiter == '\t') {
             $delimiter = "\t";
@@ -153,7 +152,8 @@ class Csv extends Injectable implements FileParserInterface
         $tmpFilePath = tempnam(sys_get_temp_dir(), 'csv_');
 
         $fp = fopen($tmpFilePath, 'w');
-        if ($hasHeader) {
+        // field-keyed rows carry their own header in their keys; a plain list has none to derive
+        if (!empty($data) && !array_is_list($data[0])) {
             fputcsv($fp, array_keys($data[0]), $delimiter, $enclosure);
         }
 

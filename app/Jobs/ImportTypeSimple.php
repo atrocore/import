@@ -618,9 +618,9 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
         $fileParser = $this->getFileParser('CSV');
         $fileParser->setData($data);
 
-        // the converted file is always header-then-data with no gap, so the header row (if any)
-        // only ever needs stripping on the very first read (offset 0)
-        $includedHeaderRow = $data['offset'] === 0 && ($data['headerRowNumber'] ?? 0) > 0;
+        // the converted file always has a header (its rows are always field-keyed), regardless of
+        // the original file's headerRowNumber, so it only needs stripping on the first read
+        $includedHeaderRow = $data['offset'] === 0;
 
         /** @var \Atro\Entities\File $file */
         $file = $this->getEntityById('File', $convertedFileId);
@@ -636,10 +636,12 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
 
         $data['offset'] = $data['offset'] + $data['limit'];
 
-        $fileParser->setData(array_merge($data, ['fileData' => $fileData]));
-        $data['sourceFields'] = $fileParser->getFileColumns($file);
-
         if ($includedHeaderRow) {
+            // sourceFields is only derivable while $fileData[0] is still the header row; on later
+            // batches it's an ordinary data row, so sourceFields is reused as-is instead
+            $fileParser->setData(array_merge($data, ['fileData' => $fileData, 'headerRowNumber' => 1]));
+            $data['sourceFields'] = $fileParser->getFileColumns($file);
+
             array_shift($fileData);
         }
 
