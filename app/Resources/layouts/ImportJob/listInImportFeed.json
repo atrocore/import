@@ -1,8 +1,7 @@
 [
   {
     "name": "number",
-    "link": true,
-    "notSortable": true
+    "link": true
   },
   {
     "name": "attachment",
