@@ -45,7 +45,8 @@
         }
       ],
       "rowActionsView": "import:views/import-feed/record/row-actions/import-jobs",
-      "view": "import:views/import-feed/record/panels/import-jobs"
+      "view": "import:views/import-feed/record/panels/import-jobs",
+      "sortBy": "number"
     }
   }
 }
