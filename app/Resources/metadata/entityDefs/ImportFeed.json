@@ -691,6 +691,25 @@
         }
       }
     },
+    "skipMissingSourceFields": {
+      "type": "bool",
+      "notStorable": true,
+      "dataField": true,
+      "filterDisabled": true,
+      "default": false,
+      "tooltip": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "processingType",
+              "value": "configurator"
+            }
+          ]
+        }
+      }
+    },
     "sourceFields": {
       "type": "array",
       "view": "import:views/import-feed/fields/source-fields"

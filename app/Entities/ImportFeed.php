@@ -129,6 +129,7 @@ class ImportFeed extends Base
         $result['excludedNodes'] = $this->getFeedField('excludedNodes');
         $result['keptStringNodes'] = $this->getFeedField('keptStringNodes');
         $result['delimiter'] = $this->getFeedField('delimiter');
+        $result['skipMissingSourceFields'] = !empty($this->getFeedField('skipMissingSourceFields'));
         $result['configuration'] = [];
 
         foreach ($configuratorItems as $item) {

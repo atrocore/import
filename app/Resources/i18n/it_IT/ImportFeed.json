@@ -38,6 +38,7 @@
     "markForNoRelation": "Marcatore per Nessuna Relazione",
     "markForUnlinkedAttribute": "Marcatore per attributo non collegato",
     "skipValue": "Marcatore per il valore saltato",
+    "skipMissingSourceFields": "Salta i campi sorgente mancanti",
     "fieldDelimiterForRelation": "Delimitatore di campo per la relazione",
     "scheduledJobs": "Lavoro programmato",
     "executeAs": "Esegui come",
@@ -119,7 +120,7 @@
     "excelExpected": "Il file caricato non è valido. Ci si aspetta un file Excel.",
     "noSuchFile": "Nessun file di questo tipo",
     "importFeedIsInactive": "Il feed di importazione è inattivo",
-    "missingSourceFieldAsIdentifiers": "Il campo sorgente '%s' contrassegnato come Identificatore è mancante.",
+    "missingSourceFields": "I campi sorgente %s configurati nel feed di importazione sono mancanti nel file di importazione.",
     "noEntityFound": "Non è stato trovato alcun record di dati per l'entità correlata '%s'.",
     "listSeparatorNotAllowed": "L'utilizzo del separatore di valori di lista nel valore del campo '%s' non è consentito."
   },
@@ -145,6 +146,7 @@
     "nullValue": "Il valore sarà interpretato come valore \"NULL\".",
     "emptyValue": "Il valore sarà interpretato come valore \"vuoto\".",
     "skipValue": "Sarà interpretato come valore da saltare.",
+    "skipMissingSourceFields": "Se attivato, i campi associati a campi sorgente mancanti nel file di importazione restano invariati. Altrimenti, l'importazione non riesce. I campi sorgente mancanti utilizzati come identificatori causano sempre un errore.",
     "executeAs": "Specificare quale utente il sistema deve utilizzare per l'importazione."
   },
   "boolFilters": {

@@ -31,6 +31,7 @@
     "emptyValue": "Marqueur de valeur vide",
     "nullValue": "Marqueur de valeur nulle",
     "skipValue": "Marqueur pour valeur à ignorer",
+    "skipMissingSourceFields": "Ignorer les champs source manquants",
     "markForNoRelation": "Marqueur pour \"pas de relation\"",
     "fieldDelimiterForRelation": "Délimiteur de champ pour la relation",
     "scheduledJobs": "Jobs programmés",
@@ -120,7 +121,7 @@
     "excelExpected": "Le fichier téléchargé n'est pas valide. Un fichier Excel est attendu.",
     "noSuchFile": "Aucun fichier de ce type",
     "importFeedIsInactive": "Le flux d'import est inactif",
-    "missingSourceFieldAsIdentifiers": "Le champ source '%s' marqué comme identifiant est manquant.",
+    "missingSourceFields": "Le(s) champ(s) source %s configuré(s) dans le flux d'importation est (sont) absent(s) du fichier d'importation.",
     "noEntityFound": "Aucun enregistrement de données n'a été trouvé pour l'entité liée \"%s\".",
     "listSeparatorNotAllowed": "L'utilisation du séparateur de valeur de liste dans la valeur du champ \"%s\" n'est pas autorisée.",
     "noEntityIdentifier": "Veuillez choisir la colonne Identifiant pour le configurateur."
@@ -147,6 +148,7 @@
     "nullValue": "La valeur sera interprétée comme une valeur \"NULL\".",
     "emptyValue": "La valeur sera interprétée comme une valeur \"vide\".",
     "skipValue": "Sera interprété comme une valeur à ignorer.",
+    "skipMissingSourceFields": "Si activé, les champs liés à des champs source absents du fichier d'importation restent inchangés. Sinon, l'importation échoue. Les champs source utilisés comme identifiants manquants provoquent toujours une erreur.",
     "executeAs": "Spécifiez quel utilisateur le système doit utiliser pour l'importation."
   },
   "boolFilters": {

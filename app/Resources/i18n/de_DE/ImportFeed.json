@@ -32,6 +32,7 @@
     "markForNoRelation": "Markierung für Keine Relation",
     "markForUnlinkedAttribute": "Markierung für nicht verknüpftes Attribut",
     "skipValue": "Markierung für übersprungenen Wert",
+    "skipMissingSourceFields": "Fehlende Quellfelder überspringen",
     "fieldDelimiterForRelation": "Feldtrennzeichen für Relation",
     "scheduledJobs": "Geplante Aufträge",
     "feedPayload": "Nutzlast",
@@ -120,7 +121,7 @@
     "excelExpected": "Hochgeladene Datei ist ungültig. Excel-Datei wird erwartet.",
     "noSuchFile": "Keine solche Datei",
     "importFeedIsInactive": "Import Feed ist inaktiv",
-    "missingSourceFieldAsIdentifiers": "Als Kennung markiertes Quellfeld '%s' fehlt.",
+    "missingSourceFields": "Die im Import-Feed konfigurierten Quellfelder %s fehlen in der Importdatei.",
     "noEntityFound": "Kein Datensatz für die zugehörige Entität '%s' gefunden.",
     "listSeparatorNotAllowed": "Die Verwendung des Trennzeichens für Listenwerte im Wert für das Feld '%s' ist nicht erlaubt.",
     "noEntityIdentifier": "Bitte wählen Sie die Identifizierungs-Spalte für den Konfigurator."
@@ -147,6 +148,7 @@
     "nullValue": "Der Wert wird als \"NULL\"-Wert interpretiert.",
     "emptyValue": "Der Wert wird als \"leerer\" Wert zusätzlich zur leeren Zelle interpretiert.",
     "skipValue": "Wird als zu übergehender Wert interpretiert.",
+    "skipMissingSourceFields": "Wenn aktiviert, bleiben Felder, deren Quellfelder in der Importdatei fehlen, unverändert. Andernfalls schlägt der Import fehl. Fehlende Quellfelder, die als Kennung verwendet werden, führen immer zu einem Fehler.",
     "executeAs": "Geben Sie an, welchen Benutzer das System für den Import verwenden soll."
   },
   "boolFilters": {
