@@ -344,6 +344,9 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
                                 if (array_key_exists($column, $row) && $row[$column] == $this->skipValue) {
                                     continue 2;
                                 }
+                                if (!empty($data['data']['skipMissingSourceFields']) && !array_key_exists($column, $row)) {
+                                    continue 2;
+                                }
                             }
                         }
 
@@ -745,19 +748,23 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
          * Validation
          */
         if (!empty($prepared)) {
+            $missingColumns = [];
             foreach ($data['data']['configuration'] as $item) {
-                if (!in_array($item['name'], $data['data']['idField'])) {
-                    continue;
-                }
-                $columns = $item['column'];
-                if (empty($columns) || !is_array($columns)) {
+                if (empty($item['column']) || !is_array($item['column'])) {
                     continue 1;
                 }
-                foreach ($columns as $column) {
-                    if (!in_array($column, array_keys($prepared[0]))) {
-                        throw new BadRequest(sprintf($this->translate('missingSourceFieldAsIdentifiers', 'exceptions', 'ImportFeed'), $column));
+                if (!empty($data['data']['skipMissingSourceFields']) && !in_array($item['name'], $data['data']['idField'])) {
+                    continue 1;
+                }
+                foreach ($item['column'] as $column) {
+                    if (!array_key_exists($column, $prepared[0])) {
+                        $missingColumns[] = $column;
                     }
                 }
+            }
+
+            if (!empty($missingColumns)) {
+                throw new BadRequest(sprintf($this->translate('missingSourceFields', 'exceptions', 'ImportFeed'), "'" . implode("', '", array_unique($missingColumns)) . "'"));
             }
         }
 

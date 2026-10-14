@@ -38,6 +38,7 @@
     "markForNoRelation": "Marker for No Relation",
     "markForUnlinkedAttribute": "Marker for Unlinked Attribute",
     "skipValue": "Marker for Skipped Value",
+    "skipMissingSourceFields": "Skip Missing Source Fields",
     "fieldDelimiterForRelation": "Field Delimiter for Relation",
     "scheduledJobs": "Scheduled Jobs",
     "executeAs": "Execute As",
@@ -121,7 +122,7 @@
     "excelExpected": "Uploaded file is not valid. Excel file is expected.",
     "noSuchFile": "No such file",
     "importFeedIsInactive": "Import feed is inactive",
-    "missingSourceFieldAsIdentifiers": "The Source Field '%s' marked as Identifier is missing.",
+    "missingSourceFields": "The Source Field(s) %s configured in the import feed are missing in the import file.",
     "noEntityFound": "No data record found for the related entity '%s'.",
     "listSeparatorNotAllowed": "The usage of the List Value Separator in the value for the field '%s' is not allowed."
   },
@@ -147,6 +148,7 @@
     "nullValue": "Value will be interpreted as \"NULL\" value.",
     "emptyValue": "Value will be interpreted as \"empty\" value.",
     "skipValue": "Will be interpreted as value to be skipped.",
+    "skipMissingSourceFields": "If enabled, fields mapped to source fields that are missing in the import file are left unchanged. Otherwise, the import fails. Missing identifier source fields always cause an error.",
     "executeAs": "Specify which user the system should use for the import."
   },
   "boolFilters": {

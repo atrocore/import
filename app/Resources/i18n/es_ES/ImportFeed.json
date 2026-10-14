@@ -38,6 +38,7 @@
     "markForNoRelation": "Marcador para Sin relación",
     "markForUnlinkedAttribute": "Marcador de atributo no vinculado",
     "skipValue": "Marcador de valor omitido",
+    "skipMissingSourceFields": "Omitir campos fuente ausentes",
     "fieldDelimiterForRelation": "Delimitador de campo para la relación",
     "scheduledJobs": "Tareas programadas",
     "executeAs": "Ejecutar como",
@@ -119,7 +120,7 @@
     "excelExpected": "El archivo cargado no es válido. Se espera un archivo Excel.",
     "noSuchFile": "No existe tal archivo",
     "importFeedIsInactive": "La alimentación de importación está inactiva",
-    "missingSourceFieldAsIdentifiers": "Falta el campo fuente '%s' marcado como identificador.",
+    "missingSourceFields": "Faltan en el archivo de importación los campos fuente %s configurados en la alimentación de importación.",
     "noEntityFound": "No se ha encontrado ningún registro de datos para la entidad relacionada '%s'.",
     "listSeparatorNotAllowed": "No se permite el uso del separador de valores de lista en el valor del campo '%s'."
   },
@@ -145,6 +146,7 @@
     "nullValue": "El valor se interpretará como valor \"NULL\".",
     "emptyValue": "El valor se interpretará como un valor \"vacío\".",
     "skipValue": "Se interpretará como valor a omitir.",
+    "skipMissingSourceFields": "Si está activado, los campos asignados a campos fuente que faltan en el archivo de importación no se modifican. De lo contrario, la importación falla. Los campos fuente ausentes utilizados como identificadores siempre provocan un error.",
     "executeAs": "Especifique qué usuario debe utilizar el sistema para la importación."
   },
   "boolFilters": {

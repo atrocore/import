@@ -68,6 +68,7 @@
     "markForNoRelation": "Značka pro No Relation",
     "markForUnlinkedAttribute": "Značka pro nepropojený atribut",
     "skipValue": "Značka pro vynechanou hodnotu",
+    "skipMissingSourceFields": "Přeskočit chybějící zdrojová pole",
     "fieldDelimiterForRelation": "Oddělovač polí pro relaci",
     "folder": "Složka",
     "files": "Soubory",
@@ -124,7 +125,7 @@
     "excelExpected": "Nahraný soubor není platný. Očekává se soubor ve formátu Excel.",
     "noSuchFile": "Žádný takový soubor",
     "importFeedIsInactive": "Importní kanál je neaktivní",
-    "missingSourceFieldAsIdentifiers": "Chybí zdrojové pole \"%s\" označené jako Identifier.",
+    "missingSourceFields": "Zdrojová pole %s nakonfigurovaná v importním kanálu v importním souboru chybí.",
     "noEntityFound": "Pro související subjekt \"%s\" nebyl nalezen žádný datový záznam.",
     "listSeparatorNotAllowed": "Použití oddělovače hodnot seznamu v hodnotě pole \"%s\" není povoleno."
   },
@@ -150,6 +151,7 @@
     "nullValue": "Hodnota bude interpretována jako hodnota \"NULL\".",
     "emptyValue": "Hodnota bude interpretována jako \"prázdná\" hodnota.",
     "skipValue": "Bude interpretováno jako hodnota, která má být přeskočena.",
+    "skipMissingSourceFields": "Je-li povoleno, pole namapovaná na zdrojová pole, která v importním souboru chybí, zůstanou beze změny. V opačném případě import selže. Chybějící zdrojová pole použitá jako identifikátory vždy způsobí chybu.",
     "executeAs": "Určete, kterého uživatele má systém použít pro import."
   }
 }
