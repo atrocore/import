@@ -101,7 +101,8 @@ class Metadata extends AbstractMetadataListener
                     $actionData = @json_decode($action['data'], true);
                     if (!empty($actionData['field']['uploadAndImport'])) {
                         $params['type'] = 'uploadAndImport';
-                        $params['importFeedId'] = $action['importFeedId'] ?? null;
+                        $params['importFeedId'] = $action['import_feed_id'] ?? null;
+                        $params['inBackground'] = $action['in_background'] ?? false;
                     }
                 }
 
