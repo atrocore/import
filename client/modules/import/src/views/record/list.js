@@ -33,8 +33,10 @@ Espo.define('import:views/record/list', 'class-replace!import:views/record/list'
                     }, view => {
                         view.on('runImport', payload => {
                             this.executeActionRequest({
+                                actionType: 'import',
+                                inBackground: data.inBackground ?? action?.inBackground ?? false,
                                 actionId: data.id,
-                                attachmentId: payload.attachmentId || null,
+                                attachmentId: payload.fileId || null,
                             }, () => {
                                 view.dialog.close();
                             });
