@@ -28,7 +28,7 @@ class FloatValue extends Varchar
             $decimals = strlen(array_pop($parts));
         }
 
-        $floatValue = round((float)str_replace((string)$decimalMark, '.', (string)str_replace((string)$thousandSeparator, '', (string)$value)), 13);
+        $floatValue = (float)str_replace((string)$decimalMark, '.', (string)str_replace((string)$thousandSeparator, '', (string)$value));
         $checkValueStrict = number_format($floatValue, $decimals, $decimalMark, $thousandSeparator);
         $checkValueUnStrict = number_format($floatValue, $decimals, $decimalMark, '');
 
@@ -37,7 +37,7 @@ class FloatValue extends Varchar
             throw new BadRequest(sprintf($this->translate('unexpectedFieldType', 'exceptions', 'ImportFeed'), $value, $type));
         }
 
-        return $floatValue;
+        return (float)sprintf('%.' . PHP_FLOAT_DIG . 'g', $floatValue);
     }
 
     public function convert(\stdClass $inputRow, array $config, array $row): void
