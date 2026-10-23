@@ -14,6 +14,8 @@ declare(strict_types=1);
 namespace Import\ActionTypes;
 
 use Atro\ActionTypes\AbstractAction;
+use Atro\DTOs\ActionResultDTO;
+use Atro\Entities\ActionExecution;
 use Espo\ORM\Entity;
 
 class Import extends AbstractAction
@@ -23,15 +25,31 @@ class Import extends AbstractAction
         return false;
     }
 
+    public function execute(ActionExecution $execution, \stdClass $input): bool
+    {
+        return $this->executeWithResult($execution, $input)->toBool();
+    }
+
+    /**
+     * @deprecated Use executeWithResult(). Kept for backward compatibility.
+     * @todo 3.0.0: remove, executeWithResult() becomes execute().
+     */
     public function executeNow(Entity $action, \stdClass $input): bool
     {
+        return $this->execute($this->createFakeExecution($action), $input);
+    }
+
+    public function executeWithResult(ActionExecution $execution, \stdClass $input): ActionResultDTO
+    {
+        $action = $execution->get('action');
+
         $payload = empty($action->get('payload')) ? '' : (string)$action->get('payload');
         $templateData = [];
         $attachmentId = '';
 
         if ($action->get('uploadAndImport')) {
             if (empty($input->attachmentId)) {
-                return false;
+                return ActionResultDTO::skipped('The file to import is missing.');
             }
 
             $attachmentId = $input->attachmentId;
@@ -88,7 +106,7 @@ class Import extends AbstractAction
 
         $importFeed = $service->getEntity($action->get('importFeedId'));
         if (empty($importFeed) || empty($importFeed->get('isActive'))) {
-            return false;
+            return ActionResultDTO::skipped('The import feed is not active.');
         }
 
         $payload['executeNow'] = empty($action->get('inBackground'));
@@ -104,7 +122,14 @@ class Import extends AbstractAction
 
         $service->runImport($importFeed->get('id'), $attachmentId, empty($payload) ? null : json_decode(json_encode($payload)));
 
-        return true;
+        if (empty($payload['executeNow'])) {
+            // a job that creates the import jobs is waiting in the queue
+            $this->markExecutionDone($execution);
+
+            return ActionResultDTO::queued();
+        }
+
+        return ActionResultDTO::done();
     }
 
 }
