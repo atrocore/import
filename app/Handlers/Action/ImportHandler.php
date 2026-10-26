@@ -71,6 +71,10 @@ use Atro\Handlers\Action\AbstractActionTypeSyncHandler;
                             'success' => [
                                 'type' => 'boolean',
                             ],
+                            'executed' => [
+                                'type'        => 'boolean',
+                                'description' => 'False when the action did not run (conditions not met, nothing to do).',
+                            ],
                             'message' => [
                                 'type'     => 'string',
                                 'nullable' => true,
