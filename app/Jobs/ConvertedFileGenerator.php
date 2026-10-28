@@ -165,7 +165,7 @@ class ConvertedFileGenerator extends AbstractJob implements JobInterface
         $inputData->importFeedId = $feed->get('id');
         $inputData->importJobId = $importJob->get('id');
         $inputData->folderId = $this->getImportFeedService()->createImportFileFolder($feed)->get('id');
-        $inputData->name = ImportFeed::generateFileName(str_replace('_', '-', Util::toUnderScore($type)) . '-' . str_replace(' ', '-', strtolower($feed->get('name'))) . '.csv');
+        $inputData->name = ImportFeed::generateFileName(str_replace('_', '-', Util::toUnderScore($type)) . '-' . preg_replace("/[^a-z0-9.!?]/", '', mb_strtolower($feed->get('name'))) . '.csv');
 
         $fileId = $this->getFileService()
             ->createFileViaContents($inputData, $fileParser->createFileContent($preparedRows));

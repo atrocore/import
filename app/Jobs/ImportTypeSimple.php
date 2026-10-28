@@ -155,7 +155,7 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
         }
 
         $inputData               = new \stdClass();
-        $inputData->name         = ImportFeedService::generateFileName('converted-' . str_replace(' ', '-', strtolower($importFeed->get('name'))) . '.csv');
+        $inputData->name         = ImportFeedService::generateFileName('converted-' . preg_replace("/[^a-z0-9.!?]/", '', mb_strtolower($importFeed->get('name'))) . '.csv');
         $inputData->importFeedId = $importFeed->get('id');
         $inputData->importJobId  = $jobData['data']['importJobId'];
         $inputData->folderId     = $this->getService('ImportFeed')->createImportFileFolder($importFeed)->get('id');
