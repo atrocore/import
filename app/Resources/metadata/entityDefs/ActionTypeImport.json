@@ -1,0 +1,53 @@
+{
+  "fields": {
+    "importFeed": {
+      "type": "link",
+      "view": "import:views/action/fields/import-feed",
+      "filterDisabled": true,
+      "massUpdateDisabled": true,
+      "importDisabled": true,
+      "required": true
+    },
+    "uploadAndImport": {
+      "type": "bool",
+      "filterDisabled": true,
+      "massUpdateDisabled": true,
+      "importDisabled": true,
+      "default": false,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "usage",
+              "value": "entity"
+            },
+            {
+              "type": "isNotEmpty",
+              "attribute": "importFeedId"
+            }
+          ]
+        }
+      }
+    },
+    "payload": {
+      "type": "code",
+      "engine": "Twig",
+      "variables": [
+        "sourceEntities",
+        "sourceEntitiesIds",
+        "entity"
+      ],
+      "filterDisabled": true,
+      "massUpdateDisabled": true,
+      "importDisabled": true,
+      "useDisabledTextareaInViewMode": true
+    }
+  },
+  "links": {
+    "importFeed": {
+      "type": "belongsTo",
+      "entity": "ImportFeed"
+    }
+  }
+}

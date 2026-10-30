@@ -14,13 +14,17 @@
     "ImportFeed": "Flux d'import",
     "ImportConfiguratorItem": "Configurateur",
     "ImportJob": "Exécution d'import",
-    "ImportJobLog": "Journal d'import"
+    "ImportJobLog": "Journal d'import",
+    "ActionTypeImport": "Action: Importation de flux",
+    "ActionTypeReImportFailedJob": "Action: Réimporter la tâche échouée"
   },
   "scopeNamesPlural": {
     "ImportConfiguratorItem": "Configurateur",
     "ImportFeed": "Flux d'imports",
     "ImportJob": "Exécutions d'imports",
-    "ImportJobLog": "Jounaux d'imports"
+    "ImportJobLog": "Jounaux d'imports",
+    "ActionTypeImport": "Action: Importation de flux",
+    "ActionTypeReImportFailedJob": "Action: Réimporter la tâche échouée"
   },
   "dashlets": {
     "DataSyncErrorsImport": "Erreurs de synchronisation des données pour l'importation"

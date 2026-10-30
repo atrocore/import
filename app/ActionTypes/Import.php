@@ -43,11 +43,11 @@ class Import extends AbstractAction
     {
         $action = $execution->get('action');
 
-        $payload = empty($action->get('payload')) ? '' : (string)$action->get('payload');
+        $payload = empty($action->getSubtype()?->get('payload')) ? '' : (string)$action->getSubtype()?->get('payload');
         $templateData = [];
         $attachmentId = '';
 
-        if ($action->get('uploadAndImport')) {
+        if ($action->getSubtype()?->get('uploadAndImport')) {
             if (empty($input->attachmentId)) {
                 return ActionResultDTO::skipped('The file to import is missing.');
             }
@@ -104,7 +104,7 @@ class Import extends AbstractAction
         /** @var \Import\Services\ImportFeed $service */
         $service = $this->getServiceFactory()->create('ImportFeed');
 
-        $importFeed = $service->getEntity($action->get('importFeedId'));
+        $importFeed = $service->getEntity($action->getSubtype()?->get('importFeedId'));
         if (empty($importFeed) || empty($importFeed->get('isActive'))) {
             return ActionResultDTO::skipped('The import feed is not active.');
         }

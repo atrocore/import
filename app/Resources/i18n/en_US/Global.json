@@ -9,13 +9,17 @@
     "ImportFeed": "Import Feed",
     "ImportConfiguratorItem": "Configurator",
     "ImportJob": "Import Execution",
-    "ImportJobLog": "Import Log"
+    "ImportJobLog": "Import Log",
+    "ActionTypeImport": "Action: Import Feed",
+    "ActionTypeReImportFailedJob": "Action: Re-import failed job"
   },
   "scopeNamesPlural": {
     "ImportConfiguratorItem": "Configurator",
     "ImportFeed": "Import Feeds",
     "ImportJob": "Import Executions",
-    "ImportJobLog": "Import Logs"
+    "ImportJobLog": "Import Logs",
+    "ActionTypeImport": "Action: Import Feed",
+    "ActionTypeReImportFailedJob": "Action: Re-import failed job"
   },
   "labels": {
     "importErrorDuring24Hours": "Import Feeds/Executions Error during 24 Hours",
