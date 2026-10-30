@@ -19,6 +19,7 @@ use Atro\Core\Exceptions\BadRequest;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
 use Import\Jobs\ImportTypeSimple;
+use Import\Core\RecordWriter;
 
 class Link extends Varchar
 {
@@ -130,7 +131,7 @@ class Link extends Varchar
                     }
 
                     try {
-                        $entityId = $this->getService($entityName, true)->createEntity($input);
+                        $entityId = $this->configuratorItem->getContainer2()->get(RecordWriter::class)->create($entityName, $input);
                         $entity   = $this->getEntityManager()->getEntity($entityName, $entityId);
                     } catch (NotUnique|ConstraintViolationException $e) {
                         $entity = $this->findAlreadyExistsEntity($entityName, $where, $config);
