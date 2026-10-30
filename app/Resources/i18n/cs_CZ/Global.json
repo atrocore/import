@@ -3,13 +3,17 @@
     "ImportJobLog": "Protokol importu",
     "ImportFeed": "Importní krmivo",
     "ImportConfiguratorItem": "Konfigurátor",
-    "ImportJob": "Provedení importu"
+    "ImportJob": "Provedení importu",
+    "ActionTypeImport": "Akce: Importovat krmivo",
+    "ActionTypeReImportFailedJob": "Akce: Znovu importovat neúspěšnou úlohu"
   },
   "scopeNamesPlural": {
     "ImportConfiguratorItem": "Konfigurátor",
     "ImportFeed": "Importní kanály",
     "ImportJob": "Provádění importu",
-    "ImportJobLog": "Importovat protokoly"
+    "ImportJobLog": "Importovat protokoly",
+    "ActionTypeImport": "Akce: Importovat krmivo",
+    "ActionTypeReImportFailedJob": "Akce: Znovu importovat neúspěšnou úlohu"
   },
   "fields": {
     "filterCreateImportJob": "Vytvořil Import Execution",

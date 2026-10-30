@@ -31,6 +31,7 @@ use Import\Entities\ImportFeed;
 use Import\Services\ImportFeed as ImportFeedService;
 use Import\FieldConverters\Link;
 use Import\ProcessingTypes\AbstractProcessingType;
+use Import\Core\RecordWriter;
 
 class ImportTypeSimple extends AbstractJob implements JobInterface
 {
@@ -384,7 +385,7 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
                         if ($action == 'delete_found') {
                             $log->set('type', 'delete');
                         } else {
-                            $id = $entityService->createEntity($input);
+                            $id = $this->getRecordWriter()->create($entityService->getEntityType(), $input);
                             $log->set('type', 'create');
                             $log->set('entityId', $id);
                             $processedIds[] = $id;
@@ -396,7 +397,7 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
                     } else {
                         $notModified = true;
                         try {
-                            $entityService->updateEntity($id, $input);
+                            $this->getRecordWriter()->update($entityService->getEntityType(), $id, $input);
                             $log->set('type', 'update');
                             $processedIds[] = $id;
                             $notModified    = false;
@@ -941,6 +942,11 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
         }
 
         return $this->getMemoryStorage()->get($key);
+    }
+
+    protected function getRecordWriter(): RecordWriter
+    {
+        return $this->getContainer()->get(RecordWriter::class);
     }
 
     protected function getEventManager(): Manager

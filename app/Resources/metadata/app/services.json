@@ -1,3 +1,5 @@
 {
-  "DataSyncErrorsImportDashlet": "\\Import\\Services\\DataSyncErrorsImportDashlet"
+  "DataSyncErrorsImportDashlet": "\\Import\\Services\\DataSyncErrorsImportDashlet",
+  "ActionTypeImport": "\\Atro\\Services\\ActionSubtype",
+  "ActionTypeReImportFailedJob": "\\Atro\\Services\\ActionSubtype"
 }
