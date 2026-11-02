@@ -922,7 +922,7 @@ class ImportFeed extends Base
                     $attribute = $this->getEntityManager()->getEntity('Attribute', $configuratorItem->entityAttributeId);
                     $protected = $attribute->get('isProtected');
                 } else {
-                    $protected = $this->getMetadata()->get(['entityDefs', $exportFeed->getFeedFields()['entity'], 'fields', $configuratorItem->name, 'protected']);
+                    $protected = $this->getMetadata()->get(['entityDefs', $exportFeed->get('entity'), 'fields', $configuratorItem->name, 'protected']);
                 }
 
                 if (empty($protected)) {
@@ -946,13 +946,13 @@ class ImportFeed extends Base
         $format = $exportFeed->get('fileType') === 'xlsx' ? 'Excel' : strtoupper($exportFeed->get('fileType'));
         $attachment->format = $format;
         $attachment->sourceFields = $sourceFields;
-        $attachment->entity = $exportFeed->getFeedField('entity');
+        $attachment->entity = $exportFeed->get('entity');
         $attachment->headerRowNumber = $numberOfHeaders;
         $attachment->dataStartRowNumber = $numberOfHeaders + 1;
-        $attachment->emptyValue = $exportFeed->getFeedField('emptyValue');
-        $attachment->nullValue = $exportFeed->getFeedField('nullValue');
-        $attachment->markForNoRelation = $exportFeed->getFeedField('markForNoRelation');
-        $attachment->markForUnlinkedAttribute = $exportFeed->getFeedField('markForUnlinkedAttribute');
+        $attachment->emptyValue = $exportFeed->get('emptyValue');
+        $attachment->nullValue = $exportFeed->get('nullValue');
+        $attachment->markForNoRelation = $exportFeed->get('markForNoRelation');
+        $attachment->markForUnlinkedAttribute = $exportFeed->get('markForUnlinkedAttribute');
         $attachment->folderId = $this->createImportFileFolderFromId($attachment->id)->get('id');
         if (!empty($locale)) {
             $attachment->thousandSeparator = $locale->get('thousandSeparator');
@@ -981,7 +981,7 @@ class ImportFeed extends Base
                     $attribute = $this->getEntityManager()->getEntity('Attribute', $configuratorItem->entityAttributeId);
                     $protected = $attribute->get('isProtected');
                 } else {
-                    $protected = $this->getMetadata()->get(['entityDefs', $exportFeed->getFeedFields()['entity'], 'fields', $configuratorItem->name, 'protected']);
+                    $protected = $this->getMetadata()->get(['entityDefs', $exportFeed->get('entity'), 'fields', $configuratorItem->name, 'protected']);
                 }
 
                 if (!empty($protected)) {
