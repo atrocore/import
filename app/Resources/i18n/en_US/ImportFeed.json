@@ -124,7 +124,8 @@
     "importFeedIsInactive": "Import feed is inactive",
     "missingSourceFields": "The Source Field(s) %s configured in the import feed are missing in the import file.",
     "noEntityFound": "No data record found for the related entity '%s'.",
-    "listSeparatorNotAllowed": "The usage of the List Value Separator in the value for the field '%s' is not allowed."
+    "listSeparatorNotAllowed": "The usage of the List Value Separator in the value for the field '%s' is not allowed.",
+    "noSuchType": "The type '%s' does not exist."
   },
   "options": {
     "repeatProcessing": {

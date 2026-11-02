@@ -17,7 +17,6 @@ use Atro\Core\Utils\Util;
 use Doctrine\DBAL\ParameterType;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Templates\Repositories\Base;
-use Espo\Core\Utils\Json;
 use Espo\Core\Utils\Language;
 use Espo\ORM\Entity;
 use Import\Entities\ImportFeed as ImportFeedEntity;
@@ -64,8 +63,6 @@ class ImportFeed extends Base
     {
         parent::beforeSave($entity, $options);
 
-        $this->setFeedFieldsToDataJson($entity);
-
         $this->validateHeaderRowNumbers($entity);
 
         $this->validateFeed($entity);
@@ -73,12 +70,12 @@ class ImportFeed extends Base
 
     protected function validateHeaderRowNumbers(Entity $entity): void
     {
-        if (!in_array($entity->getFeedField('format'), ['CSV', 'Excel'])) {
+        if (!in_array($entity->get('format'), ['CSV', 'Excel'])) {
             return;
         }
 
-        $headerRowNumber = (int)$entity->getFeedField('headerRowNumber');
-        $dataStartRowNumber = (int)$entity->getFeedField('dataStartRowNumber');
+        $headerRowNumber = (int)$entity->get('headerRowNumber');
+        $dataStartRowNumber = (int)$entity->get('dataStartRowNumber');
 
         if ($dataStartRowNumber <= $headerRowNumber) {
             throw new BadRequest($this->getLanguage()->translate('dataStartRowMustBeGreaterThanHeaderRow', 'exceptions', 'ImportFeed'));
@@ -92,24 +89,24 @@ class ImportFeed extends Base
         }
 
         $delimiters = [
-            $entity->getFeedField('delimiter'),
-            $entity->getFeedField('decimalMark'),
-            $entity->getFeedField('fieldDelimiterForRelation')
+            $entity->get('delimiter'),
+            $entity->get('decimalMark'),
+            $entity->get('fieldDelimiterForRelation')
         ];
 
         if (count(array_unique($delimiters)) !== count($delimiters)) {
             throw new BadRequest($this->getLanguage()->translate('delimitersMustBeDifferent', 'exceptions', 'ImportFeed'));
         }
 
-        if ($entity->getFeedField('emptyValue') === $entity->getFeedField('nullValue')) {
+        if ($entity->get('emptyValue') === $entity->get('nullValue')) {
             throw new BadRequest($this->getLanguage()->translate("nullNoneSame", "exceptions", "ImportFeed"));
         }
 
-        if ($entity->getFeedField('skipValue') === $entity->getFeedField('emptyValue')) {
+        if ($entity->get('skipValue') === $entity->get('emptyValue')) {
             throw new BadRequest($this->getLanguage()->translate("skipNoneSameEmpty", "exceptions", "ImportFeed"));
         }
 
-        if ($entity->getFeedField('skipValue') === $entity->getFeedField('nullValue')) {
+        if ($entity->get('skipValue') === $entity->get('nullValue')) {
             throw new BadRequest($this->getLanguage()->translate("skipNoneSameNull", "exceptions", "ImportFeed"));
         }
 
@@ -125,34 +122,6 @@ class ImportFeed extends Base
                 throw new BadRequest($this->getLanguage()->translate("noEntityIdentifier", "exceptions", "ImportFeed"));
             }
         }
-    }
-
-    protected function setFeedFieldsToDataJson(Entity $entity): void
-    {
-        $data = !empty($data = $entity->get('data')) ? Json::decode(Json::encode($data), true) : [];
-
-        foreach ($this->getMetadata()->get(['entityDefs', 'ImportFeed', 'fields'], []) as $field => $row) {
-            if (empty($row['notStorable']) || empty($row['dataField'])) {
-                continue 1;
-            }
-
-            if ($entity->has($field)) {
-                $data['feedFields'][$field] = $entity->get($field);
-
-                switch ($row['type']) {
-                    case 'int':
-                        if ($data['feedFields'][$field] !== null || !empty($row['notNull'])) {
-                            $data['feedFields'][$field] = (int)$data['feedFields'][$field];
-                        }
-                        break;
-                    case 'bool':
-                        $data['feedFields'][$field] = !empty($data['feedFields'][$field]);
-                        break;
-                }
-            }
-        }
-
-        $entity->set('data', $data);
     }
 
     protected function init()

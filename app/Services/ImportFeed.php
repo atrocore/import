@@ -21,7 +21,6 @@ use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\NotFound;
 use Atro\Core\FileStorage\FileStorageInterface;
 use Atro\Core\Templates\Services\Base;
-use Atro\Core\Utils\IdGenerator;
 use Atro\Core\Utils\Language;
 use Atro\Core\Utils\Util;
 use Atro\Entities\File;
@@ -70,7 +69,7 @@ class ImportFeed extends Base
             return;
         }
 
-        $entityName = $importFeed->getFeedField('entity');
+        $entityName = $importFeed->get('entity');
 
         if ($this->getMetadata()->get("scopes.$entityName.hasAttribute")) {
             $conn = $this->getEntityManager()->getConnection();
@@ -130,10 +129,6 @@ class ImportFeed extends Base
     public function prepareEntityForOutput(Entity $entity)
     {
         parent::prepareEntityForOutput($entity);
-
-        foreach ($entity->getFeedFields() as $name => $value) {
-            $entity->set($name, $value);
-        }
 
         if (empty($entity->_collectionPrepared)) {
             $latestJobsData = $this->getRepository()->getLatestJobData([$entity->get('id')]);
@@ -567,7 +562,7 @@ class ImportFeed extends Base
         $hasParent = $this->hasParentJob($importFeed);
 
         if ($hasParent) {
-            $parentJob = $this->createImportJob($importFeed, $importFeed->getFeedField('entity'), $attachmentId,
+            $parentJob = $this->createImportJob($importFeed, $importFeed->get('entity'), $attachmentId,
                 new \stdClass());
             if ($payload === null) {
                 $payload = new \stdClass();
@@ -576,7 +571,7 @@ class ImportFeed extends Base
         }
 
         $maxPerJob = $payload->maxPerJob ?? (int)$importFeed->get('maxPerJob');
-        $format = $payload->format ?? $importFeed->getFeedField('format');
+        $format = $payload->format ?? $importFeed->get('format');
 
         if ($maxPerJob > 0 && in_array($format, ['CSV', 'Excel'])) {
             $name = $this->getInjection('language')->translate('createImportJobs', 'labels', 'ImportFeed');
@@ -614,7 +609,7 @@ class ImportFeed extends Base
             if (!empty($priority)) {
                 $data['data']['priority'] = $priority;
             }
-            $data['data']['importJobId'] = $this->createImportJob($importFeed, $importFeed->getFeedField('entity'),
+            $data['data']['importJobId'] = $this->createImportJob($importFeed, $importFeed->get('entity'),
                 $attachmentId, $payload)->get('id');
 
             $this->getEntityManager()->getConnection()->createQueryBuilder()
@@ -846,17 +841,6 @@ class ImportFeed extends Base
         return $entity;
     }
 
-    protected function beforeUpdateEntity(Entity $entity, $data)
-    {
-        parent::beforeUpdateEntity($entity, $data);
-
-        foreach ($entity->getFeedFields() as $name => $value) {
-            if (!$entity->has($name)) {
-                $entity->set($name, $value);
-            }
-        }
-    }
-
     protected function getFieldsThatConflict(Entity $entity, \stdClass $data): array
     {
         return [];
@@ -922,7 +906,7 @@ class ImportFeed extends Base
                     $attribute = $this->getEntityManager()->getEntity('Attribute', $configuratorItem->entityAttributeId);
                     $protected = $attribute->get('isProtected');
                 } else {
-                    $protected = $this->getMetadata()->get(['entityDefs', $exportFeed->getFeedFields()['entity'], 'fields', $configuratorItem->name, 'protected']);
+                    $protected = $this->getMetadata()->get(['entityDefs', $exportFeed->get('entity'), 'fields', $configuratorItem->name, 'protected']);
                 }
 
                 if (empty($protected)) {
@@ -936,30 +920,30 @@ class ImportFeed extends Base
         }
 
         $attachment = new \stdClass();
-        $attachment->id = IdGenerator::uuid();
         $attachment->name = $exportFeed->get('name') . '(From Export)';
         $attachment->description = $exportFeed->get('description');
         $attachment->code = $exportFeed->code;
         $attachment->isActive = $exportFeed->get('isActive');
-        $attachment->type = 'simple';
         $attachment->fileDataAction = 'update';
         $format = $exportFeed->get('fileType') === 'xlsx' ? 'Excel' : strtoupper($exportFeed->get('fileType'));
         $attachment->format = $format;
         $attachment->sourceFields = $sourceFields;
-        $attachment->entity = $exportFeed->getFeedField('entity');
+        $attachment->entity = $exportFeed->get('entity');
         $attachment->headerRowNumber = $numberOfHeaders;
         $attachment->dataStartRowNumber = $numberOfHeaders + 1;
-        $attachment->emptyValue = $exportFeed->getFeedField('emptyValue');
-        $attachment->nullValue = $exportFeed->getFeedField('nullValue');
-        $attachment->markForNoRelation = $exportFeed->getFeedField('markForNoRelation');
-        $attachment->markForUnlinkedAttribute = $exportFeed->getFeedField('markForUnlinkedAttribute');
-        $attachment->folderId = $this->createImportFileFolderFromId($attachment->id)->get('id');
+        $attachment->emptyValue = $exportFeed->get('emptyValue');
+        $attachment->nullValue = $exportFeed->get('nullValue');
+        $attachment->markForNoRelation = $exportFeed->get('markForNoRelation');
+        $attachment->markForUnlinkedAttribute = $exportFeed->get('markForUnlinkedAttribute');
         if (!empty($locale)) {
             $attachment->thousandSeparator = $locale->get('thousandSeparator');
             $attachment->decimalMark = $locale->get('decimalMark');
         }
-        $importFeedId = $this->createEntity($attachment);
+        // an import feed is created via its subtype
+        $subtypeId = $this->getServiceFactory()->create('ImportFeedTypeSimple')->createEntity($attachment);
+        $importFeedId = $this->getEntityManager()->getRepository('ImportFeedTypeSimple')->get($subtypeId)->get('supertypeId');
         $importFeed = $this->getEntityManager()->getEntity('ImportFeed', $importFeedId);
+        $this->createImportFileFolder($importFeed);
 
         foreach ($exportFeed->configuratorItems as $configuratorItem) {
             if ($configuratorItem->type === 'Fixed value' || $configuratorItem->type === 'script' || $configuratorItem->type === 'allAttributes') {
@@ -981,7 +965,7 @@ class ImportFeed extends Base
                     $attribute = $this->getEntityManager()->getEntity('Attribute', $configuratorItem->entityAttributeId);
                     $protected = $attribute->get('isProtected');
                 } else {
-                    $protected = $this->getMetadata()->get(['entityDefs', $exportFeed->getFeedFields()['entity'], 'fields', $configuratorItem->name, 'protected']);
+                    $protected = $this->getMetadata()->get(['entityDefs', $exportFeed->get('entity'), 'fields', $configuratorItem->name, 'protected']);
                 }
 
                 if (!empty($protected)) {

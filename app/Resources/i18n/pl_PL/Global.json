@@ -9,13 +9,17 @@
     "ImportFeed": "Importuj Źródło",
     "ImportConfiguratorItem": "Konfigurator",
     "ImportJob": "Wykonanie importu",
-    "ImportJobLog": "Dziennik importu"
+    "ImportJobLog": "Dziennik importu",
+    "ActionTypeImport": "Akcja: Importuj Źródło",
+    "ActionTypeReImportFailedJob": "Akcja: Ponów nieudane zadanie importu"
   },
   "scopeNamesPlural": {
     "ImportConfiguratorItem": "Konfigurator",
     "ImportFeed": "Importuj Źródła",
     "ImportJob": "Wykonanie importu",
-    "ImportJobLog": "Import dzienników"
+    "ImportJobLog": "Import dzienników",
+    "ActionTypeImport": "Akcja: Importuj Źródło",
+    "ActionTypeReImportFailedJob": "Akcja: Ponów nieudane zadanie importu"
   },
   "labels": {
     "importErrorDuring24Hours": "Błąd importu kanałów/wykonań w ciągu 24 godzin",

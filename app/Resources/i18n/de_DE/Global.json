@@ -9,13 +9,17 @@
     "ImportFeed": "Import-Feed",
     "ImportConfiguratorItem": "Konfigurator",
     "ImportJob": "Importausführung",
-    "ImportJobLog": "Import-Protokoll"
+    "ImportJobLog": "Import-Protokoll",
+    "ActionTypeImport": "Aktion: Importfeed",
+    "ActionTypeReImportFailedJob": "Aktion: Fehlgeschlagenen Import erneut ausführen"
   },
   "scopeNamesPlural": {
     "ImportFeed": "Import Feeds",
     "ImportConfiguratorItem": "Konfigurator",
     "ImportJob": "Importausführungen",
-    "ImportJobLog": "Import-Logs"
+    "ImportJobLog": "Import-Logs",
+    "ActionTypeImport": "Aktion: Importfeed",
+    "ActionTypeReImportFailedJob": "Aktion: Fehlgeschlagenen Import erneut ausführen"
   },
   "labels": {
     "importErrorDuring24Hours": "Fehler bei Importfeeds/Ausführungen während 24 Stunden",

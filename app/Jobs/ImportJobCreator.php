@@ -41,7 +41,7 @@ class ImportJobCreator extends AbstractJob implements JobInterface
         $priority = $data['priority'];
 
         $maxPerJob = $payload->maxPerJob ?? (int)$importFeed->get('maxPerJob');
-        $format = $payload->format ?? $importFeed->getFeedField('format');
+        $format = $payload->format ?? $importFeed->get('format');
         $delimiter = $payload->delimiter ?? $importFeed->getDelimiter();
         $enclosure = $payload->enclosure ?? $importFeed->getEnclosure();
 
@@ -64,8 +64,8 @@ class ImportJobCreator extends AbstractJob implements JobInterface
         // a caller can force these instead of trusting the feed's own configuration - e.g. database-type
         // feeds don't expose headerRowNumber/dataStartRowNumber at all, so ImportTypeDatabaseJobCreator
         // passes the generated file's actual (fixed) layout through the payload
-        $headerRowNumber = (int)($data['headerRowNumber'] ?? $importFeed->getFeedField('headerRowNumber') ?? 0);
-        $dataStartRowNumber = (int)($data['dataStartRowNumber'] ?? $importFeed->getFeedField('dataStartRowNumber') ?? 1);
+        $headerRowNumber = (int)($data['headerRowNumber'] ?? $importFeed->get('headerRowNumber') ?? 0);
+        $dataStartRowNumber = (int)($data['dataStartRowNumber'] ?? $importFeed->get('dataStartRowNumber') ?? 1);
 
         $fileParser = $importFeedService->getFileParser($format);
         $fileParser->setData([
@@ -127,7 +127,7 @@ class ImportJobCreator extends AbstractJob implements JobInterface
             $jobData['sheet'] = 0;
             $jobData['rowNumberPart'] = $rowNumberPart;
             $jobData['data']['importJobId'] = $importFeedService
-                ->createImportJob($importFeed, $importFeed->getFeedField('entity'), $jobAttachmentId, $payload)
+                ->createImportJob($importFeed, $importFeed->get('entity'), $jobAttachmentId, $payload)
                 ->get('id');
 
             if (!empty($data['jobData']) && is_array($data['jobData'])) {

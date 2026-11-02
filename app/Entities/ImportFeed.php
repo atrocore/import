@@ -15,7 +15,6 @@ namespace Import\Entities;
 
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Templates\Entities\Base;
-use Espo\Core\Utils\Json;
 
 class ImportFeed extends Base
 {
@@ -32,79 +31,39 @@ class ImportFeed extends Base
         };
     }
 
-    public function setFeedField(string $name, $value): void
-    {
-        $data = [];
-        if (!empty($this->get('data'))) {
-            $data = Json::decode(Json::encode($this->get('data')), true);
-        }
-
-        $data['feedFields'][$name] = $value;
-
-        $this->set('data', $data);
-    }
-
-    public function getFeedField(string $name)
-    {
-        // For backward compatibility
-        if ($name === 'httpConnectionId') {
-            return $this->get('connectionId');
-        }
-
-        $data = $this->getFeedFields();
-
-        if (!isset($data[$name])) {
-            return null;
-        }
-
-        return $data[$name];
-    }
-
-    public function getFeedFields(): array
-    {
-        if (!empty($data = $this->get('data'))) {
-            $data = Json::decode(Json::encode($data), true);
-            if (!empty($data['feedFields']) && is_array($data['feedFields'])) {
-                return $data['feedFields'];
-            }
-        }
-
-        return [];
-    }
-
     public function getDelimiter(): string
     {
-        if (empty($this->getFeedField('fileFieldDelimiter'))) {
+        if (empty($this->get('fileFieldDelimiter'))) {
             return ';';
         }
 
-        return (string)$this->getFeedField('fileFieldDelimiter');
+        return (string)$this->get('fileFieldDelimiter');
     }
 
     public function getEnclosure(): string
     {
-        if (empty($this->getFeedField('fileTextQualifier'))) {
+        if (empty($this->get('fileTextQualifier'))) {
             return '"';
         }
 
-        return $this->getFeedField('fileTextQualifier') == 'singleQuote' ? "'" : '"';
+        return $this->get('fileTextQualifier') == 'singleQuote' ? "'" : '"';
     }
 
     public function getHeaderRowNumber(): int
     {
         // headerRowNumber isn't a configurable concept outside CSV/Excel, Converted file must have headers
-        if (!in_array($this->getFeedField('format'), ['CSV', 'Excel'], true)) {
+        if (!in_array($this->get('format'), ['CSV', 'Excel'], true)) {
             return 1;
         }
 
-        $value = $this->getFeedField('headerRowNumber');
+        $value = $this->get('headerRowNumber');
 
         return $value === null ? 0 : (int)$value;
     }
 
     public function getDataStartRowNumber(): int
     {
-        $value = $this->getFeedField('dataStartRowNumber');
+        $value = $this->get('dataStartRowNumber');
 
         return $value === null ? 1 : (int)$value;
     }
@@ -122,14 +81,14 @@ class ImportFeed extends Base
             throw new BadRequest($language->translate('configuratorEmpty', 'exceptions', 'ImportFeed'));
         }
 
-        $result['entity'] = $this->getFeedField('entity');
+        $result['entity'] = $this->get('entity');
         $result['idField'] = [];
         $result['priority'] = empty($this->get('priority')) ? 'Normal' : (string)$this->get('priority');
-        $result['rootNode'] = $this->getFeedField('rootNode');
-        $result['excludedNodes'] = $this->getFeedField('excludedNodes');
-        $result['keptStringNodes'] = $this->getFeedField('keptStringNodes');
-        $result['delimiter'] = $this->getFeedField('delimiter');
-        $result['skipMissingSourceFields'] = !empty($this->getFeedField('skipMissingSourceFields'));
+        $result['rootNode'] = $this->get('rootNode');
+        $result['excludedNodes'] = $this->get('excludedNodes');
+        $result['keptStringNodes'] = $this->get('keptStringNodes');
+        $result['delimiter'] = $this->get('delimiter');
+        $result['skipMissingSourceFields'] = !empty($this->get('skipMissingSourceFields'));
         $result['configuration'] = [];
 
         foreach ($configuratorItems as $item) {
@@ -150,15 +109,15 @@ class ImportFeed extends Base
                 'locale'                    => $item->get('locale'),
                 'entity'                    => $result['entity'],
                 'delimiter'                 => $result['delimiter'],
-                'emptyValue'                => $this->getFeedField('emptyValue'),
-                'nullValue'                 => $this->getFeedField('nullValue'),
-                'skipValue'                 => $this->getFeedField('skipValue'),
+                'emptyValue'                => $this->get('emptyValue'),
+                'nullValue'                 => $this->get('nullValue'),
+                'skipValue'                 => $this->get('skipValue'),
                 'urlHeaders'                => $item->get('urlHeaders'),
-                'decimalMark'               => $this->getFeedField('format') === 'CSV' ? $this->getFeedField('decimalMark') : ".",
-                'thousandSeparator'         => $this->getFeedField('format') !== 'Excel' ? $this->getFeedField('thousandSeparator') : "",
-                'markForNoRelation'         => $this->getFeedField('markForNoRelation'),
-                'markForUnlinkedAttribute'  => $this->getFeedField('markForUnlinkedAttribute'),
-                'fieldDelimiterForRelation' => $this->getFeedField('fieldDelimiterForRelation'),
+                'decimalMark'               => $this->get('format') === 'CSV' ? $this->get('decimalMark') : ".",
+                'thousandSeparator'         => $this->get('format') !== 'Excel' ? $this->get('thousandSeparator') : "",
+                'markForNoRelation'         => $this->get('markForNoRelation'),
+                'markForUnlinkedAttribute'  => $this->get('markForUnlinkedAttribute'),
+                'fieldDelimiterForRelation' => $this->get('fieldDelimiterForRelation'),
                 'valueExtractor'            => $item->get('valueExtractor'),
             ];
         }

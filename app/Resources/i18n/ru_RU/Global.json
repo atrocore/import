@@ -9,13 +9,17 @@
     "ImportJob": "Выполнение импорта",
     "ImportJobLog": "Журнал импорта",
     "ImportFeed": "Импортный фид",
-    "ImportConfiguratorItem": "Конфигуратор"
+    "ImportConfiguratorItem": "Конфигуратор",
+    "ActionTypeImport": "Действие: Импортный фид",
+    "ActionTypeReImportFailedJob": "Действие: Повторить неудавшийся импорт"
   },
   "scopeNamesPlural": {
     "ImportFeed": "Импорт фидов",
     "ImportJob": "Выполнение импорта",
     "ImportJobLog": "Импортируйте журналы",
-    "ImportConfiguratorItem": "Конфигуратор"
+    "ImportConfiguratorItem": "Конфигуратор",
+    "ActionTypeImport": "Действие: Импортный фид",
+    "ActionTypeReImportFailedJob": "Действие: Повторить неудавшийся импорт"
   },
   "labels": {
     "importErrorDuring24Hours": "Ошибка импорта Feeds/Executions в течение 24 часов",

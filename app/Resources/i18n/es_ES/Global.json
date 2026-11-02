@@ -9,13 +9,17 @@
     "ImportFeed": "Importar alimentación",
     "ImportConfiguratorItem": "Configurador",
     "ImportJob": "Ejecución de importaciones",
-    "ImportJobLog": "Registro de importación"
+    "ImportJobLog": "Registro de importación",
+    "ActionTypeImport": "Acción: Importar alimentación",
+    "ActionTypeReImportFailedJob": "Acción: Reimportar trabajo fallido"
   },
   "scopeNamesPlural": {
     "ImportConfiguratorItem": "Configurador",
     "ImportFeed": "Importar feeds",
     "ImportJob": "Ejecuciones de importación",
-    "ImportJobLog": "Importar registros"
+    "ImportJobLog": "Importar registros",
+    "ActionTypeImport": "Acción: Importar alimentación",
+    "ActionTypeReImportFailedJob": "Acción: Reimportar trabajo fallido"
   },
   "labels": {
     "importErrorDuring24Hours": "Error en las alimentaciones/ejecuciones de importación durante 24 horas",

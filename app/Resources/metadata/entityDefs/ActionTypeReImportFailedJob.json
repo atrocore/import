@@ -1,0 +1,25 @@
+{
+  "fields": {
+    "applyToPreselectedRecords": {
+      "type": "bool",
+      "filterDisabled": true,
+      "massUpdateDisabled": true,
+      "importDisabled": true,
+      "view": "views/action/fields/apply-to-preselected-records",
+      "openApiEnabled": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "usage",
+              "value": [
+                "record"
+              ]
+            }
+          ]
+        }
+      }
+    }
+  }
+}

@@ -21,6 +21,27 @@ use Import\ProcessingTypes\AbstractProcessingType;
 
 class Metadata extends AbstractMetadataListener
 {
+    /**
+     * The fields of the import feed are changed before the subtypes get them.
+     */
+    public function loadData(Event $event): void
+    {
+        $data = $event->getArgument('data');
+
+        $data['entityDefs']['ImportFeed']['fields']['lastStatus'] = [
+            'type'           => 'enum',
+            'notStorable'    => true,
+            'filterDisabled' => true,
+            'readOnly'       => true,
+            'options'        => $data['entityDefs']['ImportJob']['fields']['state']['options'],
+            'optionColors'   => $data['entityDefs']['ImportJob']['fields']['state']['optionColors']
+        ];
+
+        $this->prepareSubtypeClientDefs($data);
+
+        $event->setArgument('data', $data);
+    }
+
     public function modify(Event $event)
     {
         $data = $event->getArgument('data');
@@ -79,15 +100,7 @@ class Metadata extends AbstractMetadataListener
             $data['clientDefs']['ImportFeed']['relationshipPanels']['configuratorItems']['dragDrop']['maxSize'] = $this->getConfig()->get('recordsPerPageSmall', 20);
         }
 
-        $data['entityDefs']['ImportFeed']['fields']['lastStatus'] = [
-            'type'           => 'enum',
-            'notStorable'    => true,
-            'filterDisabled' => true,
-            'readOnly'       => true,
-            'options'        => $data['entityDefs']['ImportJob']['fields']['state']['options'],
-            'optionColors'   => $data['entityDefs']['ImportJob']['fields']['state']['optionColors']
-        ];
-
+        $importSettings = $this->getImportActionSettings();
         foreach ($this->getMemoryStorage()->get('dynamic_action') ?? [] as $action) {
             if ($action['type'] === 'import' && !empty($action['source_entity']) && !empty($action['usage'])) {
                 $params = [
@@ -98,10 +111,10 @@ class Metadata extends AbstractMetadataListener
                 ];
 
                 if ($action['usage'] === 'entity') {
-                    $actionData = @json_decode($action['data'], true);
-                    if (!empty($actionData['field']['uploadAndImport'])) {
+                    $settings = $importSettings[$action['id']] ?? [];
+                    if (!empty($settings['upload_and_import'])) {
                         $params['type'] = 'uploadAndImport';
-                        $params['importFeedId'] = $action['import_feed_id'] ?? null;
+                        $params['importFeedId'] = $settings['import_feed_id'] ?? null;
                         $params['inBackground'] = $action['in_background'] ?? false;
                     }
                 }
@@ -116,12 +129,6 @@ class Metadata extends AbstractMetadataListener
                 }
             }
         }
-
-        $data['entityDefs']['Action']['fields']['payload']['conditionalProperties']['visible']['conditionGroup'][0]['type'] = 'in';
-        $data['entityDefs']['Action']['fields']['payload']['conditionalProperties']['visible']['conditionGroup'][0]['attribute'] = 'type';
-        $data['entityDefs']['Action']['fields']['payload']['conditionalProperties']['visible']['conditionGroup'][0]['value'][] = 'import';
-
-        $data['entityDefs']['Action']['fields']['applyToPreselectedRecords']['conditionalProperties']['visible']['conditionGroup'][0]['value'][] = 'reImportFailedJob';
 
         if (empty($data['entityDefs']['ScheduledJob']['fields']['maximumHoursToLookBack']['conditionalProperties']['visible']['conditionGroup'][0])) {
             $data['entityDefs']['ScheduledJob']['fields']['maximumHoursToLookBack']['conditionalProperties']['visible']['conditionGroup'][0] = [
@@ -158,5 +165,45 @@ class Metadata extends AbstractMetadataListener
         }
 
         $event->setArgument('data', $data);
+    }
+
+    /**
+     * A record of an import feed is shown via its subtype record with the views and the panels of the import feed.
+     */
+    protected function prepareSubtypeClientDefs(array &$data): void
+    {
+        $clientDefs = $data['clientDefs']['ImportFeed'] ?? [];
+
+        foreach ($data['scopes'] ?? [] as $scope => $scopeDefs) {
+            if (($scopeDefs['type'] ?? null) !== 'Subtype' || ($scopeDefs['supertypeId'] ?? null) !== 'ImportFeed') {
+                continue;
+            }
+
+            foreach (['iconClass', 'confirm', 'bottomPanels'] as $key) {
+                if (isset($clientDefs[$key])) {
+                    $data['clientDefs'][$scope][$key] ??= $clientDefs[$key];
+                }
+            }
+
+            $data['clientDefs'][$scope]['views']['detail'] ??= $clientDefs['views']['detail'];
+            $data['clientDefs'][$scope]['recordViews']['detail'] ??= $clientDefs['recordViews']['detail'];
+        }
+    }
+
+    /**
+     * The settings of the import actions are stored in the table of their subtype.
+     */
+    protected function getImportActionSettings(): array
+    {
+        try {
+            $rows = $this->getDbal()->createQueryBuilder()
+                ->select('supertype_id, import_feed_id, upload_and_import')
+                ->from('action_type_import')
+                ->fetchAllAssociative();
+        } catch (\Throwable $e) {
+            $rows = [];
+        }
+
+        return array_column($rows, null, 'supertype_id');
     }
 }

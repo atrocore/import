@@ -86,7 +86,7 @@ class ConvertedFileGenerator extends AbstractJob implements JobInterface
             ->prepareJobData($importFeed, $importJob->get('attachmentId'));
 
         // for import type HttpRequest
-        if (!empty($importFeed->getFeedField('mergeResponses'))) {
+        if (!empty($importFeed->getSubtype()?->get('mergeResponses'))) {
             $jobData['fileFormat'] = 'CSV';
             $jobData['delimiter'] = ";";
             $jobData['enclosure'] = '"';

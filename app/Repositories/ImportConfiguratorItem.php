@@ -81,8 +81,8 @@ class ImportConfiguratorItem extends Base
 
         $this->checkIfVirtualFieldIsIdentifier($entity, $importFeed);
 
-        $type = $this->getMetadata()->get(['entityDefs', $importFeed->getFeedField('entity'), 'fields', $entity->get('name'), 'type'], 'varchar');
-        if ($type === 'varchar' && !empty($this->getMetadata()->get(['entityDefs', $importFeed->getFeedField('entity'), 'fields', $entity->get('name'), 'combinedField']))) {
+        $type = $this->getMetadata()->get(['entityDefs', $importFeed->get('entity'), 'fields', $entity->get('name'), 'type'], 'varchar');
+        if ($type === 'varchar' && !empty($this->getMetadata()->get(['entityDefs', $importFeed->get('entity'), 'fields', $entity->get('name'), 'combinedField']))) {
             $type = 'valueWithUnit';
         }
 
@@ -130,12 +130,12 @@ class ImportConfiguratorItem extends Base
 
         if (!empty($configuratorFieldName)) {
             $fieldDefs = $this->getMetadata()
-                ->get(['entityDefs', $importFeedEntity->getFeedField('entity'), 'fields', $configuratorFieldName], []);
+                ->get(['entityDefs', $importFeedEntity->get('entity'), 'fields', $configuratorFieldName], []);
 
             $isVirtualField = !empty($fieldDefs['notStorable']);
 
             if ($isIdentifier === true && $isVirtualField === true) {
-                $isParentField = $configuratorFieldName === 'parent' && $this->getMetadata()->get(['scopes', $importFeedEntity->getFeedField('entity'), 'type']) === 'Hierarchy';
+                $isParentField = $configuratorFieldName === 'parent' && $this->getMetadata()->get(['scopes', $importFeedEntity->get('entity'), 'type']) === 'Hierarchy';
 
                 // allow parent field only for hierarchy
                 if (!$isParentField) {

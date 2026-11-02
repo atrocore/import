@@ -103,11 +103,9 @@
       ],
       [
         {
-          "name": "connection"
-        },
-        {
           "name": "adapter"
-        }
+        },
+        false
       ],
       [
         {

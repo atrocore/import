@@ -9,13 +9,17 @@
     "ImportFeed": "Імпортний фід",
     "ImportConfiguratorItem": "Конфігуратор",
     "ImportJob": "Виконання імпорту",
-    "ImportJobLog": "Журнал імпорту"
+    "ImportJobLog": "Журнал імпорту",
+    "ActionTypeImport": "Дія: Імпортний фід",
+    "ActionTypeReImportFailedJob": "Дія: Повторити невдалий імпорт"
   },
   "scopeNamesPlural": {
     "ImportFeed": "Імпортні фіди",
     "ImportConfiguratorItem": "Конфігуратор",
     "ImportJob": "Виконання імпорту",
-    "ImportJobLog": "Імпорт журналів"
+    "ImportJobLog": "Імпорт журналів",
+    "ActionTypeImport": "Дія: Імпортний фід",
+    "ActionTypeReImportFailedJob": "Дія: Повторити невдалий імпорт"
   },
   "labels": {
     "importErrorDuring24Hours": "Помилка імпорту каналів/виконань протягом 24 годин",
