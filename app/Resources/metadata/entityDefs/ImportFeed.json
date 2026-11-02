@@ -97,10 +97,6 @@
       "massUpdateDisabled": true,
       "noLoad": true
     },
-    "type": {
-      "type": "enum",
-      "required": true
-    },
     "processingType": {
       "type": "varchar",
       "view": "import:views/import-feed/fields/processing-type",
