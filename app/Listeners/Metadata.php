@@ -21,6 +21,27 @@ use Import\ProcessingTypes\AbstractProcessingType;
 
 class Metadata extends AbstractMetadataListener
 {
+    /**
+     * The fields of the import feed are changed before the subtypes get them.
+     */
+    public function loadData(Event $event): void
+    {
+        $data = $event->getArgument('data');
+
+        $data['entityDefs']['ImportFeed']['fields']['lastStatus'] = [
+            'type'           => 'enum',
+            'notStorable'    => true,
+            'filterDisabled' => true,
+            'readOnly'       => true,
+            'options'        => $data['entityDefs']['ImportJob']['fields']['state']['options'],
+            'optionColors'   => $data['entityDefs']['ImportJob']['fields']['state']['optionColors']
+        ];
+
+        $this->prepareSubtypeClientDefs($data);
+
+        $event->setArgument('data', $data);
+    }
+
     public function modify(Event $event)
     {
         $data = $event->getArgument('data');
@@ -78,15 +99,6 @@ class Metadata extends AbstractMetadataListener
         if (!empty($data['clientDefs']['ImportFeed']['relationshipPanels']['configuratorItems'])) {
             $data['clientDefs']['ImportFeed']['relationshipPanels']['configuratorItems']['dragDrop']['maxSize'] = $this->getConfig()->get('recordsPerPageSmall', 20);
         }
-
-        $data['entityDefs']['ImportFeed']['fields']['lastStatus'] = [
-            'type'           => 'enum',
-            'notStorable'    => true,
-            'filterDisabled' => true,
-            'readOnly'       => true,
-            'options'        => $data['entityDefs']['ImportJob']['fields']['state']['options'],
-            'optionColors'   => $data['entityDefs']['ImportJob']['fields']['state']['optionColors']
-        ];
 
         $importSettings = $this->getImportActionSettings();
         foreach ($this->getMemoryStorage()->get('dynamic_action') ?? [] as $action) {
@@ -153,6 +165,29 @@ class Metadata extends AbstractMetadataListener
         }
 
         $event->setArgument('data', $data);
+    }
+
+    /**
+     * A record of an import feed is shown via its subtype record with the views and the panels of the import feed.
+     */
+    protected function prepareSubtypeClientDefs(array &$data): void
+    {
+        $clientDefs = $data['clientDefs']['ImportFeed'] ?? [];
+
+        foreach ($data['scopes'] ?? [] as $scope => $scopeDefs) {
+            if (($scopeDefs['type'] ?? null) !== 'Subtype' || ($scopeDefs['supertypeId'] ?? null) !== 'ImportFeed') {
+                continue;
+            }
+
+            foreach (['iconClass', 'confirm', 'bottomPanels'] as $key) {
+                if (isset($clientDefs[$key])) {
+                    $data['clientDefs'][$scope][$key] ??= $clientDefs[$key];
+                }
+            }
+
+            $data['clientDefs'][$scope]['views']['detail'] ??= $clientDefs['views']['detail'];
+            $data['clientDefs'][$scope]['recordViews']['detail'] ??= $clientDefs['recordViews']['detail'];
+        }
     }
 
     /**

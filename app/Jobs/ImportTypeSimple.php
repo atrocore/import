@@ -71,12 +71,12 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
             "name"               => $feed->get('name'),
             "offset"             => $dataStartRowNumber - 1,
             "limit"              => $this->getConfig()->get('importLimit', 5000),
-            "fileFormat"         => $feed->getFeedField('format'),
+            "fileFormat"         => $feed->get('format'),
             "delimiter"          => $feed->getDelimiter(),
             "enclosure"          => $feed->getEnclosure(),
             "headerRowNumber"    => $headerRowNumber,
             "dataStartRowNumber" => $dataStartRowNumber,
-            "adapter"            => $feed->getFeedField('adapter'),
+            "adapter"            => $feed->get('adapter'),
             "action"             => $feed->get('fileDataAction'),
             "attachmentId"       => $attachmentId,
             "importFeedId"       => $feed->get('id'),
@@ -85,7 +85,7 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
             "repeatProcessing"   => $feed->get("repeatProcessing"),
             "sheet"              => $feed->get("sheet"),
             "executeAs"          => $feed->get("executeAs"),
-            "feedPayload"        => $feed->getFeedField("feedPayload"),
+            "feedPayload"        => $feed->get('feedPayload'),
         ];
 
         if (in_array($result['fileFormat'], ['CSV', 'Excel'], true)) {

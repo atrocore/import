@@ -66,7 +66,7 @@ class ImportConfiguratorItem extends Base
             $this->getImportFeedService()->putAttributesToMetadata($importFeed->get('id'));
         }
 
-        $entity->set('entity', $importFeed->getFeedField('entity'));
+        $entity->set('entity', $importFeed->get('entity'));
         $entity->set('sourceFields', $importFeed->get('sourceFields'));
 
         // prepare field defs

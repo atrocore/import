@@ -8,7 +8,7 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('import:views/import-feed/record/detail', 'views/record/detail',
+Espo.define('import:views/import-feed/record/detail', 'views/subtype/record/detail',
     Dep => Dep.extend({
 
         setupActionItems() {
@@ -30,6 +30,13 @@ Espo.define('import:views/import-feed/record/detail', 'views/record/detail',
             );
         },
 
+        /**
+         * The record is shown via its subtype record, the actions of the import feed need the id of the feed.
+         */
+        getImportFeedId() {
+            return this.model.get('supertypeId') || this.model.id;
+        },
+
         hasImportNow() {
             return this.model.get('isActive') && this.getAcl().check('ImportJob', 'create');
         },
@@ -44,7 +51,7 @@ Espo.define('import:views/import-feed/record/detail', 'views/record/detail',
                     fileId: null,
                 };
                 this.notify(this.translate('creatingImportJobs', 'labels', 'ImportFeed'));
-                this.ajaxPostRequest('ImportFeed/' + this.model.get('id') + '/runImport', data).then(response => {
+                this.ajaxPostRequest('ImportFeed/' + this.getImportFeedId() + '/runImport', data).then(response => {
                     if (response) {
                         this.notify('Created', 'success');
                         this.model.trigger('importRun');
@@ -62,7 +69,7 @@ Espo.define('import:views/import-feed/record/detail', 'views/record/detail',
                 model: this.model
             }, view => {
                 view.on('runImport', payload => {
-                    const id = payload.importFeedId || this.model.get('id');
+                    const id = payload.importFeedId || this.getImportFeedId();
                     const data = {
                         fileId: payload.fileId || null,
                     };

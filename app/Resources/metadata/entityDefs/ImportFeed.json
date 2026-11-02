@@ -99,21 +99,7 @@
     },
     "type": {
       "type": "enum",
-      "required": true,
-      "options": [
-        "simple"
-      ],
-      "default": "simple",
-      "conditionalProperties": {
-        "protected": {
-          "conditionGroup": [
-            {
-              "type": "isNotEmpty",
-              "attribute": "id"
-            }
-          ]
-        }
-      }
+      "required": true
     },
     "processingType": {
       "type": "varchar",
@@ -181,8 +167,6 @@
     },
     "sheetOptions": {
       "type": "array",
-      "notStorable": true,
-      "dataField": true,
       "required": false,
       "layoutDetailDisabled": true,
       "layoutListDisabled": true,
@@ -195,8 +179,6 @@
     },
     "fileFieldDelimiter": {
       "type": "enum",
-      "notStorable": true,
-      "dataField": true,
       "filterDisabled": true,
       "required": false,
       "options": [
@@ -230,8 +212,6 @@
       "type": "enum",
       "view": "import:views/import-feed/fields/format",
       "required": false,
-      "notStorable": true,
-      "dataField": true,
       "filterDisabled": true,
       "options": [
         "CSV",
@@ -243,8 +223,6 @@
     },
     "fileTextQualifier": {
       "type": "enum",
-      "notStorable": true,
-      "dataField": true,
       "filterDisabled": true,
       "required": false,
       "options": [
@@ -310,8 +288,6 @@
     },
     "headerRowNumber": {
       "type": "int",
-      "notStorable": true,
-      "dataField": true,
       "filterDisabled": true,
       "required": true,
       "default": 1,
@@ -333,8 +309,6 @@
     },
     "dataStartRowNumber": {
       "type": "int",
-      "notStorable": true,
-      "dataField": true,
       "filterDisabled": true,
       "required": true,
       "default": 2,
@@ -356,8 +330,6 @@
     },
     "decimalMark": {
       "type": "varchar",
-      "notStorable": true,
-      "dataField": true,
       "filterDisabled": true,
       "required": true,
       "default": ",",
@@ -389,8 +361,6 @@
     },
     "thousandSeparator": {
       "type": "varchar",
-      "notStorable": true,
-      "dataField": true,
       "filterDisabled": true,
       "required": false,
       "conditionalProperties": {
@@ -414,8 +384,6 @@
     },
     "adapter": {
       "type": "enum",
-      "notStorable": true,
-      "dataField": true,
       "filterDisabled": true,
       "view": "import:views/import-feed/fields/adapter"
     },
@@ -472,8 +440,6 @@
     },
     "entity": {
       "type": "enum",
-      "notStorable": true,
-      "dataField": true,
       "filterDisabled": true,
       "view": "import:views/import-feed/fields/entity",
       "required": true,
@@ -482,8 +448,6 @@
     "rootNode": {
       "type": "varchar",
       "required": false,
-      "notStorable": true,
-      "dataField": true,
       "filterDisabled": true,
       "conditionalProperties": {
         "visible": {
@@ -503,8 +467,6 @@
     "excludedNodes": {
       "type": "array",
       "required": false,
-      "notStorable": true,
-      "dataField": true,
       "filterDisabled": true,
       "conditionalProperties": {
         "visible": {
@@ -529,8 +491,6 @@
     "keptStringNodes": {
       "type": "array",
       "required": false,
-      "notStorable": true,
-      "dataField": true,
       "filterDisabled": true,
       "tooltip": true,
       "conditionalProperties": {
@@ -555,8 +515,6 @@
     },
     "delimiter": {
       "type": "varchar",
-      "notStorable": true,
-      "dataField": true,
       "filterDisabled": true,
       "required": true,
       "default": "~",
@@ -574,8 +532,6 @@
     },
     "fieldDelimiterForRelation": {
       "type": "varchar",
-      "notStorable": true,
-      "dataField": true,
       "filterDisabled": true,
       "required": true,
       "default": "|",
@@ -593,8 +549,6 @@
     },
     "emptyValue": {
       "type": "varchar",
-      "notStorable": true,
-      "dataField": true,
       "filterDisabled": true,
       "required": false,
       "default": "",
@@ -613,8 +567,6 @@
     },
     "nullValue": {
       "type": "varchar",
-      "notStorable": true,
-      "dataField": true,
       "filterDisabled": true,
       "required": false,
       "default": "Null",
@@ -633,8 +585,6 @@
     },
     "markForNoRelation": {
       "type": "varchar",
-      "notStorable": true,
-      "dataField": true,
       "filterDisabled": true,
       "required": false,
       "default": "Null",
@@ -653,8 +603,6 @@
     },
     "markForUnlinkedAttribute": {
       "type": "varchar",
-      "notStorable": true,
-      "dataField": true,
       "filterDisabled": true,
       "required": false,
       "default": "N/A",
@@ -673,8 +621,6 @@
     },
     "skipValue": {
       "type": "varchar",
-      "notStorable": true,
-      "dataField": true,
       "filterDisabled": true,
       "required": false,
       "default": "Skip",
@@ -693,8 +639,6 @@
     },
     "skipMissingSourceFields": {
       "type": "bool",
-      "notStorable": true,
-      "dataField": true,
       "filterDisabled": true,
       "default": false,
       "tooltip": true,
@@ -714,10 +658,6 @@
       "type": "array",
       "view": "import:views/import-feed/fields/source-fields"
     },
-    "connection": {
-      "type": "link",
-      "view": "import:views/import-feed/fields/connection"
-    },
     "folder": {
       "type": "link",
       "required": true
@@ -733,8 +673,6 @@
       "type": "code",
       "engine": "Twig",
       "language": "json",
-      "notStorable": true,
-      "dataField": true,
       "conditionalProperties": {
         "visible": {
           "conditionGroup": [
@@ -790,10 +728,6 @@
       "type": "hasMany",
       "foreign": "importFeed",
       "entity": "File"
-    },
-    "connection": {
-      "type": "belongsTo",
-      "entity": "Connection"
     }
   },
   "collection": {

@@ -19,7 +19,7 @@ use Doctrine\DBAL\ParameterType;
 use Doctrine\DBAL\Schema\Schema;
 use Ramsey\Uuid\Uuid;
 
-class V1Dot14Dot0 extends Base
+class V2Dot0Dot0 extends Base
 {
     public function getMigrationDateTime(): ?\DateTime
     {
@@ -29,6 +29,124 @@ class V1Dot14Dot0 extends Base
     public function up(): void
     {
         $this->migrateAction();
+        $this->migrateImportFeed();
+    }
+
+    /**
+     * The import feed types are subtypes of ImportFeed now. The settings of the source and of the processing, stored in
+     * the "data" field before, are columns of the import feed. The subtype of the module has no fields, the subtypes of
+     * the other modules are created by their migrations.
+     */
+    protected function migrateImportFeed(): void
+    {
+        $feedColumns = [
+            'sheetOptions' => ['sheet_options', 'type' => 'jsonArray'],
+            'fileFieldDelimiter' => ['file_field_delimiter', 'type' => 'string', 'length' => 255, 'default' => ';'],
+            'format' => ['format', 'type' => 'string', 'length' => 255, 'default' => 'CSV'],
+            'fileTextQualifier' => ['file_text_qualifier', 'type' => 'string', 'length' => 255, 'default' => 'doubleQuote'],
+            'headerRowNumber' => ['header_row_number', 'type' => 'integer', 'default' => 1],
+            'dataStartRowNumber' => ['data_start_row_number', 'type' => 'integer', 'default' => 2],
+            'decimalMark' => ['decimal_mark', 'type' => 'string', 'length' => 255, 'default' => ','],
+            'thousandSeparator' => ['thousand_separator', 'type' => 'string', 'length' => 255],
+            'adapter' => ['adapter', 'type' => 'string', 'length' => 255],
+            'entity' => ['entity', 'type' => 'string', 'length' => 255, 'default' => 'Product'],
+            'rootNode' => ['root_node', 'type' => 'string', 'length' => 255],
+            'excludedNodes' => ['excluded_nodes', 'type' => 'jsonArray'],
+            'keptStringNodes' => ['kept_string_nodes', 'type' => 'jsonArray'],
+            'delimiter' => ['delimiter', 'type' => 'string', 'length' => 255, 'default' => '~'],
+            'fieldDelimiterForRelation' => ['field_delimiter_for_relation', 'type' => 'string', 'length' => 255, 'default' => '|'],
+            'emptyValue' => ['empty_value', 'type' => 'string', 'length' => 255, 'default' => ''],
+            'nullValue' => ['null_value', 'type' => 'string', 'length' => 255, 'default' => 'Null'],
+            'markForNoRelation' => ['mark_for_no_relation', 'type' => 'string', 'length' => 255, 'default' => 'Null'],
+            'markForUnlinkedAttribute' => ['mark_for_unlinked_attribute', 'type' => 'string', 'length' => 255, 'default' => 'N/A'],
+            'skipValue' => ['skip_value', 'type' => 'string', 'length' => 255, 'default' => 'Skip'],
+            'skipMissingSourceFields' => ['skip_missing_source_fields', 'type' => 'boolean', 'notnull' => true, 'default' => false],
+            'feedPayload' => ['feed_payload', 'type' => 'text'],
+        ];
+
+        $subtypes = [
+            'simple' => [],
+        ];
+
+        $fromSchema = $this->getCurrentSchema();
+        if (!$fromSchema->hasTable('import_feed')) {
+            return;
+        }
+
+        $toSchema = clone $fromSchema;
+
+        $table = $toSchema->getTable('import_feed');
+        foreach ($feedColumns as $options) {
+            $column = array_shift($options);
+            $type = $options['type'];
+            unset($options['type']);
+            if (!$table->hasColumn($column)) {
+                $table->addColumn($column, $type, array_merge(['notnull' => false], $options));
+            }
+        }
+
+        foreach ($subtypes as $type => $columns) {
+            $this->createSubtypeTable($toSchema, 'import_feed', $type, $columns);
+        }
+
+        foreach ($this->schemasDiffToSql($fromSchema, $toSchema) as $sql) {
+            $this->getDbal()->executeStatement($sql);
+        }
+
+        $records = $this->getDbal()->createQueryBuilder()
+            ->select('*')
+            ->from('import_feed')
+            ->fetchAllAssociative();
+
+        foreach ($records as $record) {
+            $this->updateFeedColumns($record, $feedColumns);
+
+            if (isset($subtypes[$record['type']])) {
+                $this->insertSubtypeRecord('import_feed', $record['type'], $record['id'], $subtypes[$record['type']], []);
+            }
+        }
+    }
+
+    /**
+     * The settings of the import feed were stored in the "feedFields" of the "data" field.
+     */
+    protected function updateFeedColumns(array $record, array $feedColumns): void
+    {
+        $data = @json_decode((string)($record['data'] ?? ''), true);
+        $feedFields = is_array($data['feedFields'] ?? null) ? $data['feedFields'] : [];
+
+        $qb = $this->getDbal()->createQueryBuilder()
+            ->update('import_feed')
+            ->where('id = :id')
+            ->setParameter('id', $record['id']);
+
+        $hasValues = false;
+        foreach ($feedColumns as $field => $options) {
+            if (!array_key_exists($field, $feedFields) || $feedFields[$field] === null) {
+                continue;
+            }
+
+            $value = $feedFields[$field];
+            $qb->set($this->getDbal()->quoteIdentifier($options[0]), ":$field");
+            switch ($options['type']) {
+                case 'boolean':
+                    $qb->setParameter($field, !empty($value), ParameterType::BOOLEAN);
+                    break;
+                case 'integer':
+                    $qb->setParameter($field, (int)$value, ParameterType::INTEGER);
+                    break;
+                case 'jsonArray':
+                    $qb->setParameter($field, json_encode($value));
+                    break;
+                default:
+                    $qb->setParameter($field, is_scalar($value) ? (string)$value : json_encode($value));
+            }
+            $hasValues = true;
+        }
+
+        if ($hasValues) {
+            $qb->executeStatement();
+        }
     }
 
     /**
