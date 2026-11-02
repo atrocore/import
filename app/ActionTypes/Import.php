@@ -32,7 +32,6 @@ class Import extends AbstractAction
 
     /**
      * @deprecated Use executeWithResult(). Kept for backward compatibility.
-     * @todo 3.0.0: remove, executeWithResult() becomes execute().
      */
     public function executeNow(Entity $action, \stdClass $input): bool
     {
