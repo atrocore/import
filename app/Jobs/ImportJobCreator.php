@@ -101,6 +101,7 @@ class ImportJobCreator extends AbstractJob implements JobInterface
             }
             $input->folderId = $importFeedService->createImportFileFolder($importFeed)->get('id');
 
+            $input->_generated = true;
             $jobAttachmentId = $fileService->createFileViaContents($input, $fileParser->createFileContent($part));
 
             // this part file was assembled with its own header copied to row 1 (gap rows already
