@@ -1026,6 +1026,7 @@ class ImportFeed extends Base
         $input->name = 'easy-catalog.json';
         $input->importFeedId = $importFeed->get('id');
 
+        $input->_generated = true;
         $fileId = $this->getFileService()->createFileViaContents($input, json_encode($json));
 
         $this->runImport($importFeed->id, $fileId);

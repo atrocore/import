@@ -163,6 +163,7 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
         $fileParser              = $this->getFileParser('CSV');
         $fileParser->setData($jobData);
 
+        $inputData->_generated = true;
         $fileId = $this
             ->getService('File')
             ->createFileViaContents($inputData, $fileParser->createFileContent($rows));
@@ -889,6 +890,7 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
             $input->mimeType     = 'text/csv';
             $input->importFeedId = $importFeed->get('id');
             $input->folderId     = $folder->get('id');
+            $input->_generated    = true;
             $result[]            = $this->getService('File')->moveLocalFileToFileEntity($input, $filePath);
 
             $offset += $limit;
