@@ -7,7 +7,8 @@
                 "required": true
             },
             "autorefreshInterval": {
-                "type": "enumFloat",
+                "type": "float",
+                "view": "views/fields/number-option",
                 "options": [
                     10,
                     30,
