@@ -19,10 +19,6 @@
       "select": false,
       "hideShowFullList": true,
       "canClose": false,
-      "dragDrop": {
-        "isActive": true,
-        "maxSize": 20
-      },
       "actions": {
         "unlinkRelated": {
           "disabled": true

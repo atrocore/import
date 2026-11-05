@@ -96,10 +96,6 @@ class Metadata extends AbstractMetadataListener
             ];
         }
 
-        if (!empty($data['clientDefs']['ImportFeed']['relationshipPanels']['configuratorItems'])) {
-            $data['clientDefs']['ImportFeed']['relationshipPanels']['configuratorItems']['dragDrop']['maxSize'] = $this->getConfig()->get('recordsPerPageSmall', 20);
-        }
-
         $importSettings = $this->getImportActionSettings();
         foreach ($this->getMemoryStorage()->get('dynamic_action') ?? [] as $action) {
             if ($action['type'] === 'import' && !empty($action['source_entity']) && !empty($action['usage'])) {
