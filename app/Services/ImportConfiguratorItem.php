@@ -39,7 +39,6 @@ class ImportConfiguratorItem extends Base
             'foreignImportBy'
         ];
 
-
     protected ?Container $container2 = null;
 
     public function prepareCollectionForOutput(EntityCollection $collection, array $selectParams = []): void
@@ -82,16 +81,6 @@ class ImportConfiguratorItem extends Base
         $class = $this->getMetadata()->get(['import', 'configurator', 'fields', $type, 'converter'], Varchar::class);
 
         return new $class($this->getInjection('container'), $this);
-    }
-
-    public function updateEntity(string $id, \stdClass $data): bool
-    {
-        if (property_exists($data, '_previousItemId') && property_exists($data, '_itemId')) {
-            $this->getRepository()->updatePosition((string)$data->_itemId, (string)$data->_previousItemId);
-            return true;
-        }
-
-        return parent::updateEntity($id, $data);
     }
 
     protected function init()

@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Import\Repositories;
 
-use Doctrine\DBAL\ParameterType;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Templates\Repositories\Base;
 use Espo\ORM\Entity;
@@ -31,46 +30,6 @@ class ImportConfiguratorItem extends Base
         }
 
         return $type;
-    }
-
-    public function updatePosition(string $itemId, string $previousItemId): void
-    {
-        $res = $this
-            ->getConnection()
-            ->createQueryBuilder()
-            ->select('id')
-            ->from('import_configurator_item')
-            ->where('deleted=:false')
-            ->andWhere('import_feed_id=:importFeedId')
-            ->setParameter('importFeedId', $this->get($itemId)->get('importFeedId'))
-            ->setParameter('false', false, ParameterType::BOOLEAN)
-            ->orderBy('sort_order', 'ASC')
-            ->fetchFirstColumn();
-
-        $ids = [];
-        if (empty($previousItemId)) {
-            $ids[] = $itemId;
-        }
-
-        foreach ($res as $id) {
-            if (!in_array($id, $ids)) {
-                $ids[] = $id;
-            }
-            if ($id === $previousItemId) {
-                $ids[] = $itemId;
-            }
-        }
-
-        foreach ($ids as $k => $id) {
-            $this
-                ->getConnection()
-                ->createQueryBuilder()
-                ->update('import_configurator_item')
-                ->set('sort_order', ':sortOrder')
-                ->setParameter('sortOrder', $k * 10)
-                ->where('id=:id')->setParameter('id', $id)
-                ->executeQuery();
-        }
     }
 
     protected function beforeSave(Entity $entity, array $options = [])
