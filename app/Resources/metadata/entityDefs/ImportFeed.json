@@ -684,6 +684,7 @@
   },
   "links": {
     "configuratorItems": {
+      "sortField": "sortOrder",
       "type": "hasMany",
       "foreign": "importFeed",
       "entity": "ImportConfiguratorItem",
