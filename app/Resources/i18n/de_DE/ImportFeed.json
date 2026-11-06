@@ -138,6 +138,9 @@
     },
     "processingType": {
       "configurator": "Konfigurator"
+    },
+    "type": {
+      "simple": "Datei"
     }
   },
   "tooltips": {
