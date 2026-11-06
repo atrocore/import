@@ -30,5 +30,10 @@
   },
   "dashlets": {
     "DataSyncErrorsImport": "Data sync errors for Import"
+  },
+  "subtypeDescriptions": {
+    "ActionTypeImport": "Runs an import feed, optionally with an uploaded file.",
+    "ActionTypeReImportFailedJob": "Runs a failed import job again.",
+    "ImportFeedTypeSimple": "Imports data from an uploaded CSV, Excel, JSON or XML file."
   }
 }

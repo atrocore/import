@@ -28,5 +28,10 @@
   },
   "dashlets": {
     "DataSyncErrorsImport": "Synchronisierungsfehler für Datenimport"
+  },
+  "subtypeDescriptions": {
+    "ActionTypeImport": "Führt einen Import-Feed aus, optional mit einer hochgeladenen Datei.",
+    "ActionTypeReImportFailedJob": "Führt einen fehlgeschlagenen Import-Job erneut aus.",
+    "ImportFeedTypeSimple": "Importiert Daten aus einer hochgeladenen CSV-, Excel-, JSON- oder XML-Datei."
   }
 }
