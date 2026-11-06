@@ -28,5 +28,10 @@
   },
   "dashlets": {
     "DataSyncErrorsImport": "Erreurs de synchronisation des données pour l'importation"
+  },
+  "subtypeDescriptions": {
+    "ActionTypeImport": "Exécute un flux d'import, éventuellement avec un fichier téléversé.",
+    "ActionTypeReImportFailedJob": "Relance une tâche d'import échouée.",
+    "ImportFeedTypeSimple": "Importe des données depuis un fichier CSV, Excel, JSON ou XML téléversé."
   }
 }

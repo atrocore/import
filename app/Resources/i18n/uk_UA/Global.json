@@ -28,5 +28,10 @@
   },
   "dashlets": {
     "DataSyncErrorsImport": "Помилки синхронізації імпорту даних"
+  },
+  "subtypeDescriptions": {
+    "ActionTypeImport": "Запускає фід імпорту, за потреби із завантаженим файлом.",
+    "ActionTypeReImportFailedJob": "Повторно запускає невдале завдання імпорту.",
+    "ImportFeedTypeSimple": "Імпортує дані із завантаженого файлу CSV, Excel, JSON або XML."
   }
 }
