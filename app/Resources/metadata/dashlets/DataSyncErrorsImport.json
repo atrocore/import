@@ -1,5 +1,6 @@
 {
     "view": "import:views/dashlets/data-sync-errors-import",
+    "className": "\\Import\\Dashlets\\DataSyncErrorsImport",
     "options": {
         "fields": {
             "title": {
