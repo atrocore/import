@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Import\Migrations;
 
-use Espo\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Migration\Base;
 
 class V1Dot5Dot22 extends Base
