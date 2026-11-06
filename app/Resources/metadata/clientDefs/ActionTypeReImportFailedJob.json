@@ -1,5 +1,5 @@
 {
-  "iconClass": "person-simple-run",
+  "iconClass": "arrow-counter-clockwise",
   "recordViews": {
     "detail": "views/action/record/detail"
   },
