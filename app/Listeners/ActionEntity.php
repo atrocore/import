@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Import\Listeners;
 
 use Atro\Listeners\AbstractListener;
-use Espo\Core\EventManager\Event;
+use Atro\Core\EventManager\Event;
 
 class ActionEntity extends AbstractListener
 {

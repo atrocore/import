@@ -880,7 +880,7 @@ class ImportFeed extends Base
         }
 
         // The last export header row is the one whose text the system also uses internally as
-        // the column's "real" name (see Export\Services\ExportTypeSimple::storeCsvFile()) - so
+        // the column's "real" name (see Export\ExportTypes\Simple::storeCsvFile()) - so
         // it's the row whose values line up with Source Fields here. With no header row at all
         // (0), there's nothing to match column names against, so no mapping can be derived.
         $numberOfHeaders = (int)($exportFeed->get('numberOfHeaders') ?? 0);

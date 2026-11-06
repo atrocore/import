@@ -17,7 +17,7 @@ use Atro\Core\Utils\Util;
 use Doctrine\DBAL\ParameterType;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Templates\Repositories\Base;
-use Espo\Core\Utils\Language;
+use Atro\Core\Utils\Language;
 use Espo\ORM\Entity;
 use Import\Entities\ImportFeed as ImportFeedEntity;
 

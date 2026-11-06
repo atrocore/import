@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Import\SelectManagers;
 
-use Espo\Core\SelectManagers\Base;
+use Atro\Core\SelectManagers\Base;
 
 class ImportJob extends Base
 {

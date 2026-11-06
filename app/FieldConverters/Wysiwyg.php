@@ -16,12 +16,12 @@ namespace Import\FieldConverters;
 use Atro\Core\Exceptions\NotModified;
 use Atro\Core\Utils\RegexUtil;
 use Atro\Core\KeyValueStorages\StorageInterface;
-use Espo\Core\Services\Base;
-use Espo\Core\Utils\Language;
+use Atro\Core\Services\AbstractService;
+use Atro\Core\Utils\Language;
 use Espo\ORM\Entity;
-use Espo\Core\Container;
+use Atro\Core\Container;
 use Atro\Core\Utils\Config;
-use Espo\Core\Utils\Metadata;
+use Atro\Core\Utils\Metadata;
 use Espo\ORM\EntityManager;
 use Import\Jobs\ImportTypeSimple;
 use Import\Services\ImportConfiguratorItem;
@@ -118,7 +118,7 @@ class Wysiwyg
         return $this->getLanguage()->translate($label, $category, $scope);
     }
 
-    protected function getService(string $name, bool $alternativeContainer = false): Base
+    protected function getService(string $name, bool $alternativeContainer = false): AbstractService
     {
         $key = "service_{$name}";
 

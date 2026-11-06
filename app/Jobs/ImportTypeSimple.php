@@ -24,7 +24,7 @@ use Atro\Jobs\JobInterface;
 use Atro\Core\EventManager\Manager;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Utils\Util;
-use Atro\Services\AbstractService;
+use Atro\Core\Services\AbstractService;
 use Import\Core\Exceptions\MoreThanOneRecordFound;
 use Espo\ORM\Entity;
 use Import\Entities\ImportFeed;

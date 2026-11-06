@@ -14,9 +14,9 @@ declare(strict_types=1);
 namespace Import\SelectManagers;
 
 use Atro\Core\Exceptions\BadRequest;
-use Espo\Core\Utils\Util;
+use Atro\Core\Utils\Util;
 
-class ImportFeed extends \Espo\Core\SelectManagers\Base
+class ImportFeed extends \Atro\Core\SelectManagers\Base
 {
     protected function boolFilterOnlyImportFailed24Hours(array &$result): void
     {
