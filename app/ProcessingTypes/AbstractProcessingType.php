@@ -15,10 +15,10 @@ use Atro\Core\AttributeFieldConverter;
 use Atro\Core\Container;
 use Atro\Core\Utils\Language;
 use Atro\Entities\Job;
-use Atro\Services\Record;
 use Espo\ORM\EntityManager;
 use Import\Entities\ImportFeed;
 use Import\FileParsers\FileParserInterface;
+use Atro\Core\Services\AbstractRecordService;
 
 abstract class AbstractProcessingType
 {
@@ -112,7 +112,7 @@ abstract class AbstractProcessingType
         return $this->container->get(ImportFeed::getFileParserClass($format));
     }
 
-    protected function getService(string $scope): Record
+    protected function getService(string $scope): AbstractRecordService
     {
         return $this->container->get('serviceFactory')->create($scope);
     }
