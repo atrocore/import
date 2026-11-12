@@ -88,8 +88,8 @@ class ImportJobLog extends Archive
         $importJobPart = '';
 
         if (!empty($importJobIds)) {
-            //clickhouse does not support Connection::PARAM_STR_ARRAY
-            $inList = "'" . implode("','", $importJobIds) . "'";
+            //clickhouse does not support Connection::PARAM_STR_ARRAY, so quote each value
+            $inList = implode(',', array_map(fn($id) => $con->quote((string)$id), $importJobIds));
             $importJobPart = " AND ijl.import_job_id IN ($inList)";
         }
 
