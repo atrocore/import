@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Import\Services;
 
+use Atro\Core\Authentication\CurrentUser;
 use Atro\Core\Container;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\KeyValueStorages\StorageInterface;
@@ -100,8 +101,7 @@ class ImportConfiguratorItem extends Base
         if (is_null($this->container2)) {
             $this->container2 = (new \Atro\Core\Application())->getContainer();
 
-            $auth = new \Espo\Core\Utils\Auth($this->container2);
-            $auth->useNoAuth();
+            $this->container2->get(CurrentUser::class)->setSystemUser();
 
             $importJobId = $this->getMemoryStorage()->get('importJobId');
             if (!empty($importJobId)) {
