@@ -1,3 +1,6 @@
 {
-  "iconClass": "file-arrow-up"
+  "iconClass": "file-arrow-up",
+  "views": {
+    "detail": "import:views/import-feed/detail"
+  }
 }
