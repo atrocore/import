@@ -34,8 +34,7 @@ class V1Dot2Dot4 extends \Atro\Core\Migration\Base
         $container = (new \Atro\Core\Application())->getContainer();
         $em = $container->get('entityManager');
 
-        $auth = new \Espo\Core\Utils\Auth($container);
-        $auth->useNoAuth();
+        $container->get(\Atro\Core\Authentication\CurrentUser::class)->setSystemUser();
 
         foreach ($em->getRepository('ImportFeed')->where(['type' => 'simple'])->find() as $feed) {
             $attachment = $feed->get('file');
