@@ -11,7 +11,8 @@
     "ImportFeed": "Импортный фид",
     "ImportConfiguratorItem": "Конфигуратор",
     "ActionTypeImport": "Действие: Импортный фид",
-    "ActionTypeReImportFailedJob": "Действие: Повторить неудавшийся импорт"
+    "ActionTypeReImportFailedJob": "Действие: Повторить неудавшийся импорт",
+    "ImportFeedTypeSimple": "Импортный фид: файл"
   },
   "scopeNamesPlural": {
     "ImportFeed": "Импорт фидов",
@@ -19,7 +20,8 @@
     "ImportJobLog": "Импортируйте журналы",
     "ImportConfiguratorItem": "Конфигуратор",
     "ActionTypeImport": "Действие: Импортный фид",
-    "ActionTypeReImportFailedJob": "Действие: Повторить неудавшийся импорт"
+    "ActionTypeReImportFailedJob": "Действие: Повторить неудавшийся импорт",
+    "ImportFeedTypeSimple": "Поток импорта: файл"
   },
   "labels": {
     "importErrorDuring24Hours": "Ошибка импорта Feeds/Executions в течение 24 часов",
@@ -28,5 +30,10 @@
   },
   "dashlets": {
     "DataSyncErrorsImport": "Ошибки синхронизации данных при импорте"
+  },
+  "subtypeDescriptions": {
+    "ImportFeedTypeSimple": "Импортирует данные из загруженного файла CSV, Excel, JSON или XML.",
+    "ActionTypeImport": "Запускает импортный фид, при необходимости используя загруженный файл.",
+    "ActionTypeReImportFailedJob": "Повторно запускает неудавшуюся задачу импорта."
   }
 }
