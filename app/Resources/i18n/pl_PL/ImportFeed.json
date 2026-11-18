@@ -122,7 +122,10 @@
     "missingSourceFields": "W pliku importu brakuje pól źródłowych %s skonfigurowanych w kanale importu.",
     "noEntityFound": "Nie znaleziono rekordu danych dla powiązanej encji '%s'.",
     "listSeparatorNotAllowed": "Użycie separatora wartości listy w wartości pola '%s' jest niedozwolone.",
-    "noEntityIdentifier": "Proszę wybrać kolumnę Identyfikator dla konfiguratora."
+    "noEntityIdentifier": "Proszę wybrać kolumnę Identyfikator dla konfiguratora.",
+    "noSuchType": "Typ '%s' nie istnieje.",
+    "cannotDetermineRecordToDelete": "Nie można określić, który rekord należy usunąć, ponieważ znaleziono więcej niż jeden pasujący rekord. Sprawdź konfigurację kanału importu lub usuń zduplikowane rekordy w systemie.",
+    "noRecordsFoundForWithFilter": "Nie znaleziono rekordów w encji '%s' z: %s i filtrem dla pola '%s'."
   },
   "options": {
     "repeatProcessing": {
@@ -136,6 +139,9 @@
     },
     "processingType": {
       "configurator": "Konfigurator"
+    },
+    "type": {
+      "simple": "Plik"
     }
   },
   "tooltips": {
