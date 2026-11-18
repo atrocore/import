@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace Import\FieldConverters;
 
 use Atro\Core\Exceptions\BadRequest;
-use Espo\Core\Utils\Json;
 use Espo\ORM\Entity;
 
 class ValueWithUnit extends Varchar
@@ -90,12 +89,12 @@ class ValueWithUnit extends Varchar
         if ($entity->has('default') && strpos((string)$entity->get('default'), '{') === false) {
             $data['value'] = $entity->get('default');
         }
-        $entity->set('default', Json::encode($data));
+        $entity->set('default', json_encode($data));
     }
 
     public function prepareForOutputConfiguratorDefaultField(Entity $entity): void
     {
-        $data = Json::decode($entity->get('default'), true);
+        $data = json_decode((string)$entity->get('default'), true);
         if (!empty($data)) {
             $entity->set('default', $data['value']);
             $entity->set('defaultUnitId', $data['unitId']);

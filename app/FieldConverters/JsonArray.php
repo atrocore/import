@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Import\FieldConverters;
 
-use Espo\Core\Utils\Json;
 use Espo\ORM\Entity;
 
 class JsonArray extends Varchar
@@ -67,12 +66,12 @@ class JsonArray extends Varchar
     public function prepareForSaveConfiguratorDefaultField(Entity $entity): void
     {
         if ($entity->isAttributeChanged('default')) {
-            $entity->set('default', empty($entity->get('default')) ? null : Json::encode($entity->get('default')));
+            $entity->set('default', empty($entity->get('default')) ? null : json_encode($entity->get('default')));
         }
     }
 
     public function prepareForOutputConfiguratorDefaultField(Entity $entity): void
     {
-        $entity->set('default', !empty($entity->get('default')) ? Json::decode($entity->get('default'), true) : []);
+        $entity->set('default', !empty($entity->get('default')) ? json_decode($entity->get('default'), true) : []);
     }
 }
