@@ -1,13 +1,13 @@
 {
   "fields": {
-    "importFeed": "",
-    "payload": "",
-    "uploadAndImport": ""
+    "importFeed": "Importálási adatfolyam",
+    "payload": "Adattartalom",
+    "uploadAndImport": "Feltöltés és importálás"
   },
   "options": {
     "type": {
-      "import": "",
-      "reImportFailedJob": ""
+      "import": "Importálási adatfolyam",
+      "reImportFailedJob": "Sikertelen feladat újbóli importálása"
     }
   }
 }
