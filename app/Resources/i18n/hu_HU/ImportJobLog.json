@@ -1,20 +1,20 @@
 {
   "fields": {
-    "rowNumber": "",
-    "row": "",
-    "importJob": "",
-    "type": "",
-    "entityName": "",
-    "entityId": "",
-    "message": ""
+    "rowNumber": "Sorszám",
+    "row": "Bemeneti adatok",
+    "importJob": "Importfuttatások",
+    "type": "Típus",
+    "entityName": "Entitás",
+    "entityId": "Entitásazonosító",
+    "message": "Hibaüzenet"
   },
   "options": {
     "type": {
-      "create": "",
-      "update": "",
-      "delete": "",
-      "skip": "",
-      "error": ""
+      "create": "Létrehozás",
+      "update": "Frissítés",
+      "delete": "Törlés",
+      "skip": "Kihagyás",
+      "error": "Hiba"
     }
   }
 }
