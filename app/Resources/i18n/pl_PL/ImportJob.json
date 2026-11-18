@@ -50,8 +50,6 @@
     "onlyImportFailed28Days": "Tylko Zadania Importu, które nie powiodły się w ciągu ostatnich 28 dni"
   },
   "exceptions": {
-    "cacheWriteFailed": "Nie można zapisać danych do pamięci podręcznej importu.",
-    "cannotReCreateDeleteOnlyJob": "",
-    "jobItemNotFound": ""
+    "cacheWriteFailed": "Nie można zapisać danych do pamięci podręcznej importu."
   }
 }
