@@ -11,7 +11,8 @@
     "ImportJob": "Wykonanie importu",
     "ImportJobLog": "Dziennik importu",
     "ActionTypeImport": "Akcja: Importuj Źródło",
-    "ActionTypeReImportFailedJob": "Akcja: Ponów nieudane zadanie importu"
+    "ActionTypeReImportFailedJob": "Akcja: Ponów nieudane zadanie importu",
+    "ImportFeedTypeSimple": ""
   },
   "scopeNamesPlural": {
     "ImportConfiguratorItem": "Konfigurator",
@@ -19,7 +20,8 @@
     "ImportJob": "Wykonanie importu",
     "ImportJobLog": "Import dzienników",
     "ActionTypeImport": "Akcja: Importuj Źródło",
-    "ActionTypeReImportFailedJob": "Akcja: Ponów nieudane zadanie importu"
+    "ActionTypeReImportFailedJob": "Akcja: Ponów nieudane zadanie importu",
+    "ImportFeedTypeSimple": ""
   },
   "labels": {
     "importErrorDuring24Hours": "Błąd importu kanałów/wykonań w ciągu 24 godzin",
@@ -28,5 +30,10 @@
   },
   "dashlets": {
     "DataSyncErrorsImport": "Błędy synchronizacji danych dla Importu"
+  },
+  "subtypeDescriptions": {
+    "ImportFeedTypeSimple": "",
+    "ActionTypeImport": "",
+    "ActionTypeReImportFailedJob": ""
   }
 }
