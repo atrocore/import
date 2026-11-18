@@ -46,7 +46,8 @@
   },
   "exceptions": {
     "cacheWriteFailed": "Daten können nicht in den Import-Cache geschrieben werden.",
-    "cannotReCreateDeleteOnlyJob": "Dieser Importauftrag löscht nur Datensätze. Ein erneutes Erstellen ist nicht möglich, da ein Teil der Feed-Daten alles andere löschen würde."
+    "cannotReCreateDeleteOnlyJob": "Dieser Importauftrag löscht nur Datensätze. Ein erneutes Erstellen ist nicht möglich, da ein Teil der Feed-Daten alles andere löschen würde.",
+    "jobItemNotFound": "Job nicht gefunden"
   },
   "boolFilters": {
     "onlyImportFailed24Hours": "Nur Importaufträge, die in den letzten 24 Stunden fehlgeschlagen sind",
