@@ -11,8 +11,7 @@
     "ImportJob": "Виконання імпорту",
     "ImportJobLog": "Журнал імпорту",
     "ActionTypeImport": "Дія: Імпортний фід",
-    "ActionTypeReImportFailedJob": "Дія: Повторити невдалий імпорт",
-    "ImportFeedTypeSimple": ""
+    "ActionTypeReImportFailedJob": "Дія: Повторити невдалий імпорт"
   },
   "scopeNamesPlural": {
     "ImportFeed": "Імпортні фіди",
@@ -20,8 +19,7 @@
     "ImportJob": "Виконання імпорту",
     "ImportJobLog": "Імпорт журналів",
     "ActionTypeImport": "Дія: Імпортний фід",
-    "ActionTypeReImportFailedJob": "Дія: Повторити невдалий імпорт",
-    "ImportFeedTypeSimple": ""
+    "ActionTypeReImportFailedJob": "Дія: Повторити невдалий імпорт"
   },
   "labels": {
     "importErrorDuring24Hours": "Помилка імпорту каналів/виконань протягом 24 годин",
