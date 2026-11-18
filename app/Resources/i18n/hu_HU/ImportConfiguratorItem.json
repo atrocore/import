@@ -1,0 +1,51 @@
+{
+  "fields": {
+    "entityIdentifier": "",
+    "name": "",
+    "column": "",
+    "defaultContainer": "",
+    "default": "",
+    "importFeed": "",
+    "importBy": "",
+    "createIfNotExist": "",
+    "locale": "",
+    "entityAttribute": "",
+    "sourceFields": "",
+    "type": "",
+    "foreignColumn": "",
+    "foreignImportBy": "",
+    "replaceArray": "",
+    "importByForListAttribute": "",
+    "urlHeaders": "",
+    "valueExtractor": ""
+  },
+  "groupOptions": {
+    "name": {
+      "fields": "",
+      "attributes": ""
+    }
+  },
+  "labels": {
+    "main": "",
+    "mapping": "",
+    "search": "",
+    "additionalInformation": "",
+    "importByForAttributeValue": "",
+    "urlHeaders": "",
+    "_addAttribute": ""
+  },
+  "exceptions": {
+    "wrongFieldsNumber": "",
+    "wrongForeignFieldsNumber": "",
+    "foreignColumnsAndFieldsEmpty": ""
+  },
+  "tooltips": {
+    "column": "",
+    "importBy": "",
+    "createIfNotExist": "",
+    "foreignColumn": "",
+    "foreignImportBy": "",
+    "replaceArray": "",
+    "valueExtractor": ""
+  }
+}
