@@ -124,7 +124,8 @@
     "missingSourceFields": "Die im Import-Feed konfigurierten Quellfelder %s fehlen in der Importdatei.",
     "noEntityFound": "Kein Datensatz für die zugehörige Entität '%s' gefunden.",
     "listSeparatorNotAllowed": "Die Verwendung des Trennzeichens für Listenwerte im Wert für das Feld '%s' ist nicht erlaubt.",
-    "noEntityIdentifier": "Bitte wählen Sie die Identifizierungs-Spalte für den Konfigurator."
+    "noEntityIdentifier": "Bitte wählen Sie die Identifizierungs-Spalte für den Konfigurator.",
+    "noSuchType": "Der Typ '%s' existiert nicht."
   },
   "options": {
     "repeatProcessing": {
