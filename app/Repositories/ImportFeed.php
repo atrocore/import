@@ -25,7 +25,7 @@ class ImportFeed extends Base
 {
     public function getLanguage(): Language
     {
-        return $this->getInjection('language');
+        return $this->container->get('language');
     }
 
     public function getLatestJobData(array $importFeedsIds): array
@@ -122,12 +122,5 @@ class ImportFeed extends Base
                 throw new BadRequest($this->getLanguage()->translate("noEntityIdentifier", "exceptions", "ImportFeed"));
             }
         }
-    }
-
-    protected function init()
-    {
-        parent::init();
-
-        $this->addDependency('language');
     }
 }

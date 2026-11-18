@@ -81,14 +81,7 @@ class ImportConfiguratorItem extends Base
     {
         $class = $this->getMetadata()->get(['import', 'configurator', 'fields', $type, 'converter'], Varchar::class);
 
-        return new $class($this->getInjection('container'), $this);
-    }
-
-    protected function init()
-    {
-        parent::init();
-
-        $this->addDependency('container');
+        return new $class($this->container, $this);
     }
 
     /**

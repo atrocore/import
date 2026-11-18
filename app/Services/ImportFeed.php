@@ -345,7 +345,7 @@ class ImportFeed extends Base
 
         $data = \simplexml_load_string($contents);
         if (empty($data)) {
-            throw new BadRequest($this->getInjection('language')->translate('xmlExpected', 'exceptions', 'ImportFeed'));
+            throw new BadRequest($this->container->get('language')->translate('xmlExpected', 'exceptions', 'ImportFeed'));
         }
     }
 
@@ -364,7 +364,7 @@ class ImportFeed extends Base
         }
 
         if (empty($data)) {
-            throw new BadRequest($this->getInjection('language')->translate('jsonExpected', 'exceptions',
+            throw new BadRequest($this->container->get('language')->translate('jsonExpected', 'exceptions',
                 'ImportFeed'));
         }
     }
@@ -391,12 +391,12 @@ class ImportFeed extends Base
         ];
 
         if (!in_array($attachment->get('mimeType'), $csvTypes)) {
-            throw new BadRequest($this->getInjection('language')->translate('csvExpected', 'exceptions', 'ImportFeed'));
+            throw new BadRequest($this->container->get('language')->translate('csvExpected', 'exceptions', 'ImportFeed'));
         }
 
         $contents = $attachment->getContents();
         if (is_string($contents) && !preg_match('//u', $contents)) {
-            throw new BadRequest($this->getInjection('language')->translate('utf8Expected', 'exceptions',
+            throw new BadRequest($this->container->get('language')->translate('utf8Expected', 'exceptions',
                 'ImportFeed'));
         }
     }
@@ -415,7 +415,7 @@ class ImportFeed extends Base
         ];
 
         if (!in_array($attachment->get('mimeType'), $excelTypes)) {
-            throw new BadRequest($this->getInjection('language')->translate('excelExpected', 'exceptions',
+            throw new BadRequest($this->container->get('language')->translate('excelExpected', 'exceptions',
                 'ImportFeed'));
         }
     }
@@ -437,7 +437,7 @@ class ImportFeed extends Base
         }
 
         $event = $this
-            ->getInjection('eventManager')
+            ->container->get('eventManager')
             ->dispatch('ImportFeedService', 'beforeRunImport',
                 new Event(['importFeedId' => $importFeedId, 'attachmentId' => $attachmentId, 'payload' => $payload]));
 
@@ -459,7 +459,7 @@ class ImportFeed extends Base
         if (empty($attachmentId)) {
             $attachmentId = $feed->get('fileId');
             if (empty($attachmentId)) {
-                throw new BadRequest($this->getInjection('language')->translate('fileIdIsEmpty', 'exceptions',
+                throw new BadRequest($this->container->get('language')->translate('fileIdIsEmpty', 'exceptions',
                     'ImportFeed'));
             }
         }
@@ -472,7 +472,7 @@ class ImportFeed extends Base
         $this->pushJobs($feed, $attachmentId, $payload, $priority);
 
         $this
-            ->getInjection('eventManager')
+            ->container->get('eventManager')
             ->dispatch('ImportFeedService', 'afterImportJobsCreations', new Event(['importFeedId' => $importFeedId]));
 
         return true;
@@ -574,7 +574,7 @@ class ImportFeed extends Base
         $format = $payload->format ?? $importFeed->get('format');
 
         if ($maxPerJob > 0 && in_array($format, ['CSV', 'Excel'])) {
-            $name = $this->getInjection('language')->translate('createImportJobs', 'labels', 'ImportFeed');
+            $name = $this->container->get('language')->translate('createImportJobs', 'labels', 'ImportFeed');
             $name = sprintf($name, $importFeed->get('name'));
 
             $qmJobData = [
@@ -585,7 +585,7 @@ class ImportFeed extends Base
             ];
 
             if (!empty($payload) && !empty($payload->executeNow)) {
-                $this->getInjection('container')->get(ImportJobCreator::class)->runNow($qmJobData);
+                $this->container->get(ImportJobCreator::class)->runNow($qmJobData);
             } else {
                 $jobEntity = $this->getEntityManager()->getEntity('Job');
                 $jobEntity->set([
@@ -633,18 +633,7 @@ class ImportFeed extends Base
      */
     public function exception(string $key): string
     {
-        return $this->getInjection('language')->translate($key, 'exceptions', 'ImportFeed');
-    }
-
-    /**
-     * @inheritdoc
-     */
-    protected function init()
-    {
-        parent::init();
-
-        $this->addDependency('language');
-        $this->addDependency('container');
+        return $this->container->get('language')->translate($key, 'exceptions', 'ImportFeed');
     }
 
     protected function duplicateConfiguratorItems(Entity $entity, Entity $duplicatingEntity): void
@@ -692,7 +681,7 @@ class ImportFeed extends Base
      */
     protected function translate(string $key): string
     {
-        return $this->getInjection('language')->translate($key, 'labels', 'ImportFeed');
+        return $this->container->get('language')->translate($key, 'labels', 'ImportFeed');
     }
 
     public function push(string $name, string $type, array $data = []): bool
@@ -707,7 +696,7 @@ class ImportFeed extends Base
             }
             try {
                 $className = $this->getMetadata()->get(['app', 'jobTypes', $type, 'handler']);
-                $this->getInjection('container')->get($className)->runNow($data);
+                $this->container->get($className)->runNow($data);
                 $importJob->set('state', 'Success');
             } catch (\Throwable $e) {
                 $importJob->set('state', 'Failed');
@@ -769,7 +758,7 @@ class ImportFeed extends Base
 
     public function getFileParser(string $format): \Import\FileParsers\FileParserInterface
     {
-        return $this->getInjection('container')->get(ImportFeedEntity::getFileParserClass($format));
+        return $this->container->get(ImportFeedEntity::getFileParserClass($format));
     }
 
     /**
@@ -791,17 +780,17 @@ class ImportFeed extends Base
             'handler'
         ]);
 
-        return $this->getInjection('container')->get($className);
+        return $this->container->get($className);
     }
 
     protected function getAttributeFieldConverter(): AttributeFieldConverter
     {
-        return $this->getInjection('container')->get(AttributeFieldConverter::class);
+        return $this->container->get(AttributeFieldConverter::class);
     }
 
     protected function getLanguage(): Language
     {
-        return $this->getInjection('container')->get('language');
+        return $this->container->get('language');
     }
 
     public function createImportJob(
@@ -811,7 +800,7 @@ class ImportFeed extends Base
         ?\stdClass       $payload = null
     ): ImportJob
     {
-        $entityLabel = $this->getInjection('language')->translate($entityType, 'scopeNames');
+        $entityLabel = $this->container->get('language')->translate($entityType, 'scopeNames');
 
         $user = $this->getUser();
 
@@ -1034,7 +1023,7 @@ class ImportFeed extends Base
     public function createFileDuplicate(File $file, ?string $folderId): string
     {
         /** @var FileStorageInterface $storage */
-        $storage = $this->getInjection('container')->get($file->getStorage()->get('type') . 'Storage');
+        $storage = $this->container->get($file->getStorage()->get('type') . 'Storage');
 
         $path = self::TMP_DIR . DIRECTORY_SEPARATOR . Util::generateId() . DIRECTORY_SEPARATOR . $file->get('name');
 
@@ -1085,5 +1074,4 @@ class ImportFeed extends Base
             sleep(1);
         }
     }
-
 }

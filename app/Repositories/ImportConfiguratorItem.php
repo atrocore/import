@@ -52,11 +52,11 @@ class ImportConfiguratorItem extends Base
             $importBy = $entity->get('foreignImportBy');
 
             if (empty($columns) || empty($importBy)) {
-                throw new BadRequest($this->getInjection('language')->translate('foreignColumnsAndFieldsEmpty', 'exceptions', 'ImportConfiguratorItem'));
+                throw new BadRequest($this->container->get('language')->translate('foreignColumnsAndFieldsEmpty', 'exceptions', 'ImportConfiguratorItem'));
             }
 
             if ((count($columns) === 1 && count($importBy) < 1) || (count($columns) > 1 && count($columns) !== count($importBy))) {
-                throw new BadRequest($this->getInjection('language')->translate('wrongFieldsNumber', 'exceptions', 'ImportConfiguratorItem'));
+                throw new BadRequest($this->container->get('language')->translate('wrongFieldsNumber', 'exceptions', 'ImportConfiguratorItem'));
             }
         }
 
@@ -72,14 +72,6 @@ class ImportConfiguratorItem extends Base
         }
 
         parent::beforeSave($entity, $options);
-    }
-
-    protected function init()
-    {
-        parent::init();
-
-        $this->addDependency('language');
-        $this->addDependency('container');
     }
 
     public function checkIfVirtualFieldIsIdentifier(Entity $entity, Entity $importFeedEntity): void
@@ -107,7 +99,7 @@ class ImportConfiguratorItem extends Base
     protected function prepareDefaultField(string $type, Entity $entity): void
     {
         $this
-            ->getInjection('container')
+            ->container
             ->get('serviceFactory')
             ->create('ImportConfiguratorItem')
             ->getFieldConverter($type)

@@ -30,7 +30,7 @@ class Xml extends Json
 
         $data = \Import\Core\Utils\JsonToVerticalArray::mutate($json, $this->data);
 
-        return $this->getInjection('eventManager')
+        return $this->container->get('eventManager')
             ->dispatch('ImportFileParser', 'afterGetFileData', new Event(['data' => $data, 'attachment' => $attachment, 'type' => 'xml']))
             ->getArgument('data');
     }
