@@ -136,9 +136,8 @@ class ImportJobLog extends Archive
             ->fetchFirstColumn();
     }
 
-
     protected function getClickHouseConnection(): Connection
     {
-        return $this->getInjection('container')->get('clickhouseConnection');
+        return $this->container->get('clickhouseConnection');
     }
 }

@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace Import\FieldConverters;
 
 use Atro\Core\Exceptions\BadRequest;
-use Espo\Core\Utils\Json;
 use Espo\ORM\Entity;
 
 class LinkMultiple extends Varchar
@@ -64,7 +63,7 @@ class LinkMultiple extends Varchar
         }
 
         if (empty($ids) && !empty($config['default'])) {
-            $ids = Json::decode($config['default'], true);
+            $ids = json_decode($config['default'], true);
         }
 
         $ids = array_values($ids);
@@ -117,7 +116,7 @@ class LinkMultiple extends Varchar
     public function prepareForSaveConfiguratorDefaultField(Entity $entity): void
     {
         if ($entity->has('defaultIds')) {
-            $entity->set('default', empty($entity->get('defaultIds')) ? null : Json::encode($entity->get('defaultIds')));
+            $entity->set('default', empty($entity->get('defaultIds')) ? null : json_encode($entity->get('defaultIds')));
         }
     }
 
@@ -128,7 +127,7 @@ class LinkMultiple extends Varchar
         if (!empty($entity->get('default'))) {
             $relEntityName = $this->getForeignEntityName(['entity' => $entity->get('entity'), 'name' => $entity->get('name')]);
             if (!empty($relEntityName)) {
-                $entity->set('defaultIds', Json::decode($entity->get('default'), true));
+                $entity->set('defaultIds', json_decode($entity->get('default'), true));
                 $names = [];
                 foreach ($entity->get('defaultIds') as $id) {
                     $relEntity = $this->getEntityManager()->getEntity($relEntityName, $id);

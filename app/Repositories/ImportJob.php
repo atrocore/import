@@ -53,7 +53,7 @@ class ImportJob extends Base
                     $entity->set('end', date('Y-m-d H:i:s'));
                 }
 
-                $this->getInjection('serviceFactory')->create('ImportJob')->prepareCounts(new EntityCollection([$entity]));
+                $this->container->get('serviceFactory')->create('ImportJob')->prepareCounts(new EntityCollection([$entity]));
             }
         }
 
@@ -358,13 +358,6 @@ class ImportJob extends Base
 
     protected function getImportService(): \Import\Services\ImportFeed
     {
-        return $this->getInjection('serviceFactory')->create('ImportFeed');
-    }
-
-    protected function init()
-    {
-        parent::init();
-
-        $this->addDependency('serviceFactory');
+        return $this->container->get('serviceFactory')->create('ImportFeed');
     }
 }

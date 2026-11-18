@@ -16,19 +16,18 @@ namespace Import\FileParsers;
 use Atro\Core\EventManager\Event;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Utils\Util;
-use Espo\Core\Injectable;
+use Atro\Core\Container;
 use Atro\Entities\File;
 
-class Csv extends Injectable implements FileParserInterface
+class Csv implements FileParserInterface
 {
     const UTF8_BOM = "\xEF\xBB\xBF";
     const UTF8_BOM_LEN = 3;
 
     protected array $data = [];
 
-    public function __construct()
+    public function __construct(protected readonly Container $container)
     {
-        $this->addDependency('eventManager');
     }
 
     public function setData(array $data): void
@@ -107,7 +106,7 @@ class Csv extends Injectable implements FileParserInterface
             return null;
         }
 
-        return $this->getInjection('eventManager')
+        return $this->container->get('eventManager')
             ->dispatch('ImportFileParser', 'afterGetFileData', new Event(['data' => $data, 'attachment' => $attachment, 'type' => 'csv']))
             ->getArgument('data');
     }

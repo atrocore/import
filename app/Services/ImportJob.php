@@ -64,7 +64,7 @@ class ImportJob extends Base
         }
 
         $type = $type === 'convertedFile' ? 'converted' : $type;
-        $name = $this->getInjection('container')->get('language')->translate('generateFile' . ucfirst($type), 'labels', 'ImportJob');
+        $name = $this->container->get('language')->translate('generateFile' . ucfirst($type), 'labels', 'ImportJob');
 
         $jobEntity = $this->getEntityManager()->getEntity('Job');
         $jobEntity->set([
@@ -194,15 +194,8 @@ class ImportJob extends Base
         return $importService->runImport($job->get('importFeedId'), !empty($attachmentId) ? $attachmentId : $job->get('attachmentId'));
     }
 
-    protected function init()
-    {
-        parent::init();
-
-        $this->addDependency('container');
-    }
-
     protected function translate(string $key, string $label, string $scope): string
     {
-        return $this->getInjection('container')->get('language')->translate($key, $label, $scope);
+        return $this->container->get('language')->translate($key, $label, $scope);
     }
 }

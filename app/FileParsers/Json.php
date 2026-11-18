@@ -14,16 +14,15 @@ declare(strict_types=1);
 namespace Import\FileParsers;
 
 use Atro\Core\EventManager\Event;
-use Espo\Core\Injectable;
+use Atro\Core\Container;
 use Atro\Entities\File;
 
-class Json extends Injectable implements FileParserInterface
+class Json implements FileParserInterface
 {
     protected array $data = [];
 
-    public function __construct()
+    public function __construct(protected readonly Container $container)
     {
-        $this->addDependency('eventManager');
     }
 
     public function setData(array $data): void
@@ -51,7 +50,7 @@ class Json extends Injectable implements FileParserInterface
 
         $data = \Import\Core\Utils\JsonToVerticalArray::mutate($contents, $this->data);
 
-        return $this->getInjection('eventManager')
+        return $this->container->get('eventManager')
             ->dispatch('ImportFileParser', 'afterGetFileData', new Event(['data' => $data, 'attachment' => $attachment, 'type' => 'json']))
             ->getArgument('data');
     }

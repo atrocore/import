@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace Import\FieldConverters;
 
 use Atro\Core\Exceptions\BadRequest;
-use Espo\Core\Utils\Json;
 use Espo\ORM\Entity;
 
 /**
@@ -131,7 +130,7 @@ class Currency extends FloatValue
 
     public function prepareForSaveConfiguratorDefaultField(Entity $entity): void
     {
-        $old = !$entity->isNew() ? Json::decode($entity->getFetched('default'), true) : ['value' => 0, 'currency' => 'EUR'];
+        $old = !$entity->isNew() ? json_decode((string)$entity->getFetched('default'), true) : ['value' => 0, 'currency' => 'EUR'];
         $currencyData = [
             'value'    => $entity->has('default') && strpos((string)$entity->get('default'), '{') === false ? $entity->get('default') : $old['value'],
             'currency' => $entity->has('defaultCurrency') ? $entity->get('defaultCurrency') : $old['currency']
@@ -141,12 +140,12 @@ class Currency extends FloatValue
             throw new BadRequest('Default currency is required.');
         }
 
-        $entity->set('default', Json::encode($currencyData));
+        $entity->set('default', json_encode($currencyData));
     }
 
     public function prepareForOutputConfiguratorDefaultField(Entity $entity): void
     {
-        $currencyData = Json::decode($entity->get('default'), true);
+        $currencyData = json_decode((string)$entity->get('default'), true);
         $entity->set('default', $currencyData['value']);
         $entity->set('defaultCurrency', $currencyData['currency']);
     }
@@ -157,7 +156,7 @@ class Currency extends FloatValue
         $currency = null;
 
         if (!empty($configuration['default'])) {
-            $default = Json::decode($configuration['default'], true);
+            $default = json_decode($configuration['default'], true);
 
             if (!empty($default['value']) || $default['value'] === '0' || $default['value'] === 0) {
                 try {
