@@ -124,7 +124,8 @@
     "missingSourceFields": "Le(s) champ(s) source %s configuré(s) dans le flux d'importation est (sont) absent(s) du fichier d'importation.",
     "noEntityFound": "Aucun enregistrement de données n'a été trouvé pour l'entité liée \"%s\".",
     "listSeparatorNotAllowed": "L'utilisation du séparateur de valeur de liste dans la valeur du champ \"%s\" n'est pas autorisée.",
-    "noEntityIdentifier": "Veuillez choisir la colonne Identifiant pour le configurateur."
+    "noEntityIdentifier": "Veuillez choisir la colonne Identifiant pour le configurateur.",
+    "noSuchType": "Le type « %s » n’existe pas."
   },
   "options": {
     "repeatProcessing": {
