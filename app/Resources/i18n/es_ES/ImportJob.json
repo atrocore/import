@@ -45,7 +45,9 @@
     "errorsAttachment": "Filas del 'Fichero importado' que no se han importado."
   },
   "exceptions": {
-    "cacheWriteFailed": "No se pueden escribir datos en la caché de importación."
+    "cacheWriteFailed": "No se pueden escribir datos en la caché de importación.",
+    "cannotReCreateDeleteOnlyJob": "Esta tarea de importación solo elimina registros. No es posible volver a crearla, porque una parte de los datos de la fuente eliminaría todo lo demás.",
+    "jobItemNotFound": "Tarea no encontrada"
   },
   "boolFilters": {
     "onlyImportFailed24Hours": "Sólo importar trabajos que fallaron durante las últimas 24 horas",
