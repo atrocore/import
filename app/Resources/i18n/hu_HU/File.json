@@ -1,6 +1,6 @@
 {
   "fields": {
-    "importFeed": "",
-    "importJob": ""
+    "importFeed": "Importálási adatfolyam",
+    "importJob": "Importálási feladat"
   }
 }
