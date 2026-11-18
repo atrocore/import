@@ -31,6 +31,9 @@
   "dashlets": {
     "DataSyncErrorsImport": "Data sync errors for Import"
   },
+  "scopeDescriptions": {
+    "ImportFeed": "Defines where the data is imported from, how it is mapped to the fields and attributes of the entity and how the records are created or updated."
+  },
   "subtypeDescriptions": {
     "ActionTypeImport": "Runs an import feed, optionally with an uploaded file.",
     "ActionTypeReImportFailedJob": "Runs a failed import job again.",

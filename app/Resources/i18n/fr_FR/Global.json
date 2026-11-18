@@ -29,6 +29,9 @@
   "dashlets": {
     "DataSyncErrorsImport": "Erreurs de synchronisation des données pour l'importation"
   },
+  "scopeDescriptions": {
+    "ImportFeed": "Définit d'où les données sont importées, comment elles sont mappées aux champs et attributs de l'entité et comment les enregistrements sont créés ou mis à jour."
+  },
   "subtypeDescriptions": {
     "ActionTypeImport": "Exécute un flux d'import, éventuellement avec un fichier téléversé.",
     "ActionTypeReImportFailedJob": "Relance une tâche d'import échouée.",
