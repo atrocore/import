@@ -1,8 +1,8 @@
 {
   "labels": {
-    "importFeed": ""
+    "importFeed": "Importálási adatfolyamok"
   },
   "descriptions": {
-    "importFeed": ""
+    "importFeed": "Az entitásokba történő adatimportáláshoz használandó importálási sablonok konfigurációja"
   }
 }
