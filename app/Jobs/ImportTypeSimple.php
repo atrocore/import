@@ -32,6 +32,7 @@ use Import\Services\ImportFeed as ImportFeedService;
 use Import\FieldConverters\Link;
 use Import\ProcessingTypes\AbstractProcessingType;
 use Import\Core\RecordWriter;
+use Atro\Core\Templates\Repositories\Subtype as SubtypeRepository;
 
 class ImportTypeSimple extends AbstractJob implements JobInterface
 {
@@ -265,6 +266,8 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
                     if (!empty($entity)) {
                         $id = $entity->get('id');
                         $log->set('entityId', $id);
+                    } elseif (!in_array($data['action'], ['update', 'update_delete', 'delete_found', 'delete_not_found'])) {
+                        $this->checkRecordOfAnotherSubtype($entityService->getEntityType(), $where);
                     }
 
                     /**
@@ -817,6 +820,42 @@ class ImportTypeSimple extends AbstractJob implements JobInterface
         }
 
         return null;
+    }
+
+    /**
+     * A record of a subtype is a record of its supertype, so the identifier of a new record can be taken by a record
+     * of another subtype.
+     */
+    protected function checkRecordOfAnotherSubtype(string $entityName, array $where): void
+    {
+        if (empty($where)) {
+            return;
+        }
+
+        $repository = $this->getEntityManager()->getRepository($entityName);
+        if (!$repository instanceof SubtypeRepository) {
+            return;
+        }
+
+        $supertypeName = $repository->getSupertypeName();
+        $supertypeRepository = $this->getEntityManager()->getRepository($supertypeName);
+
+        // the identifier has to be a field of the supertype
+        $seed = $supertypeRepository->get();
+        foreach (array_keys($where) as $attribute) {
+            if (!$seed->hasAttribute($attribute)) {
+                return;
+            }
+        }
+
+        $record = $supertypeRepository->where($where)->findOne();
+        if (empty($record)) {
+            return;
+        }
+
+        $type = $this->getLanguage()->translateOption((string)$record->get('type'), 'type', $supertypeName);
+
+        throw new BadRequest(sprintf($this->translate('recordExistsWithType', 'exceptions', 'ImportFeed'), $type));
     }
 
     protected function getCodeMessage(int $code): string

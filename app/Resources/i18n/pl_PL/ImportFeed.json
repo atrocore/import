@@ -97,6 +97,7 @@
     "alreadyProceeded": "Rekord danych z takimi identyfikatorami został już przetworzony.",
     "relatedEntityCreatingFailed": "Utworzenie nowego rekordu w encji '%s' nie powiodło się:",
     "moreThanOneFound": "Znaleziono więcej niż jeden rekord danych z identyfikatorem '%s'.",
+    "recordExistsWithType": "Rekord danych z takim identyfikatorem (identyfikatorami) już istnieje z typem '%s'.",
     "wrongImportByValuesCount": "Liczba otrzymanych wartości dla powiązanej encji '%s' nie powinna być mniejsza niż liczba pól powiązanej encji.",
     "nullNoneSame": "Wartość None i null nie mogą być takie same.",
     "skipNoneSameEmpty": "Wartość pusta i wartość pominięcia nie mogą być takie same.",

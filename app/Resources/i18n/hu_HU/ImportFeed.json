@@ -99,6 +99,7 @@
     "alreadyProceeded": "Az ilyen azonosító(k)kal rendelkező adatbejegyzés feldolgozása már megtörtént.",
     "relatedEntityCreatingFailed": "Nem sikerült új rekordot létrehozni a(z) „%s” entitásban:",
     "moreThanOneFound": "Egynél több adatbejegyzés található a(z) „%s” azonosítóval.",
+    "recordExistsWithType": "Ilyen azonosító(k)kal már létezik adatbejegyzés „%s” típussal.",
     "cannotDetermineRecordToDelete": "Nem állapítható meg, melyik rekordot kell törölni, mert egynél több egyező rekord található. Ellenőrizze az import adatfolyam konfigurációját, vagy távolítsa el a duplikált rekordokat a rendszerből.",
     "wrongImportByValuesCount": "A(z) „%s” kapcsolódó entitás fogadott értékeinek száma nem lehet kisebb a kapcsolódó entitás mezőinek számánál.",
     "nullNoneSame": "A „None” és a „null” érték nem lehet azonos.",
