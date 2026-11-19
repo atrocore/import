@@ -929,8 +929,7 @@ class ImportFeed extends Base
             $attachment->decimalMark = $locale->get('decimalMark');
         }
         // an import feed is created via its subtype
-        $subtypeId = $this->getServiceFactory()->create('ImportFeedTypeSimple')->createEntity($attachment);
-        $importFeedId = $this->getEntityManager()->getRepository('ImportFeedTypeSimple')->get($subtypeId)->get('supertypeId');
+        $importFeedId = $this->getServiceFactory()->create('ImportFeedTypeSimple')->createEntity($attachment);
         $importFeed = $this->getEntityManager()->getEntity('ImportFeed', $importFeedId);
         $this->createImportFileFolder($importFeed);
 

@@ -11,19 +11,19 @@
 
 declare(strict_types=1);
 
-namespace Import\Handlers\Action;
+namespace Import\Handlers\ActionTypeImport;
 
 use Atro\Core\Routing\Route;
 use Atro\Handlers\Action\AbstractActionTypeAsyncHandler;
 
 #[Route(
-    path: '/Action/{id}/reImportFailedJobAsync',
+    path: '/ActionTypeImport/{id}/importAsync',
     methods: [
         'POST',
     ],
-    summary: 'Execute Re-import failed job action asynchronously',
-    description: 'Schedules the specified Re-import failed job action as a background job and returns immediately with the job ID.',
-    tag: 'Action',
+    summary: 'Execute Import action asynchronously',
+    description: 'Schedules the specified Import action as a background job and returns immediately with the job ID.',
+    tag: 'ActionTypeImport',
     parameters: [
         [
             'name'        => 'id',
@@ -42,14 +42,18 @@ use Atro\Handlers\Action\AbstractActionTypeAsyncHandler;
                 'schema' => [
                     'type'       => 'object',
                     'properties' => [
-                        'entityId' => [
+                        'entityId'     => [
                             'type'        => 'string',
-                            'description' => 'ID of a single ImportJob record to retry. Only used when the action is configured to apply to preselected records.',
+                            'description' => 'ID of the entity record that provides context for condition evaluation and template rendering. Its fields are accessible as `{{ entity.* }}` in Twig expressions. Does not select which records the action operates on — use `where` for that.',
                         ],
-                        'where'    => [
+                        'where'        => [
                             'type'        => 'array',
-                            'description' => 'Standard AtroCore filter conditions that select the ImportJob records to retry. Only used when the action is configured to apply to preselected records.',
+                            'description' => 'Standard AtroCore filter conditions that select the records the action operates on. The action runs once for every matching record.',
                             'items'       => ['type' => 'object'],
+                        ],
+                        'attachmentId' => [
+                            'type'        => 'string',
+                            'description' => 'ID of a previously uploaded file attachment to use as the import source instead of the feed\'s default source.',
                         ],
                     ],
                 ],
@@ -75,6 +79,6 @@ use Atro\Handlers\Action\AbstractActionTypeAsyncHandler;
         ],
     ],
 )]
-class ReImportFailedJobAsyncHandler extends AbstractActionTypeAsyncHandler
+class ImportAsyncHandler extends AbstractActionTypeAsyncHandler
 {
 }

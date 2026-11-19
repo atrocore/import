@@ -193,13 +193,13 @@ class Metadata extends AbstractMetadataListener
     {
         try {
             $rows = $this->getDbal()->createQueryBuilder()
-                ->select('supertype_id, import_feed_id, upload_and_import')
+                ->select('id, import_feed_id, upload_and_import')
                 ->from('action_type_import')
                 ->fetchAllAssociative();
         } catch (\Throwable $e) {
             $rows = [];
         }
 
-        return array_column($rows, null, 'supertype_id');
+        return array_column($rows, null, 'id');
     }
 }
