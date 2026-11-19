@@ -21,6 +21,7 @@ use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\NotFound;
 use Atro\Core\FileStorage\FileStorageInterface;
 use Atro\Core\Templates\Services\Base;
+use Atro\Core\Utils\IdGenerator;
 use Atro\Core\Utils\Language;
 use Atro\Core\Utils\Util;
 use Atro\Entities\File;
@@ -909,6 +910,7 @@ class ImportFeed extends Base
         }
 
         $attachment = new \stdClass();
+        $attachment->id = IdGenerator::uuid();
         $attachment->name = $exportFeed->get('name') . '(From Export)';
         $attachment->description = $exportFeed->get('description');
         $attachment->code = $exportFeed->code;
@@ -924,6 +926,8 @@ class ImportFeed extends Base
         $attachment->nullValue = $exportFeed->get('nullValue');
         $attachment->markForNoRelation = $exportFeed->get('markForNoRelation');
         $attachment->markForUnlinkedAttribute = $exportFeed->get('markForUnlinkedAttribute');
+        // the folder is required, it is named after the id of the feed
+        $attachment->folderId = $this->createImportFileFolderFromId($attachment->id)->get('id');
         if (!empty($locale)) {
             $attachment->thousandSeparator = $locale->get('thousandSeparator');
             $attachment->decimalMark = $locale->get('decimalMark');
@@ -931,7 +935,6 @@ class ImportFeed extends Base
         // an import feed is created via its subtype
         $importFeedId = $this->getServiceFactory()->create('ImportFeedTypeSimple')->createEntity($attachment);
         $importFeed = $this->getEntityManager()->getEntity('ImportFeed', $importFeedId);
-        $this->createImportFileFolder($importFeed);
 
         foreach ($exportFeed->configuratorItems as $configuratorItem) {
             if ($configuratorItem->type === 'Fixed value' || $configuratorItem->type === 'script' || $configuratorItem->type === 'allAttributes') {
