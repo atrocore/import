@@ -28,5 +28,8 @@
   },
   "dashlets": {
     "DataSyncErrorsImport": "Błędy synchronizacji danych dla Importu"
+  },
+  "scopeDescriptions": {
+    "ImportFeed": "Określa, skąd importowane są dane, jak są mapowane na pola i atrybuty encji oraz jak tworzone lub aktualizowane są rekordy."
   }
 }
