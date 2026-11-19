@@ -35,5 +35,8 @@
     "ImportFeedTypeSimple": "Importa dati da un file CSV, Excel, JSON o XML caricato.",
     "ActionTypeImport": "Esegue un feed di importazione, facoltativamente con un file caricato.",
     "ActionTypeReImportFailedJob": "Esegue nuovamente un processo di importazione non riuscito."
+  },
+  "scopeDescriptions": {
+    "ImportFeed": "Definisce la provenienza dei dati importati, la modalità di mappatura nei campi e negli attributi dell'entità e la modalità di creazione o aggiornamento dei record."
   }
 }
