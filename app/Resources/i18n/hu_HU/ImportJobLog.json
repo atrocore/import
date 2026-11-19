@@ -1,0 +1,20 @@
+{
+  "fields": {
+    "rowNumber": "Sorszám",
+    "row": "Bemeneti adatok",
+    "importJob": "Importfuttatások",
+    "type": "Típus",
+    "entityName": "Entitás",
+    "entityId": "Entitásazonosító",
+    "message": "Hibaüzenet"
+  },
+  "options": {
+    "type": {
+      "create": "Létrehozás",
+      "update": "Frissítés",
+      "delete": "Törlés",
+      "skip": "Kihagyás",
+      "error": "Hiba"
+    }
+  }
+}

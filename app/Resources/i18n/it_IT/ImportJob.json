@@ -45,7 +45,9 @@
     "errorsAttachment": "Righe da 'File importato' che non sono state importate."
   },
   "exceptions": {
-    "cacheWriteFailed": "Impossibile scrivere i dati nella cache di importazione."
+    "cacheWriteFailed": "Impossibile scrivere i dati nella cache di importazione.",
+    "cannotReCreateDeleteOnlyJob": "Questo processo di importazione elimina solo i record. Non è possibile ricrearlo, perché una parte dei dati del feed eliminerebbe tutto il resto.",
+    "jobItemNotFound": "Processo non trovato"
   },
   "boolFilters": {
     "onlyImportFailed24Hours": "Importa solo i lavori falliti nelle ultime 24 ore",

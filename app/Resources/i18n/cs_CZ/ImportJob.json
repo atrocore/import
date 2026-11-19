@@ -23,7 +23,9 @@
     "errorsAttachment": "Řádky z \"Importovaného souboru\", které nebyly importovány."
   },
   "exceptions": {
-    "cacheWriteFailed": "Nelze zapsat data do mezipaměti importu."
+    "cacheWriteFailed": "Nelze zapsat data do mezipaměti importu.",
+    "cannotReCreateDeleteOnlyJob": "Tato importní úloha pouze maže záznamy. Znovu ji vytvořit nelze, protože část dat z feedu by smazala vše ostatní.",
+    "jobItemNotFound": "Úloha nebyla nalezena"
   },
   "boolFilters": {
     "onlyImportFailed24Hours": "Importovat pouze úlohy, které selhaly během posledních 24 hodin",

@@ -5,7 +5,8 @@
     "ImportConfiguratorItem": "Konfigurátor",
     "ImportJob": "Provedení importu",
     "ActionTypeImport": "Akce: Importovat krmivo",
-    "ActionTypeReImportFailedJob": "Akce: Znovu importovat neúspěšnou úlohu"
+    "ActionTypeReImportFailedJob": "Akce: Znovu importovat neúspěšnou úlohu",
+    "ImportFeedTypeSimple": "Importní feed: Soubor"
   },
   "scopeNamesPlural": {
     "ImportConfiguratorItem": "Konfigurátor",
@@ -13,7 +14,8 @@
     "ImportJob": "Provádění importu",
     "ImportJobLog": "Importovat protokoly",
     "ActionTypeImport": "Akce: Importovat krmivo",
-    "ActionTypeReImportFailedJob": "Akce: Znovu importovat neúspěšnou úlohu"
+    "ActionTypeReImportFailedJob": "Akce: Znovu importovat neúspěšnou úlohu",
+    "ImportFeedTypeSimple": "Importní kanál: soubor"
   },
   "fields": {
     "filterCreateImportJob": "Vytvořil Import Execution",
@@ -28,5 +30,10 @@
   },
   "dashlets": {
     "DataSyncErrorsImport": "Chyby synchronizace dat pro import"
+  },
+  "subtypeDescriptions": {
+    "ImportFeedTypeSimple": "Importuje data z nahraného souboru CSV, Excel, JSON nebo XML.",
+    "ActionTypeImport": "Spustí importní feed, případně s nahraným souborem.",
+    "ActionTypeReImportFailedJob": "Znovu spustí neúspěšnou úlohu importu."
   }
 }

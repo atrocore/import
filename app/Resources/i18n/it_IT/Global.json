@@ -11,7 +11,8 @@
     "ImportJob": "Esecuzione dell'importazione",
     "ImportJobLog": "Registro di importazione",
     "ActionTypeImport": "Azione: Importazione Feed",
-    "ActionTypeReImportFailedJob": "Azione: Reimporta lavoro non riuscito"
+    "ActionTypeReImportFailedJob": "Azione: Reimporta lavoro non riuscito",
+    "ImportFeedTypeSimple": "Feed di importazione: File"
   },
   "scopeNamesPlural": {
     "ImportConfiguratorItem": "Configuratore",
@@ -19,7 +20,8 @@
     "ImportJob": "Esecuzioni di importazione",
     "ImportJobLog": "Importazione di registri",
     "ActionTypeImport": "Azione: Importazione Feed",
-    "ActionTypeReImportFailedJob": "Azione: Reimporta lavoro non riuscito"
+    "ActionTypeReImportFailedJob": "Azione: Reimporta lavoro non riuscito",
+    "ImportFeedTypeSimple": "Importazione feed: File"
   },
   "labels": {
     "importErrorDuring24Hours": "Errore nell'importazione dei feed/esecuzioni durante le 24 ore",
@@ -28,5 +30,10 @@
   },
   "dashlets": {
     "DataSyncErrorsImport": "Errori di sincronizzazione dei dati per l'importazione"
+  },
+  "subtypeDescriptions": {
+    "ImportFeedTypeSimple": "Importa dati da un file CSV, Excel, JSON o XML caricato.",
+    "ActionTypeImport": "Esegue un feed di importazione, facoltativamente con un file caricato.",
+    "ActionTypeReImportFailedJob": "Esegue nuovamente un processo di importazione non riuscito."
   }
 }

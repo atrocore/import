@@ -127,7 +127,10 @@
     "importFeedIsInactive": "Importní kanál je neaktivní",
     "missingSourceFields": "Zdrojová pole %s nakonfigurovaná v importním kanálu v importním souboru chybí.",
     "noEntityFound": "Pro související subjekt \"%s\" nebyl nalezen žádný datový záznam.",
-    "listSeparatorNotAllowed": "Použití oddělovače hodnot seznamu v hodnotě pole \"%s\" není povoleno."
+    "listSeparatorNotAllowed": "Použití oddělovače hodnot seznamu v hodnotě pole \"%s\" není povoleno.",
+    "noSuchType": "Typ '%s' neexistuje.",
+    "cannotDetermineRecordToDelete": "Nelze určit, který záznam odstranit, protože bylo nalezeno více odpovídajících záznamů. Zkontrolujte konfiguraci importního kanálu nebo v systému odstraňte duplicitní záznamy.",
+    "noRecordsFoundForWithFilter": "V entitě '%s' nebyl nalezen žádný záznam s: %s a filtrem pro pole '%s'."
   },
   "options": {
     "repeatProcessing": {
@@ -141,6 +144,9 @@
     },
     "processingType": {
       "configurator": "Konfigurátor"
+    },
+    "type": {
+      "simple": "Soubor"
     }
   },
   "tooltips": {

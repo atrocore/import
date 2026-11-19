@@ -1,0 +1,39 @@
+{
+  "fields": {
+    "filterCreateImportJob": "Importfuttatás hozta létre",
+    "filterUpdateImportJob": "Importfuttatás frissítette",
+    "createdByImport": "Importálás hozta létre",
+    "updatedByImport": "Importálás frissítette"
+  },
+  "scopeNames": {
+    "ImportFeed": "Importfeed",
+    "ImportConfiguratorItem": "Konfigurátor",
+    "ImportJob": "Importfuttatás",
+    "ImportJobLog": "Importnapló",
+    "ActionTypeImport": "Művelet: importfeed",
+    "ActionTypeReImportFailedJob": "Művelet: sikertelen feladat újraimportálása",
+    "ImportFeedTypeSimple": "Importfeed: fájl"
+  },
+  "scopeNamesPlural": {
+    "ImportConfiguratorItem": "Konfigurátor",
+    "ImportFeed": "Importfeedek",
+    "ImportJob": "Importfuttatások",
+    "ImportJobLog": "Importnaplók",
+    "ActionTypeImport": "Művelet: adatfolyam importálása",
+    "ActionTypeReImportFailedJob": "Művelet: sikertelen feladat újraimportálása",
+    "ImportFeedTypeSimple": "Importálási adatfolyam: fájl"
+  },
+  "labels": {
+    "importErrorDuring24Hours": "Importfeedek/-futtatások hibái az elmúlt 24 órában",
+    "importErrorDuring7Days": "Importfeedek/-futtatások hibái az elmúlt 7 napban",
+    "importErrorDuring28Days": "Importadatfolyamok/-végrehajtások hibái az elmúlt 28 napban"
+  },
+  "dashlets": {
+    "DataSyncErrorsImport": "Importálási adatszinkronizálási hibák"
+  },
+  "subtypeDescriptions": {
+    "ActionTypeImport": "Import-adatfolyamot futtat, opcionálisan feltöltött fájllal.",
+    "ActionTypeReImportFailedJob": "Újra futtat egy sikertelen importfeladatot.",
+    "ImportFeedTypeSimple": "Adatokat importál egy feltöltött CSV-, Excel-, JSON- vagy XML-fájlból."
+  }
+}

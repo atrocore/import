@@ -122,7 +122,10 @@
     "importFeedIsInactive": "Il feed di importazione è inattivo",
     "missingSourceFields": "I campi sorgente %s configurati nel feed di importazione sono mancanti nel file di importazione.",
     "noEntityFound": "Non è stato trovato alcun record di dati per l'entità correlata '%s'.",
-    "listSeparatorNotAllowed": "L'utilizzo del separatore di valori di lista nel valore del campo '%s' non è consentito."
+    "listSeparatorNotAllowed": "L'utilizzo del separatore di valori di lista nel valore del campo '%s' non è consentito.",
+    "noSuchType": "Il tipo '%s' non esiste.",
+    "cannotDetermineRecordToDelete": "Non è possibile determinare quale record eliminare perché è stato trovato più di un record corrispondente. Controllare la configurazione del feed di importazione o rimuovere i record duplicati nel sistema.",
+    "noRecordsFoundForWithFilter": "Nessun record trovato nell'entità '%s' con: %s e filtro per il campo '%s'."
   },
   "options": {
     "repeatProcessing": {
@@ -136,6 +139,9 @@
     },
     "processingType": {
       "configurator": "Configuratore"
+    },
+    "type": {
+      "simple": "File"
     }
   },
   "tooltips": {

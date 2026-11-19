@@ -1,0 +1,57 @@
+{
+  "fields": {
+    "number": "Szám",
+    "importFeed": "Importálási adatfolyam",
+    "state": "Állapot",
+    "message": "Üzenet",
+    "start": "Kezdés időpontja",
+    "end": "Befejezés időpontja",
+    "createdCount": "Létrehozva",
+    "updatedCount": "Frissítve",
+    "deletedCount": "Törölve",
+    "skippedCount": "Kihagyva",
+    "errorsCount": "Hibák",
+    "attachment": "Importált fájl",
+    "convertedFile": "Konvertált fájl",
+    "importJobLogs": "Hibanaplók",
+    "files": "Fájlok"
+  },
+  "links": {
+    "importFeed": "Importálási adatfolyam",
+    "importJobLogs": "Hibanaplók",
+    "files": "Fájlok"
+  },
+  "labels": {
+    "Pending": "Függőben",
+    "Success": "Sikeres",
+    "Running": "Fut",
+    "Failed": "Sikertelen",
+    "Canceled": "Megszakítva",
+    "generate": "Generálás",
+    "generating": "Generálás folyamatban",
+    "tryAgain": "Újrapróbálkozás importálással",
+    "reCreate": "Újralétrehozás",
+    "generateFileConverted": "Fájl generálása: konvertálva",
+    "generateFileCreated": "Fájl generálása: létrehozva",
+    "generateFileUpdated": "Fájl generálása: frissítve",
+    "generateFileDeleted": "Fájl generálása: törölve",
+    "generateFileSkippedBySystem": "Fájl generálása: a rendszer kihagyta",
+    "generateFileSkippedByScript": "Fájl generálása: a szkript kihagyta",
+    "generateFileErrors": "Fájl generálása: hibák",
+    "loadCounters": "Kattintson a frissítés ikonra az érték kiszámításához.",
+    "seeRelevantRecords": "Kattintson ide a vonatkozó rekordok megtekintéséhez."
+  },
+  "tooltips": {
+    "errorsAttachment": "Az „Importált fájl” olyan sorai, amelyeket nem importáltak."
+  },
+  "exceptions": {
+    "cacheWriteFailed": "Nem lehet adatot írni az importálási gyorsítótárba.",
+    "cannotReCreateDeleteOnlyJob": "Ez az importálási feladat csak rekordokat töröl. Újbóli létrehozása nem lehetséges, mert a feedadatok egy része minden mást törölne.",
+    "jobItemNotFound": "A feladat nem található"
+  },
+  "boolFilters": {
+    "onlyImportFailed24Hours": "Csak az elmúlt 24 órában sikertelen importálási feladatok",
+    "onlyImportFailed7Days": "Csak az elmúlt 7 napban sikertelen importálási feladatok",
+    "onlyImportFailed28Days": "Csak az elmúlt 28 napban sikertelen importálási feladatok"
+  }
+}

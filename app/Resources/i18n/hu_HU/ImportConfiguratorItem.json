@@ -1,0 +1,51 @@
+{
+  "fields": {
+    "entityIdentifier": "Azonosító",
+    "name": "Mező",
+    "column": "Forrásmező(k)",
+    "defaultContainer": "Alapértelmezett érték",
+    "default": "Alapértelmezett érték",
+    "importFeed": "Importálási adatfolyam",
+    "importBy": "Kapcsolódó entitás mezői",
+    "createIfNotExist": "Kapcsolódó adatrekord létrehozása",
+    "locale": "Nyelv",
+    "entityAttribute": "Attribútum",
+    "sourceFields": "Forrásmezők",
+    "type": "Típus",
+    "foreignColumn": "Forrásmező(k)",
+    "foreignImportBy": "Kapcsolódó entitás mezői",
+    "replaceArray": "Csere",
+    "importByForListAttribute": "Kapcsolódó entitás mezői listákhoz",
+    "urlHeaders": "Kérésfejlécek",
+    "valueExtractor": "Értékkinyerő"
+  },
+  "groupOptions": {
+    "name": {
+      "fields": "Mezők",
+      "attributes": "Attribútumok"
+    }
+  },
+  "labels": {
+    "main": "Fő",
+    "mapping": "Mezőleképezés beszúráshoz",
+    "search": "Mezőleképezés kereséshez",
+    "additionalInformation": "További információ",
+    "importByForAttributeValue": "Ez csak Lista vagy Többértékű lista típusú Attribútum esetén használható",
+    "urlHeaders": "Kérésfejlécek",
+    "_addAttribute": "[Attribútum hozzáadása]"
+  },
+  "exceptions": {
+    "wrongFieldsNumber": "Kereséshez a forrásmezők számának meg kell egyeznie a kapcsolódó entitás mezőinek számával.",
+    "wrongForeignFieldsNumber": "Beszúráshoz a forrásmezők számának meg kell egyeznie a kapcsolódó entitás mezőinek számával.",
+    "foreignColumnsAndFieldsEmpty": "A forrásmező(k) és a kapcsolódó entitás mező(i) nem lehet(nek) üres(ek)."
+  },
+  "tooltips": {
+    "column": "Ezt/ezeket a mezőértéke(ke)t a rendszer annak ellenőrzésére használja, hogy létezik-e már a kapcsolódó adatrekord.",
+    "importBy": "Válassza ki a rendszerben azokat a kapcsolódó entitásmező(ke)t, amelyekben a „Forrásmező(k)” kiválasztómezőben megadott adatok alapján kell keresni. Ha csak egy adatmező van megadva, a „Kapcsolat mezőelválasztója” használható. Egyéb esetben a megadott adatmezők számának meg kell egyeznie a „Kapcsolódó entitás mező(i)” számával.",
+    "createIfNotExist": "Ha a megadott adatok alapján nem található rekord, új adatrekord jön létre a kapcsolódó entitásban.",
+    "foreignColumn": "Ezt/ezeket a mezőértéke(ke)t a rendszer a kapcsolódó adatrekord létrehozására használja.",
+    "foreignImportBy": "Válassza ki a rendszerben azokat a kapcsolódó entitásmező(ke)t, amelyeket a „Forrásmező(k)” kiválasztómezőben megadott adatok alapján kell kitölteni. Ha csak egy adatmező van megadva, a „Kapcsolat mezőelválasztója” használható. Egyéb esetben a megadott adatmezők számának meg kell egyeznie a „Kapcsolódó entitás mező(i)” számával.",
+    "replaceArray": "Alapértelmezés szerint a megadott rekord(ok) hozzáadódnak a meglévőkhöz. Jelölje be ezt a jelölőnégyzetet, ha a meglévő rekordokat le kell cserélni.",
+    "valueExtractor": "A rendszer ezt a reguláris kifejezést használja az érték forrásmező(k)ből való kinyerésére."
+  }
+}
