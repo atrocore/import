@@ -40,9 +40,8 @@ class RecordWriter
             throw new BadRequest(sprintf($this->container->get('language')->translate('noSuchType', 'exceptions', 'ImportFeed'), $type));
         }
 
-        $subtypeId = $this->getService($subtype)->createEntity($input);
-
-        return (string)$this->container->get('entityManager')->getRepository($subtype)->get($subtypeId)->get('supertypeId');
+        // a subtype record has the id of the record
+        return (string)$this->getService($subtype)->createEntity($input);
     }
 
     public function update(string $entityName, string $id, \stdClass $input): bool

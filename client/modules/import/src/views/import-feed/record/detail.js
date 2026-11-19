@@ -34,7 +34,7 @@ Espo.define('import:views/import-feed/record/detail', 'views/subtype/record/deta
          * The record is shown via its subtype record, the actions of the import feed need the id of the feed.
          */
         getImportFeedId() {
-            return this.model.get('supertypeId') || this.model.id;
+            return this.model.id;
         },
 
         hasImportNow() {
