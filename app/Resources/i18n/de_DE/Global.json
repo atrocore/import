@@ -29,6 +29,9 @@
   "dashlets": {
     "DataSyncErrorsImport": "Synchronisierungsfehler für Datenimport"
   },
+  "scopeDescriptions": {
+    "ImportFeed": "Legt fest, woher die Daten importiert werden, wie sie den Feldern und Attributen der Entität zugeordnet werden und wie die Datensätze erstellt oder aktualisiert werden."
+  },
   "subtypeDescriptions": {
     "ActionTypeImport": "Führt einen Import-Feed aus, optional mit einer hochgeladenen Datei.",
     "ActionTypeReImportFailedJob": "Führt einen fehlgeschlagenen Import-Job erneut aus.",
