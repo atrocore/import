@@ -98,6 +98,7 @@
     "alreadyProceeded": "Il record di dati con tale/i identificatore/i è già stato proceduto.",
     "relatedEntityCreatingFailed": "La creazione di un nuovo record nell'entità '%s' non è riuscita:",
     "moreThanOneFound": "È stato trovato più di un record di dati con l'identificatore '%s'.",
+    "recordExistsWithType": "Esiste già un record di dati con tale/i identificatore/i con il tipo '%s'.",
     "wrongImportByValuesCount": "L'importo dei valori ricevuti per l'entità correlata '%s' non deve essere inferiore all'importo dei campi dell'entità correlata.",
     "nullNoneSame": "Nessuno e il valore nullo non possono essere uguali.",
     "skipNoneSameEmpty": "Il valore vuoto e il valore di salto non possono essere uguali.",

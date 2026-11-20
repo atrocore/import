@@ -98,6 +98,7 @@
     "alreadyProceeded": "Ya se ha procedido al registro de datos con dicho(s) identificador(es).",
     "relatedEntityCreatingFailed": "Ha fallado la creación de un nuevo registro en la entidad '%s':",
     "moreThanOneFound": "Se ha encontrado más de un registro de datos con el identificador '%s'.",
+    "recordExistsWithType": "Ya existe un registro de datos con este(s) identificador(es) con el tipo '%s'.",
     "wrongImportByValuesCount": "El importe de los valores recibidos para la entidad relacionada '%s' no debe ser inferior al importe de los campos de la entidad relacionada.",
     "nullNoneSame": "Ninguno y valor nulo no pueden ser lo mismo.",
     "skipNoneSameEmpty": "El valor vacío y el valor de omisión no pueden ser iguales.",

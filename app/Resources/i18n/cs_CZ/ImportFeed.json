@@ -103,6 +103,7 @@
     "alreadyProceeded": "Datový záznam s takovým identifikátorem (identifikátory) byl již proveden.",
     "relatedEntityCreatingFailed": "Vytvoření nového záznamu v entitě \"%s\" se nezdařilo:",
     "moreThanOneFound": "Nalezen více než jeden datový záznam s identifikátorem \"%s\".",
+    "recordExistsWithType": "Datový záznam s takovým identifikátorem (identifikátory) již existuje s typem '%s'.",
     "wrongImportByValuesCount": "Částka přijatých hodnot pro související entitu \"%s\" by neměla být menší než částka polí související entity.",
     "nullNoneSame": "Hodnoty None a Null nemohou být stejné.",
     "skipNoneSameEmpty": "Hodnoty Empty a Skip nemohou být stejné.",
