@@ -90,7 +90,11 @@ class ImportFeed extends Base
                 $qb->leftJoin('a', $conn->quoteIdentifier('channel'), 'c', 'c.id=a.channel_id');
             }
 
-            $attributes = $qb->fetchAllAssociative();
+            // the settings of the attribute types, such as the options of an enum, are in the tables of the subtypes
+            $converter = $this->getAttributeFieldConverter();
+            $converter->joinSubtypes($qb, 'a');
+
+            $attributes = array_map([$converter, 'prepareSubtypeColumns'], $qb->fetchAllAssociative());
 
             $importEntity = $this->getEntityManager()->getEntity($entityName);
 
