@@ -1,7 +1,6 @@
 {
   "fields": {
     "importFeed": "Importovat krmivo",
-    "maximumHoursToLookBack": "Maximální počet hodin na ohlédnutí",
     "maximumDaysForJobExist": "Maximální doba uchovávání ve dnech"
   },
   "links": {

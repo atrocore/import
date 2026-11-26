@@ -27,9 +27,6 @@ class ScheduledJobLayout extends AbstractLayoutListener
             $newRows[] = $row;
             if ($row[0]['name'] === 'type') {
                 $newRows[] = [['name' => 'importFeed'], false];
-                if(!$this->checkIfFieldExists('maximumHoursToLookBack', $result[0]['rows'])){
-                    $newRows[] = [['name' => 'maximumHoursToLookBack'], false];
-                }
                 if (!$this->checkIfFieldExists('maximumDaysForJobExist', $result[0]['rows'])) {
                     $newRows[] = [['name' => 'maximumDaysForJobExist'], false];
                 }
