@@ -1,7 +1,6 @@
 {
   "fields": {
     "importFeed": "Import Feed",
-    "maximumHoursToLookBack": "Maximum hours to look back",
     "maximumDaysForJobExist": "Maximum retention period in days"
   },
   "links": {

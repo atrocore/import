@@ -1,7 +1,6 @@
 {
   "fields": {
     "importFeed": "Importálási adatfolyam",
-    "maximumHoursToLookBack": "Visszatekintési idő maximuma órában",
     "maximumDaysForJobExist": "Megőrzési idő maximális hossza napokban"
   },
   "links": {

@@ -1,7 +1,6 @@
 {
   "fields": {
     "importFeed": "Імпортний фід",
-    "maximumHoursToLookBack": "Максимальна кількість годин для ретроспективи",
     "maximumDaysForJobExist": "Максимальний термін зберігання в днях"
   },
   "links": {

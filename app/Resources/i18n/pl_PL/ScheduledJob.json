@@ -1,7 +1,6 @@
 {
   "fields": {
     "importFeed": "Importuj Źródło",
-    "maximumHoursToLookBack": "Maksymalna liczba godzin do cofnięcia",
     "maximumDaysForJobExist": "Maksymalny okres retencji w dniach"
   },
   "links": {
