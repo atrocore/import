@@ -101,6 +101,7 @@
     "recordExistsWithType": "Un enregistrement de données avec cet(ces) identifiant(s) existe déjà avec le type '%s'.",
     "cannotDetermineRecordToDelete": "Impossible de déterminer quel enregistrement supprimer, car plusieurs enregistrements correspondants ont été trouvés. Vérifiez la configuration du flux d'import ou supprimez les enregistrements en double dans le système.",
     "wrongImportByValuesCount": "Le montant des valeurs reçues pour l'entité apparentée \"%s\" ne doit pas être inférieur au montant des champs de l'entité apparentée.",
+    "importByValuesCountMismatch": "La valeur \"%s\" est divisée par \"%s\" en %d partie(s), mais l'entité apparentée \"%s\" est recherchée par les champs : %s.",
     "nullNoneSame": "La valeur nulle et l'absence de valeur ne peuvent pas être identiques.",
     "skipNoneSameEmpty": "La valeur vide et la valeur à ignorer ne peuvent pas être identiques.",
     "skipNoneSameNull": "La valeur nulle et la valeur à ignorer ne peuvent pas être identiques.",

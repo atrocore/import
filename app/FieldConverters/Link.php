@@ -54,7 +54,23 @@ class Link extends Varchar
 
                 $where = [];
 
-                $values = !is_array($value) ? explode((string)$config['fieldDelimiterForRelation'], (string)$value) : $value;
+                if (is_array($value)) {
+                    $values = $value;
+                } elseif (count($config['importBy']) > 1) {
+                    $values = explode((string)$config['fieldDelimiterForRelation'], (string)$value);
+                    if (count($values) !== count($config['importBy'])) {
+                        throw new BadRequest(sprintf(
+                            $this->translate('importByValuesCountMismatch', 'exceptions', 'ImportFeed'),
+                            $value,
+                            $config['fieldDelimiterForRelation'],
+                            count($values),
+                            $entityName,
+                            implode(', ', $config['importBy'])
+                        ));
+                    }
+                } else {
+                    $values = [(string)$value];
+                }
                 foreach ($config['importBy'] as $k => $field) {
                     $fieldData = $this->getMetadata()->get(['entityDefs', $entityName, 'fields', $field], ['type' => 'varchar']);
 
@@ -270,8 +286,10 @@ class Link extends Varchar
         $foreignColumn   = $config['foreignColumn'];
         $foreignImportBy = $config['foreignImportBy'];
 
-        if (count($foreignColumn) === 1) {
+        if (count($foreignColumn) === 1 && count($foreignImportBy) > 1) {
             $foreignValues = explode($config['fieldDelimiterForRelation'], (string)$row[$foreignColumn[0]]);
+        } elseif (count($foreignColumn) === 1) {
+            $foreignValues = [(string)$row[$foreignColumn[0]]];
         } else {
             foreach ($foreignColumn as $column) {
                 $foreignValues[] = $row[$column];
@@ -346,9 +364,11 @@ class Link extends Varchar
                     continue;
                 }
 
-                $values = explode($configuration['delimiter'], (string)$row[$columnName]);
+                $values = empty($configuration['mainConfig']) ? [(string)$row[$columnName]] : explode($configuration['delimiter'], (string)$row[$columnName]);
                 foreach ($values as $value) {
-                    $value         = explode($configuration['fieldDelimiterForRelation'], $value)[$valueIndex] ?? null;
+                    if (count($configuration['importBy']) > 1) {
+                        $value = explode($configuration['fieldDelimiterForRelation'], $value)[$valueIndex] ?? null;
+                    }
                     $res[$field][] = $this->extractValue($configuration, $value, (string)$configuration['emptyValue'], (string)$configuration['nullValue']);
                 }
             }

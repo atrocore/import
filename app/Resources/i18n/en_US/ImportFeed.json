@@ -102,6 +102,7 @@
     "recordExistsWithType": "A data record with such identifier(s) already exists with type '%s'.",
     "cannotDetermineRecordToDelete": "Unable to determine which record to delete because more than one matching record was found. Check the import feed configuration or remove duplicate records in the system.",
     "wrongImportByValuesCount": "The amount of the received values for the related entity '%s' should not be smaller than the amount of the related entity fields.",
+    "importByValuesCountMismatch": "Value '%s' is split by '%s' into %d part(s), but the related entity '%s' is searched by fields: %s.",
     "nullNoneSame": "None and null value cannot be the same.",
     "skipNoneSameEmpty": "Empty and skip value cannot be the same.",
     "skipNoneSameNull": "Null and skip value cannot be the same.",
