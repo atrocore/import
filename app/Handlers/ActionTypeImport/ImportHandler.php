@@ -24,6 +24,7 @@ use Atro\Handlers\Action\AbstractActionTypeSyncHandler;
     summary: 'Execute Import action',
     description: 'Executes the specified Import action synchronously. Runs the configured import feed.',
     tag: 'ActionTypeImport',
+    operationId: 'executeImportAction',
     parameters: [
         [
             'name'        => 'id',

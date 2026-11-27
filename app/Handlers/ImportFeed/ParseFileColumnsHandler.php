@@ -29,6 +29,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Parse file source fields',
     description: "Synchronously reads the uploaded file and returns its source fields (column names for CSV/Excel, key paths for JSON/XML).\n\n> Use for files up to **2 MB**. For larger files use `POST /ImportFeed/parseFileColumnsAsync`.",
     tag: 'ImportFeed',
+    operationId: 'parseImportFileColumns',
     requestBody: [
         'required' => true,
         'content'  => [

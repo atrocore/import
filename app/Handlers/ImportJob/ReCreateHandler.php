@@ -29,6 +29,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Re-create import job',
     description: 'Re-creates an import job from an existing one, optionally with a new file.',
     tag: 'ImportJob',
+    operationId: 'recreateImportJob',
     parameters: [
         [
             'name'        => 'id',

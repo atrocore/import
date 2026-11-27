@@ -29,6 +29,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Run import',
     description: 'Triggers an import job for the specified import feed.',
     tag: 'ImportFeed',
+    operationId: 'runImportFeed',
     parameters: [
         [
             'name'        => 'id',

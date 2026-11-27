@@ -29,6 +29,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Import data',
     description: 'Imports data into the system using the specified feed code and JSON payload.',
     tag: 'ImportFeed',
+    operationId: 'importData',
     requestBody: [
         'required' => true,
         'content'  => [

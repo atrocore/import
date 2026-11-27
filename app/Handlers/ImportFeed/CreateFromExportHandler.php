@@ -29,6 +29,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Create import feed from export feed',
     description: 'Creates a new simple import feed by mirroring the column mapping of an existing export feed. Only simple-type export feeds are supported. Requires the Export module to be installed.',
     tag: 'ImportFeed',
+    operationId: 'createImportFeedFromExport',
     requestBody: [
         'required' => true,
         'content'  => [

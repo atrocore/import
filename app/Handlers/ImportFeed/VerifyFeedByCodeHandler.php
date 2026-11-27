@@ -29,6 +29,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Verify feed by code',
     description: 'Checks whether an import feed is correctly configured for the given code.',
     tag: 'ImportFeed',
+    operationId: 'verifyImportFeedByCode',
     parameters: [
         [
             'name'     => 'code',

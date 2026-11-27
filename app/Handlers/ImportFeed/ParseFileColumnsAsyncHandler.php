@@ -29,6 +29,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Parse file source fields as background job',
     description: "Queues a background job to parse the source fields from the uploaded file (column names for CSV/Excel, key paths for JSON/XML). Use for files larger than 2 MB.\n\n**How to retrieve the result:**\n1. Call this endpoint to receive a `jobId`\n2. Poll `GET /Job/{jobId}` every few seconds\n3. When `status` is `Success`, the parsed source fields are available in `payload.sourceFields`\n4. When `status` is `Canceled`, the parsing failed",
     tag: 'ImportFeed',
+    operationId: 'parseImportFileColumnsAsync',
     requestBody: [
         'required' => true,
         'content'  => [

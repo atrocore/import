@@ -24,6 +24,7 @@ use Atro\Handlers\Action\AbstractActionTypeAsyncHandler;
     summary: 'Execute Import action asynchronously',
     description: 'Schedules the specified Import action as a background job and returns immediately with the job ID.',
     tag: 'ActionTypeImport',
+    operationId: 'executeImportActionAsync',
     parameters: [
         [
             'name'        => 'id',

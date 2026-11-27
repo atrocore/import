@@ -28,6 +28,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Get Excel sheet names',
     description: 'Returns the sheet names for the given file. Only Excel format is supported; other formats return an empty array.',
     tag: 'File',
+    operationId: 'getFileSheets',
     parameters: [
         [
             'name'        => 'id',

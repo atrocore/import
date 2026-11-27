@@ -29,6 +29,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Get record counters',
     description: 'Returns created/updated/deleted/skipped/error counters for the specified import job.',
     tag: 'ImportJob',
+    operationId: 'getImportJobRecordCounters',
     parameters: [
         [
             'name'        => 'id',

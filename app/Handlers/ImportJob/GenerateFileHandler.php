@@ -29,6 +29,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     summary: 'Generate file',
     description: 'Queues a job to generate the converted or error file for the specified import job.',
     tag: 'ImportJob',
+    operationId: 'generateImportJobFile',
     parameters: [
         [
             'name'        => 'id',
