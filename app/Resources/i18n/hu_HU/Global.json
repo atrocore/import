@@ -35,5 +35,8 @@
     "ActionTypeImport": "Import-adatfolyamot futtat, opcionálisan feltöltött fájllal.",
     "ActionTypeReImportFailedJob": "Újra futtat egy sikertelen importfeladatot.",
     "ImportFeedTypeSimple": "Adatokat importál egy feltöltött CSV-, Excel-, JSON- vagy XML-fájlból."
+  },
+  "scopeDescriptions": {
+    "ImportFeed": "Meghatározza, honnan történik az adatok importálása, hogyan történik azok leképezése az Entitás mezőire és attribútumaira, valamint hogyan jönnek létre vagy frissülnek a rekordok."
   }
 }

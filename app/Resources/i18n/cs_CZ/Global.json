@@ -35,5 +35,8 @@
     "ImportFeedTypeSimple": "Importuje data z nahraného souboru CSV, Excel, JSON nebo XML.",
     "ActionTypeImport": "Spustí importní feed, případně s nahraným souborem.",
     "ActionTypeReImportFailedJob": "Znovu spustí neúspěšnou úlohu importu."
+  },
+  "scopeDescriptions": {
+    "ImportFeed": "Určuje, odkud se data importují, jak se mapují na pole a atributy entity a jak se záznamy vytvářejí nebo aktualizují."
   }
 }

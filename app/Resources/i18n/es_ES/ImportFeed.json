@@ -126,7 +126,8 @@
     "listSeparatorNotAllowed": "No se permite el uso del separador de valores de lista en el valor del campo '%s'.",
     "noSuchType": "El tipo '%s' no existe.",
     "cannotDetermineRecordToDelete": "No se puede determinar qué registro eliminar porque se encontró más de un registro coincidente. Compruebe la configuración de la alimentación de importación o elimine los registros duplicados del sistema.",
-    "noRecordsFoundForWithFilter": "No se encontraron registros en la entidad '%s' con: %s y el filtro para el campo '%s'."
+    "noRecordsFoundForWithFilter": "No se encontraron registros en la entidad '%s' con: %s y el filtro para el campo '%s'.",
+    "importByValuesCountMismatch": "El valor '%s' se divide por '%s' en %d parte(s), pero la entidad relacionada '%s' se busca por los campos: %s."
   },
   "options": {
     "repeatProcessing": {

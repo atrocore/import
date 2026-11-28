@@ -131,7 +131,8 @@
     "listSeparatorNotAllowed": "Použití oddělovače hodnot seznamu v hodnotě pole \"%s\" není povoleno.",
     "noSuchType": "Typ '%s' neexistuje.",
     "cannotDetermineRecordToDelete": "Nelze určit, který záznam odstranit, protože bylo nalezeno více odpovídajících záznamů. Zkontrolujte konfiguraci importního kanálu nebo v systému odstraňte duplicitní záznamy.",
-    "noRecordsFoundForWithFilter": "V entitě '%s' nebyl nalezen žádný záznam s: %s a filtrem pro pole '%s'."
+    "noRecordsFoundForWithFilter": "V entitě '%s' nebyl nalezen žádný záznam s: %s a filtrem pro pole '%s'.",
+    "importByValuesCountMismatch": "Hodnota '%s' je rozdělena pomocí '%s' na %d částí, ale související entita '%s' se vyhledává podle polí: %s."
   },
   "options": {
     "repeatProcessing": {

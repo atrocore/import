@@ -126,7 +126,8 @@
     "missingSourceFields": "Az importforrásban beállított forrásmező(k) (%s) hiányoznak az importfájlból.",
     "noEntityFound": "A(z) „%s” kapcsolódó entitáshoz nem található adatrekord.",
     "listSeparatorNotAllowed": "A listaérték-elválasztó használata nem engedélyezett a(z) „%s” mező értékében.",
-    "noSuchType": "A(z) „%s” típus nem létezik."
+    "noSuchType": "A(z) „%s” típus nem létezik.",
+    "importByValuesCountMismatch": "A(z) „%s” érték a(z) „%s” elválasztó mentén %d részre bomlik, de a(z) „%s” nevű kapcsolódó entitást a következő mezők alapján keresi a rendszer: %s."
   },
   "options": {
     "repeatProcessing": {

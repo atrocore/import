@@ -35,5 +35,8 @@
     "ImportFeedTypeSimple": "Importa datos de un archivo CSV, Excel, JSON o XML cargado.",
     "ActionTypeImport": "Ejecuta una fuente de importación, opcionalmente con un archivo cargado.",
     "ActionTypeReImportFailedJob": "Vuelve a ejecutar una tarea de importación fallida."
+  },
+  "scopeDescriptions": {
+    "ImportFeed": "Define de dónde se importan los datos, cómo se asignan a los campos y atributos de la entidad y cómo se crean o actualizan los registros."
   }
 }
