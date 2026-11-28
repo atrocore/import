@@ -126,7 +126,8 @@
     "noEntityIdentifier": "Proszę wybrać kolumnę Identyfikator dla konfiguratora.",
     "noSuchType": "Typ '%s' nie istnieje.",
     "cannotDetermineRecordToDelete": "Nie można określić, który rekord należy usunąć, ponieważ znaleziono więcej niż jeden pasujący rekord. Sprawdź konfigurację kanału importu lub usuń zduplikowane rekordy w systemie.",
-    "noRecordsFoundForWithFilter": "Nie znaleziono rekordów w encji '%s' z: %s i filtrem dla pola '%s'."
+    "noRecordsFoundForWithFilter": "Nie znaleziono rekordów w encji '%s' z: %s i filtrem dla pola '%s'.",
+    "importByValuesCountMismatch": "Wartość '%s' jest dzielona przez '%s' na %d części, ale powiązana encja '%s' jest wyszukiwana na podstawie pól: %s."
   },
   "options": {
     "repeatProcessing": {
